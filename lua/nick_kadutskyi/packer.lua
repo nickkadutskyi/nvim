@@ -87,7 +87,7 @@ return require("packer").startup(function(use)
 	-- Provides connection of telescope with fzf (fazzy search)
 	use({
 		"nvim-telescope/telescope-fzf-native.nvim",
-		run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+		run = "make",
 	})
 
 	-- Provides visibility for changes compared to current git branch in the gutter
