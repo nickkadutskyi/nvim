@@ -42,7 +42,7 @@ require('rose-pine').setup({
 -- set colorscheme after options
 vim.cmd('colorscheme rose-pine')
 
-if os.getenv('theme') == 'light' then
+if os.getenv('theme') == 'light' or os.getenv('theme') == 'l' then
   vim.o.background = 'light'
 else
   vim.o.background = 'dark'
