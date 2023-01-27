@@ -1,18 +1,18 @@
 local ensure_packer = function()
-  local fn = vim.fn
-  local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-  if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
-    vim.cmd [[packadd packer.nvim]]
-    return true
-  end
-  return false
+	local fn = vim.fn
+	local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
+	if fn.empty(fn.glob(install_path)) > 0 then
+		fn.system({ "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path })
+		vim.cmd([[packadd packer.nvim]])
+		return true
+	end
+	return false
 end
 
 local packer_bootstrap = ensure_packer()
 
-return require('packer').startup(function(use)
-  use 'wbthomason/packer.nvim'
+return require("packer").startup(function(use)
+	use("wbthomason/packer.nvim")
 
 	-- File search in current buffer
 	use({
@@ -127,9 +127,31 @@ return require('packer').startup(function(use)
 	-- Visual guides
 	use("xiyaowong/virtcolumn.nvim")
 
-  -- Automatically set up your configuration after cloning packer.nvim
-  -- Put this at the end after all plugins
-  if packer_bootstrap then
-    require('packer').sync()
-  end
+	-- Transparent background
+	use({
+		"xiyaowong/nvim-transparent",
+		config = function()
+			require("transparent").setup({
+				enable = true, -- boolean: enable transparent
+				extra_groups = { -- table/string: additional groups that should be cleared
+					-- In particular, when you set it to 'all', that means all available groups
+
+					-- example of akinsho/nvim-bufferline.lua
+					"BufferLineTabClose",
+					"BufferlineBufferSelected",
+					"BufferLineFill",
+					"BufferLineBackground",
+					"BufferLineSeparator",
+					"BufferLineIndicatorSelected",
+				},
+				exclude = {}, -- table: groups you don't want to clear
+			})
+		end,
+	})
+
+	-- Automatically set up your configuration after cloning packer.nvim
+	-- Put this at the end after all plugins
+	if packer_bootstrap then
+		require("packer").sync()
+	end
 end)
