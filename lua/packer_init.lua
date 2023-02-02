@@ -1,4 +1,3 @@
-compile_path = vim.fn.stdpath 'data' .. '/site/pack/loader/start/packer.nvim/plugin/packer.lua'
 local ensure_packer = function()
 	local fn = vim.fn
 	local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
@@ -11,8 +10,11 @@ local ensure_packer = function()
 end
 
 local packer_bootstrap = ensure_packer()
-
-return require("packer").startup(function(use)
+local packer = require("packer")
+packer.init({
+  compile_path = vim.fn.stdpath("data") .. "/site/pack/loader/start/packer.nvim/plugin/packer.lua",
+})
+return packer.startup(function(use)
 	use("wbthomason/packer.nvim")
 
 	-- File search in current buffer
