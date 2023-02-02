@@ -1,3 +1,4 @@
+compile_path = vim.fn.stdpath 'data' .. '/site/pack/loader/start/packer.nvim/plugin/packer.lua'
 local ensure_packer = function()
 	local fn = vim.fn
 	local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
