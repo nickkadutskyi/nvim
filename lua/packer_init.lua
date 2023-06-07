@@ -12,7 +12,7 @@ end
 local packer_bootstrap = ensure_packer()
 local packer = require("packer")
 packer.init({
-  compile_path = vim.fn.stdpath("data") .. "/site/pack/loader/start/packer.nvim/plugin/packer.lua",
+	compile_path = vim.fn.stdpath("data") .. "/site/pack/loader/start/packer.nvim/plugin/packer.lua",
 })
 return packer.startup(function(use)
 	use("wbthomason/packer.nvim")
@@ -117,7 +117,8 @@ return packer.startup(function(use)
 	use("nvim-treesitter/nvim-treesitter-context")
 
 	-- Code formatter
-	use("sbdchd/neoformat")
+	-- use("sbdchd/neoformat")
+	use("mhartington/formatter.nvim")
 
 	-- Smooth scrolling
 	use({
@@ -135,7 +136,6 @@ return packer.startup(function(use)
 		"xiyaowong/nvim-transparent",
 		config = function()
 			require("transparent").setup({
-				enable = true, -- boolean: enable transparent
 				extra_groups = { -- table/string: additional groups that should be cleared
 					-- In particular, when you set it to 'all', that means all available groups
 
@@ -147,7 +147,7 @@ return packer.startup(function(use)
 					"BufferLineSeparator",
 					"BufferLineIndicatorSelected",
 				},
-				exclude = {}, -- table: groups you don't want to clear
+				exclude_groups = {}, -- table: groups you don't want to clear
 			})
 		end,
 	})

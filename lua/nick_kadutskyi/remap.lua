@@ -25,7 +25,8 @@ nnoremap('<leader>fb', ":Telescope file_browser<CR>")
 -- Neoformat
 --
 -- Reformat Code
-nnoremap('<leader>cf', ':Neoformat<CR>')
+-- nnoremap('<leader>cf', ':Neoformat<CR>')
+nnoremap('<leader>cf',':Format<CR>')
 
 -- Undotree
 --
