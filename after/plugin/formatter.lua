@@ -39,10 +39,10 @@ require("formatter").setup({
 		},
 
 		php = {
-			require("formatter.filetypes.php"),
+			require("formatter.filetypes.php").php_cs_fixer,
 		},
     json = {
-      require("formatter.filetypes.json"),
+      require("formatter.filetypes.json").prettier,
     },
 		-- Use the special "*" filetype for defining formatter configurations on
 		-- any filetype

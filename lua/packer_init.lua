@@ -71,11 +71,14 @@ return packer.startup(function(use)
 		},
 	})
 
-	-- List of issues
+  -- Icons for Issues and for Telescope File Browser 
+  use ("nvim-tree/nvim-web-devicons")
 
+	-- List of issues
 	use({
 		"folke/trouble.nvim",
-		requires = "kyazdani42/nvim-web-devicons",
+    -- Installed directly
+		-- requires = "kyazdani42/nvim-web-s",
 		config = function()
 			require("trouble").setup({
 				-- your configuration comes here
