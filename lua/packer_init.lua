@@ -104,7 +104,9 @@ return packer.startup(function(use)
 	})
 
 	-- Provides visibility for changes compared to current git branch in the gutter
-	use("airblade/vim-gitgutter")
+  -- Replaced airblade because couldn't update it
+	-- use("airblade/vim-gitgutter")
+  use("lewis6991/gitsigns.nvim")
 
 	-- Help to jump anywhere (requires keybindings)
 	--  use {
@@ -149,6 +151,14 @@ return packer.startup(function(use)
 					"BufferLineBackground",
 					"BufferLineSeparator",
 					"BufferLineIndicatorSelected",
+          "SignColumn",
+          "GitGutter",
+          "GitSignsChangedelete",
+          "GitSignsAdd",
+          "GitSignsDelete",
+          "GitSignsTopdelete",
+          "GitSignsUntracked",
+          "GitSignsChange",
 				},
 				exclude_groups = {}, -- table: groups you don't want to clear
 			})
