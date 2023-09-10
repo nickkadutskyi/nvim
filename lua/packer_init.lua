@@ -15,7 +15,8 @@ packer.init({
 	compile_path = vim.fn.stdpath("data") .. "/site/pack/loader/start/packer.nvim/plugin/packer.lua",
 })
 return packer.startup(function(use)
-	use("wbthomason/packer.nvim")
+  -- Plugin manager
+  use("wbthomason/packer.nvim")
 
 	-- File search in current buffer
 	use({
@@ -138,7 +139,7 @@ return packer.startup(function(use)
 
 	-- Transparent background
 	use({
-		"xiyaowong/nvim-transparent",
+		"xiyaowong/transparent.nvim",
 		config = function()
 			require("transparent").setup({
 				extra_groups = { -- table/string: additional groups that should be cleared
