@@ -15,8 +15,8 @@ packer.init({
 	compile_path = vim.fn.stdpath("data") .. "/site/pack/loader/start/packer.nvim/plugin/packer.lua",
 })
 return packer.startup(function(use)
-  -- Plugin manager
-  use("wbthomason/packer.nvim")
+	-- Plugin manager
+	use("wbthomason/packer.nvim")
 
 	-- File search in current buffer
 	use({
@@ -72,13 +72,13 @@ return packer.startup(function(use)
 		},
 	})
 
-  -- Icons for Issues and for Telescope File Browser 
-  use ("nvim-tree/nvim-web-devicons")
+	-- Icons for Issues and for Telescope File Browser
+	use("nvim-tree/nvim-web-devicons")
 
 	-- List of issues
 	use({
 		"folke/trouble.nvim",
-    -- Installed directly
+		-- Installed directly
 		-- requires = "kyazdani42/nvim-web-s",
 		config = function()
 			require("trouble").setup({
@@ -105,9 +105,9 @@ return packer.startup(function(use)
 	})
 
 	-- Provides visibility for changes compared to current git branch in the gutter
-  -- Replaced airblade because couldn't update it
+	-- Replaced airblade because couldn't update it
 	-- use("airblade/vim-gitgutter")
-  use("lewis6991/gitsigns.nvim")
+	use("lewis6991/gitsigns.nvim")
 
 	-- Help to jump anywhere (requires keybindings)
 	--  use {
@@ -119,8 +119,13 @@ return packer.startup(function(use)
 	--    end
 	--  }
 
-	-- Shows sticky header for current context
-	use("nvim-treesitter/nvim-treesitter-context")
+	-- Context
+	-- Shows sticky header for current context (commented it because it caused lagged scrolling)
+	-- use("nvim-treesitter/nvim-treesitter-context")
+	use({
+		"SmiteshP/nvim-navic",
+		requires = "neovim/nvim-lspconfig",
+	})
 
 	-- Code formatter
 	-- use("sbdchd/neoformat")
@@ -133,6 +138,9 @@ return packer.startup(function(use)
 		-- 	require("cinnamon").setup()
 		-- end,
 	})
+
+	-- Smooth scrolling Neoscroll
+	-- use ('karb94/neoscroll.nvim')
 
 	-- Visual guides
 	use("xiyaowong/virtcolumn.nvim")
@@ -152,14 +160,14 @@ return packer.startup(function(use)
 					"BufferLineBackground",
 					"BufferLineSeparator",
 					"BufferLineIndicatorSelected",
-          "SignColumn",
-          "GitGutter",
-          "GitSignsChangedelete",
-          "GitSignsAdd",
-          "GitSignsDelete",
-          "GitSignsTopdelete",
-          "GitSignsUntracked",
-          "GitSignsChange",
+					"SignColumn",
+					"GitGutter",
+					"GitSignsChangedelete",
+					"GitSignsAdd",
+					"GitSignsDelete",
+					"GitSignsTopdelete",
+					"GitSignsUntracked",
+					"GitSignsChange",
 				},
 				exclude_groups = {}, -- table: groups you don't want to clear
 			})
