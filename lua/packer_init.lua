@@ -142,6 +142,9 @@ return packer.startup(function(use)
 	-- Smooth scrolling Neoscroll
 	-- use ('karb94/neoscroll.nvim')
 
+	-- Comments
+	use("terrortylor/nvim-comment")
+
 	-- Visual guides
 	use("xiyaowong/virtcolumn.nvim")
 
