@@ -13,7 +13,7 @@ require("cinnamon").setup({
 	default_delay = 3, -- The default delay (in ms) between each line when scrolling.
 	hide_cursor = false, -- Hide the cursor while scrolling. Requires enabling termguicolors!
 	horizontal_scroll = true, -- Enable smooth horizontal scrolling when view shifts left or right.
-	max_length = -1, -- Maximum length (in ms) of a command. The line delay will be
+	max_length = 350, -- Maximum length (in ms) of a command. The line delay will be
 	-- re-calculated. Setting to -1 will disable this option.
 	scroll_limit = 150, -- Max number of lines moved before scrolling is skipped. Setting
 	-- to -1 will disable this option.
