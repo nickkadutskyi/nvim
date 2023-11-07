@@ -1,6 +1,6 @@
 -- You don't need to set any of these options.
 -- IMPORTANT!: this is only a showcase of how you can set default options!
-local fb_actions = require "telescope".extensions.file_browser.actions
+local fb_actions = require("telescope").extensions.file_browser.actions
 require("telescope").setup({
 	defaults = {
 		-- Default configuration for telescope goes here:
@@ -22,6 +22,9 @@ require("telescope").setup({
 		-- }
 		-- Now the picker_config_key will be applied every time you call this
 		-- builtin picker
+		find_files = {
+			hidden = true,
+		},
 	},
 	extensions = {
 		fzf = {
@@ -39,11 +42,11 @@ require("telescope").setup({
 			mappings = {
 				["i"] = {
 					-- your custom insert mode mappings
-          ["<C-b>"] = fb_actions.goto_parent_dir
+					["<C-b>"] = fb_actions.goto_parent_dir,
 				},
 				["n"] = {
 					-- your custom normal mode mappings
-          ["b"] = fb_actions.goto_parent_dir
+					["b"] = fb_actions.goto_parent_dir,
 				},
 			},
 		},
