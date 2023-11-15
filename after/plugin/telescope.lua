@@ -13,6 +13,10 @@ require("telescope").setup({
 				["<C-h>"] = "which_key",
 			},
 		},
+    -- ignore in Go to file action
+    file_ignore_patterns = {
+      ".git"
+    }
 	},
 	pickers = {
 		-- Default configuration for builtin pickers goes here:
