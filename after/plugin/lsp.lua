@@ -1,19 +1,6 @@
 local lsp = require("lsp-zero")
 
-
 lsp.preset("recommended")
-
-
-
-lsp.ensure_installed({
-	"vimls",
-	"bashls",
-	"jsonls",
-	"lemminx",
-	"yamlls",
-	"intelephense",
-  "emmet_language_server"
-})
 
 lsp.set_preferences({
 	sign_icons = {
@@ -28,7 +15,7 @@ lsp.configure("intelephense", {
 	licenseKey = "00WS74ZNX2TKTI8",
 })
 
-lsp.nvim_workspace()
+-- lsp.nvim_workspace()
 
 -- Needed for nvim-navic
 lsp.on_attach(function(client, bufnr)
