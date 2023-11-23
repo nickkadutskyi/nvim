@@ -1,3 +1,4 @@
+print("-> /nvim/lua/packer_init.lua")
 local ensure_packer = function()
 	local fn = vim.fn
 	local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
@@ -77,18 +78,18 @@ return packer.startup(function(use)
 	use("nvim-tree/nvim-web-devicons")
 
 	-- List of issues
-	use({
-		"folke/trouble.nvim",
+	-- use({
+	--	"folke/trouble.nvim",
 		-- Installed directly
 		-- requires = "kyazdani42/nvim-web-s",
-		config = function()
-			require("trouble").setup({
+	--	config = function()
+	--		require("trouble").setup({
 				-- your configuration comes here
 				-- or leave it empty to use the default settings
 				-- refer to the configuration section below
-			})
-		end,
-	})
+	--		})
+	--	end,
+	-- })
 
 	-- Tree view
 	-- use({
