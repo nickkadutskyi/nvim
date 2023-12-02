@@ -28,6 +28,8 @@ require("telescope").setup({
 		-- builtin picker
 		find_files = {
 			hidden = true,
+      -- to include files in gitignore
+      -- no_ignore = true,
 		},
 	},
 	extensions = {
