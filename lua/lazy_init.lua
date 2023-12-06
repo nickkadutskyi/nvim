@@ -33,16 +33,21 @@ require("lazy").setup({
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 	},
+	{
+		"nvim-treesitter/playground",
+	},
 	-- Color themes
 	-- Config in ~/.config/nvim/after/plugin/color.lua
+	-- {
+	-- 	"rose-pine/neovim",
+	-- 	name = "rose-pine",
+	--     lazy = true
+	-- },
 	{
-		"rose-pine/neovim",
-		name = "rose-pine",
+		"devsjc/vim-jb",
+		name = "vim-jb",
+		lazy = true,
 	},
-  {
-    "devsjc/vim-jb",
-    name = "vim-jb"
-  },
 	-- Auto dark mode
 	-- Config in ~/.config/nvim/after/plugin/color.lua
 	{

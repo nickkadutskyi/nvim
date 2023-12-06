@@ -27,7 +27,7 @@ lsp.on_attach(function(client, bufnr)
 end)
 
 -- Updates statusline with Navic info
-vim.o.statusline = "%<%f %h%m%r %{%v:lua.require'nvim-navic'.get_location()%}%=%-14.(%l,%c%V%) %P"
+vim.o.statusline = "%<%f %h%m%r %{%v:lua.require'nvim-navic'.get_location()%} %=%-14.(%l,%c%V%) %P"
 
 lsp.setup()
 
