@@ -1,3 +1,4 @@
+-- Rose Pine configs
 require('rose-pine').setup({
 	--- @usage 'main' | 'moon'
 	dark_variant = 'main',
@@ -39,15 +40,25 @@ require('rose-pine').setup({
 	}
 })
 
+-- JB configs
+-- Enables intalics
+vim.g.jb_enable_italics = 1
+
+
+
 -- set colorscheme after options
-vim.cmd('colorscheme rose-pine')
+-- vim.cmd('colorscheme rose-pine')
 
 if os.getenv('theme') == 'light' or os.getenv('theme') == 'l' then
   vim.o.background = 'light'
+  vim.g.jb_style = 'light'
 else
   vim.o.background = 'dark'
+  vim.g.jb_style = 'dark'
 end
 
+-- enables jb theme
+vim.cmd('colorscheme jb')
 
 -- auto dark mode switch
 
@@ -57,10 +68,16 @@ auto_dark_mode.setup({
 	update_interval = 1000,
 	set_dark_mode = function()
 		vim.api.nvim_set_option('background', 'dark')
+    -- sets jb theme to dark and reenables it
+    vim.api.nvim_set_var('jb_style', 'dark')
+    vim.cmd('colorscheme jb')
 		-- vim.cmd('colorscheme gruvbox')
 	end,
 	set_light_mode = function()
 		vim.api.nvim_set_option('background', 'light')
+    -- sets jb theme to light and reenables it
+    vim.api.nvim_set_var('jb_style', 'light')
+    vim.cmd('colorscheme jb')
 		-- vim.cmd('colorscheme gruvbox')
 	end,
 })
