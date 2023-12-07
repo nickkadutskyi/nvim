@@ -186,6 +186,7 @@ require("lazy").setup(
 		},
 		{
 			"xiyaowong/transparent.nvim",
+      enabled = false,
 			config = function()
 				require("transparent").setup({
 					extra_groups = {
@@ -205,7 +206,9 @@ require("lazy").setup(
 						"GitSignsUntracked",
 						"GitSignsChange",
 					},
-					exclude_groups = {},
+					exclude_groups = {
+						"CursorLine", -- Exlcudes it to show highlight like in IntelliJ
+					},
 				})
 			end,
 		},
@@ -214,8 +217,8 @@ require("lazy").setup(
 	{
 		dev = {
 			path = "~/Developer/PE/0000",
-      patterns = { "nick-kadutskyi" },
-      fallback = true
+			patterns = { "nick-kadutskyi" },
+			fallback = true,
 		},
 	}
 )
