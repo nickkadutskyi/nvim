@@ -15,7 +15,7 @@ require("telescope").setup({
 		},
     -- ignore in Go to file action
     file_ignore_patterns = {
-      ".git"
+      "%.git%/*"
     }
 	},
 	pickers = {
@@ -43,6 +43,8 @@ require("telescope").setup({
 		file_browser = {
 			initial_mode = "normal",
 			theme = "ivy",
+      -- Includes files in gitignore
+      no_ignore = true,
 			-- disables netrw and use telescope-file-browser in its place
 			hijack_netrw = true,
 			mappings = {
