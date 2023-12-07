@@ -63,3 +63,8 @@ end)
 -- Move hightlighted code
 -- vnoremap( "<S-Up>", ":m '<-2<CR>gv=gv")
 -- vnoremap( "<S-Down>", ":m '>+1<CR>gv=gv")
+
+
+-- Treesitter Inspect builtin
+nnoremap('<leader>ti', ':Inspect<CR>')
+nnoremap('<leader>tti', ':Inspect<CR>')

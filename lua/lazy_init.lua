@@ -172,10 +172,6 @@ require("lazy").setup(
 		{
 			"mhartington/formatter.nvim",
 		},
-		-- Smooth scrolling
-		{
-			"declancm/cinnamon.nvim",
-		},
 		-- Comments
 		{
 			"terrortylor/nvim-comment",
