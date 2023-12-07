@@ -41,6 +41,7 @@ require("lazy").setup(
 		-- Color themes
 		-- Config in ~/.config/nvim/after/plugin/color.lua
 		{
+			-- "devsjs/vim-jb",
 			"nick-kadutskyi/vim-jb",
 			name = "vim-jb",
 			lazy = true,

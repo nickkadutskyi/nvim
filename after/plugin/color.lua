@@ -13,7 +13,6 @@ local theme = os.getenv("theme")
 if theme == nil then
 	-- Only start auto dark mode switcher if theme env var wasn't used
 	auto_dark_mode.setup({
-		update_interval = 1000,
 		set_dark_mode = function()
 			vim.api.nvim_set_var("jb_style", "dark")
 			vim.cmd("colorscheme jb")
@@ -32,7 +31,6 @@ else
 	elseif theme == "mid" or theme == "m" then
 		vim.g.jb_style = "mid"
 	end
-  -- enables colorscheme after config
+	-- enables colorscheme after config
 	vim.cmd("colorscheme jb")
 end
-
