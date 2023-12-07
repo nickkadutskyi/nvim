@@ -61,7 +61,7 @@ require("lazy").setup(
 			"tpope/vim-fugitive",
 		},
 		-- Shows sticky header for current context
-		{
+    {
 			"SmiteshP/nvim-navic",
 			dependencies = { "neovim/nvim-lspconfig" },
 		},
