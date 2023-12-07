@@ -67,4 +67,4 @@ end)
 
 -- Treesitter Inspect builtin
 nnoremap('<leader>ti', ':Inspect<CR>')
-nnoremap('<leader>tti', ':Inspect<CR>')
+nnoremap('<leader>tti', ':InspectTree<CR>')

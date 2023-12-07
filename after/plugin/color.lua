@@ -32,7 +32,7 @@ else
 	elseif theme == "mid" or theme == "m" then
 		vim.g.jb_style = "mid"
 	end
+  -- enables colorscheme after config
+	vim.cmd("colorscheme jb")
 end
 
--- enables jb theme after configuration
-vim.cmd("colorscheme jb")
