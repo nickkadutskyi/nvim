@@ -62,7 +62,7 @@ require("lazy").setup(
 			"tpope/vim-fugitive",
 		},
 		-- Shows sticky header for current context
-    {
+		{
 			"SmiteshP/nvim-navic",
 			dependencies = { "neovim/nvim-lspconfig" },
 		},
@@ -168,6 +168,22 @@ require("lazy").setup(
 		{
 			"lewis6991/gitsigns.nvim",
 		},
+		-- Scrollbar
+		{
+			"petertriho/nvim-scrollbar",
+			config = function()
+				require("scrollbar").setup({
+					marks = {
+						GitAdd = {
+							text = "│",
+						},
+						GitChange = {
+							text = "│",
+						},
+					},
+				})
+			end,
+		},
 		-- Code formatter
 		-- Config ~/.config/nvim/after/plugin/formatter.lua
 		{
@@ -183,7 +199,7 @@ require("lazy").setup(
 		},
 		{
 			"xiyaowong/transparent.nvim",
-      enabled = false,
+			enabled = false,
 			config = function()
 				require("transparent").setup({
 					extra_groups = {
