@@ -52,9 +52,6 @@ autocmd("ColorScheme", {
 	group = "JBHiglights",
 	pattern = "*",
 	callback = function()
-    -- Sets treesitter queries because they doesn't work for PHP
-    -- require("vim.treesitter.query").set("php", "highlights", '"?>" @tag')
-    -- require("vim.treesitter.query").set("php", "highlights", '"?>" @tag')
 		vim.api.nvim_set_hl(0, "@variable.php", { link = "JBConstant" })
 		vim.api.nvim_set_hl(0, "@namespace.php", { link = "Normal" })
 		vim.api.nvim_set_hl(0, "@type.php", { link = "Normal" })
@@ -62,14 +59,6 @@ autocmd("ColorScheme", {
 		vim.api.nvim_set_hl(0, "@tag.attribute", { link = "Normal" })
 		vim.api.nvim_set_hl(0, "@constructor.php", { link = "Normal" })
 		vim.api.nvim_set_hl(0, "@tag.php", { link = "JBKeyword" })
-
-    -- vim.api.nvim_command("redraw")
-    -- print(require("vim.treesitter.query").get('php',"@tag"))
-		-- vim.api.nvim_set_hl(0, "@tag", { link = "JBConstant" })
-
-		-- vim.api.nvim_set_hl(0, "@tag.php", { link = "JBKeyword" })
-		-- vim.api.nvim_set_hl(0, "@type.php", { link = "JBType" })
-		-- vim.api.nvim_set_hl(0, "phpFunction", { link = "JBFunction" })
 	end,
 })
 
@@ -77,10 +66,10 @@ autocmd("ColorScheme", {
 -- vim.cmd('colorscheme rose-pine')
 
 if os.getenv("theme") == "light" or os.getenv("theme") == "l" then
-	vim.o.background = "light"
+	-- vim.o.background = "light"
 	vim.g.jb_style = "light"
 else
-	vim.o.background = "dark"
+	-- vim.o.background = "dark"
 	vim.g.jb_style = "dark"
 end
 
