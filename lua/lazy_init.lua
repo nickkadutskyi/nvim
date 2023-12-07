@@ -40,16 +40,11 @@ require("lazy").setup(
 		},
 		-- Color themes
 		-- Config in ~/.config/nvim/after/plugin/color.lua
-		-- {
-		-- 	"rose-pine/neovim",
-		-- 	name = "rose-pine",
-		--     lazy = true
-		-- },
 		{
 			"nick-kadutskyi/vim-jb",
 			name = "vim-jb",
 			lazy = true,
-			dev = true,
+			dev = true, -- theme is in dev but falls back to my public GitHub repo
 		},
 		-- Auto dark mode
 		-- Config in ~/.config/nvim/after/plugin/color.lua
