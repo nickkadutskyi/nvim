@@ -83,7 +83,14 @@ require("lazy").setup(
 			"williamboman/mason.nvim",
 			lazy = false,
 			-- Uses default implementation
-			config = true,
+			-- config = true,
+			config = function()
+				require("mason").setup({
+					ui = {
+						border = "single",
+					},
+				})
+			end,
 		},
 
 		-- Autocompletion
@@ -236,6 +243,10 @@ require("lazy").setup(
 	},
 	-- Configs
 	{
+		ui = {
+			border = "single",
+			title = " Plugin Manager ",
+		},
 		dev = {
 			path = "~/Developer/PE/0000",
 			patterns = { "nick-kadutskyi" },
