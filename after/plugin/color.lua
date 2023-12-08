@@ -1,15 +1,22 @@
 -- JB configs
---
 -- Enables intalics
 vim.g.jb_enable_italics = 1
 -- Sets default light style
 vim.g.jb_style = "light"
+
+-- Sets default jb_style based on time
+local hr = tonumber(vim.fn.strftime('%_H'))
+if hr >= 21 or hr <= 6 then
+  vim.g.jb_style = "dark"
+end
 
 -- Read hardcoded style from bash var
 local theme = os.getenv("theme")
 
 if theme == nil then
 	-- Only start auto dark mode switcher if theme env var wasn't used
+  -- enables default color
+  vim.cmd("colorscheme jb")
 	require("auto-dark-mode").setup({
 		set_dark_mode = function()
 			vim.api.nvim_set_var("jb_style", "dark")
