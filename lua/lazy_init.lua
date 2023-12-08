@@ -173,6 +173,14 @@ require("lazy").setup(
 			"petertriho/nvim-scrollbar",
 			config = function()
 				require("scrollbar").setup({
+					handlers = {
+						-- to show my position in doc
+						cursor = true,
+						-- to see if I have any changes
+						gitsigns = true,
+						-- disables handle because it works shitty
+						handle = false,
+					},
 					marks = {
 						GitAdd = {
 							text = "│",
