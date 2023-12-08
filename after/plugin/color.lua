@@ -1,5 +1,3 @@
-local auto_dark_mode = require("auto-dark-mode")
-
 -- JB configs
 --
 -- Enables intalics
@@ -12,7 +10,7 @@ local theme = os.getenv("theme")
 
 if theme == nil then
 	-- Only start auto dark mode switcher if theme env var wasn't used
-	auto_dark_mode.setup({
+	require("auto-dark-mode").setup({
 		set_dark_mode = function()
 			vim.api.nvim_set_var("jb_style", "dark")
 			vim.cmd("colorscheme jb")
