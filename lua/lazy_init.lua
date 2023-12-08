@@ -87,7 +87,7 @@ require("lazy").setup(
 			config = function()
 				require("mason").setup({
 					ui = {
-						border = "single",
+						border = "rounded",
 					},
 				})
 			end,
@@ -244,8 +244,8 @@ require("lazy").setup(
 	-- Configs
 	{
 		ui = {
-			border = "single",
-			title = " Plugin Manager ",
+			border = "rounded",
+			title = {{" Plugin Manager ", "JBFloatBorder"}},
 		},
 		dev = {
 			path = "~/Developer/PE/0000",
