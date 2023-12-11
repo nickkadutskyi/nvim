@@ -17,11 +17,19 @@ require("neo-tree").setup({
 		position = "float",
 		popup = { -- settings that apply to float position only
 			size = { width = "65" },
-      -- position = { row  =20, col = 10},
+			-- position = { row  =20, col = 10},
 			position = "0%",
-      col = 10,
-      row =10
+			col = 10,
+			row = 10,
+			border = {
+				text = {
+					-- top = " Project ",
+				},
+				style = "rounded",
+        highlight = "Normal",
+			},
 		},
+		title = "Project",
 	},
 	popup_border_style = "rounded",
 })
