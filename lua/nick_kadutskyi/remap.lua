@@ -1,24 +1,36 @@
+local fzf = require("fzf-lua")
 local nnoremap = require("nick_kadutskyi.keymap").nnoremap
 -- local vnoremap = require("nick_kadutskyi.keymap").vnoremap
-local builtin = require("telescope.builtin")
+-- local builtin = require("telescope.builtin")
 
--- General
+-- Browser Neotree and Netrw
 --
 -- Go back to Netrw
 nnoremap("<leader>pv", "<cmd>Ex<CR>")
+nnoremap("<leader>fb", ":Neotree float<CR>")
+nnoremap("<leader>fg", ":Neotree git_status<CR>")
+
 
 -- Telescope
 --
--- Search project files (Go to File)
-nnoremap("<leader>gf", builtin.find_files, {})
--- Live grep in project files (Find in Path)
-nnoremap("<leader>fp", builtin.live_grep, {})
+-- Search project files (Go to File) → Switched to Fzf-lua
+-- nnoremap("<leader>gf", builtin.find_files, {})
+-- Live grep in project files (Find in Path) → Switched to Fzf-lua
+-- nnoremap("<leader>fp", builtin.live_grep, {})
 -- Search git files (git ls-files)
-nnoremap("<C-p>", builtin.git_files, {})
--- Lists open buffers in current neovim instance
-nnoremap("<leader>gb", builtin.buffers, {})
+-- nnoremap("<C-p>", builtin.git_files, {})
+-- Lists open buffers in current neovim instance → Switched to Fzf-lua
+-- nnoremap("<leader>gb", builtin.buffers, {})
 -- File browser action
-nnoremap("<leader>fb", ":Telescope file_browser<CR>")
+-- nnoremap("<leader>fb", ":Telescope file_browser<CR>")
+
+
+-- Fzf-lua
+--
+nnoremap('<leader>gf', fzf.files, {})
+nnoremap('<leader>fp', fzf.live_grep, {})
+nnoremap('<leader>gb', fzf.buffers, {})
+
 
 -- Neoformat
 --

@@ -16,18 +16,16 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup(
 	-- Plugins
 	{
-		-- File search in current buffer
-		-- Config in ~/.config/nvim/after/plugin/telescope.lua
+		-- Neo tree file browser
 		{
-			"nvim-telescope/telescope.nvim",
-			branch = "0.1.x",
-			dependencies = { "nvim-lua/plenary.nvim" },
-		},
-		-- Telescope file browser action
-		-- Config in ~/.config/nvim/after/plugin/telescope.lua
-		{
-			"nvim-telescope/telescope-file-browser.nvim",
-			dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
+			"nvim-neo-tree/neo-tree.nvim",
+			branch = "v3.x",
+			dependencies = {
+				"nvim-lua/plenary.nvim",
+				"nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
+				"MunifTanjim/nui.nvim",
+				-- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+			},
 		},
 		-- Treesitter for syntax highlight
 		-- Config in ~/.config/nvim/after/plugin/tresitter.lua
@@ -166,10 +164,12 @@ require("lazy").setup(
 		{
 			"nvim-tree/nvim-web-devicons",
 		},
-		-- Provides connection of telescope with fzf (fuzzy search)
+		-- faster fzf in case of a large project
+		-- DEPENDENCIES: Linux or Mac, fzf or skim, OPTIONAL: fd, rg, bat, delta, chafa
 		{
-			"nvim-telescope/telescope-fzf-native.nvim",
-			build = "make",
+			"ibhagwan/fzf-lua",
+			-- optional for icon support
+			dependencies = { "nvim-tree/nvim-web-devicons" },
 		},
 		-- Visibility for changes comparde to current git branch in the gutter
 		{
@@ -245,7 +245,7 @@ require("lazy").setup(
 	{
 		ui = {
 			border = "rounded",
-			title = {{" Plugin Manager ", "JBFloatBorder"}},
+			title = { { " Plugin Manager ", "JBFloatBorder" } },
 		},
 		dev = {
 			path = "~/Developer/PE/0000",
