@@ -10,7 +10,6 @@ nnoremap("<leader>pv", "<cmd>Ex<CR>")
 nnoremap("<leader>fb", ":Neotree float<CR>")
 nnoremap("<leader>fg", ":Neotree git_status<CR>")
 
-
 -- Telescope
 --
 -- Search project files (Go to File) → Switched to Fzf-lua
@@ -24,13 +23,24 @@ nnoremap("<leader>fg", ":Neotree git_status<CR>")
 -- File browser action
 -- nnoremap("<leader>fb", ":Telescope file_browser<CR>")
 
-
 -- Fzf-lua
 --
-nnoremap('<leader>gf', fzf.files, {})
-nnoremap('<leader>fp', fzf.live_grep, {})
-nnoremap('<leader>gb', fzf.buffers, {})
-
+nnoremap("<leader>gf", function()
+	-- closes Neotree to prevent a bug
+	require("neo-tree").close_all()
+	-- opens Fzf file search
+	fzf.files()
+end, {})
+nnoremap("<leader>gc", fzf.lsp_live_workspace_symbols, {})
+nnoremap("<leader>gs", function()
+	fzf.lsp_live_workspace_symbols({
+		-- prompt = "Sho",
+    -- lsp_query = "sho"
+    -- lsp_params = {}
+	})
+end, {})
+nnoremap("<leader>fp", fzf.live_grep, {})
+nnoremap("<leader>gb", fzf.buffers, {})
 
 -- Neoformat
 --
@@ -46,7 +56,7 @@ nnoremap("<leader>u", ":UndotreeToggle<CR>")
 -- Vim Fuigitive
 --
 -- Git Satus
-nnoremap("<leader>gs", ":Git<CR>")
+-- nnoremap("<leader>gs", ":Git<CR>")
 
 -- Trouble
 --
