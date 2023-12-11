@@ -6,7 +6,8 @@ vim.g.jb_style = "light"
 
 -- Sets default jb_style based on time
 local hr = tonumber(vim.fn.strftime('%_H'))
-if hr ~= nil and  hr >= 21 or hr <= 6 then
+
+if hr ~= nil and ( hr >= 21 or hr <= 6) then
   vim.g.jb_style = "dark"
 end
 
