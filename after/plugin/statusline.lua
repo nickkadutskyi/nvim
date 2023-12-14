@@ -16,7 +16,7 @@ end
 
 local function getGitBranch()
 	if vim.b.gitsigns_status_dict ~= nil then
-		return "(" .. vim.b.gitsigns_status_dict.head .. ") "
+		return vim.b.gitsigns_status_dict.head .. " "
 	else
 		return ""
 	end
