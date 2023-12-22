@@ -7,8 +7,6 @@ local nnoremap = require("nick_kadutskyi.keymap").nnoremap
 --
 -- Go back to Netrw
 nnoremap("<leader>pv", "<cmd>Ex<CR>")
-nnoremap("<leader>fb", ":Neotree float<CR>")
-nnoremap("<leader>fg", ":Neotree git_status<CR>")
 
 -- Telescope
 --
@@ -26,9 +24,6 @@ nnoremap("<leader>fg", ":Neotree git_status<CR>")
 -- Fzf-lua
 --
 nnoremap("<leader>gf", function()
-	-- closes Neotree to prevent a bug
-	require("neo-tree").close_all()
-	-- opens Fzf file search
 	fzf.files()
 end, {})
 nnoremap("<leader>gc", fzf.lsp_live_workspace_symbols, {})
