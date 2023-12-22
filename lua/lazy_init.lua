@@ -22,13 +22,10 @@ require("lazy").setup(
 			"nvim-treesitter/nvim-treesitter",
 			build = ":TSUpdate",
 		},
-		{
-			"nvim-treesitter/playground",
-		},
-		-- Color themes
+		-- Color theme
 		-- Config in ~/.config/nvim/after/plugin/color.lua
 		{
-			-- "devsjs/vim-jb",
+			-- "devsjs/vim-jb", -- Forked my theme from this one
 			"nick-kadutskyi/vim-jb",
 			name = "vim-jb",
 			lazy = true,
@@ -38,11 +35,6 @@ require("lazy").setup(
 		-- Config in ~/.config/nvim/after/plugin/color.lua
 		{
 			"f-person/auto-dark-mode.nvim",
-		},
-		-- Undo Tree
-		-- Config in ~/.config/nvim/after/plugin/undotree.lua
-		{
-			"mbbill/undotree",
 		},
 		-- Git plugin
 		{
