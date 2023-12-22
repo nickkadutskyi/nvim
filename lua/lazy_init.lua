@@ -137,11 +137,7 @@ require("lazy").setup(
 		},
 		-- ZERO LSP END
 		--
-		-- Icons for Issues and for Telescope File Browser
-		{
-			"nvim-tree/nvim-web-devicons",
-		},
-		-- faster fzf in case of a large project
+		-- Faster fzf in case of a large project
 		-- DEPENDENCIES: Linux or Mac, fzf or skim, OPTIONAL: fd, rg, bat, delta, chafa
 		{
 			"ibhagwan/fzf-lua",
@@ -152,7 +148,7 @@ require("lazy").setup(
 		{
 			"lewis6991/gitsigns.nvim",
 		},
-		-- Scrollbar
+		-- Scrollbar to also show git changes not visible in current view
 		{
 			"petertriho/nvim-scrollbar",
 			config = function()
@@ -176,7 +172,7 @@ require("lazy").setup(
 				})
 			end,
 		},
-		-- Code formatter
+		-- Code formatter - probably need a better one
 		-- Config ~/.config/nvim/after/plugin/formatter.lua
 		{
 			"mhartington/formatter.nvim",
@@ -188,34 +184,6 @@ require("lazy").setup(
 		-- Visual guides
 		{
 			"xiyaowong/virtcolumn.nvim",
-		},
-		{
-			"xiyaowong/transparent.nvim",
-			enabled = false,
-			config = function()
-				require("transparent").setup({
-					extra_groups = {
-						-- example of akinsho/nvim-bufferline.lua
-						"BufferLineTabClose",
-						"BufferlineBufferSelected",
-						"BufferLineFill",
-						"BufferLineBackground",
-						"BufferLineSeparator",
-						"BufferLineIndicatorSelected",
-						"SignColumn",
-						"GitGutter",
-						"GitSignsChangedelete",
-						"GitSignsAdd",
-						"GitSignsDelete",
-						"GitSignsTopdelete",
-						"GitSignsUntracked",
-						"GitSignsChange",
-					},
-					exclude_groups = {
-						"CursorLine", -- Exlcudes it to show highlight like in IntelliJ
-					},
-				})
-			end,
 		},
 	},
 	-- Configs
