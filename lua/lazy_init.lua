@@ -36,7 +36,7 @@ require("lazy").setup(
 		{
 			"f-person/auto-dark-mode.nvim",
 		},
-		-- Git plugin
+		-- Git plugin - consider deleting it
 		{
 			"tpope/vim-fugitive",
 		},
