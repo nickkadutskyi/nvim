@@ -11,10 +11,6 @@ lsp.set_preferences({
 	},
 })
 
-lsp.configure("intelephense", {
-	licenseKey = "00WS74ZNX2TKTI8",
-})
-
 -- lsp.nvim_workspace()
 
 -- Needed for nvim-navic
