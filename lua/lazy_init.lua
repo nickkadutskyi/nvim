@@ -36,11 +36,7 @@ require("lazy").setup(
 		{
 			"f-person/auto-dark-mode.nvim",
 		},
-		-- Git plugin - consider deleting it
-		{
-			"tpope/vim-fugitive",
-		},
-		-- Shows sticky header for current context
+		-- Adds location in status line
 		{
 			"SmiteshP/nvim-navic",
 			dependencies = { "neovim/nvim-lspconfig" },
