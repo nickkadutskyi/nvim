@@ -6,7 +6,7 @@ local nnoremap = require("nick_kadutskyi.keymap").nnoremap
 -- Browser Neotree and Netrw
 --
 -- Go back to Netrw
-nnoremap("<leader>pv", "<cmd>Ex<CR>")
+nnoremap("<leader>pv", "<cmd>Ex<CR><CR>")
 
 -- Telescope
 --
