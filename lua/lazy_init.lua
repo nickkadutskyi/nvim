@@ -148,6 +148,10 @@ require("lazy").setup(
 		{
 			"lewis6991/gitsigns.nvim",
 		},
+    -- For git diff
+    {
+      "tpope/vim-fugitive"
+    },
 		-- Scrollbar to also show git changes not visible in current view
 		{
 			"petertriho/nvim-scrollbar",
