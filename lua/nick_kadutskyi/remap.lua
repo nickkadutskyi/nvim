@@ -1,9 +1,6 @@
 local fzf = require("fzf-lua")
 local nnoremap = require("nick_kadutskyi.keymap").nnoremap
 
--- Go back to Netrw
-nnoremap("<leader>pv", "<cmd>Ex<CR><CR>")
-
 -- Fzf-lua
 --
 -- Go to file
