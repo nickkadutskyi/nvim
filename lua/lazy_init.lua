@@ -148,10 +148,10 @@ require("lazy").setup(
 		{
 			"lewis6991/gitsigns.nvim",
 		},
-    -- For git diff
-    {
-      "tpope/vim-fugitive"
-    },
+		-- For git diff
+		{
+			"tpope/vim-fugitive",
+		},
 		-- Scrollbar to also show git changes not visible in current view
 		{
 			"petertriho/nvim-scrollbar",
@@ -188,6 +188,47 @@ require("lazy").setup(
 		-- Visual guides
 		{
 			"xiyaowong/virtcolumn.nvim",
+		},
+		{
+			"epwalsh/obsidian.nvim",
+			version = "*", -- recommended, use latest release instead of latest commit
+			lazy = true,
+			ft = "markdown",
+			-- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
+			-- event = {
+			--   -- If you want to use the home shortcut '~' here you need to call 'vim.fn.expand'.
+			--   -- E.g. "BufReadPre " .. vim.fn.expand "~" .. "/my-vault/**.md"
+			--   "BufReadPre path/to/my-vault/**.md",
+			--   "BufNewFile path/to/my-vault/**.md",
+			-- },
+			dependencies = {
+				-- Required.
+				"nvim-lua/plenary.nvim",
+
+				-- see below for full list of optional dependencies 👇
+			},
+			opts = {
+				-- see below for full list of options 👇
+				follow_url_func = function(url)
+					-- Open the URL in the default web browser.
+					vim.fn.jobstart({ "open", url }) -- Mac OS
+					-- vim.fn.jobstart({"xdg-open", url})  -- linux
+				end,
+				ui = {
+					hl_groups = {
+						-- The options are passed directly to `vim.api.nvim_set_hl()`. See `:help nvim_set_hl`.
+						-- ObsidianTodo = { bold = true, fg = "#f78c6c" },
+						-- ObsidianDone = { bold = true, fg = "#89ddff" },
+						ObsidianRightArrow = { bold = true, fg = "#f78c6c" },
+						ObsidianTilde = { bold = true, fg = "#ff5370" },
+						ObsidianRefText = { underline = true, fg = "#c792ea" },
+						ObsidianExtLinkIcon = { fg = "#c792ea" },
+						ObsidianTag = { italic = true, underline = true, cterm = { underline = true} },
+						-- ObsidianHighlightText = { bg = "#75662e" },
+						ObsidianHighlightText = { bg = "#FAECA1" },
+					},
+				},
+			},
 		},
 	},
 	-- Configs

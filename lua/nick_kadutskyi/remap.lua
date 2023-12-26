@@ -45,3 +45,12 @@ nnoremap("<leader>tti", ":InspectTree<CR>")
 -- Exit search mode
 nnoremap("<leader>/h", ":noh<CR>")
 nnoremap("<leader>/c", ':noh | let@/ = "" | call histdel("/", ".*") | wshada!<CR>')
+
+-- Obsidian
+vim.keymap.set("n", "fl", function()
+	if require("obsidian").util.cursor_on_markdown_link() then
+		return "<cmd>ObsidianFollowLink<CR>"
+	else
+		return "fl"
+	end
+end, { noremap = false, expr = true })
