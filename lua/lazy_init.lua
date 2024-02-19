@@ -85,6 +85,10 @@ require("lazy").setup(
 				local cmp_action = lsp_zero.cmp_action()
 
 				cmp.setup({
+					preselect = "item",
+					completion = {
+						completeopt = "menu,menuone,noinsert",
+					},
 					formatting = lsp_zero.cmp_format(),
 					mapping = cmp.mapping.preset.insert({
 						["<C-Space>"] = cmp.mapping.complete(),
@@ -92,6 +96,8 @@ require("lazy").setup(
 						["<C-d>"] = cmp.mapping.scroll_docs(4),
 						["<C-f>"] = cmp_action.luasnip_jump_forward(),
 						["<C-b>"] = cmp_action.luasnip_jump_backward(),
+						-- Confirm completion with enter
+						["<CR>"] = cmp.mapping.confirm({ select = true }),
 					}),
 				})
 			end,
@@ -130,6 +136,20 @@ require("lazy").setup(
 							-- (Optional) Configure lua language server for neovim
 							local lua_opts = lsp_zero.nvim_lua_ls()
 							require("lspconfig").lua_ls.setup(lua_opts)
+						end,
+						emmet_ls = function()
+							require("lspconfig").emmet_ls.setup({
+								filetypes = {
+									"html",
+									"css",
+									-- […]
+									"php",
+									"sass",
+									"scss",
+									"vue",
+									"javascript",
+								},
+							})
 						end,
 					},
 				})
@@ -215,7 +235,7 @@ require("lazy").setup(
 					-- vim.fn.jobstart({"xdg-open", url})  -- linux
 				end,
 				ui = {
-          enable=false,
+					enable = false,
 					hl_groups = {
 						-- The options are passed directly to `vim.api.nvim_set_hl()`. See `:help nvim_set_hl`.
 						-- ObsidianTodo = { bold = true, fg = "#f78c6c" },
@@ -224,7 +244,7 @@ require("lazy").setup(
 						ObsidianTilde = { bold = true, fg = "#ff5370" },
 						ObsidianRefText = { underline = true, fg = "#c792ea" },
 						ObsidianExtLinkIcon = { fg = "#c792ea" },
-						ObsidianTag = { italic = true, underline = true, cterm = { underline = true} },
+						ObsidianTag = { italic = true, underline = true, cterm = { underline = true } },
 						-- ObsidianHighlightText = { bg = "#75662e" },
 						ObsidianHighlightText = { bg = "#FAECA1" },
 					},
