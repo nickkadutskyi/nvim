@@ -1,6 +1,6 @@
 local fzf = require("fzf-lua")
 local nnoremap = require("nick_kadutskyi.keymap").nnoremap
-
+local conform = require("conform")
 -- Fzf-lua
 --
 -- Go to file
@@ -18,7 +18,10 @@ nnoremap("<leader>gb", fzf.buffers, {})
 --
 -- Reformat Code
 -- nnoremap('<leader>cf', ':Neoformat<CR>')
-nnoremap("<leader>cf", ":Format<CR>")
+nnoremap("<leader>cf", function()
+	conform.format({ lsp_fallback = true })
+end)
+nnoremap("<leader>clf", vim.lsp.buf.format)
 
 -- Vim Fuigitive
 --

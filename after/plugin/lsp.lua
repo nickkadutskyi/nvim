@@ -22,4 +22,16 @@ lsp.on_attach(function(client, bufnr)
 	end
 end)
 
+-- LSP Formatters
+lsp.format_mapping("gq", {
+	format_opts = {
+		async = true,
+		timeout_ms = 10000,
+	},
+	servers = {
+		["prettierd"] = { "javascript", "typescript" },
+		["rust_analyzer"] = { "rust" },
+	},
+})
+
 lsp.setup()

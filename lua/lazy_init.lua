@@ -239,10 +239,11 @@ require("lazy").setup(
 				})
 			end,
 		},
-		-- Code formatter - probably need a better one
+		-- Code formatter
 		-- Config ~/.config/nvim/after/plugin/formatter.lua
 		{
-			"mhartington/formatter.nvim",
+			"stevearc/conform.nvim",
+			opts = {},
 		},
 		-- Comments
 		{
