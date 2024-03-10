@@ -16,6 +16,49 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup(
 	-- Plugins
 	{
+		-- Disables treesitter if the file has 100000 cols wide lines
+		{
+			"LunarVim/bigfile.nvim",
+			lazy = false,
+			event = { "FileReadPre", "BufReadPre", "User FileOpened" },
+			config = function()
+				require("bigfile").setup({
+					-- filesize = 5, -- size of the file in MiB, the plugin round file sizes to the closest MiB
+					-- pattern = { "*" }, -- autocmd pattern or function see <### Overriding the detection of big files>
+					pattern = function(bufnr, filesize_mib)
+						-- you can't use `nvim_buf_line_count` because this runs on BufReadPre
+						local file_contents = vim.fn.readfile(vim.api.nvim_buf_get_name(bufnr))
+						-- local file_length = #file_contents
+						-- local filetype = vim.filetype.match({ buf = bufnr })
+						local longest = 0
+						for k, v in pairs(file_contents) do
+							local len = #v
+							if len > longest then
+								longest = #v
+								if len > 100000 then
+									break
+								end
+							end
+						end
+
+						if longest > 100000 then
+							print("Treesitter is disabled due to file containing 100k col wide lines")
+							return true
+						end
+					end,
+					features = { -- features to disable
+						-- "indent_blankline",
+						-- "illuminate",
+						-- "lsp",
+						"treesitter",
+						-- "syntax",
+						-- "matchparen",
+						-- "vimopts",
+						-- "filetype",
+					},
+				})
+			end,
+		},
 		-- Treesitter for syntax highlight
 		-- Config in ~/.config/nvim/after/plugin/tresitter.lua
 		{
