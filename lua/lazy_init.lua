@@ -35,13 +35,13 @@ require("lazy").setup(
 							local len = #v
 							if len > longest then
 								longest = #v
-								if len > 100000 then
+								if len > 50000 then
 									break
 								end
 							end
 						end
 
-						if longest > 100000 then
+						if longest > 50000 then
 							print("Treesitter is disabled due to file containing 100k col wide lines")
 							return true
 						end
