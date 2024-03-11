@@ -19,7 +19,7 @@ nnoremap("<leader>gb", fzf.buffers, {})
 -- Reformat Code
 -- nnoremap('<leader>cf', ':Neoformat<CR>')
 nnoremap("<leader>cf", function()
-	conform.format({ lsp_fallback = true })
+  conform.format({ lsp_fallback = true })
 end)
 nnoremap("<leader>clf", vim.lsp.buf.format)
 
@@ -51,9 +51,9 @@ nnoremap("<leader>/c", ':noh | let@/ = "" | call histdel("/", ".*") | wshada!<CR
 
 -- Obsidian
 vim.keymap.set("n", "fl", function()
-	if require("obsidian").util.cursor_on_markdown_link() then
-		return "<cmd>ObsidianFollowLink<CR>"
-	else
-		return "fl"
-	end
+  if require("obsidian").util.cursor_on_markdown_link() then
+    return "<cmd>ObsidianFollowLink<CR>"
+  else
+    return "fl"
+  end
 end, { noremap = false, expr = true })
