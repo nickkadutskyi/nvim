@@ -24,7 +24,7 @@ end
 
 local function getSearchCount()
 	local sc = vim.fn.searchcount()
-	if sc.total ~= nil then
+	if sc.total ~= nil and sc.current ~= 0 then
 		return sc.current .. "/" .. sc.total .. " "
 	else
 		return ""
