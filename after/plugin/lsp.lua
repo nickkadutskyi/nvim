@@ -19,9 +19,6 @@ lsp.set_preferences({
 lsp.on_attach(function(client, bufnr)
   lsp.default_keymaps({ buffer = bufnr })
 
-  -- Disabled semantic tokens before I deal with highlights
-  client.server_capabilities.semanticTokensProvider = nil
-
   if client.server_capabilities.documentSymbolProvider then
     require("nvim-navic").attach(client, bufnr)
   end
