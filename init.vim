@@ -1,3 +1,4 @@
+" Define as much as possible in .vimrc to share configs with vim and ideavim
 if filereadable(expand("~/.vimrc"))
     source ~/.vimrc
 endif
@@ -6,5 +7,4 @@ endif
 lua require("lazy_init")
 lua require("nick_kadutskyi")
 
-" Plugins in lazy require make, g++, gcc, fd-find, ripgrep
-" Works good with nvim 0.9.4
+" Works good with nvim 0.9.5
