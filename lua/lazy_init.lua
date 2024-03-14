@@ -16,8 +16,8 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup(
 -- Plugins
   {
-    -- AI Assistant
-    { "github/copilot.vim" },
+    'tpope/vim-sleuth',   -- Detect tabstop and shiftwidth automatically
+    "github/copilot.vim", -- AI Assistant
     -- Disables treesitter if the file has 100000 cols wide lines
     {
       "LunarVim/bigfile.nvim",
