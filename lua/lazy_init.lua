@@ -250,7 +250,11 @@ require("lazy").setup(
     },
     -- Comments
     {
-      "terrortylor/nvim-comment",
+      'numToStr/Comment.nvim',
+      opts = {
+        -- add any options here
+      },
+      lazy = false,
     },
     -- Visual guides
     {
