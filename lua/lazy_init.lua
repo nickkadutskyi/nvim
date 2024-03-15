@@ -14,10 +14,30 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Initializing lazy.nvim
 require("lazy").setup(
--- Plugins
   {
     'tpope/vim-sleuth',   -- Detect tabstop and shiftwidth automatically
     "github/copilot.vim", -- AI Assistant
+    {                     -- Useful plugin to show you pending keybinds.
+      'folke/which-key.nvim',
+      event = 'VimEnter', -- Sets the loading event to 'VimEnter'
+      config = function() -- This is the function that runs, AFTER loading
+        require('which-key').setup()
+
+        -- Document existing key chains
+        require('which-key').register {
+          ['<leader>c'] = { name = '[C]hange & keep register', _ = 'which_key_ignore' },
+          ['<leader>C'] = { name = '[C]hange line & keep register', _ = 'which_key_ignore' },
+          ['<leader>d'] = { name = '[D]elete & keep register', _ = 'which_key_ignore' },
+          ['<leader>D'] = { name = '[D]elete line & keep register', _ = 'which_key_ignore' },
+          ['<leader>x'] = { name = '[D]elete char & keep register', _ = 'which_key_ignore' },
+          ['<leader>p'] = { name = '[P]aste over selection & keep regiser', _ = 'which_key_ignore' },
+
+          ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
+          ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
+          ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+        }
+      end,
+    },
     -- Disables treesitter if the file has 100000 cols wide lines
     {
       "LunarVim/bigfile.nvim",
@@ -44,7 +64,7 @@ require("lazy").setup(
             end
 
             if longest > 50000 then
-              print("Treesitter is disabled due to file containing 100k col wide lines")
+              print("Treesitter is disabled due to file containing 50k col wide lines")
               return true
             end
           end,
@@ -66,26 +86,84 @@ require("lazy").setup(
     {
       "nvim-treesitter/nvim-treesitter",
       build = ":TSUpdate",
+      opts = {
+        ensure_installed = {
+          "bash", "lua", "vim", "vimdoc", "json", "yaml", "regex", "html", "c",
+          "php", "javascript", "typescript", "css", "gitignore", "http", "sql",
+        },
+        auto_install = true, -- Automatically install missing parsers
+        -- sync_install = false, -- Install parsers synchronously
+        highlight = { enable = true, additional_vim_regex_highlighting = false },
+        indent = { enable = true },
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection = '<A-Up>',
+            node_incremental = '<A-Up>',
+            scope_incremental = '<C-s>',
+            node_decremental = '<A-Down>'
+          }
+        }
+      },
+      config = function(_, opts)
+        require("nvim-treesitter.configs").setup(opts)
+      end
     },
-    -- Color theme
-    -- Config in ~/.config/nvim/after/plugin/color.lua
-    {
+    { -- Color theme
       -- "devsjs/vim-jb", -- Forked my theme from this one
       "nick-kadutskyi/vim-jb",
       name = "vim-jb",
       lazy = true,
       dev = true, -- theme is in dev but falls back to my public GitHub repo
+      init = function()
+        -- Enables intalics
+        vim.g.jb_enable_italics = 1
+        -- JB defualt light theme
+        vim.g.jb_style = "light"
+        -- Sets default jb_style based on MacOs theme
+        if vim.fn.has('macunix') == 1 then
+          if io.popen("defaults read -g AppleInterfaceStyle 2>/dev/null"):read() == "Dark" then
+            vim.g.jb_style = "dark"
+          end
+        end
+        -- Read hardcoded style from bash var
+        local theme = os.getenv("theme")
+        if theme ~= nil then
+          -- If theme var provided enforce colorscheme style and don't auto change
+          if theme == "light" or theme == "l" then
+            vim.g.jb_style = "light"
+          elseif theme == "dark" or theme == "d" then
+            vim.g.jb_style = "dark"
+          elseif theme == "mid" or theme == "m" then
+            vim.g.jb_style = "mid"
+          end
+        end
+      end,
+      config = function()
+        vim.cmd("colorscheme jb")
+      end
     },
-    -- Auto dark mode
-    -- Config in ~/.config/nvim/after/plugin/color.lua
-    {
+    { -- Auto dark mode
       "f-person/auto-dark-mode.nvim",
+      config = function()
+        local theme = os.getenv("theme")
+        if theme == nil then
+          require("auto-dark-mode").setup({
+            set_dark_mode = function()
+              vim.api.nvim_set_var("jb_style", "dark")
+              vim.cmd("colorscheme jb")
+            end,
+            set_light_mode = function()
+              vim.api.nvim_set_var("jb_style", "light")
+              vim.cmd("colorscheme jb")
+            end,
+          })
+        end
+      end,
+      dependencies = { "nick-kadutskyi/vim-jb" },
     },
-    -- Adds location in status line
-    {
-      "SmiteshP/nvim-navic",
-      dependencies = { "neovim/nvim-lspconfig" },
-    },
+    { "SmiteshP/nvim-navic", dependencies = { "neovim/nvim-lspconfig" } }, -- Adds location in status line
+
     -- ZERO LSP START
     -- Additional Config in ~/.config/nvim/after/plugin/lsp.lua
     {
@@ -209,15 +287,38 @@ require("lazy").setup(
       "ibhagwan/fzf-lua",
       -- optional for icon support
       dependencies = { "nvim-tree/nvim-web-devicons" },
+      config = function()
+        require("fzf-lua").setup({
+          "telescope", -- Sets telescope profile for look and feel
+          fzf_colors = {
+            ["fg"] = { "fg", "CursorLine" },
+            ["bg"] = { "bg", "Normal" },
+            ["hl"] = { "fg", "Comment" },
+            ["fg+"] = { "fg", "Normal" },
+            ["bg+"] = { "bg", "CursorLine" },
+            ["hl+"] = { "fg", "Statement" },
+            ["info"] = { "fg", "PreProc" },
+            ["prompt"] = { "fg", "Conditional" },
+            ["pointer"] = { "fg", "Exception" },
+            ["marker"] = { "fg", "Keyword" },
+            ["spinner"] = { "fg", "Label" },
+            ["header"] = { "fg", "Comment" },
+            ["gutter"] = { "bg", "EndOfBuffer" },
+          },
+          previewers = {
+            builtin = {
+              extensions = {
+                ["svg"] = { "chafa" },
+                ["png"] = { "chafa", "<file>" },
+                ["jpg"] = { "chafa" },
+              },
+            },
+          },
+        })
+      end
     },
-    -- Visibility for changes comparde to current git branch in the gutter
-    {
-      "lewis6991/gitsigns.nvim",
-    },
-    -- For git diff
-    {
-      "tpope/vim-fugitive",
-    },
+    "lewis6991/gitsigns.nvim", -- Visibility for changes comparde to current git branch in the gutter
+    "tpope/vim-fugitive",      -- For git diff
     -- Scrollbar to also show git changes not visible in current view
     {
       "petertriho/nvim-scrollbar",
@@ -242,11 +343,20 @@ require("lazy").setup(
         })
       end,
     },
-    -- Code formatter
-    -- Config ~/.config/nvim/after/plugin/formatter.lua
-    {
+    { -- Code formatter
       "stevearc/conform.nvim",
       opts = {},
+      config = function()
+        require("conform").setup({
+          formatters_by_ft = {
+            -- lua = { "stylua" },
+            -- Conform will run multiple formatters sequentially
+            python = { "isort", "black" },
+            -- Use a sub-list to run only the first available formatter
+            javascript = { { "prettierd", "prettier" } },
+          },
+        })
+      end
     },
     -- Comments
     {
