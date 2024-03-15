@@ -82,27 +82,21 @@ require("lazy").setup(
         })
       end
     },
-    { -- Color theme
-      -- "devsjs/vim-jb", -- Forked my theme from this one
-      "nick-kadutskyi/vim-jb",
+    {
+      "nick-kadutskyi/vim-jb", -- My color theme (forked from devsjs/vim-js)
       name = "vim-jb",
       lazy = true,
-      dev = true, -- theme is in dev but falls back to my public GitHub repo
+      dev = true,                          -- theme is in dev but falls back to my public GitHub repo
       init = function()
-        -- Enables intalics
-        vim.g.jb_enable_italics = 1
-        -- JB defualt light theme
-        vim.g.jb_style = "light"
-        -- Sets default jb_style based on MacOs theme
-        if vim.fn.has('macunix') == 1 then
+        vim.g.jb_enable_italics = 1        -- Enables intalics
+        vim.g.jb_style = "light"           -- JB defualt light theme
+        if vim.fn.has('macunix') == 1 then -- Sets default jb_style based on MacOs theme
           if io.popen("defaults read -g AppleInterfaceStyle 2>/dev/null"):read() == "Dark" then
             vim.g.jb_style = "dark"
           end
         end
-        -- Read hardcoded style from bash var
-        local theme = os.getenv("theme")
-        if theme ~= nil then
-          -- If theme var provided enforce colorscheme style and don't auto change
+        local theme = os.getenv("theme") -- Read hardcoded style from bash var
+        if theme ~= nil then             -- If theme var provided enforce colorscheme style
           if theme == "light" or theme == "l" then
             vim.g.jb_style = "light"
           elseif theme == "dark" or theme == "d" then
@@ -114,11 +108,11 @@ require("lazy").setup(
         vim.cmd("colorscheme jb")
       end
     },
-    { -- Auto dark mode
-      "f-person/auto-dark-mode.nvim",
+    {
+      "f-person/auto-dark-mode.nvim", -- Auto dark mode
       config = function()
         local theme = os.getenv("theme")
-        if theme == nil then
+        if theme == nil then -- Run auto dark mode only if theme is not hardcoded
           require("auto-dark-mode").setup({
             update_interval = 400,
             set_dark_mode = function()
