@@ -2,10 +2,7 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
+    "git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git",
     "--branch=stable", -- latest stable release
     lazypath,
   })
@@ -27,27 +24,14 @@ require("lazy").setup(
       "LunarVim/bigfile.nvim", -- Disables treesitter if the file matches some pattern
       lazy = false,
       event = { "FileReadPre", "BufReadPre", "User FileOpened" },
-      opts = { max_line_len = 30000 },
-      config = function(_, opts)
+      config = function()
         require("bigfile").setup({
           pattern = function(bufnr, _)
-            -- you can't use `nvim_buf_line_count` because this runs on BufReadPre
-            local file_contents = vim.fn.readfile(vim.api.nvim_buf_get_name(bufnr))
-            local max_line_len = opts.max_line_len or 10000
-            local longest = 0
-            for _, v in pairs(file_contents) do
-              local len = #v
-              if len > longest then
-                longest = #v
-                if len > max_line_len then
-                  break
-                end
+            for _, v in pairs(vim.fn.readfile(vim.api.nvim_buf_get_name(bufnr))) do
+              if #v > 30000 then
+                print("Treesitter and LSP are disabled.")
+                return true
               end
-            end
-
-            if longest > max_line_len then
-              print("Treesitter and LSP are disabled due to lines more than " .. max_line_len .. "k col wide.")
-              return true
             end
           end,
           features = { "lsp", "treesitter" }, -- features to disable
