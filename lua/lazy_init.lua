@@ -24,41 +24,32 @@ require("lazy").setup(
       "LunarVim/bigfile.nvim",
       lazy = false,
       event = { "FileReadPre", "BufReadPre", "User FileOpened" },
-      config = function()
+      opts = {
+        max_line_len = 30000,
+      },
+      config = function(_, opts)
         require("bigfile").setup({
-          -- filesize = 5, -- size of the file in MiB, the plugin round file sizes to the closest MiB
-          -- pattern = { "*" }, -- autocmd pattern or function see <### Overriding the detection of big files>
-          pattern = function(bufnr, filesize_mib)
+          pattern = function(bufnr, _)
             -- you can't use `nvim_buf_line_count` because this runs on BufReadPre
             local file_contents = vim.fn.readfile(vim.api.nvim_buf_get_name(bufnr))
-            -- local file_length = #file_contents
-            -- local filetype = vim.filetype.match({ buf = bufnr })
+            local max_line_len = opts.max_line_len or 10000
             local longest = 0
-            for k, v in pairs(file_contents) do
+            for _, v in pairs(file_contents) do
               local len = #v
               if len > longest then
                 longest = #v
-                if len > 50000 then
+                if len > max_line_len then
                   break
                 end
               end
             end
 
-            if longest > 50000 then
-              print("Treesitter is disabled due to file containing 50k col wide lines")
+            if longest > max_line_len then
+              print("Treesitter and LSP are disabled due to lines more than " .. max_line_len .. "k col wide.")
               return true
             end
           end,
-          features = { -- features to disable
-            -- "indent_blankline",
-            -- "illuminate",
-            -- "lsp",
-            "treesitter",
-            -- "syntax",
-            -- "matchparen",
-            -- "vimopts",
-            -- "filetype",
-          },
+          features = { "lsp", "treesitter" }, -- features to disable
         })
       end,
     },
