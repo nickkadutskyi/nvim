@@ -15,18 +15,19 @@ vim.opt.rtp:prepend(lazypath)
 -- Initializing lazy.nvim
 require("lazy").setup(
   {
-    'tpope/vim-sleuth',          -- Detect tabstop and shiftwidth automatically
-    "github/copilot.vim",        -- AI Assistant
-    "xiyaowong/virtcolumn.nvim", -- Visual guides
-    "lewis6991/gitsigns.nvim",   -- Visibility for changes comparde to current git branch in the gutter
-    "tpope/vim-fugitive",        -- For git diff
-    {                            -- Disables treesitter if the file has 100000 cols wide lines
-      "LunarVim/bigfile.nvim",
+    'tpope/vim-sleuth',                 -- Detect tabstop and shiftwidth automatically
+    "github/copilot.vim",               -- AI Assistant
+    "tpope/vim-fugitive",               -- For git diff
+    {
+      "lukas-reineke/virt-column.nvim", -- Visual guides
+      opts = { highlight = { 'JBVisualGuide', 'JBVisualGuide', 'JBHardWrapGuide' }, char = "▕" },
+      config = function(_, opts) require("virt-column").setup(opts) end
+    },
+    {
+      "LunarVim/bigfile.nvim", -- Disables treesitter if the file matches some pattern
       lazy = false,
       event = { "FileReadPre", "BufReadPre", "User FileOpened" },
-      opts = {
-        max_line_len = 30000,
-      },
+      opts = { max_line_len = 30000 },
       config = function(_, opts)
         require("bigfile").setup({
           pattern = function(bufnr, _)
@@ -53,10 +54,8 @@ require("lazy").setup(
         })
       end,
     },
-    -- Treesitter for syntax highlight
-    -- Config in ~/.config/nvim/after/plugin/tresitter.lua
     {
-      "nvim-treesitter/nvim-treesitter",
+      "nvim-treesitter/nvim-treesitter", -- Treesitter for syntax highlight (check after/queries for customizations)
       build = ":TSUpdate",
       opts = {
         ensure_installed = {
@@ -79,6 +78,24 @@ require("lazy").setup(
       },
       config = function(_, opts)
         require("nvim-treesitter.configs").setup(opts)
+      end
+    },
+    {
+      "nvim-tree/nvim-web-devicons", -- For getting pretty icons, but requires a Nerd Font.
+      config = function()
+        require("nvim-web-devicons").setup({
+          override = { -- your personnal icons can go here (to override)
+            zsh = { icon = "", color = "#428850", cterm_color = "65", name = "Zsh" },
+          },
+          default = true,          -- globally enable default icons (default to false)
+          strict = true,           -- globally enable "strict" selection of icons (default to false)
+          override_by_filename = { -- same as `override` but for overrides by filename (requires `strict` to be true)
+            [".gitignore"] = { icon = "", color = "#f1502f", name = "Gitignore" },
+          },
+          override_by_extension = { -- same as `override` but for overrides by extension (requires `strict` to be true)
+            ["log"] = { icon = "", color = "#81e043", name = "Log" },
+          },
+        })
       end
     },
     { -- Color theme
@@ -106,8 +123,6 @@ require("lazy").setup(
             vim.g.jb_style = "light"
           elseif theme == "dark" or theme == "d" then
             vim.g.jb_style = "dark"
-          elseif theme == "mid" or theme == "m" then
-            vim.g.jb_style = "mid"
           end
         end
       end,
@@ -121,6 +136,7 @@ require("lazy").setup(
         local theme = os.getenv("theme")
         if theme == nil then
           require("auto-dark-mode").setup({
+            update_interval = 400,
             set_dark_mode = function()
               vim.api.nvim_set_var("jb_style", "dark")
               vim.cmd("colorscheme jb")
@@ -289,18 +305,14 @@ require("lazy").setup(
         })
       end
     },
-    -- Scrollbar to also show git changes not visible in current view
-    {
+    { -- Scrollbar to also show git changes not visible in current view
       "petertriho/nvim-scrollbar",
       config = function()
         require("scrollbar").setup({
           handlers = {
-            -- to show my position in doc
-            cursor = true,
-            -- to see if I have any changes
-            gitsigns = true,
-            -- disables handle because it works shitty
-            handle = false,
+            cursor = true,   -- to show my position in doc
+            gitsigns = true, -- to see if I have any changes
+            handle = false,  -- disables handle because it works shitty
           },
           marks = {
             GitAdd = {
@@ -311,6 +323,7 @@ require("lazy").setup(
             },
           },
         })
+        require("scrollbar.handlers.gitsigns").setup()
       end,
     },
     { -- Code formatter
@@ -335,6 +348,52 @@ require("lazy").setup(
         -- add any options here
       },
       lazy = false,
+    },
+    { -- Visibility for changes comparde to current git branch in the gutter
+      "lewis6991/gitsigns.nvim",
+      config = function()
+        require('gitsigns').setup {
+          signs                        = {
+            add          = { text = '┃' },
+            change       = { text = '┃' },
+            delete       = { text = '_' },
+            topdelete    = { text = '‾' },
+            changedelete = { text = '~' },
+            untracked    = { text = '║' },
+          },
+          signcolumn                   = true,  -- Toggle with `:Gitsigns toggle_signs`
+          numhl                        = false, -- Toggle with `:Gitsigns toggle_numhl`
+          linehl                       = false, -- Toggle with `:Gitsigns toggle_linehl`
+          word_diff                    = false, -- Toggle with `:Gitsigns toggle_word_diff`
+          watch_gitdir                 = {
+            follow_files = true
+          },
+          attach_to_untracked          = true,
+          current_line_blame           = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+          current_line_blame_opts      = {
+            virt_text = true,
+            virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+            delay = 400,
+            ignore_whitespace = false,
+          },
+          current_line_blame_formatter = '<author>, <author_time:%Y-%m-%d> - <summary>',
+          sign_priority                = 6,
+          update_debounce              = 100,
+          status_formatter             = nil,   -- Use default
+          max_file_length              = 40000, -- Disable if file is longer than this (in lines)
+          preview_config               = {
+            -- Options passed to nvim_open_win
+            border = 'single',
+            style = 'minimal',
+            relative = 'cursor',
+            row = 0,
+            col = 1
+          },
+          yadm                         = {
+            enable = false
+          },
+        }
+      end
     },
     {
       "folke/trouble.nvim",
