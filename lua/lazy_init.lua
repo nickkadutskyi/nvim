@@ -288,7 +288,7 @@ require("lazy").setup(
       config = function()
         require("scrollbar").setup({
           handlers = {
-            cursor = true,   -- to show my position in doc
+            cursor = true,  -- to show my position in doc
             gitsigns = true, -- to see if I have any changes
             handle = false,  -- disables handle because it works shitty
           },
