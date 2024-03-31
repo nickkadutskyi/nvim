@@ -23,6 +23,12 @@ vim.filetype.add({
   extension = {
     zsh = "sh",
     sh = "sh", -- force sh-files with zsh-shebang to still get sh as filetype
+    scpt = function () -- detect if it's AppleScript or JavaScript for osascript
+      if vim.fn.search("osascript -l JavaScript", "nw") ~= 0 then
+        return "javascript"
+      end
+      return "applescript"
+    end,
   },
   filename = {
     [".zshrc"] = "sh",
