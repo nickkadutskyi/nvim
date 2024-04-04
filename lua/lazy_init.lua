@@ -315,6 +315,7 @@ require("lazy").setup(
             python = { "isort", "black" },
             -- Use a sub-list to run only the first available formatter
             javascript = { { "prettierd", "prettier" } },
+            css = { { "prettierd", "prettier" } },
           },
         })
       end
