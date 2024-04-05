@@ -38,34 +38,36 @@ vim.fn.jobstart('git rev-parse --is-inside-work-tree', {
     end
   end,
   on_stderr = function(_, data)
-    local t = "" .. next(data)
-    for _, d in pairs(data) do
-      t = t .. d
-    end
-    if string.find(t, "not a git repository") then
-      -- Get all files in directory excluding some folders
-      vim.fn.jobstart(
-        'find "' .. rootPath .. '/" -type f ' ..
-        '! -path "*node_modules/*" ' ..
-        '! -path "*vendor/*" ' ..
-        '! -path "*.idea/sonarlint*" ' ..
-        '! -path "*.git/*" ' ..
-        ' -exec basename {} \\;',
-        {
-          cwd = rootPath,
-          on_exit = function()
-          end,
-          on_stdout = function(_, dataInternal)
-            for _, d in pairs(dataInternal) do
-              vim.g.all_files_str = vim.g.all_files_str .. ", " .. d
-            end
-            vim.g.all_files_str = vim.g.all_files_str .. ", end"
-          end,
-          on_stderr = function()
-          end
-        }
-      )
-    end
+    -- do nothing if not a git repository because it can amoun to a lot of files
+    --
+    -- local t = "" .. next(data)
+    -- for _, d in pairs(data) do
+    --   t = t .. d
+    -- end
+    -- if string.find(t, "not a git repository") then
+    --   -- Get all files in directory excluding some folders
+    --   vim.fn.jobstart(
+    --     'find "' .. rootPath .. '/" -type f ' ..
+    --     '! -path "*node_modules/*" ' ..
+    --     '! -path "*vendor/*" ' ..
+    --     '! -path "*.idea/sonarlint*" ' ..
+    --     '! -path "*.git/*" ' ..
+    --     ' -exec basename {} \\;',
+    --     {
+    --       cwd = rootPath,
+    --       on_exit = function()
+    --       end,
+    --       on_stdout = function(_, dataInternal)
+    --         for _, d in pairs(dataInternal) do
+    --           vim.g.all_files_str = vim.g.all_files_str .. ", " .. d
+    --         end
+    --         vim.g.all_files_str = vim.g.all_files_str .. ", end"
+    --       end,
+    --       on_stderr = function()
+    --       end
+    --     }
+    --   )
+    -- end
   end,
   stderr_buffered = false,
   stdout_buffered = false,
