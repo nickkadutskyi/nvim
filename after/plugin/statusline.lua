@@ -24,6 +24,14 @@ local function getGitBranch()
 	end
 end
 
+local function getGitStatus()
+	if vim.b.gitsigns_status ~= nil then
+		return " " .. vim.b.gitsigns_status
+	else
+		return ""
+	end
+end
+
 local function getSearchCount()
 	local sc = vim.fn.searchcount()
 	if sc.total ~= nil and sc.current ~= 0 then
@@ -78,6 +86,7 @@ function StatusLine()
 		"[" .. getAbbreviation(getProjectName()) .. "]",
 		getProjectName(),
 		getGitBranch(),
+		getGitStatus(),
 		cFileType,
 		getFileTypeIcon(),
 		cReset,

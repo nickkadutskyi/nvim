@@ -116,6 +116,12 @@ nnoremap("<leader>gs", fzf.lsp_live_workspace_symbols, {})
 nnoremap("<leader>fp", fzf.live_grep, {})
 -- Go to buffer (Similar to Switcher in Intellij)
 nnoremap("<leader>gb", fzf.buffers, {})
+-- Go to git status
+nnoremap("<leader>ggs", fzf.git_status, {})
+-- Go to git commits
+nnoremap("<leader>ggc", fzf.git_commits, {})
+-- Go to git commits of current buffer
+nnoremap("<leader>ggb", fzf.git_bcommits, {})
 
 -- Formatting
 -- Reformat code with Conform.nvim which might fallback to LSP
