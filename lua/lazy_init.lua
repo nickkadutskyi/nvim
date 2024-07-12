@@ -340,7 +340,7 @@ require("lazy").setup(
             changedelete = { text = '~' },
             untracked    = { text = '║' },
           },
-          _signs_staged_enable              = true,
+          signs_staged_enable              = true,
           signcolumn                        = true,  -- Toggle with `:Gitsigns toggle_signs`
           numhl                             = false, -- Toggle with `:Gitsigns toggle_numhl`
           linehl                            = false, -- Toggle with `:Gitsigns toggle_linehl`
@@ -358,9 +358,6 @@ require("lazy").setup(
             ignore_whitespace = false,
           },
           current_line_blame_formatter      = '<author>, <author_time:%m/%d/%Y>, <author_time:%I:%M %p> · <summary>',
-          current_line_blame_formatter_opts = {
-            relative_time = false,
-          },
           sign_priority                     = 6,
           update_debounce                   = 100,
           status_formatter                  = nil,   -- Use default
