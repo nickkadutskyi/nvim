@@ -216,9 +216,30 @@ require("lazy").setup(
           end
         end)
 
+        -- Configure nil_ls
+        local caps = vim.tbl_deep_extend(
+          'force',
+          vim.lsp.protocol.make_client_capabilities(),
+          require('cmp_nvim_lsp').default_capabilities(),
+          -- File watching is disabled by default for neovim.
+          -- See: https://github.com/neovim/neovim/pull/22405
+          { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
+        );
+        require 'lspconfig'.nil_ls.setup {
+          capabitilies = caps,
+          settings = {
+            ['nil'] = {
+              testSetting = 42,
+              formatting = {
+                command = { "nixpkgs-fmt" },
+              },
+            },
+          },
+        }
+
         -- Runs after require("mason").setup()
         require("mason-lspconfig").setup({
-          ensure_installed = {},
+          -- ensure_installed = {'nil'},
           handlers = {
             lsp_zero.default_setup,
             lua_ls = function()
@@ -332,7 +353,7 @@ require("lazy").setup(
       "lewis6991/gitsigns.nvim",
       config = function()
         require('gitsigns').setup {
-          signs                             = {
+          signs                        = {
             add          = { text = '┃' },
             change       = { text = '┃' },
             delete       = { text = '_' },
@@ -340,29 +361,29 @@ require("lazy").setup(
             changedelete = { text = '~' },
             untracked    = { text = '║' },
           },
-          signs_staged_enable              = true,
-          signcolumn                        = true,  -- Toggle with `:Gitsigns toggle_signs`
-          numhl                             = false, -- Toggle with `:Gitsigns toggle_numhl`
-          linehl                            = false, -- Toggle with `:Gitsigns toggle_linehl`
-          word_diff                         = false, -- Toggle with `:Gitsigns toggle_word_diff`
-          watch_gitdir                      = {
+          signs_staged_enable          = true,
+          signcolumn                   = true,  -- Toggle with `:Gitsigns toggle_signs`
+          numhl                        = false, -- Toggle with `:Gitsigns toggle_numhl`
+          linehl                       = false, -- Toggle with `:Gitsigns toggle_linehl`
+          word_diff                    = false, -- Toggle with `:Gitsigns toggle_word_diff`
+          watch_gitdir                 = {
             follow_files = true
           },
-          attach_to_untracked               = true,
-          current_line_blame                = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
+          attach_to_untracked          = true,
+          current_line_blame           = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
 
-          current_line_blame_opts           = {
+          current_line_blame_opts      = {
             virt_text = true,
             virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
             delay = 400,
             ignore_whitespace = false,
           },
-          current_line_blame_formatter      = '<author>, <author_time:%m/%d/%Y>, <author_time:%I:%M %p> · <summary>',
-          sign_priority                     = 6,
-          update_debounce                   = 100,
-          status_formatter                  = nil,   -- Use default
-          max_file_length                   = 40000, -- Disable if file is longer than this (in lines)
-          preview_config                    = {
+          current_line_blame_formatter = '<author>, <author_time:%m/%d/%Y>, <author_time:%I:%M %p> · <summary>',
+          sign_priority                = 6,
+          update_debounce              = 100,
+          status_formatter             = nil,   -- Use default
+          max_file_length              = 40000, -- Disable if file is longer than this (in lines)
+          preview_config               = {
             -- Options passed to nvim_open_win
             border = 'single',
             style = 'minimal',
@@ -370,10 +391,10 @@ require("lazy").setup(
             row = 0,
             col = 1
           },
-          yadm                              = {
+          yadm                         = {
             enable = false
           },
-          on_attach                         = function(bufnr)
+          on_attach                    = function(bufnr)
             local gitsigns = require('gitsigns')
 
             local function map(mode, l, r, opts)
