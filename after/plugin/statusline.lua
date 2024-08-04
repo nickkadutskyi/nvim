@@ -105,6 +105,9 @@ function StatusLine()
 end
 
 -- Setup
+-- Show single statusline for all splits
+vim.opt.laststatus = 3
+-- Init statusline
 vim.o.statusline = "%!v:lua.StatusLine()"
 -- vim.o.statusline =
 -- 	"%<%f %h%m%r %{%v:lua.require'nvim-navic'.get_location()%} %=%{%v:lua.require'nick_kadutskyi.mode'.get()%}%-10.(%l,%c%V%) %P"
