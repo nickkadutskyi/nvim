@@ -12,8 +12,14 @@ vim.opt.rtp:prepend(lazypath)
 -- Initializing lazy.nvim
 require("lazy").setup(
   {
-    'tpope/vim-sleuth',                 -- Detect tabstop and shiftwidth automatically
-    "github/copilot.vim",               -- AI Assistant
+    'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+    -- "github/copilot.vim",               -- AI Assistant
+    {
+      "supermaven-inc/supermaven-nvim", -- AI Assistant
+      config = function()
+        require("supermaven-nvim").setup({})
+      end,
+    },
     "tpope/vim-fugitive",               -- For git diff
     {
       "lukas-reineke/virt-column.nvim", -- Visual guides
@@ -337,7 +343,7 @@ require("lazy").setup(
             -- Use a sub-list to run only the first available formatter
             javascript = { { "prettierd", "prettier" } },
             css = { { "prettierd", "prettier" } },
-            php = {"php_cs_fixer"}
+            php = { "php_cs_fixer" }
           },
         })
       end
