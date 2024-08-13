@@ -17,7 +17,9 @@ require("lazy").setup(
     {
       "supermaven-inc/supermaven-nvim", -- AI Assistant
       config = function()
-        require("supermaven-nvim").setup({})
+        require("supermaven-nvim").setup({
+          log_level = "error",
+        })
       end,
     },
     "tpope/vim-fugitive",               -- For git diff
