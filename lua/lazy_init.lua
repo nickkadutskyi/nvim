@@ -12,8 +12,7 @@ vim.opt.rtp:prepend(lazypath)
 -- Initializing lazy.nvim
 require("lazy").setup(
   {
-    'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-    -- "github/copilot.vim",               -- AI Assistant
+    'tpope/vim-sleuth',                 -- Detect tabstop and shiftwidth automatically
     {
       "supermaven-inc/supermaven-nvim", -- AI Assistant
       config = function()
@@ -25,7 +24,14 @@ require("lazy").setup(
     "tpope/vim-fugitive",               -- For git diff
     {
       "lukas-reineke/virt-column.nvim", -- Visual guides
-      opts = { highlight = { 'JBVisualGuide', 'JBVisualGuide', 'JBHardWrapGuide' }, char = "▕" },
+      opts = {
+        highlight = {
+          'General_Editor_Guides_VisualGuides',
+          'General_Editor_Guides_VisualGuides',
+          'General_Editor_Guides_HardWrapGuide'
+        },
+        char = "▕"
+      },
       config = function(_, opts) require("virt-column").setup(opts) end
     },
     {
@@ -53,6 +59,7 @@ require("lazy").setup(
         ensure_installed = {
           "bash", "lua", "vim", "vimdoc", "json", "yaml", "regex", "html", "c",
           "php", "javascript", "typescript", "css", "gitignore", "http", "sql",
+          "comment", "json"
         },
         auto_install = true, -- Automatically install missing parsers
         -- sync_install = false, -- Install parsers synchronously
@@ -91,31 +98,72 @@ require("lazy").setup(
       end
     },
     {
-      "nick-kadutskyi/vim-jb", -- My color theme (forked from devsjs/vim-js)
-      name = "vim-jb",
+      "rachartier/tiny-inline-diagnostic.nvim", -- better diagnostics
+      event = "VeryLazy",                       -- Or `LspAttach`
+      config = function()
+        -- Hides diagnostic virtual text
+        vim.diagnostic.config({ virtual_text = false })
+        require('tiny-inline-diagnostic').setup({
+          options = {
+            show_source = true,
+            virt_texts = {
+              priority = 80,
+            },
+          }
+        })
+      end
+    },
+    {
+      "nickkadutskyi/jb.nvim", -- My new color scheme inspired by IntelliJ
+      name = "jb.nvim",
       lazy = true,
-      dev = true,                          -- theme is in dev but falls back to my public GitHub repo
+      dev = true,
       init = function()
-        vim.g.jb_enable_italics = 1        -- Enables intalics
-        vim.g.jb_style = "light"           -- JB defualt light theme
         if vim.fn.has('macunix') == 1 then -- Sets default jb_style based on MacOs theme
           if io.popen("defaults read -g AppleInterfaceStyle 2>/dev/null"):read() == "Dark" then
-            vim.g.jb_style = "dark"
+            vim.o.background = "dark"
           end
         end
         local theme = os.getenv("theme") -- Read hardcoded style from bash var
         if theme ~= nil then             -- If theme var provided enforce colorscheme style
           if theme == "light" or theme == "l" then
-            vim.g.jb_style = "light"
+            vim.o.background = "light"
           elseif theme == "dark" or theme == "d" then
-            vim.g.jb_style = "dark"
+            vim.o.background = "dark"
           end
         end
       end,
       config = function()
-        vim.cmd("colorscheme jb")
+        vim.cmd('colorscheme jb')
       end
     },
+    -- {
+    --   "nick-kadutskyi/vim-jb", -- My color theme (forked from devsjs/vim-js)
+    --   enabled = false,
+    --   name = "vim-jb",
+    --   lazy = true,
+    --   dev = true,                          -- theme is in dev but falls back to my public GitHub repo
+    --   init = function()
+    --     vim.g.jb_enable_italics = 1        -- Enables intalics
+    --     vim.g.jb_style = "light"           -- JB defualt light theme
+    --     if vim.fn.has('macunix') == 1 then -- Sets default jb_style based on MacOs theme
+    --       if io.popen("defaults read -g AppleInterfaceStyle 2>/dev/null"):read() == "Dark" then
+    --         vim.g.jb_style = "dark"
+    --       end
+    --     end
+    --     local theme = os.getenv("theme") -- Read hardcoded style from bash var
+    --     if theme ~= nil then             -- If theme var provided enforce colorscheme style
+    --       if theme == "light" or theme == "l" then
+    --         vim.g.jb_style = "light"
+    --       elseif theme == "dark" or theme == "d" then
+    --         vim.g.jb_style = "dark"
+    --       end
+    --     end
+    --   end,
+    --   config = function()
+    --     vim.cmd("colorscheme jb")
+    --   end
+    -- },
     {
       "f-person/auto-dark-mode.nvim", -- Auto dark mode
       config = function()
@@ -124,17 +172,17 @@ require("lazy").setup(
           require("auto-dark-mode").setup({
             update_interval = 400,
             set_dark_mode = function()
-              vim.api.nvim_set_var("jb_style", "dark")
+              vim.api.nvim_set_option_value("background", "dark", {})
               vim.cmd("colorscheme jb")
             end,
             set_light_mode = function()
-              vim.api.nvim_set_var("jb_style", "light")
+              vim.api.nvim_set_option_value("background", "light", {})
               vim.cmd("colorscheme jb")
             end,
           })
         end
       end,
-      dependencies = { "nick-kadutskyi/vim-jb" },
+      dependencies = { "nickkadutskyi/jb.nvim" },
     },
     { "SmiteshP/nvim-navic", dependencies = { "neovim/nvim-lspconfig" } }, -- Adds location in status line
 
@@ -247,7 +295,10 @@ require("lazy").setup(
 
         -- Runs after require("mason").setup()
         require("mason-lspconfig").setup({
-          -- ensure_installed = {'nil'},
+          ensure_installed = {
+            "stylua",
+            "lua_ls",
+          },
           handlers = {
             lsp_zero.default_setup,
             lua_ls = function()
@@ -350,8 +401,8 @@ require("lazy").setup(
         })
       end
     },
-    -- Comments
-    {
+
+    { -- For commenting
       'numToStr/Comment.nvim',
       opts = {
         -- add any options here
@@ -531,8 +582,8 @@ require("lazy").setup(
       title = { { " Plugin Manager ", "JBFloatBorder" } },
     },
     dev = {
-      path = "~/Developer/PE/0000",
-      patterns = { "nick-kadutskyi" },
+      path = "~/Developer/PE/0027",
+      patterns = { "nickkadutskyi" },
       fallback = true,
     },
   }
