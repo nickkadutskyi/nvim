@@ -55,11 +55,12 @@ require("lazy").setup(
     {
       "nvim-treesitter/nvim-treesitter", -- Treesitter for syntax highlight (check after/queries for customizations)
       build = ":TSUpdate",
+      enabled = true,
       opts = {
         ensure_installed = {
-          "bash", "lua", "vim", "vimdoc", "json", "yaml", "regex", "html", "c",
+          "bash", "lua", "vim", "vimdoc", "yaml", "regex", "html", "c",
           "php", "javascript", "typescript", "css", "gitignore", "http", "sql",
-          "comment", "json"
+          "comment",
         },
         auto_install = true, -- Automatically install missing parsers
         -- sync_install = false, -- Install parsers synchronously
@@ -296,7 +297,6 @@ require("lazy").setup(
         -- Runs after require("mason").setup()
         require("mason-lspconfig").setup({
           ensure_installed = {
-            "stylua",
             "lua_ls",
           },
           handlers = {
@@ -390,7 +390,7 @@ require("lazy").setup(
       config = function()
         require("conform").setup({
           formatters_by_ft = {
-            -- lua = { "stylua" },
+            lua = { "stylua" },
             -- Conform will run multiple formatters sequentially
             python = { "isort", "black" },
             -- Use a sub-list to run only the first available formatter
@@ -438,7 +438,7 @@ require("lazy").setup(
             delay = 400,
             ignore_whitespace = false,
           },
-          current_line_blame_formatter = '<author>, <author_time:%m/%d/%Y>, <author_time:%I:%M %p> · <summary>',
+          current_line_blame_formatter = '<author>, <author_time:%m/%d/%y>, <author_time:%I:%M %p> · <summary>',
           sign_priority                = 6,
           update_debounce              = 100,
           status_formatter             = nil,   -- Use default
@@ -513,6 +513,7 @@ require("lazy").setup(
     -- Markdown preview
     {
       "epwalsh/obsidian.nvim",
+      enabled = false,
       version = "*", -- recommended, use latest release instead of latest commit
       lazy = true,
       ft = "markdown",
