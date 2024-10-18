@@ -1,5 +1,5 @@
 local fzf = require("fzf-lua")
-local nnoremap = require("nick_kadutskyi.keymap").nnoremap
+local nnoremap = require("nickkadutskyi.keymap").nnoremap
 local conform = require("conform")
 
 -- If opened a dir set it as current dir to help narrow down fzf scope
