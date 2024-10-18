@@ -20,47 +20,6 @@ require("lazy").setup({
     spec = {
         { import = "nickkadutskyi.plugins" },
         {
-            "nvim-treesitter/nvim-treesitter", -- Treesitter for syntax highlight (check after/queries for customizations)
-            build = ":TSUpdate",
-            enabled = true,
-            opts = {
-                ensure_installed = {
-                    "bash",
-                    "lua",
-                    "vim",
-                    "vimdoc",
-                    "yaml",
-                    "regex",
-                    "html",
-                    "c",
-                    "php",
-                    "javascript",
-                    "typescript",
-                    "css",
-                    "gitignore",
-                    "http",
-                    "sql",
-                    "comment",
-                },
-                auto_install = true, -- Automatically install missing parsers
-                -- sync_install = false, -- Install parsers synchronously
-                highlight = { enable = true, additional_vim_regex_highlighting = false },
-                indent = { enable = true },
-                incremental_selection = {
-                    enable = true,
-                    keymaps = {
-                        init_selection = "<A-Up>",
-                        node_incremental = "<A-Up>",
-                        scope_incremental = "<C-s>",
-                        node_decremental = "<A-Down>",
-                    },
-                },
-            },
-            config = function(_, opts)
-                require("nvim-treesitter.configs").setup(opts)
-            end,
-        },
-        {
             "nvim-tree/nvim-web-devicons", -- For getting pretty icons, but requires a Nerd Font.
             config = function()
                 require("nvim-web-devicons").setup({
