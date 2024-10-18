@@ -5,6 +5,6 @@ endif
 
 " Import Lua modules
 lua require("lazy_init")
-lua require("nick_kadutskyi")
+lua require("nickkadutskyi")
 
 " Works good with nvim 0.9.5

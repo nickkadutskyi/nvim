@@ -13,7 +13,7 @@ local function getLocation()
 end
 
 local function getMode()
-	return require("nick_kadutskyi.mode").get()
+	return require("nickkadutskyi.mode").get()
 end
 
 local function getGitBranch()
@@ -110,4 +110,4 @@ vim.opt.laststatus = 3
 -- Init statusline
 vim.o.statusline = "%!v:lua.StatusLine()"
 -- vim.o.statusline =
--- 	"%<%f %h%m%r %{%v:lua.require'nvim-navic'.get_location()%} %=%{%v:lua.require'nick_kadutskyi.mode'.get()%}%-10.(%l,%c%V%) %P"
+-- 	"%<%f %h%m%r %{%v:lua.require'nvim-navic'.get_location()%} %=%{%v:lua.require'nickkadutskyi.mode'.get()%}%-10.(%l,%c%V%) %P"
