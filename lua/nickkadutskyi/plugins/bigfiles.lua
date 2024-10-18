@@ -11,7 +11,7 @@ return {
                 "treesitter",
             },
             line_len_limit = 30000,
-            filesize = 2,
+            filesize = 3,
         },
         config = function(plugin, opts)
             require("bigfile").setup({
@@ -26,11 +26,7 @@ return {
                     )
                     -- Check filesize
                     local due_to = filesize_mib <= opts.filesize and ""
-                        or string.format(
-                            message .. " file size being greater than %sMiB (%sMiB).",
-                            opts.filesize,
-                            filesize_mib
-                        )
+                        or string.format(" file size being greater than %sMiB (%sMiB).", opts.filesize, filesize_mib)
                     -- Check length of lines
                     if due_to == "" then
                         for _, v in pairs(file_content) do
@@ -44,11 +40,7 @@ return {
                         end
                     end
                     if due_to ~= "" then
-                        vim.notify(
-                            message .. due_to,
-                            vim.log.levels.WARN,
-                            { title = "Plugin " .. plugin.name .. " pattern()" }
-                        )
+                        vim.notify(message .. due_to, vim.log.levels.WARN, { title = plugin.name .. " pattern()" })
                         vim.cmd("set syntax=" .. filetype)
                         return true
                     end
