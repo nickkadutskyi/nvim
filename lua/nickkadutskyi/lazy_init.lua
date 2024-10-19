@@ -177,42 +177,6 @@ require("lazy").setup({
         -- ZERO LSP END
         --
         --
-        -- Faster fzf in case of a large project
-        -- DEPENDENCIES: Linux or Mac, fzf or skim, OPTIONAL: fd, rg, bat, delta, chafa
-        {
-            "ibhagwan/fzf-lua",
-            -- optional for icon support
-            dependencies = { "nvim-tree/nvim-web-devicons" },
-            config = function()
-                require("fzf-lua").setup({
-                    "telescope", -- Sets telescope profile for look and feel
-                    fzf_colors = {
-                        ["fg"] = { "fg", "CursorLine" },
-                        ["bg"] = { "bg", "Normal" },
-                        ["hl"] = { "fg", "Comment" },
-                        ["fg+"] = { "fg", "Normal" },
-                        ["bg+"] = { "bg", "CursorLine" },
-                        ["hl+"] = { "fg", "Statement" },
-                        ["info"] = { "fg", "PreProc" },
-                        ["prompt"] = { "fg", "Conditional" },
-                        ["pointer"] = { "fg", "Exception" },
-                        ["marker"] = { "fg", "Keyword" },
-                        ["spinner"] = { "fg", "Label" },
-                        ["header"] = { "fg", "Comment" },
-                        ["gutter"] = { "bg", "EndOfBuffer" },
-                    },
-                    previewers = {
-                        builtin = {
-                            extensions = {
-                                ["svg"] = { "chafa" },
-                                ["png"] = { "chafa", "<file>" },
-                                ["jpg"] = { "chafa" },
-                            },
-                        },
-                    },
-                })
-            end,
-        },
         { -- Scrollbar to also show git changes not visible in current view
             "petertriho/nvim-scrollbar",
             config = function()
@@ -358,15 +322,6 @@ require("lazy").setup({
                     end,
                 })
             end,
-        },
-        {
-            "folke/trouble.nvim",
-            dependencies = { "nvim-tree/nvim-web-devicons" },
-            opts = {
-                -- your configuration comes here
-                -- or leave it empty to use the default settings
-                -- refer to the configuration section below
-            },
         },
         -- Markdown preview
         {
