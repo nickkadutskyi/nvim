@@ -113,23 +113,6 @@ vim.filetype.add({
 
 -- NEOVIM SPECIFIC MAPPINGS (keep as much as possible in .vimrc)
 
--- Fzf-lua
--- Go to file
-nnoremap("<leader>gf", fzf.files, {})
--- Go to Class
-nnoremap("<leader>gc", fzf.lsp_live_workspace_symbols, {})
--- Go to Symbol (same as class)
-nnoremap("<leader>gs", fzf.lsp_live_workspace_symbols, {})
--- Find in path
-nnoremap("<leader>fp", fzf.live_grep, {})
--- Go to buffer (Similar to Switcher in Intellij)
-nnoremap("<leader>gb", fzf.buffers, {})
--- Go to git status
-nnoremap("<leader>ggs", fzf.git_status, {})
--- Go to git commits
-nnoremap("<leader>ggc", fzf.git_commits, {})
--- Go to git commits of current buffer
-nnoremap("<leader>ggb", fzf.git_bcommits, {})
 
 -- Formatting
 -- Reformat code with Conform.nvim which might fallback to LSP
@@ -143,36 +126,6 @@ nnoremap("<leader>clf", vim.lsp.buf.format)
 -- Git Satus
 -- nnoremap("<leader>gs", ":Git<CR>")
 
--- Diagnostics Trouble  plugin
--- Open Problems window
-nnoremap("<leader>xx", ":TroubleToggle document_diagnostics<CR>")
--- Quick Fix
-nnoremap("<leader>xq", ":TroubleToggle quickfix<CR>")
-
-nnoremap("<leader>xx", function()
-    require("trouble").toggle()
-end)
-nnoremap("<leader>xw", function()
-    require("trouble").toggle("workspace_diagnostics")
-end)
-nnoremap("<leader>xd", function()
-    require("trouble").toggle("document_diagnostics")
-end)
-nnoremap("<leader>xq", function()
-    require("trouble").toggle("quickfix")
-end)
-nnoremap("<leader>xl", function()
-    require("trouble").toggle("loclist")
-end)
-nnoremap("gR", function()
-    require("trouble").toggle("lsp_references")
-end)
-nnoremap("gd", function()
-    require("trouble").toggle("lsp_definitions")
-end)
-nnoremap("gi", function()
-    require("trouble").toggle("lsp_implementations")
-end)
 
 -- Diagnostics builtin
 nnoremap("[d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]iagnostic message" })
