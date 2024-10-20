@@ -8,8 +8,4 @@ return {
         "supermaven-inc/supermaven-nvim",
         opts = { log_level = "error" },
     },
-    {
-        -- For git diff
-        "tpope/vim-fugitive",
-    },
 }
