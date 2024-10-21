@@ -1,53 +1,55 @@
 return {
     "folke/trouble.nvim",
     opts = {
-        -- your configuration comes here
-        -- or leave it empty to use the default settings
-        -- refer to the configuration section below
+        auto_close = true,
+        warn_no_results = true,
+        open_no_results = false,
+        modes = {
+            document_diagnostics = {
+                mode = "diagnostics",
+                filter = { buf = 0 },
+                focus = true,
+            },
+            workspace_diagnostics = {
+                mode = "diagnostics",
+                filter = {},
+                focus = true,
+            },
+        },
     },
     config = function(_, opts)
-        local nnoremap = require("nickkadutskyi.keymap").nnoremap
         local trouble = require("trouble")
         trouble.setup(opts)
-        -- Diagnostics Trouble  plugin
-        -- Open Problems window
-        -- nnoremap("<leader>xx", ":Trouble diagnostics toggle<CR>")
-        -- Quick Fix
-        -- nnoremap("<leader>xq", ":TroubleToggle quickfix<CR>")
+        ---@type fun(mode?: string|table)
+        local toggle_problems = function(mode)
+            mode = mode or "diagnostics"
+            local curr_buf_name = vim.api.nvim_buf_get_name(0)
 
-        -- same toggle behavior as in Intellij
-        local toggle_problems = function()
-            local buf_name = vim.api.nvim_buf_get_name(0)
-            if buf_name ~= "" then
-                trouble.open({ mode = "diagnostics", focus = true })
+            if curr_buf_name ~= "" and (not trouble.is_open() or trouble.is_open(mode)) then
+                trouble.open(mode)
+            elseif trouble.is_open() and not trouble.is_open(mode) then
+                trouble.close()
+                trouble.open(mode)
             else
-                trouble.close({ mode = "diagnostics", focus = true })
+                trouble.close()
             end
         end
-        nnoremap("<C-6>", toggle_problems)
-        nnoremap("<leader>xx", toggle_problems)
-
-        -- TODO check the rest of the mappings
-        nnoremap("<leader>xw", function()
-            trouble.toggle("workspace_diagnostics")
-        end)
-        nnoremap("<leader>xd", function()
-            trouble.toggle("document_diagnostics")
-        end)
-        nnoremap("<leader>xq", function()
-            trouble.toggle("quickfix")
-        end)
-        nnoremap("<leader>xl", function()
-            trouble.toggle("loclist")
-        end)
-        nnoremap("gR", function()
-            trouble.toggle("lsp_references")
-        end)
-        nnoremap("gd", function()
-            trouble.toggle("lsp_definitions")
-        end)
-        nnoremap("gi", function()
-            trouble.toggle("lsp_implementations")
-        end)
+        vim.keymap.set("n", "<leader>tt", function()
+            toggle_problems("document_diagnostics")
+        end, { noremap = true })
+        vim.keymap.set("n", "<leader>tT", function()
+            toggle_problems("workspace_diagnostics")
+        end, { noremap = true })
+        vim.keymap.set("n", "]t", function()
+            trouble._action("next")("document_diagnostics")
+            -- trouble.next({ skip_groups = true, jump = true, mode = "diagnostics" })
+        end, { noremap = true })
+        vim.keymap.set("n", "[t", function()
+            trouble._action("prev")("document_diagnostics")
+            -- trouble.prev({ skip_groups = true, jump = true, mode = "diagnostics" })
+        end, { noremap = true })
+        vim.keymap.set("n", "<leader>tq", function()
+            trouble.toggle({ mode = "quickfix", filter = { buf = 0 } })
+        end, { noremap = true })
     end,
 }
