@@ -19,6 +19,24 @@ return {
             ["header"] = { "fg", "Comment" },
             ["gutter"] = { "bg", "EndOfBuffer" },
         },
+        fzf_opts = {
+            -- options are sent as `<left>=<right>`
+            -- set to `false` to remove a flag
+            -- set to `true` for a no-value flag
+            -- for raw args use `fzf_args` instead
+            -- ["--ansi"] = true,
+            -- ["--info"] = "inline-right", -- fzf < v0.42 = "inline"
+            -- ["--height"] = "100%",
+            ["--layout"] = "reverse",
+            -- ["--border"] = "none",
+            -- ["--highlight-line"] = true, -- fzf >= v0.53
+        },
+        files = {
+            previewer = false,
+            formatter = "path.filename_first",
+            cwd_prompt = false,
+            prompt = "  ",
+        },
         previewers = {
             builtin = {
                 extensions = {
