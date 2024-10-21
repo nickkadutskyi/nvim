@@ -50,7 +50,7 @@ return {
                     end
                 end
                 if due_to ~= "" then
-                    vim.notify(message .. due_to, vim.log.levels.WARN, { title = plugin.name .. " pattern()" })
+                    vim.notify(plugin.name .. " pattern()" .. "\n" .. message .. due_to, vim.log.levels.WARN)
                     vim.cmd("set syntax=" .. filetype)
                     return true
                 end

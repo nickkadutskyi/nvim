@@ -2,16 +2,10 @@
 local vimrc = vim.fn.expand("~/.vimrc")
 if vim.fn.filereadable(vimrc) then
     vim.cmd.source(vimrc)
-else
-    print("File not found: " .. vimrc)
-    -- TODO provide lua configs from other sources
 end
+
 -- Load plugins
 require("nickkadutskyi.lazy_init")
-
-local fzf = require("fzf-lua")
-local nnoremap = require("nickkadutskyi.keymap").nnoremap
-local conform = require("conform")
 
 -- If opened a dir set it as current dir to help narrow down fzf scope
 if vim.fn.isdirectory(vim.fn.expand("%")) == 1 then
@@ -19,6 +13,64 @@ if vim.fn.isdirectory(vim.fn.expand("%")) == 1 then
 elseif vim.fn.filereadable(vim.fn.expand("%")) == 1 then
     vim.api.nvim_set_current_dir(vim.fn.expand("%:p:h"))
 end
+
+-- Auto commands
+local autocmd = vim.api.nvim_create_autocmd
+local augroup = vim.api.nvim_create_augroup
+local NickKadutskyiGroup = augroup("NickKadutskyi", {})
+
+local nnoremap = require("nickkadutskyi.keymap").nnoremap
+local conform = require("conform")
+
+-- Adds mappings for LSP
+autocmd("LspAttach", {
+    group = NickKadutskyiGroup,
+    callback = function(e)
+        local bufnr = e.buf
+        local client = vim.lsp.get_client_by_id(e.data.client_id)
+        if client ~= nil and client.server_capabilities.documentSymbolProvider then
+            require("nvim-navic").attach(client, bufnr)
+        end
+        -- lsp.on_attach(function(client, bufnr)
+        --     lsp.default_keymaps({ buffer = e.bufnr })
+
+        -- if client.server_capabilities.documentSymbolProvider then
+        --     require("nvim-navic").attach(e.client, bufnr)
+        --     end
+        -- end)
+        local opts = { buffer = e.buf }
+        vim.keymap.set("n", "gd", function()
+            vim.lsp.buf.definition()
+        end, opts)
+        vim.keymap.set("n", "K", function()
+            vim.lsp.buf.hover()
+        end, opts)
+        vim.keymap.set("n", "<leader>vws", function()
+            vim.lsp.buf.workspace_symbol()
+        end, opts)
+        vim.keymap.set("n", "<leader>vd", function()
+            vim.diagnostic.open_float()
+        end, opts)
+        vim.keymap.set("n", "<leader>vca", function()
+            vim.lsp.buf.code_action()
+        end, opts)
+        vim.keymap.set("n", "<leader>vrr", function()
+            vim.lsp.buf.references()
+        end, opts)
+        vim.keymap.set("n", "<leader>vrn", function()
+            vim.lsp.buf.rename()
+        end, opts)
+        vim.keymap.set("i", "<C-h>", function()
+            vim.lsp.buf.signature_help()
+        end, opts)
+        vim.keymap.set("n", "]d", function()
+            vim.diagnostic.goto_next()
+        end, opts)
+        vim.keymap.set("n", "[d", function()
+            vim.diagnostic.goto_prev()
+        end, opts)
+    end,
+})
 
 -- Add all file into global variable
 vim.g.all_files_str = ""
@@ -113,7 +165,6 @@ vim.filetype.add({
 
 -- NEOVIM SPECIFIC MAPPINGS (keep as much as possible in .vimrc)
 
-
 -- Formatting
 -- Reformat code with Conform.nvim which might fallback to LSP
 nnoremap("<leader>cf", function()
@@ -126,25 +177,24 @@ nnoremap("<leader>clf", vim.lsp.buf.format)
 -- Git Satus
 -- nnoremap("<leader>gs", ":Git<CR>")
 
-
 -- Diagnostics builtin
-nnoremap("[d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]iagnostic message" })
-nnoremap("]d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagnostic message" })
-nnoremap("<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
-nnoremap("<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+-- nnoremap("[d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]iagnostic message" })
+-- nnoremap("]d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagnostic message" })
+-- nnoremap("<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
+-- nnoremap("<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
 -- Treesitter Inspect builtin
 nnoremap("<leader>ti", ":Inspect<CR>")
 nnoremap("<leader>tti", ":InspectTree<CR>")
 
 -- Obsidian
-nnoremap("fl", function()
-    if require("obsidian").util.cursor_on_markdown_link() then
-        return "<cmd>ObsidianFollowLink<CR>"
-    else
-        return "fl"
-    end
-end, { noremap = false, expr = true })
+-- nnoremap("fl", function()
+--     if require("obsidian").util.cursor_on_markdown_link() then
+--         return "<cmd>ObsidianFollowLink<CR>"
+--     else
+--         return "fl"
+--     end
+-- end, { noremap = false, expr = true })
 
 -- FEATUERS
 
