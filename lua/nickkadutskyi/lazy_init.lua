@@ -36,7 +36,6 @@ require("lazy").setup({
         --        })
         --    end,
         --},
-        { "SmiteshP/nvim-navic", dependencies = { "neovim/nvim-lspconfig" } }, -- Adds location in status line
 
         -- -- ZERO LSP START
         -- -- Additional Config in ~/.config/nvim/after/plugin/lsp.lua

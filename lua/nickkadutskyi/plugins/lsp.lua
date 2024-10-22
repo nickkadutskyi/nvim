@@ -1,10 +1,12 @@
--- mason.nvim -> nvim-lspconfig -> servers via lspconfig
 return {
     {
         -- For installing langauge servers
         "williamboman/mason.nvim",
-        lazy = false,
-        opts = { ui = { border = "rounded" } },
+    },
+    {
+        -- Uses LSP to show current code context—used in status line
+        "SmiteshP/nvim-navic",
+        dependencies = { "neovim/nvim-lspconfig" },
     },
     {
         -- LSP config
@@ -12,24 +14,86 @@ return {
         dependencies = {
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
+            "hrsh7th/cmp-nvim-lsp",
         },
         config = function()
-            -- Have to be run after require("mason.nvim").setup()
+            -- Mason—before mason-lspconfig
+            require("mason").setup({
+                ui = {
+                    border = "rounded",
+                },
+            })
+
+            -- Mason-lspconfig—before require("lspconfig")[server_name].setup
+            local cmp_lsp = require("cmp_nvim_lsp")
+            local capabilities = vim.tbl_deep_extend(
+                "force",
+                {},
+                vim.lsp.protocol.make_client_capabilities(),
+                cmp_lsp.default_capabilities()
+                -- File watching is disabled by default for neovim.
+                -- See: https://github.com/neovim/neovim/pull/22405
+                -- { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
+            )
             require("mason-lspconfig").setup({
                 ensure_installed = {
                     "lua_ls",
                     "ts_ls",
                     "jsonls",
+                    "emmet_ls",
                 },
                 handlers = {
                     -- Setup lspconfig for each server with default options
                     function(server_name)
-                        return require("lspconfig")[server_name].setup({})
+                        return require("lspconfig")[server_name].setup({
+                            capabilities = capabilities,
+                        })
+                    end,
+                    ["lua_ls"] = function()
+                        require("lspconfig").lua_ls.setup({
+                            capabilities = capabilities,
+                            settings = {
+                                Lua = {
+                                    diagnostics = {
+                                        globals = { "vim" },
+                                    },
+                                },
+                            },
+                        })
+                    end,
+                    ["emmet_ls"] = function()
+                        require("lspconfig").emmet_ls.setup({
+                            filetypes = {
+                                "html",
+                                "css",
+                                "php",
+                                "sass",
+                                "scss",
+                                "vue",
+                                "javascript",
+                            },
+                        })
                     end,
                 },
             })
+
+            -- Configure nil_ls (installed in home-manager profile) for nix
+            require("lspconfig").nil_ls.setup({
+                capabitilies = capabilities,
+                settings = {
+                    ["nil"] = {
+                        testSetting = 42,
+                        formatting = {
+                            command = { "nixpkgs-fmt" },
+                        },
+                    },
+                },
+            })
+
+            -- FIXME is it the best place to do this?
+            -- Diagnostics config
             vim.diagnostic.config({
-                virtual_text = false,
+                virtual_text = true,
                 float = {
                     focusable = false,
                     style = "minimal",

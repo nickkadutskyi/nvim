@@ -38,7 +38,6 @@ return {
                 title_pos = "left",
             },
             previewer = false,
-            formatter = "path.filename_first",
             cwd_prompt = false,
             prompt = "  ",
         },
@@ -48,7 +47,6 @@ return {
                 title_pos = "left",
             },
             previewer = false,
-            formatter = "path.filename_first",
             cwd_prompt = false,
             prompt = "  ",
         },
@@ -69,7 +67,6 @@ return {
                 },
             },
         },
-        formatters = {},
     },
     config = function(_, opts)
         local fzf = require("fzf-lua")
@@ -82,7 +79,6 @@ return {
                 regex_filter = "Class.*",
                 winopts = { title = " Classes ", title_pos = "left" },
                 prompt = "  ",
-                formatter = "path.filename_first",
                 previewer = false,
                 cwd_only = true,
             })
@@ -92,7 +88,6 @@ return {
             fzf.lsp_live_workspace_symbols({
                 winopts = { title = " Project Symbols ", title_pos = "left" },
                 prompt = "  ",
-                formatter = "path.filename_first",
                 previewer = false,
                 cwd_only = true,
             })
@@ -101,7 +96,6 @@ return {
             fzf.lsp_live_workspace_symbols({
                 winopts = { title = " All Symbols ", title_pos = "left" },
                 prompt = "  ",
-                formatter = "path.filename_first",
                 previewer = false,
                 cwd_only = false,
             })
