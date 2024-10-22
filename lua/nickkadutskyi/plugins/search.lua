@@ -4,6 +4,16 @@ return {
     "ibhagwan/fzf-lua",
     opts = {
         "telescope", -- Sets telescope profile for look and feel
+        winopts = {
+            title_pos = "left",
+            height = 0.85, -- window height
+            width = 85,
+            preview = {
+                scrollbar = false,
+                layout = "vertical",
+                vertical = "down:60%",
+            },
+        },
         fzf_colors = {
             ["fg"] = { "fg", "CursorLine" },
             ["bg"] = { "bg", "Normal" },
@@ -20,22 +30,35 @@ return {
             ["gutter"] = { "bg", "EndOfBuffer" },
         },
         fzf_opts = {
-            -- options are sent as `<left>=<right>`
-            -- set to `false` to remove a flag
-            -- set to `true` for a no-value flag
-            -- for raw args use `fzf_args` instead
-            -- ["--ansi"] = true,
-            -- ["--info"] = "inline-right", -- fzf < v0.42 = "inline"
-            -- ["--height"] = "100%",
             ["--layout"] = "reverse",
-            -- ["--border"] = "none",
-            -- ["--highlight-line"] = true, -- fzf >= v0.53
         },
         files = {
+            winopts = {
+                title = " Files ",
+                title_pos = "left",
+            },
             previewer = false,
             formatter = "path.filename_first",
             cwd_prompt = false,
             prompt = "  ",
+        },
+        buffers = {
+            winopts = {
+                title = " Files ",
+                title_pos = "left",
+            },
+            previewer = false,
+            formatter = "path.filename_first",
+            cwd_prompt = false,
+            prompt = "  ",
+        },
+        grep = {
+            winopts = {
+                title = " Find in Files ",
+                title_pos = "left",
+            },
+            prompt = "  ",
+            cwd_prompt = false,
         },
         previewers = {
             builtin = {
@@ -46,26 +69,52 @@ return {
                 },
             },
         },
+        formatters = {},
     },
     config = function(_, opts)
-        local nnoremap = require("nickkadutskyi.keymap").nnoremap
         local fzf = require("fzf-lua")
         fzf.setup(opts)
         -- Go to file
-        nnoremap("<leader>gf", fzf.files, {})
+        vim.keymap.set("n", "<leader>gf", fzf.files, { noremap = true })
         -- Go to Class
-        nnoremap("<leader>gc", fzf.lsp_live_workspace_symbols, {})
+        vim.keymap.set("n", "<leader>gc", function()
+            fzf.lsp_live_workspace_symbols({
+                regex_filter = "Class.*",
+                winopts = { title = " Classes ", title_pos = "left" },
+                prompt = "  ",
+                formatter = "path.filename_first",
+                previewer = false,
+                cwd_only = true,
+            })
+        end, { noremap = true })
         -- Go to Symbol (same as class)
-        nnoremap("<leader>gs", fzf.lsp_live_workspace_symbols, {})
+        vim.keymap.set("n", "<leader>gs", function()
+            fzf.lsp_live_workspace_symbols({
+                winopts = { title = " Project Symbols ", title_pos = "left" },
+                prompt = "  ",
+                formatter = "path.filename_first",
+                previewer = false,
+                cwd_only = true,
+            })
+        end, { noremap = true })
+        vim.keymap.set("n", "<leader>gas", function()
+            fzf.lsp_live_workspace_symbols({
+                winopts = { title = " All Symbols ", title_pos = "left" },
+                prompt = "  ",
+                formatter = "path.filename_first",
+                previewer = false,
+                cwd_only = false,
+            })
+        end, { noremap = true })
         -- Find in path
-        nnoremap("<leader>fp", fzf.live_grep, {})
+        vim.keymap.set("n", "<leader>fp", fzf.live_grep, { noremap = true })
         -- Go to buffer (Similar to Switcher in Intellij)
-        nnoremap("<leader>gb", fzf.buffers, {})
+        vim.keymap.set("n", "<leader>gb", fzf.buffers, { noremap = true })
         -- Go to git status
-        nnoremap("<leader>ggs", fzf.git_status, {})
+        vim.keymap.set("n", "<leader>ggs", fzf.git_status, { noremap = true })
         -- Go to git commits
-        nnoremap("<leader>ggc", fzf.git_commits, {})
+        vim.keymap.set("n", "<leader>ggc", fzf.git_commits, { noremap = true })
         -- Go to git commits of current buffer
-        nnoremap("<leader>ggb", fzf.git_bcommits, {})
+        vim.keymap.set("n", "<leader>ggb", fzf.git_bcommits, { noremap = true })
     end,
 }
