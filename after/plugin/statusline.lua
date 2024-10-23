@@ -33,33 +33,6 @@ local function getGitStatus()
 end
 
 local function getSearchCount()
-    -- function! LastSearchCount() abort
-    --   let result = searchcount(#{recompute: 0})
-    --   if empty(result)
-    --     return ''
-    --   endif
-    --   if result.incomplete ==# 1     " timed out
-    --     return printf(' /%s [?/??]', @/)
-    --   elseif result.incomplete ==# 2 " max count exceeded
-    --     if result.total > result.maxcount &&
-    --     \  result.current > result.maxcount
-    --       return printf(' /%s [>%d/>%d]', @/,
-    --       \             result.current, result.total)
-    --     elseif result.total > result.maxcount
-    --       return printf(' /%s [%d/>%d]', @/,
-    --       \             result.current, result.total)
-    --     endif
-    --   endif
-    --   return printf(' /%s [%d/%d]', @/,
-    --   \             result.current, result.total)
-    -- endfunction
-    -- let &statusline ..= '%{LastSearchCount()}'
-    --
-    -- " Or if you want to show the count only when
-    -- " 'hlsearch' was on
-    -- " let &statusline ..=
-    -- " \   '%{v:hlsearch ? LastSearchCount() : ""}'
-
     local sc = vim.fn.searchcount()
 
     if vim.v.hlsearch == 0 then
