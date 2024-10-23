@@ -167,9 +167,9 @@ vim.filetype.add({
 
 -- Formatting
 -- Reformat code with Conform.nvim which might fallback to LSP
-nnoremap("<leader>cf", function()
-    conform.format({ lsp_fallback = true })
-end)
+-- nnoremap("<leader>cf", function()
+--     conform.format()
+-- end)
 -- Reformat code with LSP
 nnoremap("<leader>clf", vim.lsp.buf.format)
 

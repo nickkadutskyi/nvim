@@ -12,4 +12,9 @@ return {
             stop_after_first = true,
         },
     },
+    config = function(_, opts)
+        local conform = require("conform")
+        conform.setup(opts)
+        vim.keymap.set("n", "<leader>cf", conform.format, { noremap = true })
+    end,
 }
