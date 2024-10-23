@@ -6,8 +6,9 @@ return {
         "telescope", -- Sets telescope profile for look and feel
         winopts = {
             title_pos = "left",
-            height = 0.85, -- window height
+            height = 30, -- window height
             width = 85,
+            row = .75,
             preview = {
                 scrollbar = false,
                 layout = "vertical",
