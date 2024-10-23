@@ -33,9 +33,50 @@ local function getGitStatus()
 end
 
 local function getSearchCount()
+    -- function! LastSearchCount() abort
+    --   let result = searchcount(#{recompute: 0})
+    --   if empty(result)
+    --     return ''
+    --   endif
+    --   if result.incomplete ==# 1     " timed out
+    --     return printf(' /%s [?/??]', @/)
+    --   elseif result.incomplete ==# 2 " max count exceeded
+    --     if result.total > result.maxcount &&
+    --     \  result.current > result.maxcount
+    --       return printf(' /%s [>%d/>%d]', @/,
+    --       \             result.current, result.total)
+    --     elseif result.total > result.maxcount
+    --       return printf(' /%s [%d/>%d]', @/,
+    --       \             result.current, result.total)
+    --     endif
+    --   endif
+    --   return printf(' /%s [%d/%d]', @/,
+    --   \             result.current, result.total)
+    -- endfunction
+    -- let &statusline ..= '%{LastSearchCount()}'
+    --
+    -- " Or if you want to show the count only when
+    -- " 'hlsearch' was on
+    -- " let &statusline ..=
+    -- " \   '%{v:hlsearch ? LastSearchCount() : ""}'
+
     local sc = vim.fn.searchcount()
-    if sc.total ~= nil and sc.current ~= 0 then
-        return sc.current .. "/" .. sc.total .. " "
+
+    if vim.v.hlsearch == 0 then
+        return ""
+    end
+
+    local icon = " "
+    if sc.incomplete == 1 then -- timed out
+        return icon .. "?/?? "
+    elseif sc.incomplete == 2 then -- max count exceeded
+        if sc.total > sc.maxcount and sc.current > sc.maxcount then
+            return icon .. ">" .. sc.current .. "/>" .. sc.total .. " "
+        elseif sc.total > sc.maxcount then
+            return icon .. sc.current .. "/>" .. sc.total .. " "
+        end
+    elseif sc.total ~= nil then
+        return icon .. sc.current .. "/" .. sc.total .. " "
     else
         return ""
     end
@@ -43,7 +84,7 @@ end
 
 local function getAbbreviation(inputstr)
     local firstChars = {}
-    for str in string.gmatch(inputstr, "([^-_,%s]+)") do
+    for str in string.gmatch(inputstr, "([^-_,%s.]+)") do
         table.insert(firstChars, string.upper(string.sub(str, 1, 1)))
     end
     if next(firstChars) == nil then
