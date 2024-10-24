@@ -39,7 +39,7 @@ return {
                             vim.o.background
                         ),
                         vim.log.levels.WARN,
-                        { title = "Plugin " .. _.name .. " config" }
+                        { title = "Plugin " .. _.name .. " config()" }
                     )
                 end
             end

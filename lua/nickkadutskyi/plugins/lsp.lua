@@ -1,7 +1,12 @@
 return {
     {
-        -- For installing langauge servers
+        -- For installing langauge servers, formatters, linters, DAPs
         "williamboman/mason.nvim",
+        opts = {
+            ui = {
+                border = "rounded",
+            },
+        },
     },
     {
         -- Uses LSP to show current code context—used in status line
@@ -12,83 +17,124 @@ return {
         -- LSP config
         "neovim/nvim-lspconfig",
         dependencies = {
+            -- mason.nvim setup have to be before mason-lspconfig
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
             "hrsh7th/cmp-nvim-lsp",
         },
-        config = function()
-            -- Mason—before mason-lspconfig
-            require("mason").setup({
-                ui = {
-                    border = "rounded",
-                },
-            })
+        config = function(plugin, _)
+            local ensure_ls = {
+                "lua_ls",
+                "ts_ls",
+                "jsonls",
+                "emmet_ls",
+                "nixd",
+            }
 
-            -- Mason-lspconfig—before manual require("lspconfig")[server_name].setup
+            -- language servers to handle with mason
+            local mason_ls = {}
+            -- language servers to configure with lspconfig
+            local lspconfig_ls = {}
+
+            local mason_dir = require("mason.settings").current.install_root_dir
+            for _, server_name in ipairs(ensure_ls) do
+                local success, config = pcall(require, "lspconfig.configs." .. server_name)
+                if success then
+                    local cmd = config.default_config.cmd
+                    if cmd and type(cmd) == "table" and not vim.tbl_isempty(cmd) then
+                        local path = vim.fn.exepath(cmd[1])
+                        -- missing from the system or already installed with mason
+                        if #path == 0 or string.find(path, mason_dir) ~= nil then
+                            table.insert(mason_ls, server_name)
+                        else
+                            table.insert(lspconfig_ls, server_name)
+                        end
+                    end
+                else
+                    vim.notify(
+                        string.format(
+                            'Config "%s" not found. Ensure it is listed in `neovim/nvim-lspconfig/doc/configs.md`.',
+                            server_name
+                        ),
+                        vim.log.levels.WARN,
+                        { title = "Plugin " .. plugin.name .. " config()" }
+                    )
+                end
+            end
+
             local cmp_lsp = require("cmp_nvim_lsp")
             local capabilities = vim.tbl_deep_extend(
                 "force",
                 {},
                 vim.lsp.protocol.make_client_capabilities(),
                 cmp_lsp.default_capabilities()
-                -- File watching is disabled by default for neovim.
-                -- See: https://github.com/neovim/neovim/pull/22405
-                -- { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } }
             )
-            require("mason-lspconfig").setup({
-                ensure_installed = {
-                    "lua_ls",
-                    "ts_ls",
-                    "jsonls",
-                    "emmet_ls",
-                },
-                handlers = {
-                    -- Setup lspconfig for each server with default options
-                    function(server_name)
-                        return require("lspconfig")[server_name].setup({
-                            capabilities = capabilities,
-                        })
-                    end,
-                    ["lua_ls"] = function()
-                        require("lspconfig").lua_ls.setup({
-                            capabilities = capabilities,
-                            settings = {
-                                Lua = {
-                                    diagnostics = {
-                                        globals = { "vim" },
-                                    },
-                                },
-                            },
-                        })
-                    end,
-                    ["emmet_ls"] = function()
-                        require("lspconfig").emmet_ls.setup({
-                            filetypes = {
-                                "html",
-                                "css",
-                                "php",
-                                "sass",
-                                "scss",
-                                "vue",
-                                "javascript",
-                            },
-                        })
-                    end,
-                },
-            })
 
-            -- Configure nil_ls (installed in home-manager profile) for nix
-            require("lspconfig").nil_ls.setup({
-                capabitilies = capabilities,
-                settings = {
-                    ["nil"] = {
-                        testSetting = 42,
-                        formatting = {
-                            command = { "nixpkgs-fmt" },
+            local ls_configs = {
+                ["lua_ls"] = {
+                    settings = {
+                        Lua = {
+                            diagnostics = {
+                                globals = { "vim" },
+                            },
                         },
                     },
                 },
+                ["emmet_ls"] = {
+                    filetypes = {
+                        "html",
+                        "css",
+                        "php",
+                        "sass",
+                        "scss",
+                        "vue",
+                        "javascript",
+                    },
+                },
+                ["nixd"] = {
+                    settings = {
+                        ["nixd"] = {
+                            formatting = {
+                                command = { "nixfmt" },
+                            },
+                        },
+                    },
+                },
+                ["nil_ls"] = {
+                    capabilities = { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } },
+                    settings = {
+                        ["nil"] = {
+                            testSetting = 42,
+                            formatting = {
+                                command = { "nixfmt" },
+                            },
+                        },
+                    },
+                },
+            }
+
+            ---@param server_name string
+            ---@param user_config ?lspconfig.Config
+            local setup_ls = function(server_name, user_config)
+                local conf = vim.tbl_deep_extend(
+                    "force",
+                    { capabilities = capabilities },
+                    ls_configs[server_name] or {},
+                    user_config or {}
+                )
+                require("lspconfig")[server_name].setup(conf)
+            end
+
+            -- install language servers with mason and configure
+            require("mason-lspconfig").setup({
+                ensure_installed = mason_ls,
+                handlers = { setup_ls },
             })
+
+            -- configure language servers with lspconfig
+            for _, server_name in ipairs(lspconfig_ls) do
+                setup_ls(server_name)
+            end
 
             -- FIXME is it the best place to do this?
             -- Diagnostics config

@@ -60,16 +60,12 @@ local function getAbbreviation(inputstr)
     for str in string.gmatch(inputstr, "([^-_,%s.]+)") do
         table.insert(firstChars, string.upper(string.sub(str, 1, 1)))
     end
-    if next(firstChars) == nil then
-        return string.upper(string.sub(inputstr, 1, 1))
-    else
-        return (firstChars[1] or "") .. (firstChars[2] or "")
-    end
+    return (firstChars[1] or "") .. (firstChars[2] or string.upper(string.sub(inputstr, 2, 2)) or "")
 end
 
 local function getProjectName()
     local rootPath = vim.fn.getcwd()
-    return " " .. vim.fs.basename(rootPath)
+    return vim.fs.basename(rootPath)
 end
 
 local function getFileTypeIcon()
@@ -98,7 +94,7 @@ end
 function StatusLine()
     return table.concat({
         "[" .. getAbbreviation(getProjectName()) .. "]",
-        getProjectName(),
+        " " .. getProjectName(),
         getGitBranch(),
         getGitStatus(),
         cFileType,
