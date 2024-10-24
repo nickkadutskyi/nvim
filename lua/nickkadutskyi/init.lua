@@ -22,6 +22,7 @@ local NickKadutskyiGroup = augroup("NickKadutskyi", {})
 local nnoremap = require("nickkadutskyi.keymap").nnoremap
 local conform = require("conform")
 
+-- FIXME do i need to move this to lsp.lua config?
 -- Adds mappings for LSP
 autocmd("LspAttach", {
     group = NickKadutskyiGroup,
