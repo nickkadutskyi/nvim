@@ -81,7 +81,33 @@ return {
                 },
                 lualine_x = {},
                 lualine_y = { "progress", "location" },
-                lualine_z = { "mode" },
+                lualine_z = {
+                    {
+                        "mode",
+                        fmt = function(mode)
+                            local modes = {
+                                ["NORMAL"] = "NOR",
+                                ["O-PENDING"] = "OPND",
+                                ["VISUAL"] = "VIS",
+                                ["V-LINE"] = "VISL",
+                                ["V-BLOCK"] = "VISB",
+                                ["SELECT"] = "SEL",
+                                ["S-LINE"] = "SELL",
+                                ["S-BLOCK"] = "SELB",
+                                ["INSERT"] = "INS",
+                                ["REPLACE"] = "RPLC",
+                                ["V-REPLACE"] = "VRPL",
+                                ["COMMAND"] = "COM",
+                                ["EX"] = "EX",
+                                ["MORE"] = "MORE",
+                                ["CONFIRM"] = "CONF",
+                                ["SHELL"] = "SHEL",
+                                ["TERMINAL"] = "TERM",
+                            }
+                            return modes[mode] or mode
+                        end,
+                    },
+                },
             },
             inactive_sections = {
                 lualine_a = {},
