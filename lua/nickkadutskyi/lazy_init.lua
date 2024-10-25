@@ -19,6 +19,10 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
     spec = {
         { import = "nickkadutskyi.plugins" },
+        {
+            -- Detect tabstop and shiftwidth automatically
+            "tpope/vim-sleuth",
+        },
         --{
         --    "rachartier/tiny-inline-diagnostic.nvim", -- better diagnostics
         --    enabled = false,

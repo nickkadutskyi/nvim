@@ -1,9 +1,5 @@
 return {
     {
-        -- Detect tabstop and shiftwidth automatically
-        "tpope/vim-sleuth",
-    },
-    {
         "nvim-lualine/lualine.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
         opts = {
@@ -34,8 +30,10 @@ return {
                         return vim.fs.basename(rootPath)
                     end,
                 },
-                lualine_b = { "branch", "diff", "diagnostics" },
-                lualine_c = {
+                lualine_b = {
+                    "branch",
+                    "diff",
+                    "diagnostics",
                     {
                         "filetype",
                         padding = { left = 1, right = 0 },
@@ -47,15 +45,43 @@ return {
                         newfile_status = true,
                         path = 1,
                         symbols = { newfile = "[new]", unnamed = "[no name]" },
+                        fmt = function(name, fmt)
+                            local filePath, rest = name:match("(.+)%s*(.*)")
+                            local fileName = vim.fs.basename(filePath)
+                            local files = vim.g.all_files_str
+                            local _, c = files:gsub(", " .. (fileName or "") .. ", ", "")
+                            if c > 1 and fileName ~= nil then
+                                return filePath .. " " .. (rest or "")
+                            elseif fileName ~= nil then
+                                return fileName .. " " .. (rest or "")
+                            else
+                                return name
+                            end
+                        end,
                     },
                     "searchcount",
-                    function()
-                        return require("nvim-navic").get_location()
-                    end,
+                },
+                lualine_c = {
+                    {
+                        "navic",
+
+                        -- Component specific options
+                        color_correction = "dynamic", -- Can be nil, "static" or "dynamic". This option is useful only when you have highlights enabled.
+                        -- Many colorschemes don't define same backgroud for nvim-navic as their lualine statusline backgroud.
+                        -- Setting it to "static" will perform a adjustment once when the component is being setup. This should
+                        --   be enough when the lualine section isn't changing colors based on the mode.
+                        -- Setting it to "dynamic" will keep updating the highlights according to the current modes colors for
+                        --   the current section.
+
+                        navic_opts = {
+                            click = true,
+                            separator = "  ",
+                        }, -- lua table with same format as setup's option. All options except "lsp" options take effect when set here.
+                    },
                 },
                 lualine_x = {},
-                lualine_y = { "progress" },
-                lualine_z = { "mode", "location" },
+                lualine_y = { "progress", "location" },
+                lualine_z = { "mode" },
             },
             inactive_sections = {
                 lualine_a = {},
