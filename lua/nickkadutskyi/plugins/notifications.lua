@@ -10,6 +10,8 @@ return {
             icons = {
                 WARN = "",
             },
+            top_down = false,
+            stages = "static",
         },
         init = function()
             vim.notify = require("notify")

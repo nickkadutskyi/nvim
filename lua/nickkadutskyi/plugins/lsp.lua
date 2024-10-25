@@ -169,7 +169,7 @@ return {
             })
 
             -- configure language servers with lspconfig
-            for server_name, config in pairs(lspconfig_ls) do
+            for server_name, _ in pairs(lspconfig_ls) do
                 setup_ls(server_name)
             end
 
@@ -240,6 +240,8 @@ return {
             })
             vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { noremap = true })
             vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { noremap = true })
+            -- nnoremap("<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
+            -- nnoremap("<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
         end,
     },
     {

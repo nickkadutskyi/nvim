@@ -14,14 +14,6 @@ elseif vim.fn.filereadable(vim.fn.expand("%")) == 1 then
     vim.api.nvim_set_current_dir(vim.fn.expand("%:p:h"))
 end
 
--- Auto commands
-
-local nnoremap = require("nickkadutskyi.keymap").nnoremap
-local conform = require("conform")
-
--- FIXME do i need to move this to lsp.lua config?
--- Adds mappings for LSP
-
 -- Add all file into global variable
 vim.g.all_files_str = ""
 local rootPath = vim.fn.getcwd()
@@ -113,37 +105,15 @@ vim.filetype.add({
     },
 })
 
--- NEOVIM SPECIFIC MAPPINGS (keep as much as possible in .vimrc)
-
--- Vim Fuigitive
-
--- Diagnostics builtin
--- nnoremap("[d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]iagnostic message" })
--- nnoremap("]d", vim.diagnostic.goto_next, { desc = "Go to next [D]iagnostic message" })
--- nnoremap("<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
--- nnoremap("<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
 -- Treesitter Inspect builtin
-nnoremap("<leader>ti", ":Inspect<CR>")
-nnoremap("<leader>tti", ":InspectTree<CR>")
+vim.keymap.set("n", "<leader>ti", ":Inspect<CR>", { noremap = true })
+vim.keymap.set("n", "<leader>tti", ":InspectTree<CR>", { noremap = true })
 
--- Obsidian
--- nnoremap("fl", function()
---     if require("obsidian").util.cursor_on_markdown_link() then
---         return "<cmd>ObsidianFollowLink<CR>"
---     else
---         return "fl"
---     end
--- end, { noremap = false, expr = true })
-
--- FEATUERS
-
--- Highlight when yanking (copying) text
---  Try it with `yap` in normal mode
---  See `:help vim.highlight.on_yank()`
+-- highlight when yanking (copying) text
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight when yanking (copying) text",
-    group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
+    group = vim.api.nvim_create_augroup("NickKadutskyi", { clear = true }),
     callback = function()
         vim.highlight.on_yank()
     end,
