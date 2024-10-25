@@ -12,6 +12,8 @@ return {
     {
         -- LSP config
         "neovim/nvim-lspconfig",
+        event = { "BufReadPre", "BufNewFile" },
+        cmd = { "LspInfo", "LspInstall", "LspUninstall" },
         dependencies = {
             -- mason.nvim setup have to be before mason-lspconfig
             "williamboman/mason.nvim",
@@ -220,12 +222,10 @@ return {
                     vim.keymap.set("n", "<leader>vrr", vim.lsp.buf.references, opts)
                     vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
                     vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
-                    vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
-                    vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
+                    vim.keymap.set("n", "<leader>clf", vim.lsp.buf.format, opts)
                 end,
             })
 
-            -- FIXME is it the best place to do this?
             -- Diagnostics config
             vim.diagnostic.config({
                 virtual_text = true,
@@ -238,6 +238,8 @@ return {
                     prefix = "",
                 },
             })
+            vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { noremap = true })
+            vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { noremap = true })
         end,
     },
     {

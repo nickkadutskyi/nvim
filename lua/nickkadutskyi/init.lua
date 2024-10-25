@@ -115,17 +115,7 @@ vim.filetype.add({
 
 -- NEOVIM SPECIFIC MAPPINGS (keep as much as possible in .vimrc)
 
--- Formatting
--- Reformat code with Conform.nvim which might fallback to LSP
--- nnoremap("<leader>cf", function()
---     conform.format()
--- end)
--- Reformat code with LSP
-nnoremap("<leader>clf", vim.lsp.buf.format)
-
 -- Vim Fuigitive
--- Git Satus
--- nnoremap("<leader>gs", ":Git<CR>")
 
 -- Diagnostics builtin
 -- nnoremap("[d", vim.diagnostic.goto_prev, { desc = "Go to previous [D]iagnostic message" })
