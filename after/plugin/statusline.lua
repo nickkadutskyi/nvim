@@ -13,7 +13,35 @@ local function getLocation()
 end
 
 local function getMode()
-    return require("nickkadutskyi.mode").get()
+    local modes = {
+        ["n"] = "NOR",
+        ["no"] = "NOR",
+        ["v"] = "VIS",
+        ["V"] = "VISL",
+        ["^v"] = "VISB",
+        ["s"] = "SEL",
+        ["S"] = "SELL",
+        [""] = "SELB",
+        ["i"] = "INS",
+        ["ic"] = "INS",
+        ["R"] = "REP",
+        ["Rv"] = "VISR",
+        ["c"] = "COMM",
+        ["cv"] = "VIME",
+        ["ce"] = "EX",
+        ["r"] = "PROM",
+        ["rm"] = "MOAR",
+        ["r?"] = "CONF",
+        ["!"] = "SHEL",
+        ["t"] = "TERM",
+    }
+    local current_mode = vim.api.nvim_get_mode().mode
+    local defined_mode = modes[current_mode]
+    if defined_mode ~= nil then
+        return string.format(" %-4s ", modes[current_mode]):upper()
+    else
+        return string.format(" %-4s ", current_mode):upper()
+    end
 end
 
 local function getGitBranch()
@@ -118,6 +146,6 @@ end
 -- Show single statusline for all splits
 vim.opt.laststatus = 3
 -- Init statusline
-vim.o.statusline = "%!v:lua.StatusLine()"
+-- vim.o.statusline = "%!v:lua.StatusLine()"
 -- vim.o.statusline =
 -- 	"%<%f %h%m%r %{%v:lua.require'nvim-navic'.get_location()%} %=%{%v:lua.require'nickkadutskyi.mode'.get()%}%-10.(%l,%c%V%) %P"
