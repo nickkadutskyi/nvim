@@ -6,6 +6,7 @@ return {
             javascript = { "prettierd", "prettier" },
             css = { "prettierd", "prettier" },
             php = { "php_cs_fixer" },
+            nix = { "nixfmt" },
         },
         default_format_opts = {
             lsp_format = "fallback",

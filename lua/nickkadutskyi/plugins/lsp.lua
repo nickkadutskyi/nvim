@@ -1,5 +1,21 @@
 return {
     {
+        -- Rename with incremental search
+        "smjonas/inc-rename.nvim",
+        config = function()
+            require("inc_rename").setup({})
+            vim.keymap.set("n", "<leader>vrn", function()
+                return ":IncRename " .. vim.fn.expand("<cword>")
+            end, { expr = true })
+            vim.keymap.set("n", "<S-F6>", function()
+                return ":IncRename " .. vim.fn.expand("<cword>")
+            end, { expr = true })
+            vim.keymap.set("n", "<F18>", function()
+                return ":IncRename " .. vim.fn.expand("<cword>")
+            end, { expr = true })
+        end,
+    },
+    {
         -- For installing langauge servers, formatters, linters, DAPs
         "williamboman/mason.nvim",
         opts = { ui = { border = "rounded" } },
@@ -30,6 +46,8 @@ return {
                 "jsonls",
                 "emmet_ls",
                 "nixd",
+                "bashls",
+                -- "nil_ls",
             }
 
             -- language servers to install and configure with mason
@@ -51,7 +69,7 @@ return {
                         -- missing from the system or already installed with mason
                         if
                             (#path == 0 or string.find(path, mason_dir) ~= nil)
-                            and require("mason-lspconfig").get_mappings().mason_to_lspconfig[server_name] ~= nil
+                            and require("mason-lspconfig").get_mappings().lspconfig_to_mason[server_name] ~= nil
                         then
                             mason_ls[server_name] = config.default_config
                         elseif #path ~= 0 then
@@ -128,7 +146,6 @@ return {
                     },
                 },
                 ["nixd"] = {
-                    random = "",
                     settings = {
                         ["nixd"] = {
                             formatting = {
@@ -147,6 +164,9 @@ return {
                             },
                         },
                     },
+                },
+                ["bashls"] = {
+                    filetypes = { "sh", "zsh" },
                 },
             }
 
@@ -205,7 +225,7 @@ return {
 
             -- Conifgures LspAttach (on_attach) event for all language servers
             vim.api.nvim_create_autocmd("LspAttach", {
-                group = vim.api.nvim_create_augroup("NickKadutskyi", {}),
+                group = vim.api.nvim_create_augroup("NickKadutskyi", { clear = false }),
                 callback = function(e)
                     local bufnr = e.buf
                     local client = vim.lsp.get_client_by_id(e.data.client_id)
@@ -217,10 +237,9 @@ return {
                     vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
                     vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
                     vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, opts)
-                    vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, opts)
                     vim.keymap.set("n", "<leader>vca", vim.lsp.buf.code_action, opts)
                     vim.keymap.set("n", "<leader>vrr", vim.lsp.buf.references, opts)
-                    vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
+                    -- vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
                     vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
                     vim.keymap.set("n", "<leader>clf", vim.lsp.buf.format, opts)
                 end,
@@ -240,6 +259,7 @@ return {
             })
             vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { noremap = true })
             vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { noremap = true })
+            vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, { noremap = true })
             -- nnoremap("<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
             -- nnoremap("<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
         end,

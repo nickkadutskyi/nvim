@@ -62,9 +62,9 @@ return {
         previewers = {
             builtin = {
                 extensions = {
-                    ["svg"] = { "chafa" },
-                    ["png"] = { "chafa", "<file>" },
-                    ["jpg"] = { "chafa" },
+                    ["svg"] = { "viu", "-b" },
+                    ["png"] = { "chafa" },
+                    ["jpg"] = { "viu", "-b" },
                 },
             },
         },

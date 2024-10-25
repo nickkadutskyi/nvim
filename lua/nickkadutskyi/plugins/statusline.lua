@@ -45,10 +45,10 @@ return {
                         newfile_status = true,
                         path = 1,
                         symbols = { newfile = "[new]", unnamed = "[no name]" },
-                        fmt = function(name, fmt)
+                        fmt = function(name, _)
                             local filePath, rest = name:match("(.+)%s*(.*)")
                             local fileName = vim.fs.basename(filePath)
-                            local files = vim.g.all_files_str
+                            local files = vim.g.all_files_str or ""
                             local _, c = files:gsub(", " .. (fileName or "") .. ", ", "")
                             if c > 1 and fileName ~= nil then
                                 return filePath .. " " .. (rest or "")
@@ -118,5 +118,18 @@ return {
                 lualine_z = {},
             },
         },
+        config = function(_, opts)
+            require("lualine").setup(opts)
+            -- get a list of all git files into global variable
+            vim.system({ "git", "rev-parse", "--is-inside-work-tree" }, { text = true }, function(o)
+                if o.code == 0 and o.stdout:match("true") then
+                    vim.system({ "sh", "-c", "git -C \"$(git rev-parse --show-toplevel)\" ls-files | xargs basename" }, { text = true }, function(git_files)
+                        if git_files.code == 0 then
+                            vim.g.all_files_str = table.concat(vim.split(git_files.stdout, "\n"), ", ")
+                        end
+                    end)
+                end
+            end)
+        end,
     },
 }

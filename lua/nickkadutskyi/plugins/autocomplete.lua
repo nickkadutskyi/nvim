@@ -91,6 +91,7 @@ return {
                 }, {
                     { name = "buffer" },
                     { name = "lazydev", group_index = 0 },
+                    { name = "supermaven" },
                 }),
                 experimental = {
                     ghost_text = false, -- this feature conflict with ai assistant inline preview

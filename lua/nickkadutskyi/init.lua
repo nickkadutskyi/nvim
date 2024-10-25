@@ -14,97 +14,13 @@ elseif vim.fn.filereadable(vim.fn.expand("%")) == 1 then
     vim.api.nvim_set_current_dir(vim.fn.expand("%:p:h"))
 end
 
--- Add all file into global variable
-vim.g.all_files_str = ""
-local rootPath = vim.fn.getcwd()
--- Check if it's a git repo
-vim.fn.jobstart("git rev-parse --is-inside-work-tree", {
-    cwd = rootPath,
-    on_exit = function() end,
-    on_stdout = function(_, data)
-        local t = ""
-        for _, d in pairs(data) do
-            t = t .. d
-        end
-        if string.find(t, "true") then
-            -- Get all files in git repo
-            vim.fn.jobstart("git ls-files | xargs basename", {
-                cwd = rootPath,
-                on_exit = function() end,
-                on_stdout = function(_, dataInternal)
-                    for _, d in pairs(dataInternal) do
-                        vim.g.all_files_str = vim.g.all_files_str .. ", " .. d
-                    end
-                    vim.g.all_files_str = vim.g.all_files_str .. ", end"
-                end,
-                on_stderr = function() end,
-            })
-        end
-    end,
-    on_stderr = function(_, data)
-        -- do nothing if not a git repository because it can amoun to a lot of files
-        --
-        -- local t = "" .. next(data)
-        -- for _, d in pairs(data) do
-        --   t = t .. d
-        -- end
-        -- if string.find(t, "not a git repository") then
-        --   -- Get all files in directory excluding some folders
-        --   vim.fn.jobstart(
-        --     'find "' .. rootPath .. '/" -type f ' ..
-        --     '! -path "*node_modules/*" ' ..
-        --     '! -path "*vendor/*" ' ..
-        --     '! -path "*.idea/sonarlint*" ' ..
-        --     '! -path "*.git/*" ' ..
-        --     ' -exec basename {} \\;',
-        --     {
-        --       cwd = rootPath,
-        --       on_exit = function()
-        --       end,
-        --       on_stdout = function(_, dataInternal)
-        --         for _, d in pairs(dataInternal) do
-        --           vim.g.all_files_str = vim.g.all_files_str .. ", " .. d
-        --         end
-        --         vim.g.all_files_str = vim.g.all_files_str .. ", end"
-        --       end,
-        --       on_stderr = function()
-        --       end
-        --     }
-        --   )
-        -- end
-    end,
-    stderr_buffered = false,
-    stdout_buffered = false,
-})
-
--- NEOVIM SPECIFIC SETTINGS (keep as much as possible in .vimrc)
+-- NEOVIM SPECIFIC SETTINGS
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = "split"
 
 -- Remove cmd line to allow more space
 vim.opt.cmdheight = 0
-
--- make zsh files recognized as sh for bash-ls & treesitter because there is no parser for zsh
-vim.filetype.add({
-    extension = {
-        zsh = "sh",
-        sh = "sh", -- force sh-files with zsh-shebang to still get sh as filetype
-        scpt = function() -- detect if it's AppleScript or JavaScript for osascript
-            if vim.fn.search("osascript -l JavaScript", "nw") ~= 0 then
-                return "javascript"
-            end
-            return "applescript"
-        end,
-    },
-    filename = {
-        [".zshrc"] = "sh",
-        [".zshenv"] = "sh",
-        [".zpath"] = "sh",
-        [".zprofile"] = "sh",
-    },
-})
-
 
 -- Treesitter Inspect builtin
 vim.keymap.set("n", "<leader>ti", ":Inspect<CR>", { noremap = true })
@@ -113,7 +29,7 @@ vim.keymap.set("n", "<leader>tti", ":InspectTree<CR>", { noremap = true })
 -- highlight when yanking (copying) text
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight when yanking (copying) text",
-    group = vim.api.nvim_create_augroup("NickKadutskyi", { clear = true }),
+    group = vim.api.nvim_create_augroup("NickKadutskyi", { clear = false }),
     callback = function()
         vim.highlight.on_yank()
     end,
