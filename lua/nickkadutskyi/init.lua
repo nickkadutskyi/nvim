@@ -29,7 +29,7 @@ vim.keymap.set("n", "<leader>tti", ":InspectTree<CR>", { noremap = true })
 -- highlight when yanking (copying) text
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight when yanking (copying) text",
-    group = vim.api.nvim_create_augroup("NickKadutskyi", { clear = false }),
+    group = vim.api.nvim_create_augroup("nickkadutskyi-highlight-yank", { clear = true }),
     callback = function()
         vim.highlight.on_yank()
     end,

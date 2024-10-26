@@ -31,10 +31,10 @@ return {
         event = { "BufReadPre", "BufNewFile" },
         cmd = { "LspInfo", "LspInstall", "LspUninstall" },
         dependencies = {
-            -- mason.nvim setup have to be before mason-lspconfig
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
             "hrsh7th/cmp-nvim-lsp",
+            "j-hui/fidget.nvim",
         },
         config = function(plugin, _)
             -- FIXME is this a proper api?
@@ -45,9 +45,9 @@ return {
                 "ts_ls",
                 "jsonls",
                 "emmet_ls",
-                "nixd",
+                -- "nixd",
                 "bashls",
-                -- "nil_ls",
+                "nil_ls",
             }
 
             -- language servers to install and configure with mason
@@ -108,19 +108,19 @@ return {
                 cmp_lsp.default_capabilities()
             )
 
-            local runtime_path = vim.split(package.path, ";")
-            table.insert(runtime_path, "lua/?.lua")
-            table.insert(runtime_path, "lua/?/init.lua")
+            -- local runtime_path = vim.split(package.path, ";")
+            -- table.insert(runtime_path, "lua/?.lua")
+            -- table.insert(runtime_path, "lua/?/init.lua")
             local ls_configs = {
                 ["lua_ls"] = {
                     settings = {
                         Lua = {
                             -- Disable telemetry
                             telemetry = { enable = false },
-                            runtime = {
-                                version = "LuaJIT",
-                                path = runtime_path,
-                            },
+                            -- runtime = {
+                            --     version = "LuaJIT",
+                            --     path = runtime_path,
+                            -- },
                             diagnostics = {
                                 globals = { "vim" },
                             },
@@ -225,16 +225,13 @@ return {
 
             -- Conifgures LspAttach (on_attach) event for all language servers
             vim.api.nvim_create_autocmd("LspAttach", {
-                group = vim.api.nvim_create_augroup("NickKadutskyi", { clear = false }),
-                callback = function(e)
-                    local bufnr = e.buf
-                    local client = vim.lsp.get_client_by_id(e.data.client_id)
-                    if client ~= nil and client.server_capabilities.documentSymbolProvider then
-                        require("nvim-navic").attach(client, bufnr)
-                    end
+                group = vim.api.nvim_create_augroup("nickkadutskyi-lsp-attach", { clear = true }),
+                callback = function(event)
+                    local bufnr = event.buf
 
-                    local opts = { buffer = e.buf }
-                    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+                    local opts = { buffer = event.buf, desc = "LSP: " }
+                    -- vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+                    vim.keymap.set("n", "gd", require("fzf-lua").lsp_definitions, opts)
                     vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
                     vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, opts)
                     vim.keymap.set("n", "<leader>vca", vim.lsp.buf.code_action, opts)
@@ -242,6 +239,41 @@ return {
                     -- vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
                     vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
                     vim.keymap.set("n", "<leader>clf", vim.lsp.buf.format, opts)
+
+                    -- Attach to nvim-navic to show current code context—used in status line
+                    local client = vim.lsp.get_client_by_id(event.data.client_id)
+                    if client ~= nil and client.server_capabilities.documentSymbolProvider then
+                        require("nvim-navic").attach(client, bufnr)
+                    end
+
+                    -- The following two autocommands are used to highlight references of the
+                    -- word under your cursor when your cursor rests there for a little while.
+                    -- When you move your cursor, the highlights will be cleared (the second autocommand).
+                    if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+                        local hi_augroup = vim.api.nvim_create_augroup("nickkadutskyi-lsp-highlight", { clear = false })
+                        vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+                            buffer = event.buf,
+                            group = hi_augroup,
+                            callback = vim.lsp.buf.document_highlight,
+                        })
+
+                        vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+                            buffer = event.buf,
+                            group = hi_augroup,
+                            callback = vim.lsp.buf.clear_references,
+                        })
+
+                        vim.api.nvim_create_autocmd("LspDetach", {
+                            group = vim.api.nvim_create_augroup("nickkadutskyi-lsp-detach", { clear = true }),
+                            callback = function(event2)
+                                vim.lsp.buf.clear_references()
+                                vim.api.nvim_clear_autocmds({
+                                    group = "nickkadutskyi-lsp-highlight",
+                                    buffer = event2.buf,
+                                })
+                            end,
+                        })
+                    end
                 end,
             })
 

@@ -17,19 +17,7 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Initializing lazy.nvim
 require("lazy").setup({
-    spec = {
-        { import = "nickkadutskyi.plugins" },
-        {
-            -- Detect tabstop and shiftwidth automatically
-            "tpope/vim-sleuth",
-        },
-        {
-            -- For commenting
-            "numToStr/Comment.nvim",
-            opts = {},
-            lazy = false,
-        },
-    },
+    spec = { { import = "nickkadutskyi.plugins" } },
     change_detection = {
         enable = true,
         notify = false,
