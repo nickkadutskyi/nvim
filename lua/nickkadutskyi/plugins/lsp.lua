@@ -48,6 +48,10 @@ return {
                 -- "nixd",
                 "bashls",
                 "nil_ls",
+
+                -- PHP
+                "intelephense",
+                -- "psalm", -- disabled because it's not working as if ran as cli tool via nvim-lint
             }
 
             -- language servers to install and configure with mason
@@ -167,6 +171,9 @@ return {
                 },
                 ["bashls"] = {
                     filetypes = { "sh", "zsh" },
+                },
+                ["psalm"] = {
+                    cmd = { "psalm", "--language-server", "--config=psalm.xml" },
                 },
             }
 

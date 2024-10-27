@@ -8,32 +8,30 @@ return {
                 -- component_separators = { left = "", right = "" },
                 -- component_separators = { left = "|", right = "|" },
                 component_separators = { left = "", right = "" },
-                section_separators = { left = "", right = "" },
+                -- section_separators = { left = "", right = "" },
+                section_separators = { left = "", right = "" },
                 always_divide_middle = true,
             },
             sections = {
                 lualine_a = {
                     -- project abbreviation
                     function()
-                        local rootPath = vim.fn.getcwd()
-                        local inputstr = vim.fs.basename(rootPath)
+                        local projectName = vim.fs.basename(vim.fn.getcwd())
                         local firstChars = {}
-                        for str in string.gmatch(inputstr, "([^-_,%s.]+)") do
+                        for str in string.gmatch(projectName, "([^-_,%s.]+)") do
                             table.insert(firstChars, string.upper(string.sub(str, 1, 1)))
                         end
                         return (firstChars[1] or "")
-                            .. (firstChars[2] or string.upper(string.sub(inputstr, 2, 2)) or "")
+                            .. (firstChars[2] or string.upper(string.sub(projectName, 2, 2)) or "")
                     end,
                     -- project name
                     function()
-                        local rootPath = vim.fn.getcwd()
-                        return vim.fs.basename(rootPath)
+                        return vim.fs.basename(vim.fn.getcwd())
                     end,
                 },
                 lualine_b = {
                     "branch",
-                    "diff",
-                    "diagnostics",
+                    -- "diff",
                     {
                         "filetype",
                         padding = { left = 1, right = 0 },
@@ -43,23 +41,31 @@ return {
                         "filename",
                         file_status = true,
                         newfile_status = true,
-                        path = 1,
+                        path = 2,
                         symbols = { newfile = "[new]", unnamed = "[no name]" },
                         fmt = function(name, _)
-                            local filePath, rest = name:match("(.+)%s*(.*)")
+                            local rootPath = vim.fn.getcwd()
+                            local filePath, rest = name:match("(.+)%s*(%[*.*%]*)")
+                            local relativePath = vim.fn.fnamemodify(filePath, ":~:.")
+                            local parentPath = vim.fn.fnamemodify(filePath, ":h")
                             local fileName = vim.fs.basename(filePath)
                             local files = vim.g.all_files_str or ""
                             local _, c = files:gsub(", " .. (fileName or "") .. ", ", "")
                             if c > 1 and fileName ~= nil then
-                                return filePath .. " " .. (rest or "")
-                            elseif fileName ~= nil then
+                                return relativePath .. " " .. (rest or "")
+                            elseif fileName ~= nil and string.sub(filePath, 1, string.len(rootPath)) == rootPath then
                                 return fileName .. " " .. (rest or "")
                             else
-                                return name
+                                if string.len(filePath) > 40 then
+                                    local rightPart = vim.fs.basename(parentPath) .. "/" .. fileName
+                                    local leftPart = string.sub(filePath, 1, 40 - string.len(rightPart))
+                                    return leftPart .. ".../" .. rightPart .. " " .. (rest or "")
+                                else
+                                    return filePath .. " " .. (rest or "")
+                                end
                             end
                         end,
                     },
-                    "searchcount",
                 },
                 lualine_c = {
                     {
@@ -75,12 +81,18 @@ return {
 
                         navic_opts = {
                             click = true,
-                            separator = "  ",
+                            separator = "  ",
                         }, -- lua table with same format as setup's option. All options except "lsp" options take effect when set here.
                     },
                 },
-                lualine_x = {},
-                lualine_y = { "progress", "location" },
+                lualine_x = {
+                    "diagnostics",
+                },
+                lualine_y = {
+                    "searchcount",
+                    "progress",
+                    "location",
+                },
                 lualine_z = {
                     {
                         "mode",
@@ -123,11 +135,15 @@ return {
             -- get a list of all git files into global variable
             vim.system({ "git", "rev-parse", "--is-inside-work-tree" }, { text = true }, function(o)
                 if o.code == 0 and o.stdout:match("true") then
-                    vim.system({ "sh", "-c", "git -C \"$(git rev-parse --show-toplevel)\" ls-files | xargs basename" }, { text = true }, function(git_files)
-                        if git_files.code == 0 then
-                            vim.g.all_files_str = table.concat(vim.split(git_files.stdout, "\n"), ", ")
+                    vim.system(
+                        { "sh", "-c", 'git -C "$(git rev-parse --show-toplevel)" ls-files | xargs basename' },
+                        { text = true },
+                        function(git_files)
+                            if git_files.code == 0 then
+                                vim.g.all_files_str = table.concat(vim.split(git_files.stdout, "\n"), ", ")
+                            end
                         end
-                    end)
+                    )
                 end
             end)
         end,
