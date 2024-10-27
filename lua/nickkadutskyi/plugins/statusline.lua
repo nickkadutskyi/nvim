@@ -41,28 +41,18 @@ return {
                         "filename",
                         file_status = true,
                         newfile_status = true,
-                        path = 2,
+                        path = 1,
                         symbols = { newfile = "[new]", unnamed = "[no name]" },
                         fmt = function(name, _)
-                            local rootPath = vim.fn.getcwd()
                             local filePath, rest = name:match("(.+)%s*(%[*.*%]*)")
-                            local relativePath = vim.fn.fnamemodify(filePath, ":~:.")
                             local parentPath = vim.fn.fnamemodify(filePath, ":h")
                             local fileName = vim.fs.basename(filePath)
-                            local files = vim.g.all_files_str or ""
-                            local _, c = files:gsub(", " .. (fileName or "") .. ", ", "")
-                            if c > 1 and fileName ~= nil then
-                                return relativePath .. " " .. (rest or "")
-                            elseif fileName ~= nil and string.sub(filePath, 1, string.len(rootPath)) == rootPath then
-                                return fileName .. " " .. (rest or "")
+                            if string.len(filePath) > 50 then
+                                local rightPart = vim.fs.basename(parentPath) .. "/" .. fileName
+                                local leftPart = string.sub(filePath, 1, 50 - string.len(rightPart))
+                                return leftPart .. "../" .. rightPart .. " " .. (rest or "")
                             else
-                                if string.len(filePath) > 40 then
-                                    local rightPart = vim.fs.basename(parentPath) .. "/" .. fileName
-                                    local leftPart = string.sub(filePath, 1, 40 - string.len(rightPart))
-                                    return leftPart .. ".../" .. rightPart .. " " .. (rest or "")
-                                else
-                                    return filePath .. " " .. (rest or "")
-                                end
+                                return filePath .. " " .. (rest or "")
                             end
                         end,
                     },
