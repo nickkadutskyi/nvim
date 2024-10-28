@@ -175,6 +175,11 @@ return {
                 ["psalm"] = {
                     cmd = { "psalm", "--language-server", "--config=psalm.xml" },
                 },
+                ["intelephense"] = {
+                    init_options = {
+                        licenceKey = vim.fn.expand("~/.config/php/intelephense_license.txt"),
+                    },
+                },
             }
 
             ---@param server_name string
