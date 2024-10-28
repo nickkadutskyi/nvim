@@ -48,8 +48,5 @@ return {
             trouble._action("prev")("document_diagnostics")
             -- trouble.prev({ skip_groups = true, jump = true, mode = "diagnostics" })
         end, { noremap = true })
-        vim.keymap.set("n", "<leader>tq", function()
-            trouble.toggle({ mode = "quickfix", filter = { buf = 0 } })
-        end, { noremap = true })
     end,
 }

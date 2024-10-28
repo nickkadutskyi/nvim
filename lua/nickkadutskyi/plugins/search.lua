@@ -8,7 +8,7 @@ return {
             title_pos = "left",
             height = 30, -- window height
             width = 85,
-            row = .75,
+            row = 0.75,
             preview = {
                 scrollbar = false,
                 layout = "vertical",
@@ -33,31 +33,26 @@ return {
         fzf_opts = {
             ["--layout"] = "reverse",
         },
-        files = {
+        defaults = {
             winopts = {
-                title = " Files ",
                 title_pos = "left",
             },
             previewer = false,
             cwd_prompt = false,
+            prompt = "  ",
+        },
+        files = {
+            winopts = { title = " Files ", title_pos = "left" },
             prompt = "  ",
         },
         buffers = {
-            winopts = {
-                title = " Files ",
-                title_pos = "left",
-            },
-            previewer = false,
-            cwd_prompt = false,
+            winopts = { title = " Switcher ", title_pos = "left" },
             prompt = "  ",
         },
         grep = {
-            winopts = {
-                title = " Find in Files ",
-                title_pos = "left",
-            },
+            winopts = { title = " Find in Files ", title_pos = "left" },
             prompt = "  ",
-            cwd_prompt = false,
+            previewer = "builtin",
         },
         previewers = {
             builtin = {
@@ -73,38 +68,11 @@ return {
         local fzf = require("fzf-lua")
         fzf.setup(opts)
         -- Go to file
-        vim.keymap.set("n", "<leader>gf", fzf.files, { noremap = true })
-        -- Go to Class
-        vim.keymap.set("n", "<leader>gc", function()
-            fzf.lsp_live_workspace_symbols({
-                regex_filter = "Class.*",
-                winopts = { title = " Classes ", title_pos = "left" },
-                prompt = "  ",
-                previewer = false,
-                cwd_only = true,
-            })
-        end, { noremap = true })
-        -- Go to Symbol (same as class)
-        vim.keymap.set("n", "<leader>gs", function()
-            fzf.lsp_live_workspace_symbols({
-                winopts = { title = " Project Symbols ", title_pos = "left" },
-                prompt = "  ",
-                previewer = false,
-                cwd_only = true,
-            })
-        end, { noremap = true })
-        vim.keymap.set("n", "<leader>gas", function()
-            fzf.lsp_live_workspace_symbols({
-                winopts = { title = " All Symbols ", title_pos = "left" },
-                prompt = "  ",
-                previewer = false,
-                cwd_only = false,
-            })
-        end, { noremap = true })
+        vim.keymap.set("n", "<leader>gf", fzf.files, { noremap = true, desc = "[g]o to [f]ile" })
         -- Find in path
-        vim.keymap.set("n", "<leader>fp", fzf.live_grep, { noremap = true })
+        vim.keymap.set("n", "<leader>fp", fzf.live_grep, { noremap = true, desc = "[f]ind in [p]ath" })
         -- Go to buffer (Similar to Switcher in Intellij)
-        vim.keymap.set("n", "<leader>gb", fzf.buffers, { noremap = true })
+        vim.keymap.set("n", "<leader>gb", fzf.buffers, { noremap = true, desc = "[g]o to [b]uffer" })
         -- Go to git status
         vim.keymap.set("n", "<leader>ggs", fzf.git_status, { noremap = true })
         -- Go to git commits

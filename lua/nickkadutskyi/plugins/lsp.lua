@@ -2,18 +2,7 @@ return {
     {
         -- Rename with incremental search
         "smjonas/inc-rename.nvim",
-        config = function()
-            require("inc_rename").setup({})
-            vim.keymap.set("n", "<leader>vrn", function()
-                return ":IncRename " .. vim.fn.expand("<cword>")
-            end, { expr = true })
-            vim.keymap.set("n", "<S-F6>", function()
-                return ":IncRename " .. vim.fn.expand("<cword>")
-            end, { expr = true })
-            vim.keymap.set("n", "<F18>", function()
-                return ":IncRename " .. vim.fn.expand("<cword>")
-            end, { expr = true })
-        end,
+        opts = {},
     },
     {
         -- For installing langauge servers, formatters, linters, DAPs
@@ -135,6 +124,7 @@ return {
                                     "${3rd}/luv/library",
                                 },
                             },
+                            hint = { enable = true },
                         },
                     },
                 },
@@ -242,12 +232,76 @@ return {
                     local bufnr = event.buf
 
                     local opts = { buffer = event.buf, desc = "LSP: " }
-                    -- vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-                    vim.keymap.set("n", "gd", require("fzf-lua").lsp_definitions, opts)
-                    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-                    vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, opts)
-                    vim.keymap.set("n", "<leader>vca", vim.lsp.buf.code_action, opts)
-                    vim.keymap.set("n", "<leader>vrr", vim.lsp.buf.references, opts)
+                    local fzf = require("fzf-lua")
+
+                    vim.keymap.set("n", "gd", function()
+                        -- vim.lsp.buf.definition()
+                        fzf.lsp_definitions({ winopts = { title = " Choose Definition " } })
+                    end, { buffer = event.buf, desc = "LSP: [g]o to [d]efinition" })
+
+                    vim.keymap.set("n", "gD", function()
+                        -- vim.lsp.buf.declaration()
+                        fzf.lsp_declarations({ winopts = { titne = " Choose Declaration " } })
+                    end, { buffer = event.buf, desc = "LSP: [g]o to [D]eclaration" })
+
+                    vim.keymap.set("n", "gr", function()
+                        -- vim.lsp.buf.references()
+                        fzf.lsp_references({ winopts = { title = " Usages " } })
+                    end, { buffer = event.buf, desc = "LSP: [g]o to [r]eferences" })
+
+                    vim.keymap.set("n", "gi", function()
+                        -- vim.lsp.buf.implementation()
+                        fzf.lsp_implementations({ winopts = { title = " Choose Implementation " } })
+                    end, { buffer = event.buf, desc = "LSP: [g]o to [i]mplementations" })
+
+                    vim.keymap.set("n", "<leader>D", function()
+                        -- vim.lsp.buf.type_definition()
+                        fzf.lsp_type_definitions({ winopts = { title = " Choose Type Definition " } })
+                    end, { buffer = event.buf, desc = "LSP: Type [D]efinition" })
+
+                    vim.keymap.set({ "n", "x" }, "<leader>ca", function()
+                        -- vim.lsp.buf.code_action()
+                        fzf.lsp_code_actions({ winopts = { title = " Context Actions ", title_pos = "left" } })
+                    end, { buffer = event.buf, desc = "LSP: [c]ontext [a]ctions" })
+
+                    vim.keymap.set("n", "<leader>gc", function()
+                        fzf.lsp_live_workspace_symbols({
+                            regex_filter = "Class.*",
+                            winopts = { title = " Classes ", title_pos = "left" },
+                        })
+                    end, { noremap = true, desc = "LSP: [g]o to [c]lass" })
+
+                    vim.keymap.set("n", "<leader>gs", function()
+                        fzf.lsp_live_workspace_symbols({
+                            winopts = { title = " Symbols ", title_pos = "left" },
+                        })
+                    end, { desc = "LSP: [g]o to [s]ymbol" })
+
+                    vim.keymap.set("n", "<leader>gas", function()
+                        fzf.lsp_live_workspace_symbols({
+                            winopts = { title = " All Symbols ", title_pos = "left" },
+                        })
+                    end, { noremap = true, desc = "LSP: [g]o to [a]ll [s]ymbols" })
+
+                    vim.keymap.set("n", "K", function()
+                        vim.lsp.buf.hover()
+                    end, { buffer = event.buf, desc = "LSP: [K]eeword lookup/quick documentation" })
+
+                    -- LSP Renaming. <S-F6> on macOS is <F18>
+                    vim.keymap.set("n", "<S-F6>", function()
+                        -- vim.lsp.buf.rename()
+                        return ":IncRename " .. vim.fn.expand("<cword>")
+                    end, { expr = true, buffer = event.buf, desc = "LSP: [S-F6/F18] Rename" })
+                    vim.keymap.set("n", "<F18>", function()
+                        -- vim.lsp.buf.rename()
+                        return ":IncRename " .. vim.fn.expand("<cword>")
+                    end, { expr = true, buffer = event.buf, desc = "LSP: [F18/S-F6] Rename" })
+                    vim.keymap.set("n", "<leader>rn", function()
+                        -- vim.lsp.buf.rename()
+                        return ":IncRename " .. vim.fn.expand("<cword>")
+                    end, { expr = true, buffer = event.buf, desc = "LSP: [r]e[n]ame" })
+
+                    -- vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, opts)
                     -- vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
                     vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
                     vim.keymap.set("n", "<leader>clf", vim.lsp.buf.format, opts)
@@ -285,6 +339,25 @@ return {
                                 })
                             end,
                         })
+                    end
+
+                    -- The following code creates a keymap to toggle inlay hints in your
+                    -- code, if the language server you are using supports them
+                    --
+                    -- This may be unwanted, since they displace some of your code
+                    if
+                        client
+                        and (
+                            client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint)
+                            or client.server_capabilities.inlayHintProvider
+                        )
+                    then
+                        vim.keymap.set("n", "<leader>th", function()
+                            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
+                        end, { buffer = event.buf, desc = "LSP: [t]oggle [h]ints" })
+
+                        -- Enable inlay hints by default
+                        vim.lsp.inlay_hint.enable()
                     end
                 end,
             })

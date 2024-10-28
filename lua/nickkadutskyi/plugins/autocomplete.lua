@@ -15,10 +15,15 @@ return {
             "hrsh7th/cmp-path",
             "hrsh7th/cmp-nvim-lua",
             "hrsh7th/cmp-cmdline",
+            "hrsh7th/cmp-nvim-lsp-signature-help",
+            "hrsh7th/cmp-nvim-lsp-document-symbol",
             "L3MON4D3/LuaSnip",
             "saadparwaiz1/cmp_luasnip",
             "folke/lazydev.nvim",
-            -- "williamboman/mason-lspconfig.nvim",
+            {
+                "fbuchlak/cmp-symfony-router",
+                dependencies = { "nvim-lua/plenary.nvim" },
+            },
         },
         config = function()
             local luasnip = require("luasnip")
@@ -87,17 +92,52 @@ return {
                 }),
                 sources = cmp.config.sources({
                     { name = "nvim_lsp" },
+                    { name = "nvim_lsp_signature_help" },
+                    { name = "nvim_lsp_document_symbol" },
                     { name = "nvim_lua" },
                     { name = "luasnip" }, -- For luasnip users.
                     { name = "path" },
+                    { name = "lazydev" },
+                    {
+                        name = "symfony_router",
+                        -- these options are default, you don't need to include them in setup
+                        option = {
+                            console_command = { "php", "bin/console" }, -- see Configuration section
+                            cwd = nil, -- string|nil Defaults to vim.loop.cwd()
+                            cwd_files = { "composer.json", "bin/console" }, -- all these files must exist in cwd to trigger completion
+                            filetypes = { "php", "twig" },
+                        },
+                    },
                 }, {
                     { name = "buffer" },
-                    { name = "lazydev", group_index = 0 },
-                    -- { name = "supermaven" }, -- disabled to keep it as ghost text only
+                    { name = "supermaven" }, -- disabled to keep it as ghost text only
                 }),
                 experimental = {
                     ghost_text = false, -- this feature conflict with ai assistant inline preview
                 },
+            })
+
+            require("cmp").setup.cmdline("/", {
+                mapping = cmp.mapping.preset.cmdline(),
+                sources = cmp.config.sources({
+                    { name = "nvim_lsp_document_symbol" },
+                }, {
+                    { name = "buffer" },
+                }),
+            })
+
+            cmp.setup.cmdline(":", {
+                mapping = cmp.mapping.preset.cmdline(),
+                sources = cmp.config.sources({
+                    { name = "path" },
+                }, {
+                    {
+                        name = "cmdline",
+                        option = {
+                            ignore_cmds = { "Man", "!" },
+                        },
+                    },
+                }),
             })
         end,
     },
