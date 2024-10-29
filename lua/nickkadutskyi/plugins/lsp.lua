@@ -34,8 +34,8 @@ return {
                 "ts_ls",
                 "jsonls",
                 "emmet_ls",
-                -- "nixd",
                 "bashls",
+                -- "nixd",
                 "nil_ls",
 
                 -- PHP
