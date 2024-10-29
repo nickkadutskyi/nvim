@@ -29,15 +29,15 @@ return {
             local luasnip = require("luasnip")
             local cmp = require("cmp")
             local cmp_select = { behavior = cmp.SelectBehavior.Select }
-            -- local cmp_select = { behavior = cmp.ConfirmBehavior.Insert }
             cmp.setup({
+                preselect = cmp.PreselectMode.Item,
                 snippet = {
                     expand = function(args)
                         luasnip.lsp_expand(args.body) -- For `luasnip` users.
                     end,
                 },
                 completion = {
-                    completeopt = "menu,menuone,noinsert",
+                    completeopt = "menu,menuone",
                 },
                 formatting = {
                     expandable_indicator = true,
@@ -70,6 +70,7 @@ return {
                     ["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
                     ["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
                     ["<C-y>"] = cmp.mapping.confirm({ select = true }),
+                    ["<CR>"] = cmp.mapping.confirm({ select = true }),
                     ["<C-e>"] = cmp.mapping.abort(),
                     ["<C-a>"] = cmp.mapping.complete(),
                     ["<C-b>"] = cmp.mapping.scroll_docs(-5),
@@ -117,7 +118,11 @@ return {
                 },
             })
 
-            require("cmp").setup.cmdline("/", {
+            cmp.setup.cmdline("/", {
+                preselect = cmp.PreselectMode.None,
+                completion = {
+                    completeopt = "menu,menuone,noselect",
+                },
                 mapping = cmp.mapping.preset.cmdline(),
                 sources = cmp.config.sources({
                     { name = "nvim_lsp_document_symbol" },
@@ -127,6 +132,10 @@ return {
             })
 
             cmp.setup.cmdline(":", {
+                preselect = cmp.PreselectMode.None,
+                completion = {
+                    completeopt = "menu,menuone,noselect",
+                },
                 mapping = cmp.mapping.preset.cmdline(),
                 sources = cmp.config.sources({
                     { name = "path" },
