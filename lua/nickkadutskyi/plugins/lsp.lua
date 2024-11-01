@@ -40,6 +40,7 @@ return {
 
                 -- PHP
                 "intelephense",
+                -- "phpactor", -- use either phpactor or intelephense to avoid duplcates
                 -- "psalm", -- disabled because it's not working as if ran as cli tool via nvim-lint
             }
 
@@ -168,6 +169,14 @@ return {
                 ["intelephense"] = {
                     init_options = {
                         licenceKey = vim.fn.expand("~/.config/php/intelephense_license.txt"),
+                    },
+                    intelephense = {
+                        telemetry = {
+                            enabled = false,
+                        },
+                        files = {
+                            maxSize = 1000000,
+                        },
                     },
                 },
             }
@@ -303,7 +312,7 @@ return {
 
                     -- vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, opts)
                     -- vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
-                    vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
+                    vim.keymap.set({ "i", "n" }, "<C-h>", vim.lsp.buf.signature_help, opts)
                     vim.keymap.set("n", "<leader>clf", vim.lsp.buf.format, opts)
 
                     -- Attach to nvim-navic to show current code context—used in status line
@@ -364,7 +373,7 @@ return {
 
             -- Diagnostics config
             vim.diagnostic.config({
-                virtual_text = true,
+                virtual_text = false,
                 float = {
                     focusable = false,
                     style = "minimal",

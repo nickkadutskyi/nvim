@@ -111,6 +111,7 @@ return {
                     },
                 }, {
                     { name = "buffer" },
+                }, {
                     { name = "supermaven" }, -- disabled to keep it as ghost text only
                 }),
                 experimental = {
