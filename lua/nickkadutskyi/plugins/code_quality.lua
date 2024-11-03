@@ -9,6 +9,7 @@ return {
                     "phpstan",
                     "psalm",
                     "phpcs",
+                    "php",
                 },
             }
 
@@ -76,13 +77,22 @@ return {
 
                 return diagnostics
             end
-            -- Run linters on specific events
-            -- vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "InsertLeave" }, {
-            -- FIXME consider when is the best time to run linters to avoid delays
-            vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+
+            -- Run PHP linters that require a file to be saved (no stdin)
+            vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPre", "BufNewFile" }, {
+                group = vim.api.nvim_create_augroup("nickkadutskyi-lint-file", { clear = true }),
+                pattern = { "*.php" },
                 callback = function()
-                    -- runs the linters defined in `linters_by_ft` for the current filetype
-                    lint.try_lint()
+                    lint.try_lint({ "phpstan", "psalm" })
+                end,
+            })
+            -- Run PHP linters that use stdin
+            vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave" }, {
+                group = vim.api.nvim_create_augroup("nickkadutskyi-lint-stdin", { clear = true }),
+                callback = function(e)
+                    if e.file ~= "" and vim.bo.filetype == "php" then
+                        lint.try_lint({ "phpcs", "php" })
+                    end
                 end,
             })
         end,
