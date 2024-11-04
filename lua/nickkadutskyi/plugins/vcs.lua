@@ -1,9 +1,48 @@
 return {
     {
-        -- For git diff
-        "tpope/vim-fugitive",
+        -- Git integration
+        -- FIXME resolve issue with headers when using split kind for log_view
+        "NeogitOrg/neogit",
+        dependencies = {
+            "nvim-lua/plenary.nvim", -- required
+            "sindrets/diffview.nvim", -- optional - Diff integration
+
+            "ibhagwan/fzf-lua", -- optional
+        },
+        config = function()
+            local neogit = require("neogit")
+            neogit.setup({
+                integrations = {
+                    fzf_lua = true,
+                    diffview = true,
+                },
+                signs = {
+                    -- { CLOSED, OPENED }
+                    hunk = { "", "" },
+                    item = { " ", " " },
+                    section = { "", "" },
+                },
+            })
+
+            vim.keymap.set("n", "<leader>ac", function()
+                neogit.open()
+            end, { noremap = true, desc = "[a]ctivate vcs [c]ommit window (VCS)" })
+
+            vim.keymap.set("n", "<leader>avc", function()
+                neogit.open()
+            end, { noremap = true, desc = "[a]ctivate [v]cs [c]ommit window (VCS)" })
+
+            vim.keymap.set("n", "<leader>avf", function()
+                neogit.action("log", "log_current", { "--", vim.fn.expand("%") })()
+            end, { noremap = true, desc = "[a]ctivate [v]sc log for current [f]ile (VCS)" })
+
+            vim.keymap.set("n", "<leader>avl", function()
+                neogit.action("log", "log_head")()
+            end, { noremap = true, desc = "[a]ctivate [v]sc [l]og (VCS)" })
+        end,
     },
-    { -- Visibility for changes compared to current git branch in the gutter
+    {
+        -- Visibility for changes compared to current git branch in the gutter
         "lewis6991/gitsigns.nvim",
         opts = {
             signs = {
@@ -50,6 +89,12 @@ return {
             on_attach = function(bufnr)
                 local gitsigns = require("gitsigns")
 
+                -- Preview hunk
+                vim.keymap.set("n", "<leader>sh", gitsigns.preview_hunk, {
+                    buffer = bufnr,
+                    desc = "VCS: [s]how [h]unk",
+                })
+
                 local function map(mode, l, r, opts)
                     opts = opts or {}
                     opts.buffer = bufnr
@@ -64,6 +109,8 @@ return {
                 --     gitsigns.nav_hunk('next')
                 --   end
                 -- end)
+                --
+                --
 
                 -- map('n', '[c', function()
                 --   if vim.wo.diff then
