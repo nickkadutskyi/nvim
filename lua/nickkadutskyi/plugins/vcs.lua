@@ -1,7 +1,7 @@
 return {
     {
         -- Git integration
-        -- FIXME resolve issue with headers when using split kind for log_view
+        -- FIXME resolve issue with headers when using split kind for log_view https://github.com/NeogitOrg/neogit/issues/1540
         "NeogitOrg/neogit",
         dependencies = {
             "nvim-lua/plenary.nvim", -- required
@@ -22,21 +22,50 @@ return {
                     item = { " ", " " },
                     section = { "", "" },
                 },
+                status = {
+                    mode_padding = 2,
+                    -- adds whitespace to the left of the mode text to put it further from sings
+                    mode_text = {
+                        M = " mod",
+                        N = " new",
+                        A = " add",
+                        D = " del",
+                        C = " cop",
+                        U = " upd",
+                        R = " ren",
+                        DD = " unm",
+                        AU = " unm",
+                        UD = " unm",
+                        UA = " unm",
+                        DU = " aunm",
+                        AA = " unm",
+                        UU = " unm",
+                        ["?"] = " ",
+                    },
+                },
             })
 
             vim.keymap.set("n", "<leader>ac", function()
+                vim.cmd("CloseNetrw")
+                vim.cmd("CloseNetrw")
                 neogit.open()
             end, { noremap = true, desc = "[a]ctivate vcs [c]ommit window (VCS)" })
 
             vim.keymap.set("n", "<leader>avc", function()
+                vim.cmd("CloseNetrw")
+                vim.cmd("CloseNetrw")
                 neogit.open()
             end, { noremap = true, desc = "[a]ctivate [v]cs [c]ommit window (VCS)" })
 
             vim.keymap.set("n", "<leader>avf", function()
+                vim.cmd("CloseNetrw")
+                vim.cmd("CloseNetrw")
                 neogit.action("log", "log_current", { "--", vim.fn.expand("%") })()
             end, { noremap = true, desc = "[a]ctivate [v]sc log for current [f]ile (VCS)" })
 
             vim.keymap.set("n", "<leader>avl", function()
+                vim.cmd("CloseNetrw")
+                vim.cmd("CloseNetrw")
                 neogit.action("log", "log_head")()
             end, { noremap = true, desc = "[a]ctivate [v]sc [l]og (VCS)" })
         end,
