@@ -7,6 +7,7 @@ else
 end
 
 -- If opened a dir set it as current dir to help narrow down fzf scope
+-- Later project.nvim will adjust cwd
 if vim.fn.isdirectory(vim.fn.expand("%")) == 1 then
     vim.api.nvim_set_current_dir(vim.fn.expand("%"))
 elseif vim.fn.filereadable(vim.fn.expand("%")) == 1 then
@@ -16,35 +17,22 @@ end
 vim.filetype.add({
     extension = {
         neon = "yaml",
-        --   bar = function(path, bufnr)
-        --     if some_condition() then
-        --       return 'barscript', function(bufnr)
-        --         -- Set a buffer variable
-        --         vim.b[bufnr].barscript_version = 2
-        --       end
-        --     end
-        --     return 'bar'
-        --   end,
     },
     filename = {
         [".jsbeautifyrc"] = "json",
-        --   ['.foorc'] = 'toml',
-        --   ['/etc/foo/config'] = 'toml',
     },
-    -- pattern = {
-    --   ['.*/etc/foo/.*'] = 'fooscript',
-    --   -- Using an optional priority
-    --   ['.*/etc/foo/.*%.conf'] = { 'dosini', { priority = 10 } },
-    --   -- A pattern containing an environment variable
-    --   ['${XDG_CONFIG_HOME}/foo/git'] = 'git',
-    --   ['.*README.(%a+)'] = function(path, bufnr, ext)
-    --     if ext == 'md' then
-    --       return 'markdown'
-    --     elseif ext == 'rst' then
-    --       return 'rst'
-    --     end
-    --   end,
-    -- },
+    pattern = {
+        [".*"] = {
+            function(path, bufnr)
+                local content = vim.api.nvim_buf_get_lines(bufnr, 0, 1, false)[1] or ""
+                -- AppleScript written in JavaScript
+                if vim.regex([[^#!/usr/bin/osascript -l JavaScript]]):match_str(content) ~= nil then
+                    return "javascript"
+                end
+            end,
+            { priority = -math.huge },
+        },
+    },
 })
 
 -- Load plugins
@@ -59,8 +47,14 @@ vim.opt.inccommand = "split"
 vim.opt.cmdheight = 0
 
 -- Treesitter Inspect builtin
-vim.keymap.set("n", "<leader>ti", ":Inspect<CR>", { noremap = true })
-vim.keymap.set("n", "<leader>tti", ":InspectTree<CR>", { noremap = true })
+vim.keymap.set("n", "<leader>si", ":Inspect<CR>", {
+    noremap = true,
+    desc = "[s]how treesitter [i]nspection",
+})
+vim.keymap.set("n", "<leader>sti", ":InspectTree<CR>", {
+    noremap = true,
+    desc = "[s]how treesitter [t]ree [i]nspection",
+})
 
 -- highlight when yanking (copying) text
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -70,6 +64,21 @@ vim.api.nvim_create_autocmd("TextYankPost", {
         vim.highlight.on_yank()
     end,
 })
+
+-- Enfore readonly for vendor and node_modules
+vim.api.nvim_create_autocmd("BufRead", {
+    group = vim.api.nvim_create_augroup("nickkadutskyi-readonly-dirs", { clear = true }),
+    pattern = {
+        "*/vendor/*",
+        "*/node_modules/*",
+    },
+    callback = function()
+        vim.opt_local.readonly = true
+        vim.opt_local.modifiable = false
+    end,
+})
+
+-- Terminal mappings
 
 -- Keybinds to make split navigation easier.
 --  Use CTRL+<hjkl> to switch between windows
