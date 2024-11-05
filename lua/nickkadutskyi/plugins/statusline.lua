@@ -1,7 +1,10 @@
 return {
     {
         "nvim-lualine/lualine.nvim",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
+        dependencies = {
+            "nvim-tree/nvim-web-devicons",
+            "akinsho/toggleterm.nvim",
+        },
         opts = {
             options = {
                 globalstatus = true,
@@ -37,6 +40,9 @@ return {
                         padding = { left = 1, right = 0 },
                         icon_only = true,
                     },
+                    -- function()
+                    --     return '%{&ft == "toggleterm" ? "terminal (".b:toggle_number.")" : ""}'
+                    -- end,
                     {
                         "filename",
                         file_status = true,
@@ -47,6 +53,13 @@ return {
                             local filePath, rest = name:match("(.+)%s*(%[*.*%]*)")
                             local parentPath = vim.fn.fnamemodify(filePath, ":h")
                             local fileName = vim.fs.basename(filePath)
+
+                            if string.match(name, "term://.*toggleterm#.*") then
+                                local terms = require("toggleterm.terminal").get_all(true)
+                                -- local terms = require("toggleterm.termial").get_all(true)
+                                return "Term id: " .. (vim.b.toggle_number or "0") .. " (tot: " .. #terms .. ") " .. (rest or "")
+                            end
+
                             if string.len(filePath) > 50 then
                                 local rightPart = vim.fs.basename(parentPath) .. "/" .. fileName
                                 local leftPart = string.sub(filePath, 1, 50 - string.len(rightPart))
