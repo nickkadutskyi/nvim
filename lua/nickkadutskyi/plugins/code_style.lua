@@ -12,6 +12,18 @@ return {
         },
     },
     {
+        "lukas-reineke/indent-blankline.nvim",
+        main = "ibl",
+        opts = {
+            indent = { char = "▏" },
+            scope = {
+                -- disables underline
+                show_start = false,
+                show_end = false,
+            },
+        },
+    },
+    {
         -- Code formatter
         "stevearc/conform.nvim",
         config = function()

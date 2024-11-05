@@ -70,7 +70,6 @@ return {
                     ["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
                     ["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
                     ["<C-y>"] = cmp.mapping.confirm({ select = true }),
-                    ["<CR>"] = cmp.mapping.confirm({ select = true }),
                     ["<C-e>"] = cmp.mapping.abort(),
                     ["<C-a>"] = cmp.mapping.complete(),
                     ["<C-b>"] = cmp.mapping.scroll_docs(-5),
@@ -112,7 +111,7 @@ return {
                 }, {
                     { name = "buffer" },
                 }, {
-                    { name = "supermaven" }, -- disabled to keep it as ghost text only
+                    -- { name = "supermaven" }, -- disabled to keep it as ghost text only
                 }),
                 experimental = {
                     ghost_text = false, -- this feature conflict with ai assistant inline preview
