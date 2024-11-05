@@ -1,5 +1,101 @@
 return {
     {
+        "folke/which-key.nvim",
+        event = "VeryLazy",
+        keys = {
+            {
+                "<leader>?",
+                function()
+                    require("which-key").show({ global = false })
+                end,
+                desc = "Buffer Local Keymaps (which-key)",
+            },
+        },
+        config = function()
+            local wk = require("which-key")
+            wk.setup({})
+            -- Groups: [Leader|None] > [Action] > [Modifier|None] > [Item]
+            wk.add({
+                {
+                    "<leader>",
+                    group = "Leader",
+
+                    {
+                        "<leader>a",
+                        group = "[a]ctivate",
+
+                        { "<leader>av", group = "[v]cs" },
+                    },
+                    { "<leader>f", group = "[f]ind" },
+                    { "<leader>g", group = "[g]o to" },
+                    {
+                        "<leader>s",
+                        group = "[s]how",
+
+                        { "<leader>sr", group = "[r]ecent" },
+                    },
+                    { "<leader>t", group = "[t]oggle" },
+                },
+                { "]", group = "[n]ext" },
+                { "[", group = "[p]rev" },
+            })
+            -- Keymaps
+            vim.keymap.set("n", "<leader>?", function()
+                wk.show({ mode = "n", global = false })
+            end, { silent = true, desc = "Buffer Local Keymaps (which-key)" })
+        end,
+    },
+    {
+        "ahmedkhalf/project.nvim",
+        dependencies = {
+            "ibhagwan/fzf-lua",
+        },
+        config = function()
+            require("project_nvim").setup({})
+
+            -- Show Recent Projects
+            vim.keymap.set("n", "<leader>srp", function()
+                local uv = vim.uv or vim.loop
+                local contents = require("project_nvim").get_recent_projects()
+                local reverse = {}
+                for i = #contents, 1, -1 do
+                    local ok, path = pcall(uv.fs_realpath, contents[i])
+                    if ok and path ~= contents[i] then
+                        reverse[path] = true
+                    else
+                        reverse[contents[i]] = true
+                    end
+                end
+                local reverseStrings = {}
+                for k, _ in pairs(reverse) do
+                    reverseStrings[#reverseStrings + 1] = k
+                end
+                require("fzf-lua").fzf_exec(reverseStrings, {
+                    winopts = { title = " Recent Projects ", title_pos = "left" },
+                    actions = {
+                        ["default"] = function(e)
+                            -- change cwd and open Explorer
+                            vim.cmd(":cd " .. e[1] .. " | Explore")
+                            -- change Explorer root to cwd
+                            vim.cmd(":Ntree " .. e[1])
+                            -- close all the buffers and keep current explorer
+                            vim.cmd(":%bd|e .")
+                        end,
+                        ["ctrl-d"] = function(x)
+                            local choice = vim.fn.confirm("Delete '" .. #x .. "' projects? ", "&Yes\n&No", 2)
+                            if choice == 1 then
+                                local history = require("project_nvim.utils.history")
+                                for _, v in ipairs(x) do
+                                    history.delete_project(v)
+                                end
+                            end
+                        end,
+                    },
+                })
+            end, { silent = true, desc = "[s]how [r]ecent [p]rojects" })
+        end,
+    },
+    {
         -- Improves commenting
         "numToStr/Comment.nvim",
         opts = {},
