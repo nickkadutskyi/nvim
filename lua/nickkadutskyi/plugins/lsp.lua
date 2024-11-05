@@ -1,3 +1,4 @@
+-- TODO add ability to jump to a file path in PHP files provided as __DIR__."/path/to/file"
 return {
     {
         -- Rename with incremental search
@@ -352,8 +353,6 @@ return {
 
                     -- The following code creates a keymap to toggle inlay hints in your
                     -- code, if the language server you are using supports them
-                    --
-                    -- This may be unwanted, since they displace some of your code
                     if
                         client
                         and (
@@ -362,11 +361,11 @@ return {
                         )
                     then
                         vim.keymap.set("n", "<leader>th", function()
-                            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = event.buf }))
-                        end, { buffer = event.buf, desc = "LSP: [t]oggle [h]ints" })
-
-                        -- Enable inlay hints by default
-                        vim.lsp.inlay_hint.enable()
+                            local new_state = not vim.lsp.inlay_hint.is_enabled({
+                                bufnr = event.buf,
+                            })
+                            vim.lsp.inlay_hint.enable(new_state)
+                        end, { buffer = event.buf, desc = "[t]oggle inlay [h]ints (LSP)" })
                     end
                 end,
             })
@@ -383,11 +382,22 @@ return {
                     prefix = "",
                 },
             })
-            vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { noremap = true })
-            vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { noremap = true })
-            vim.keymap.set("n", "<leader>vd", vim.diagnostic.open_float, { noremap = true })
-            -- nnoremap("<leader>e", vim.diagnostic.open_float, { desc = "Show diagnostic [E]rror messages" })
-            -- nnoremap("<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+            vim.keymap.set("n", "]d", vim.diagnostic.goto_next, {
+                noremap = true,
+                desc = "[n]ext [d]iagnostic (LSP)",
+            })
+            vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, {
+                noremap = true,
+                desc = "[p]rev [d]iagnostic (LSP)",
+            })
+            vim.keymap.set("n", "<leader>sd", vim.diagnostic.open_float, {
+                noremap = true,
+                desc = "[s]how [d]iagnostic float (LSP)",
+            })
+            vim.keymap.set("n", "<leader>sq", vim.diagnostic.setloclist, {
+                noremap = true,
+                desc = "[s]how diagostic [q]uickfix list (LSP)",
+            })
         end,
     },
     {
