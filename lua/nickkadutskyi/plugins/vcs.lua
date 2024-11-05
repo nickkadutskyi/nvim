@@ -2,11 +2,11 @@ return {
     {
         -- Git integration
         -- FIXME resolve issue with headers when using split kind for log_view https://github.com/NeogitOrg/neogit/issues/1540
+        -- TODO test
         "NeogitOrg/neogit",
         dependencies = {
             "nvim-lua/plenary.nvim", -- required
             "sindrets/diffview.nvim", -- optional - Diff integration
-
             "ibhagwan/fzf-lua", -- optional
         },
         config = function()
@@ -24,7 +24,7 @@ return {
                 },
                 status = {
                     mode_padding = 2,
-                    -- adds whitespace to the left of the mode text to put it further from sings
+                    -- adds whitespace to the left of the mode text to put it further from sings and makes it shorter
                     mode_text = {
                         M = " mod",
                         N = " new",
@@ -45,32 +45,47 @@ return {
                 },
             })
 
-            vim.keymap.set("n", "<leader>ac", function()
-                vim.cmd("CloseNetrw")
-                vim.cmd("CloseNetrw")
-                neogit.open()
-            end, { noremap = true, desc = "[a]ctivate vcs [c]ommit window (VCS)" })
-
-            vim.keymap.set("n", "<leader>avc", function()
-                vim.cmd("CloseNetrw")
-                vim.cmd("CloseNetrw")
-                neogit.open()
-            end, { noremap = true, desc = "[a]ctivate [v]cs [c]ommit window (VCS)" })
+            for lhs, mode in pairs({
+                ["<leader>avc"] = { "n" },
+                ["<A-K>"] = { { "n", "i" } },
+                ["<leader>ac"] = { "n", "VCS: [a]ctivate vcs [c]ommit window" },
+            }) do
+                vim.keymap.set(mode[1], lhs, function()
+                    vim.cmd("CloseNetrw")
+                    vim.cmd("CloseNetrw")
+                    neogit.open()
+                end, { noremap = true, desc = mode[2] or "VCS: [a]ctivate [v]cs [c]ommit window" })
+            end
 
             vim.keymap.set("n", "<leader>avf", function()
                 vim.cmd("CloseNetrw")
                 vim.cmd("CloseNetrw")
                 neogit.action("log", "log_current", { "--", vim.fn.expand("%") })()
-            end, { noremap = true, desc = "[a]ctivate [v]sc log for current [f]ile (VCS)" })
+            end, { noremap = true, desc = "VCS: [a]ctivate [v]sc log for current [f]ile" })
 
             vim.keymap.set("n", "<leader>avl", function()
                 vim.cmd("CloseNetrw")
                 vim.cmd("CloseNetrw")
                 neogit.action("log", "log_head")()
-            end, { noremap = true, desc = "[a]ctivate [v]sc [l]og (VCS)" })
+            end, { noremap = true, desc = "VCS: [a]ctivate [v]sc [l]og" })
+
+            for lhs, mode in pairs({
+                ["<leader>avp"] = "n",
+                ["<S-A-K>"] = { "n", "i" }, -- Similar to Intellij <M-S-K>
+                [""] = { "n", "i" }, -- macOS char for the <S-A-K> key
+            }) do
+                vim.keymap.set(mode, lhs, function()
+                    vim.cmd("CloseNetrw")
+                    vim.cmd("CloseNetrw")
+                    neogit.open({ "push" })
+                end, { noremap = true, desc = "VCS: [a]ctivate [v]cs [p]ush window" })
+            end
         end,
     },
     {
+        -- TODO change position of hunk float so it appears under the row and to the left
+        -- TODO find out if I can use regular colors for hunk preview
+        -- TODO style this plugin in jb.nvim color scheme
         -- Visibility for changes compared to current git branch in the gutter
         "lewis6991/gitsigns.nvim",
         opts = {
@@ -80,7 +95,15 @@ return {
                 delete = { text = "_" },
                 topdelete = { text = "‾" },
                 changedelete = { text = "~" },
-                untracked = { text = "║" },
+                untracked = { text = "┆" },
+            },
+            signs_staged = {
+                add = { text = "║" },
+                change = { text = "║" },
+                delete = { text = "‗" },
+                topdelete = { text = "═" },
+                changedelete = { text = "≈" },
+                untracked = { text = "┆" },
             },
             signs_staged_enable = true,
             signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
@@ -118,7 +141,7 @@ return {
             on_attach = function(bufnr)
                 local gitsigns = require("gitsigns")
 
-                -- Preview hunk
+                -- Show hunk
                 vim.keymap.set("n", "<leader>sh", gitsigns.preview_hunk, {
                     buffer = bufnr,
                     desc = "VCS: [s]how [h]unk",

@@ -81,7 +81,7 @@ return {
             -- Go to buffer (Similar to Switcher in Intellij)
             vim.keymap.set("n", "<leader>gb", fzf.buffers, { noremap = true, desc = "[g]o to [b]uffer" })
             -- Go to git status
-            vim.keymap.set("n", "<leader>ggs", fzf.git_status, { noremap = true })
+            -- vim.keymap.set("n", "<leader>ggs", fzf.git_status, { noremap = true })
             -- Go to git commits
             vim.keymap.set("n", "<leader>ggc", fzf.git_commits, { noremap = true })
             -- Go to git commits of current buffer
