@@ -116,8 +116,8 @@ return {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-term-open", { clear = true }),
                 pattern = { "term://*toggleterm#*" },
                 callback = function(event)
-                    vim.keymap.set({ "t" }, "<Esc>", "<C-\\><C-O><C-W><C-W><Esc>", {
-                        desc = "Term: Leave terminal",
+                    vim.keymap.set({ "t" }, "<Esc>", "<C-\\><C-N>", {
+                        desc = "Term: Leave terminal mode",
                         buffer = event.buf,
                     })
 
