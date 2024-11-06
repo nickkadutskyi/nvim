@@ -116,17 +116,15 @@ return {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-term-open", { clear = true }),
                 pattern = { "term://*toggleterm#*" },
                 callback = function(event)
-                    -- Leave terminal while in toggleterm terminal
                     vim.keymap.set({ "t" }, "<Esc>", "<C-\\><C-O><C-W><C-W><Esc>", {
-                        desc = "Leave terminal",
+                        desc = "Term: Leave terminal",
                         buffer = event.buf,
                     })
 
-                    vim.keymap.set({ "n" }, "<Esc>", "<C-W><C-W><Esc>", {
-                        desc = "Leave terminal",
+                    vim.keymap.set({ "n" }, "<Esc>", "<C-W><C-W>", {
+                        desc = "Term: Leave terminal",
                         buffer = event.buf,
                     })
-
                     -- Create new terminal tab
                     for lhs, mode in pairs({
                         ["<A-t>"] = { "n", "t" },
