@@ -47,7 +47,8 @@ return {
 
             for lhs, mode in pairs({
                 ["<leader>avc"] = { "n" },
-                ["<A-K>"] = { { "n", "i" } },
+                ["<A-K>"] = { { "n", "i" } }, -- Similar to Intellij <CMD-K>
+                ["˚"] = { { "n", "i" } }, -- macOS char for the <A-K> key
                 ["<leader>ac"] = { "n", "VCS: [a]ctivate vcs [c]ommit window" },
             }) do
                 vim.keymap.set(mode[1], lhs, function()
