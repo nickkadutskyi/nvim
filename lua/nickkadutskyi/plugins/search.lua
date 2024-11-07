@@ -1,11 +1,5 @@
 return {
     {
-        "nvim-telescope/telescope.nvim",
-        tag = "0.1.8",
-        -- or                              , branch = '0.1.x',
-        dependencies = { "nvim-lua/plenary.nvim" },
-    },
-    {
         -- Faster fzf in case of a large project
         -- DEPENDENCIES: Linux or Mac, fzf or skim, OPTIONAL: fd, rg, bat, delta, chafa
         "ibhagwan/fzf-lua",
