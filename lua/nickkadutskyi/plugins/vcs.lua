@@ -71,8 +71,8 @@ return {
             end, { noremap = true, desc = "VCS: [a]ctivate [v]sc [l]og" })
 
             for lhs, mode in pairs({
-                ["<leader>avp"] = "n",
-                ["<S-A-K>"] = { "n", "i" }, -- Similar to Intellij <M-S-K>
+                ["<leader>avP"] = "n",
+                ["<S-A-K>"] = { "n", "i" }, -- Similar to Intellij <D-S-K>
                 [""] = { "n", "i" }, -- macOS char for the <S-A-K> key
             }) do
                 vim.keymap.set(mode, lhs, function()
@@ -80,6 +80,18 @@ return {
                     vim.cmd("CloseNetrw")
                     neogit.open({ "push" })
                 end, { noremap = true, desc = "VCS: [a]ctivate [v]cs [p]ush window" })
+            end
+
+            for lhs, mode in pairs({
+                ["<leader>avp"] = "n",
+                ["<A-T>"] = { "n", "i" }, -- Similar to Intellij <D-T>
+                ["†"] = { "n", "i" }, -- macOS char for the <A-T> key
+            }) do
+                vim.keymap.set(mode, lhs, function()
+                    vim.cmd("CloseNetrw")
+                    vim.cmd("CloseNetrw")
+                    neogit.open({ "pull" })
+                end, { noremap = true, desc = "VCS: [a]ctivate [v]cs [p]ull window" })
             end
         end,
     },
