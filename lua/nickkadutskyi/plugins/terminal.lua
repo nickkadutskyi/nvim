@@ -161,11 +161,21 @@ return {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-term-open", { clear = true }),
                 pattern = toggleterm_pattern,
                 callback = function(event)
+                    -- Hide terminal
+                    vim.keymap.set({ "t", "n" }, "<S-Esc>", function()
+                        toggle_terminal()
+                    end, {
+                        desc = "Term: Hide terminal",
+                        buffer = event.buf,
+                    })
+
+                    -- Leave terminal mode
                     vim.keymap.set({ "t" }, "<Esc>", "<C-\\><C-N>", {
                         desc = "Term: Leave terminal mode",
                         buffer = event.buf,
                     })
 
+                    -- Leave terminal to previous window
                     vim.keymap.set({ "n" }, "<Esc>", function()
                         require("toggleterm.ui").goto_previous()
                     end, {
@@ -178,28 +188,31 @@ return {
                         ["†"] = { "n", "t" },
                     }) do
                         vim.keymap.set(mode, lhs, function()
-                            toggleterm.toggle(vim.b.toggle_number)
-                            toggleterm.toggle(terms.get_or_create_term().id)
+                            terms.get(terms.get_focused_id()):close()
+                            terms.get_or_create_term():toggle()
                         end, {
-                            desc = "Create new terminal tab",
+                            desc = "Term: Create new terminal tab",
                             buffer = event.buf,
                         })
                     end
 
+                    -- Go to next terminal
                     vim.keymap.set({ "t", "n" }, "<C-Right>", function()
                         go_next_term()
                     end, {
-                        desc = "Go to next terminal",
+                        desc = "Term: Go to next terminal",
                         buffer = event.buf,
                     })
 
+                    -- Go to previous terminal
                     vim.keymap.set({ "t", "n" }, "<C-Left>", function()
                         go_prev_term()
                     end, {
-                        desc = "Go to previous terminal",
+                        desc = "Term: Go to previous terminal",
                         buffer = event.buf,
                     })
 
+                    -- Close terminal
                     for lhs, mode in pairs({
                         ["<A-W>"] = { "n", "t" },
                         ["∑"] = { "n", "t" },
@@ -218,7 +231,7 @@ return {
                                 terms.get(to_close.id):shutdown()
                             end
                         end, {
-                            desc = "Close terminal",
+                            desc = "Term: Close terminal",
                             buffer = event.buf,
                         })
                     end

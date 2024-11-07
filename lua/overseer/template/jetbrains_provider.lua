@@ -1,9 +1,11 @@
-local function getTagValue(xmlContent, tagName, nameAttr)
+local function getTagValue(xmlContent, tagName, nameAttr, attrValue)
+    attrValue = attrValue or "value"
     -- Pattern to match the tag with specific name attribute and get its value
-    local pattern = string.format("<%s[^>]+name=[\"'']%s[\"''][^>]+value=\"([^\"]-)\"", tagName, nameAttr)
+    local pattern = string.format("<%s[^>]+name=[\"'']%s[\"''][^>]+" .. attrValue .. '="([^"]-)"', tagName, nameAttr)
 
     -- Alternative pattern if value attribute comes before name attribute
-    local altPattern = string.format("<%s[^>]+value=[\"'']([^\"'']-)[\"''][^>]+name=[\"'']%s[\"'']", tagName, nameAttr)
+    local altPattern =
+        string.format("<%s[^>]+" .. attrValue .. "=[\"'']([^\"'']-)[\"''][^>]+name=[\"'']%s[\"'']", tagName, nameAttr)
 
     -- Try to find a match using either pattern
     local value = string.match(xmlContent, pattern) or string.match(xmlContent, altPattern)
@@ -79,17 +81,12 @@ local function parse_xml_file(file_path)
     local content = file:read("*all")
     file:close()
 
-    -- Basic XML parsing (you might want to use a proper XML parser for more robust handling)
-    -- local name = content:match('name="([^"]+)"')
     local name = content:match('<configuration[^>]*%sname="([^"]*)"')
-    -- local script_text = content:match('SCRIPT_TEXT" value="([^"]+)"')
     local script_text = decodeHTMLEntities(getTagValue(content, "option", "SCRIPT_TEXT"))
     local interpreter = getTagValue(content, "option", "INTERPRETER_PATH")
     local working_dir = getTagValue(content, "option", "SCRIPT_WORKING_DIRECTORY")
     local execute_in_terminal = getTagValue(content, "option", "EXECUTE_IN_TERMINAL")
-    -- local working_dir = content:match('SCRIPT_WORKING_DIRECTORY" value="([^"]+)"')
-    -- local interpreter = content:match('INTERPRETER_PATH" value="([^"]+)"')
-    -- local execute_in_terminal = content:match('EXECUTE_IN_TERMINAL" value="([^"]+)"')
+    local singleton = getTagValue(content, "configuration", name, "singleton")
 
     return {
         name = name,
@@ -97,6 +94,7 @@ local function parse_xml_file(file_path)
         working_dir = working_dir,
         interpreter = interpreter,
         execute_in_terminal = execute_in_terminal == "true",
+        allow_multiple_instances = singleton == "false",
     }
 end
 
@@ -132,6 +130,15 @@ local intellij_provider = {
         local uv = vim.uv or vim.loop
 
         for _, config in ipairs(configs) do
+            local components = {
+                "default",
+                { "open_output", on_start = "always", focus = true },
+                { "on_complete_dispose", timeout = 30000 },
+                -- {""}
+            }
+            if not config.allow_multiple_instances then
+                table.insert(components, { "unique", replace = false, restart_interrupts = false })
+            end
             if config.script_text ~= nil and config.script_text ~= "" then
                 local cwd = config.working_dir:gsub("%$PROJECT_DIR%$", project_dir)
                 local ok, path = pcall(uv.fs_realpath, cwd)
@@ -144,7 +151,7 @@ local intellij_provider = {
                                 args = { "-c", config.script_text },
                                 name = config.name,
                                 cwd = path,
-                                components = { "default" },
+                                components = components,
                                 metadata = {
                                     intellij_config = true,
                                 },
