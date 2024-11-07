@@ -52,7 +52,9 @@ return {
             "ibhagwan/fzf-lua",
         },
         config = function()
-            require("project_nvim").setup({})
+            require("project_nvim").setup({
+                detection_methods = { "pattern", "lsp" },
+            })
 
             -- Show Recent Projects
             vim.keymap.set("n", "<leader>srp", function()
