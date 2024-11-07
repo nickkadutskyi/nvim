@@ -28,6 +28,7 @@ return {
                     },
                     { "<leader>f", group = "[f]ind" },
                     { "<leader>g", group = "[g]o to" },
+                    { "<leader>r", group = "[r]un" },
                     {
                         "<leader>s",
                         group = "[s]how",

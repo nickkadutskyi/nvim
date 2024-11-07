@@ -55,7 +55,7 @@ return {
                             local fileName = vim.fs.basename(filePath)
 
                             if string.match(name, "term://.*toggleterm#.*") then
-                                local terms = require("toggleterm.terminal").get_all(true)
+                                local terms = require("toggleterm.terminal").get_all()
                                 -- local terms = require("toggleterm.termial").get_all(true)
                                 return "Term id: " .. (vim.b.toggle_number or "0") .. " (tot: " .. #terms .. ") " .. (rest or "")
                             end

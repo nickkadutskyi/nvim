@@ -1,6 +1,6 @@
 local function getTagValue(xmlContent, tagName, nameAttr)
     -- Pattern to match the tag with specific name attribute and get its value
-    local pattern = string.format("<%s[^>]+name=[\"'']%s[\"''][^>]+value=[\"'']([^\"'']-)[\"'']", tagName, nameAttr)
+    local pattern = string.format("<%s[^>]+name=[\"'']%s[\"''][^>]+value=\"([^\"]-)\"", tagName, nameAttr)
 
     -- Alternative pattern if value attribute comes before name attribute
     local altPattern = string.format("<%s[^>]+value=[\"'']([^\"'']-)[\"''][^>]+name=[\"'']%s[\"'']", tagName, nameAttr)
@@ -126,16 +126,14 @@ end
 
 local intellij_provider = {
     generator = function(search, cb)
-        vim.notify("intellij_provider.generator")
+        local project_dir = vim.fn.getcwd()
         local templates = {}
-        local configs = find_run_configs(search.dir)
+        local configs = find_run_configs(project_dir)
         local uv = vim.uv or vim.loop
 
         for _, config in ipairs(configs) do
-            -- vim.notify(vim.inspect(config))
-            -- vim.notify(vim.inspect(search))
             if config.script_text ~= nil and config.script_text ~= "" then
-                local cwd = config.working_dir:gsub("%$PROJECT_DIR%$", vim.fn.getcwd())
+                local cwd = config.working_dir:gsub("%$PROJECT_DIR%$", project_dir)
                 local ok, path = pcall(uv.fs_realpath, cwd)
                 if ok then
                     local template = {
@@ -152,7 +150,7 @@ local intellij_provider = {
                                 },
                             }
                         end,
-                        desc = "IntelliJ run configuration: " .. config.name,
+                        desc = "IntelliJ run configuration: ",
                         priority = 50,
                         condition = {
                             callback = function(search)
@@ -170,9 +168,10 @@ local intellij_provider = {
 
     condition = {
         callback = function(search)
+            local project_dir = vim.fn.getcwd()
             -- Check if either .idea/runConfigurations or .run exists
-            return vim.fn.isdirectory(search.dir .. "/.idea/runConfigurations") == 1
-                or vim.fn.isdirectory(search.dir .. "/.run") == 1
+            return vim.fn.isdirectory(project_dir .. "/.idea/runConfigurations") == 1
+                or vim.fn.isdirectory(project_dir .. "/.run") == 1
         end,
     },
 

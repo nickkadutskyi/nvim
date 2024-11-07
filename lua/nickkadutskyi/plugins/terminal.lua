@@ -1,3 +1,4 @@
+local toggleterm_pattern = { "term://*#toggleterm#*", "term://*::toggleterm::*" }
 local function get_term_index(current_id, terms)
     local idx
     for i, v in ipairs(terms) do
@@ -14,7 +15,7 @@ local function go_prev_term(id)
         return
     end
 
-    local terms = require("toggleterm.terminal").get_all(true)
+    local terms = require("toggleterm.terminal").get_all()
     local prev_index
 
     local index = get_term_index(current_id, terms)
@@ -33,7 +34,7 @@ local function go_next_term(id)
         return
     end
 
-    local terms = require("toggleterm.terminal").get_all(true)
+    local terms = require("toggleterm.terminal").get_all()
     local next_index
 
     local index = get_term_index(current_id, terms)
@@ -45,6 +46,29 @@ local function go_next_term(id)
     require("toggleterm").toggle(terms[index].id)
     require("toggleterm").toggle(terms[next_index].id)
 end
+
+---@param current_term ?Terminal
+local function get_term_to_switch_after_exit(current_term)
+    if current_term == nil then
+        return nil
+    end
+    local all = require("toggleterm.terminal").get_all()
+    for index, term in ipairs(all) do
+        if term.id == current_term.id then
+            if index ~= #all then
+                return all[index + 1]
+            elseif #all == index and #all > 1 then
+                return all[index - 1]
+            end
+        elseif term.id > current_term.id then
+            return term
+        elseif #all == index then
+            return term
+        end
+    end
+    return nil
+end
+
 local function toggle_terminal()
     local ui = require("toggleterm.ui")
     local terms = require("toggleterm.terminal")
@@ -61,7 +85,6 @@ local function toggle_terminal()
             ui.close_and_save_terminal_view(windows)
         else
             vim.api.nvim_set_current_win(windows[1].window)
-            vim.cmd.startinsert()
         end
     else
         if not ui.open_terminal_view() then
@@ -74,29 +97,52 @@ end
 return {
     {
         -- Terminal in floating window
-        -- TODO add ability to open multiple terminals and cylce through them
         "akinsho/toggleterm.nvim",
         version = "*",
         config = function()
             local toggleterm = require("toggleterm")
             local terms = require("toggleterm.terminal")
+            local ui = require("toggleterm.ui")
 
             toggleterm.setup({
-                start_in_insert = false,
-                -- requires delay to start in insert mode
+                start_in_insert = true,
+                persist_mode = false,
                 on_open = function(t)
                     vim.fn.timer_start(1, function()
                         vim.cmd("startinsert!")
                     end)
                 end,
-                -- reuqire toggling again after exiting to get back to term
+                ---@param t Terminal
                 on_exit = function(t)
-                    vim.fn.timer_start(1, function()
-                        if #require("toggleterm.terminal").get_all(true) ~= 0 then
-                            toggle_terminal()
+                    -- Mimics behavior in Intellij terminal
+                    if t.close_on_exit == true then
+                        t.close_on_exit = false
+                        local switch_term = get_term_to_switch_after_exit(t)
+                        if t:is_open() == true and t:is_focused() == false then
+                            if switch_term ~= nil then
+                                local mode = vim.api.nvim_get_mode()
+                                ui.close(t)
+                                switch_term:toggle()
+                                vim.fn.timer_start(1, function()
+                                    ui.goto_previous()
+                                    if mode.mode == "n" then
+                                        vim.cmd("stopinsert!")
+                                    end
+                                end)
+                            else
+                                ui.close(t)
+                            end
+                        elseif t:is_focused() == true and switch_term ~= nil then
+                            ui.close(t)
+                            vim.fn.timer_start(1, function()
+                                switch_term:toggle()
+                            end)
+                        else
+                            ui.close(t)
                         end
-                    end)
+                    end
                 end,
+                close_on_exit = true,
             })
 
             for lhs, mode in pairs({
@@ -108,21 +154,22 @@ return {
                     vim.cmd("CloseNetrw")
                     vim.cmd("CloseNetrw")
                     toggle_terminal()
-                    -- toggleterm.toggle()
                 end, { noremap = true, desc = "[a]ctivate [t]erminal tool window (Terminal)" })
             end
 
             vim.api.nvim_create_autocmd("TermOpen", {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-term-open", { clear = true }),
-                pattern = { "term://*toggleterm#*" },
+                pattern = toggleterm_pattern,
                 callback = function(event)
                     vim.keymap.set({ "t" }, "<Esc>", "<C-\\><C-N>", {
                         desc = "Term: Leave terminal mode",
                         buffer = event.buf,
                     })
 
-                    vim.keymap.set({ "n" }, "<Esc>", "<C-W><C-W>", {
-                        desc = "Term: Leave terminal",
+                    vim.keymap.set({ "n" }, "<Esc>", function()
+                        require("toggleterm.ui").goto_previous()
+                    end, {
+                        desc = "Term: Leave terminal to previous window",
                         buffer = event.buf,
                     })
                     -- Create new terminal tab
@@ -158,9 +205,18 @@ return {
                         ["∑"] = { "n", "t" },
                     }) do
                         vim.keymap.set(mode, lhs, function()
-                            local to_close = vim.b.toggle_number
-                            go_prev_term()
-                            terms.get(to_close):shutdown()
+                            local to_close = terms.get(terms.get_focused_id())
+                            local to_switch = get_term_to_switch_after_exit(to_close)
+                            if to_close ~= nil then
+                                to_close.on_exit = function()
+                                    vim.fn.timer_start(1, function()
+                                        if to_switch ~= nil then
+                                            toggleterm.toggle(to_switch.id)
+                                        end
+                                    end)
+                                end
+                                terms.get(to_close.id):shutdown()
+                            end
                         end, {
                             desc = "Close terminal",
                             buffer = event.buf,
