@@ -3,7 +3,9 @@ return {
     {
         -- Rename with incremental search
         "smjonas/inc-rename.nvim",
-        opts = {},
+        opts = {
+            input_buffer_type = "dressing",
+        },
     },
     {
         -- For installing langauge servers, formatters, linters, DAPs

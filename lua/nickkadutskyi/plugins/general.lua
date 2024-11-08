@@ -1,5 +1,14 @@
 return {
     {
+        -- Better input and select popups
+        "stevearc/dressing.nvim",
+        opts = {
+            select = {
+                backend = { "fzf" },
+            },
+        },
+    },
+    {
         "folke/which-key.nvim",
         event = "VeryLazy",
         keys = {
@@ -53,8 +62,13 @@ return {
         },
         config = function()
             require("project_nvim").setup({
+                manual_mode = true,
                 detection_methods = { "pattern", "lsp" },
             })
+            -- Change to project root on startup only
+            vim.fn.timer_start(1, function()
+                vim.cmd(":ProjectRoot")
+            end)
 
             -- Show Recent Projects
             vim.keymap.set("n", "<leader>srp", function()
