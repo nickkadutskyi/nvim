@@ -1,5 +1,36 @@
 return {
     {
+        "laytan/cloak.nvim",
+        config = function()
+            require("cloak").setup({
+                patterns = {
+                    {
+                        file_pattern = ".env*",
+                        cloak_pattern = vim.tbl_map(function(param)
+                            return { "(" .. param .. "=).+", replace = "%1" }
+                        end, {
+                            "APP_SECRET",
+                            "DATABASE_URL",
+                            ".*KEY.*",
+                            ".*SECRET.*",
+                            ".*TOKEN.*",
+                            ".*VAPID.*",
+                            "MAILER_DSN",
+                        }),
+
+                        replace = nil,
+                    },
+                },
+            })
+            vim.keymap.set(
+                "n",
+                "<leader>el",
+                ":CloakPreviewLine<CR>",
+                { noremap = true, desc = "[r]eveal hidden [l]ine" }
+            )
+        end,
+    },
+    {
         -- Better input and select popups
         "stevearc/dressing.nvim",
         opts = {
@@ -35,6 +66,7 @@ return {
 
                         { "<leader>av", group = "[v]cs" },
                     },
+                    { "<leader>e", group = "[e]xpose" },
                     { "<leader>f", group = "[f]ind" },
                     { "<leader>g", group = "[g]o to" },
                     { "<leader>r", group = "[r]un" },

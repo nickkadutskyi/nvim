@@ -12,6 +12,7 @@ return {
         config = function()
             local neogit = require("neogit")
             neogit.setup({
+                process_spinner = false,
                 integrations = {
                     fzf_lua = true,
                     diffview = true,
