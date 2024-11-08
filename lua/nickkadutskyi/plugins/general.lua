@@ -5,29 +5,46 @@ return {
             require("cloak").setup({
                 patterns = {
                     {
-                        file_pattern = ".env*",
-                        cloak_pattern = vim.tbl_map(function(param)
-                            return { "(" .. param .. "=).+", replace = "%1" }
-                        end, {
-                            "APP_SECRET",
-                            "DATABASE_URL",
-                            ".*KEY.*",
-                            ".*SECRET.*",
-                            ".*TOKEN.*",
-                            ".*VAPID.*",
-                            "MAILER_DSN",
-                        }),
-
+                        file_pattern = { ".env*", "*credentials*", "*.php*" },
+                        cloak_pattern = (function()
+                            local patterns = {}
+                            for _, param in ipairs({
+                                "APP_SECRET",
+                                "DATABASE_URL",
+                                ".*KEY.*",
+                                ".*key.*",
+                                ".*SECRET.*",
+                                ".*secret.*",
+                                ".*TOKEN.*",
+                                ".*token.*",
+                                ".*VAPID.*",
+                                ".*vapid.*",
+                                "MAILER_DSN",
+                            }) do
+                                table.insert(patterns, {
+                                    "(%s*['\"]+" .. param .. "['\"]+%s*[=][>]*%s*['\"]).+(['\"][,]*)",
+                                    replace = "%1",
+                                })
+                                table.insert(patterns, {
+                                    "(" .. param .. "%s*[=:]%s*).+",
+                                    replace = "%1",
+                                })
+                            end
+                            return patterns
+                        end)(),
                         replace = nil,
                     },
                 },
             })
-            vim.keymap.set(
-                "n",
-                "<leader>el",
-                ":CloakPreviewLine<CR>",
-                { noremap = true, desc = "[r]eveal hidden [l]ine" }
-            )
+
+            vim.keymap.set("n", "<leader>el", ":CloakPreviewLine<CR>", {
+                noremap = true,
+                desc = "Cloak: [e]expose hidden [l]ine",
+            })
+            vim.keymap.set("n", "<leader>te", ":CloakToggle<CR>", {
+                noremap = true,
+                desc = "Cloak: [t]oggle [e]xposure",
+            })
         end,
     },
     {
