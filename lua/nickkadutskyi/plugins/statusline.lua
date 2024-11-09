@@ -57,7 +57,12 @@ return {
                             if string.match(name, "term://.*toggleterm#.*") then
                                 local terms = require("toggleterm.terminal").get_all()
                                 -- local terms = require("toggleterm.termial").get_all(true)
-                                return "Term id: " .. (vim.b.toggle_number or "0") .. " (tot: " .. #terms .. ") " .. (rest or "")
+                                return "Term id: "
+                                    .. (vim.b.toggle_number or "0")
+                                    .. " (tot: "
+                                    .. #terms
+                                    .. ") "
+                                    .. (rest or "")
                             end
 
                             if string.len(filePath) > 50 then
@@ -89,7 +94,17 @@ return {
                     },
                 },
                 lualine_x = {
-                    "diagnostics",
+                    { "diagnostics" },
+                    {
+                        "overseer",
+                        label = "", -- Prefix for task counts
+                        colored = true, -- Color the task icons and counts
+                        unique = false, -- Unique-ify non-running task count by name
+                        name = nil, -- List of task names to search for
+                        name_not = false, -- When true, invert the name search
+                        status = nil, -- List of task statuses to display
+                        status_not = false, -- When true, invert the status search
+                    },
                 },
                 lualine_y = {
                     "searchcount",
