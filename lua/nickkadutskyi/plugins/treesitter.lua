@@ -14,6 +14,7 @@ return {
             "html",
             "c",
             "php",
+            "phpdoc",
             "javascript",
             "jsdoc",
             "typescript",

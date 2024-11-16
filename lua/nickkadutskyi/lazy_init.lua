@@ -17,7 +17,14 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Initializing lazy.nvim
 require("lazy").setup({
-    spec = { { import = "nickkadutskyi.plugins" } },
+    spec = {
+        { import = "nickkadutskyi.appearance_behavior" },
+        { import = "nickkadutskyi.editor" },
+        { import = "nickkadutskyi.version_control" },
+        { import = "nickkadutskyi.plugins" },
+        { import = "nickkadutskyi.languages_frameworks" },
+        { import = "nickkadutskyi.tools" },
+    },
     change_detection = {
         enable = true,
         notify = false,

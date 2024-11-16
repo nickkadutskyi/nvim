@@ -1,17 +1,6 @@
 return {
     {
-        -- My new color scheme inspired by IntelliJ
-        "nickkadutskyi/jb.nvim",
-        lazy = false,
-        priority = 1000,
-        opts = {},
-        dev = true,
-        config = function()
-            vim.cmd("colorscheme jb")
-        end,
-    },
-    {
-        -- Auto dark mode
+        -- Sync theme with OS
         "f-person/auto-dark-mode.nvim",
         config = function(_)
             local theme = os.getenv("theme") or os.getenv("colorscheme_bg") or os.getenv("neovim_bg")

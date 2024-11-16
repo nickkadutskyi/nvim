@@ -43,7 +43,7 @@ return {
 
                 -- PHP
                 "intelephense",
-                -- "phpactor", -- use either phpactor or intelephense to avoid duplcates
+                "phpactor", -- use either phpactor or intelephense to avoid duplcates
                 -- "psalm", -- disabled because it's not working as if ran as cli tool via nvim-lint
             }
 
@@ -320,7 +320,12 @@ return {
 
                     -- Attach to nvim-navic to show current code context—used in status line
                     local client = vim.lsp.get_client_by_id(event.data.client_id)
-                    if client ~= nil and client.server_capabilities.documentSymbolProvider then
+                    if
+                        client ~= nil
+                        and client.server_capabilities.documentSymbolProvider
+                        and client.name ~= "phpactor"
+                        and client.name ~= "psalm"
+                    then
                         require("nvim-navic").attach(client, bufnr)
                     end
 
@@ -383,6 +388,8 @@ return {
                     header = "",
                     prefix = "",
                 },
+                -- turns off diagnostics signs in gutter
+                signs = false,
             })
             vim.keymap.set("n", "]d", vim.diagnostic.goto_next, {
                 noremap = true,

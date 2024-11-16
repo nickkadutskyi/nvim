@@ -104,12 +104,16 @@ return {
         "lewis6991/gitsigns.nvim",
         opts = {
             signs = {
-                add = { text = "┃" },
-                change = { text = "┃" },
-                delete = { text = "_" },
-                topdelete = { text = "‾" },
-                changedelete = { text = "~" },
-                untracked = { text = "┆" },
+                -- add = { text = "┃" },
+                add = { text = "▐ " },
+                -- change = { text = "┃" },
+                change = { text = "▐ " },
+                -- delete = { text = "_" },
+                delete = { text = "▁" },
+                -- topdelete = { text = "‾" },
+                topdelete = { text = "▔" },
+                changedelete = { text = "▐" },
+                untracked = { text = "▐" },
             },
             signs_staged = {
                 add = { text = "║" },
@@ -124,6 +128,9 @@ return {
             numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
             linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
             word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
+            diff_opts = {
+                internal = true,
+            },
             watch_gitdir = {
                 follow_files = true,
             },
