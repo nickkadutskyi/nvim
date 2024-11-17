@@ -49,16 +49,16 @@ return {
                     overseer.close()
                 end
                 -- overseer.toggle()
-            end, { noremap = true, desc = "Run: [a]ctivate [r]un" })
+            end, { noremap = true, desc = "Run: [a]ctivate [r]un tool window" })
 
-            vim.keymap.set("n", "<leader>rt", function()
+            vim.keymap.set("n", "<leader>ct", function()
                 -- overseer.run_template()
                  overseer.run_template({}, function(task)
                    if task then
                      -- overseer.run_action(task, 'open float')
                    end
                  end)
-            end, { noremap = true, desc = "Run: [r]un [t]ask" })
+            end, { noremap = true, desc = "Run: [c]hoose [t]ask to run" })
         end,
     },
 }

@@ -1,5 +1,16 @@
 return {
     {
+        -- Better highlighting
+        "nvim-treesitter/nvim-treesitter",
+        opts = function(_, opts)
+            vim.list_extend(opts.ensure_installed, {
+                "php",
+                "phpdoc",
+            })
+        end,
+    },
+    {
+        -- Formatting
         "stevearc/conform.nvim",
         opts = function(_, opts)
             local util = require("conform.util")

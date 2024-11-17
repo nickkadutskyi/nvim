@@ -14,28 +14,3 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
     end
 end
 vim.opt.rtp:prepend(lazypath)
-
--- Initializing lazy.nvim
-require("lazy").setup({
-    spec = {
-        { import = "nickkadutskyi.appearance_behavior" },
-        { import = "nickkadutskyi.editor" },
-        { import = "nickkadutskyi.version_control" },
-        { import = "nickkadutskyi.plugins" },
-        { import = "nickkadutskyi.languages_frameworks" },
-        { import = "nickkadutskyi.tools" },
-    },
-    change_detection = {
-        enable = true,
-        notify = false,
-    },
-    ui = {
-        border = "rounded",
-        title = { { " Plugin Manager ", "JBFloatBorder" } },
-    },
-    dev = {
-        path = "~/Developer/PE/0027",
-        patterns = { "nickkadutskyi" },
-        fallback = true,
-    },
-})

@@ -1,5 +1,16 @@
+-- Search text in file
+-- Case-insensitive searching UNLESS \C or capital in search
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+-- Highlight search results
+vim.opt.hlsearch = true
+-- Incremental search
+vim.opt.incsearch = true
+
+-- Lazy.nvim modules
 return {
     {
+        -- Search Everywhere
         -- Faster fzf in case of a large project
         -- DEPENDENCIES: Linux or Mac, fzf or skim, OPTIONAL: fd, rg, bat, delta, chafa
         "ibhagwan/fzf-lua",

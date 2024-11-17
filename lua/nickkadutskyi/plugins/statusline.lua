@@ -150,20 +150,6 @@ return {
         },
         config = function(_, opts)
             require("lualine").setup(opts)
-            -- get a list of all git files into global variable
-            vim.system({ "git", "rev-parse", "--is-inside-work-tree" }, { text = true }, function(o)
-                if o.code == 0 and o.stdout:match("true") then
-                    vim.system(
-                        { "sh", "-c", 'git -C "$(git rev-parse --show-toplevel)" ls-files | xargs basename' },
-                        { text = true },
-                        function(git_files)
-                            if git_files.code == 0 then
-                                vim.g.all_files_str = table.concat(vim.split(git_files.stdout, "\n"), ", ")
-                            end
-                        end
-                    )
-                end
-            end)
         end,
     },
 }

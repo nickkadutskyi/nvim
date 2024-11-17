@@ -1,10 +1,6 @@
--- Define as much as possible in .vimrc to share configs with vim and ideavim
-local vimrc = vim.fn.expand("~/.vimrc")
-if vim.fn.filereadable(vimrc) then
-    vim.cmd.source(vimrc)
-else
-    -- TODO provide lua configs from other sources
-end
+-- Settings
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 -- If opened a dir set it as current dir to help narrow down fzf scope
 -- Later project.nvim will adjust cwd
@@ -14,55 +10,22 @@ elseif vim.fn.filereadable(vim.fn.expand("%")) == 1 then
     vim.api.nvim_set_current_dir(vim.fn.expand("%:p:h"))
 end
 
-
--- Load plugins
+-- Bootstrap lazy.nvim for loading all the plugins and modules
 require("nickkadutskyi.lazy_init")
-
--- NEOVIM SPECIFIC SETTINGS
-
--- Preview substitutions live, as you type!
-vim.opt.inccommand = "split"
-
--- Remove cmd line to allow more space
-vim.opt.cmdheight = 0
-
--- Treesitter Inspect builtin
-vim.keymap.set("n", "<leader>si", ":Inspect<CR>", {
-    noremap = true,
-    desc = "[s]how treesitter [i]nspection",
-})
-vim.keymap.set("n", "<leader>sti", ":InspectTree<CR>", {
-    noremap = true,
-    desc = "[s]how treesitter [t]ree [i]nspection",
-})
-
--- highlight when yanking (copying) text
-vim.api.nvim_create_autocmd("TextYankPost", {
-    desc = "Highlight when yanking (copying) text",
-    group = vim.api.nvim_create_augroup("nickkadutskyi-highlight-yank", { clear = true }),
-    callback = function()
-        vim.highlight.on_yank()
-    end,
-})
-
--- Enfore readonly for vendor and node_modules
-vim.api.nvim_create_autocmd("BufRead", {
-    group = vim.api.nvim_create_augroup("nickkadutskyi-readonly-dirs", { clear = true }),
-    pattern = {
-        "*/vendor/*",
-        "*/node_modules/*",
+-- Loads config modules via Lazy.nvim
+require("lazy").setup({
+    spec = {
+        { import = "nickkadutskyi.appearance_behavior" },
+        { import = "nickkadutskyi.keymap" },
+        { import = "nickkadutskyi.editor" },
+        { import = "nickkadutskyi.version_control" },
+        { import = "nickkadutskyi.plugins" },
+        { import = "nickkadutskyi.languages_frameworks" },
+        { import = "nickkadutskyi.tools" },
+        { import = "nickkadutskyi.other" },
     },
-    callback = function()
-        vim.opt_local.readonly = true
-        vim.opt_local.modifiable = false
-    end,
+    change_detection = { enable = true, notify = false },
+    ui = { border = "rounded", title = " Plugin Manager " },
+    dev = { path = "~/Developer/PE/0027", patterns = { "nickkadutskyi" }, fallback = true },
 })
 
--- Terminal mappings
-
--- Keybinds to make split navigation easier.
---  Use CTRL+<hjkl> to switch between windows
-vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
