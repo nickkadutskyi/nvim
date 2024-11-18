@@ -19,7 +19,6 @@ require("lazy").setup({
         { import = "nickkadutskyi.keymap" },
         { import = "nickkadutskyi.editor" },
         { import = "nickkadutskyi.version_control" },
-        { import = "nickkadutskyi.plugins" },
         { import = "nickkadutskyi.languages_frameworks" },
         { import = "nickkadutskyi.tools" },
         { import = "nickkadutskyi.other" },
