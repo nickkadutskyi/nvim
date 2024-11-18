@@ -18,6 +18,7 @@ vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
 -- Indents next line if current is indented
 vim.opt.autoindent = true
+vim.opt.smartindent = true
 -- Adds visual guides
 -- vim.opt.colorcolumn = "80,100,120" -- defined in plugin
 -- Allow to move to one column past the end of the line
