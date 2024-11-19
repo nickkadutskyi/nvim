@@ -15,13 +15,14 @@ vim.opt.listchars = {
 vim.opt.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 3
+-- Adds visual guides
+-- vim.opt.colorcolumn = "80,100,120" -- defined in plugin
 
 return {
-    {
-        -- Visual guides
+    { -- Visual guides
         "lukas-reineke/virt-column.nvim",
         opts = {
-            -- Use highlight groups from nickkadutskyi/jb.nvim
+            -- Highlight groups from nickkadutskyi/jb.nvim
             highlight = {
                 "General_Editor_Guides_VisualGuides",
                 "General_Editor_Guides_VisualGuides",
@@ -31,21 +32,16 @@ return {
             virtcolumn = "80,100,120",
         },
     },
-    {
-        -- Indent guides
+    { -- Indent guides
         "lukas-reineke/indent-blankline.nvim",
         main = "ibl",
         opts = {
             indent = { char = "▏" },
-            scope = {
-                -- disables underline
-                show_start = false,
-                show_end = false,
-            },
+            -- disables underline
+            scope = { show_start = false, show_end = false },
         },
     },
-    {
-        -- Scrollbar to also show git changes not visible in current view
+    { -- Error stripes and VCS status in Scrollbar
         "petertriho/nvim-scrollbar",
         dependencies = {
             "kevinhwang91/nvim-hlslens",
@@ -53,7 +49,7 @@ return {
         opts = {
             show = true,
             set_highlights = false,
-            hide_if_all_visible = true,
+            hide_if_all_visible = false,
             handlers = {
                 diagnostic = true,
                 gitsigns = true, -- Requires gitsigns
