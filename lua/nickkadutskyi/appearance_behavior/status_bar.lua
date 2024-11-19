@@ -65,9 +65,10 @@ return {
                                     .. (rest or "")
                             end
 
-                            if string.len(filePath) > 50 then
+                            local shorten_after = math.floor(vim.o.columns/238 * 60)
+                            if string.len(filePath) > shorten_after then
                                 local rightPart = vim.fs.basename(parentPath) .. "/" .. fileName
-                                local leftPart = string.sub(filePath, 1, 50 - string.len(rightPart))
+                                local leftPart = string.sub(filePath, 1, shorten_after - string.len(rightPart))
                                 return leftPart .. "../" .. rightPart .. " " .. (rest or "")
                             else
                                 return filePath .. " " .. (rest or "")

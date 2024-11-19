@@ -29,7 +29,8 @@ function _G.TitleString()
             return vim.fn.fnamemodify(vim.fn.resolve(filePath), ":~:.:h") .. "/" .. vim.fn.expand("%:t")
         elseif count == 0 then -- if not in project
             if string.match(relativeFilePath, "^term://") then
-                return "term " .. vim.fn.split(relativeFilePath, ":")[4]
+                local path_parts = vim.fn.split(relativeFilePath, ":")
+                return "term " .. path_parts[#path_parts]
             else
                 return relativeFilePath .. " -[1]"
             end

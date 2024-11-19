@@ -25,7 +25,6 @@ return {
             -- nickkadutskyi.languages_frameworks
             ensure_installed = {
                 "bash",
-                "lua",
                 "vim",
                 "vimdoc",
                 "yaml",

@@ -1,6 +1,5 @@
 return {
-    {
-        -- Highlighting
+    { -- Color Scheme
         "nvim-treesitter/nvim-treesitter",
         opts = function(_, opts)
             vim.list_extend(opts.ensure_installed, {
@@ -9,8 +8,7 @@ return {
             })
         end,
     },
-    {
-        -- Formatting
+    { -- Code Style
         "stevearc/conform.nvim",
         opts = function(_, opts)
             local util = require("conform.util")
@@ -42,8 +40,7 @@ return {
             })
         end,
     },
-    {
-        -- Quality Tools
+    { -- Quality Tools
         "mfussenegger/nvim-lint",
         event = { "BufReadPre", "BufNewFile" },
         opts = function() -- Configure in opts to run all configs for all languages
@@ -65,18 +62,16 @@ return {
                 end,
             })
             -- Run PHP linters that use stdin
-            vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave" }, {
+            vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-php-lint-stdin", { clear = true }),
                 pattern = { "*.php", "*.php.inc" },
                 callback = function(e)
-                    if e.file ~= "" and vim.bo.filetype == "php" then
-                        lint.try_lint({ "phpcs", "php", "phpmd" })
-                    end
+                    lint.try_lint({ "phpcs", "php", "phpmd" })
                 end,
             })
 
             -- PHPStan
-            -- Adds underline for the whole line since phpstan doesn't provide column start and end
+            -- Sets col and end_col to whole row
             lint.linters.phpstan.parser = function(output, bufnr)
                 if vim.trim(output) == "" or output == nil then
                     return {}
@@ -110,9 +105,9 @@ return {
             end
 
             -- Psalm
-            -- psalm exits with 2 when there are issues in file
+            -- Psalm exits with 2 when there are issues in file
             lint.linters.psalm.ignore_exitcode = true
-            -- adds type, link and shortcote to messages
+            -- Adds type, link and shortcote to diagnostics entries
             lint.linters.psalm.parser = function(output, bufnr)
                 if output == nil then
                     return {}
@@ -142,7 +137,7 @@ return {
             end
 
             -- PHP_CodeSniffer
-            -- Underlines whole row
+            -- Sets col and end_col to whole row
             lint.linters.phpcs.parser = function(output, bufnr)
                 local severities = {
                     ERROR = vim.diagnostic.severity.ERROR,
@@ -186,7 +181,7 @@ return {
             end
 
             -- Mess Detector
-            -- Changes priority 3 to HINT
+            -- Changes priority 3 to HINT instead of INFO
             lint.linters.phpmd.parser = function(output, _)
                 local severities = {}
                 severities[1] = vim.diagnostic.severity.ERROR
