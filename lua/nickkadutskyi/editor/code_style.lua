@@ -52,9 +52,7 @@ return {
         opts = { ignore_install = {} },
         config = function(_, opts)
             vim.api.nvim_create_user_command("CodeFormattersInstall", function()
-                pcall(function()
-                    require("mason-conform").setup(opts)
-                end)
+                require("mason-conform").setup(opts)
             end, {})
         end,
     },

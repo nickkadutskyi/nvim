@@ -13,9 +13,7 @@ return {
         opts = { automatic_installation = false },
         config = function(_, opts)
             vim.api.nvim_create_user_command("CodeLintersInstall", function()
-                pcall(function()
-                    require("mason-nvim-lint").setup(opts)
-                end)
+                require("mason-nvim-lint").setup(opts)
             end, {})
         end,
     },
