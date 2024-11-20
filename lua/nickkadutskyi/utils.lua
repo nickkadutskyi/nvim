@@ -1,6 +1,5 @@
 local M = {}
 
----Got it from https://github.com/stevearc/conform.nvim/blob/master/lua/conform/util.lua#L16
 ---Search parent directories for a relative path to a command
 ---@param paths string[]
 ---@param default string

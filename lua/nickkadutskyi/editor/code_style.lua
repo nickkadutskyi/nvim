@@ -45,4 +45,12 @@ return {
             })
         end,
     },
+    {
+        "zapling/mason-conform.nvim",
+        enabled = false,
+        dependencies = { "williamboman/mason.nvim", "stevearc/conform.nvim" },
+        -- ignore_install is merged from nickkadutskyi.languages_frameworks
+        opts = { ignore_install = {} },
+        config = true,
+    },
 }

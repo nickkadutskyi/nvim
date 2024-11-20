@@ -217,17 +217,30 @@ return {
         "rshkarin/mason-nvim-lint",
         dependencies = { "mfussenegger/nvim-lint", "williamboman/mason.nvim" },
         opts = function(_, opts)
+            -- Define PHP linters to ensure installed via Mason
             local mason_install = {}
-            local lint = require("lint")
-            for _, linter in ipairs(lint.linters_by_ft["php"]) do
-                if vim.fn.executable(lint.linters[linter].cmd) == 0 then
-                    table.insert(mason_install, linter)
-                end
-            end
+            -- local lint = require("lint")
+            -- for _, linter in ipairs(lint.linters_by_ft["php"]) do
+            --     if vim.fn.executable(lint.linters[linter].cmd) == 0 then
+            --         table.insert(mason_install, linter)
+            --     end
+            -- end
             if type(opts.ensure_installed) ~= "table" then
                 opts.ensure_installed = {}
             end
             vim.list_extend(opts.ensure_installed, mason_install)
+        end,
+    },
+    {
+        "zapling/mason-conform.nvim",
+        dependencies = { "williamboman/mason.nvim", "stevearc/conform.nvim" },
+        opts = function(_, opts)
+            -- Define PHP formatters to ignore installing via Mason
+            local mason_ignore = {}
+            if type(opts.ignore_install) ~= "table" then
+                opts.ignore_install = {}
+            end
+            vim.list_extend(opts.ignore_install, mason_ignore)
         end,
     },
 }
