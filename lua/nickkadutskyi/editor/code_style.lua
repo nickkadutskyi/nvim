@@ -47,10 +47,15 @@ return {
     },
     {
         "zapling/mason-conform.nvim",
-        enabled = false,
         dependencies = { "williamboman/mason.nvim", "stevearc/conform.nvim" },
         -- ignore_install is merged from nickkadutskyi.languages_frameworks
         opts = { ignore_install = {} },
-        config = true,
+        config = function(_, opts)
+            vim.api.nvim_create_user_command("CodeFormattersInstall", function()
+                pcall(function()
+                    require("mason-conform").setup(opts)
+                end)
+            end, {})
+        end,
     },
 }

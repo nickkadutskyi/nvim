@@ -52,7 +52,7 @@ return {
         event = { "BufReadPre", "BufNewFile" },
         dependencies = { "stevearc/conform.nvim" },
         opts = function() -- Configure in opts to run all configs for all languages
-            local util = require("nickkadutskyi.utils")
+            local utils = require("nickkadutskyi.utils")
             local lint = require("lint")
             lint.linters_by_ft["php"] = {
                 "phpstan",
@@ -80,7 +80,7 @@ return {
             })
 
             -- PHPStan
-            lint.linters.phpstan.cmd = util.find_executable({
+            lint.linters.phpstan.cmd = utils.find_executable({
                 "vendor/bin/phpstan",
                 ".devenv/profile/bin/phpstan",
                 "~/.nix-profile/bin/phpstan",
@@ -119,7 +119,7 @@ return {
             end
 
             -- Psalm
-            lint.linters.psalm.cmd = util.find_executable({
+            lint.linters.psalm.cmd = utils.find_executable({
                 "vendor/bin/psalm",
                 "vendor/bin/psalm.phar",
                 ".devenv/profile/bin/psalm",
@@ -157,7 +157,7 @@ return {
             end
 
             -- PHP_CodeSniffer
-            lint.linters.phpcs.cmd = util.find_executable({
+            lint.linters.phpcs.cmd = utils.find_executable({
                 "vendor/bin/phpcs",
                 ".devenv/profile/bin/phpcs",
                 "~/.nix-profile/bin/phpcs",
@@ -206,7 +206,7 @@ return {
             end
 
             -- Mess Detector
-            lint.linters.phpmd.cmd = util.find_executable({
+            lint.linters.phpmd.cmd = utils.find_executable({
                 "vendor/bin/phpmd",
                 ".devenv/profile/bin/phpmd",
                 "~/.nix-profile/bin/phpmd",
@@ -219,12 +219,12 @@ return {
         opts = function(_, opts)
             -- Define PHP linters to ensure installed via Mason
             local mason_install = {}
-            -- local lint = require("lint")
-            -- for _, linter in ipairs(lint.linters_by_ft["php"]) do
-            --     if vim.fn.executable(lint.linters[linter].cmd) == 0 then
-            --         table.insert(mason_install, linter)
-            --     end
-            -- end
+            local lint = require("lint")
+            for _, linter in ipairs(lint.linters_by_ft["php"]) do
+                if vim.fn.executable(lint.linters[linter].cmd) == 0 then
+                    table.insert(mason_install, linter)
+                end
+            end
             if type(opts.ensure_installed) ~= "table" then
                 opts.ensure_installed = {}
             end

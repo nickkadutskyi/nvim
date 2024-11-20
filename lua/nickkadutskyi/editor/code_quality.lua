@@ -8,10 +8,15 @@ return {
     },
     {
         "rshkarin/mason-nvim-lint",
-        enabled = false,
         dependencies = { "mfussenegger/nvim-lint", "williamboman/mason.nvim" },
         -- ensure_installed is merged from nickkadutskyi.languages_frameworks
         opts = { automatic_installation = false },
-        config = true,
+        config = function(_, opts)
+            vim.api.nvim_create_user_command("CodeLintersInstall", function()
+                pcall(function()
+                    require("mason-nvim-lint").setup(opts)
+                end)
+            end, {})
+        end,
     },
 }
