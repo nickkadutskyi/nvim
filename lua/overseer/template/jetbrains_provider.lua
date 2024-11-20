@@ -83,6 +83,7 @@ local function parse_xml_file(file_path)
 
     local name = content:match('<configuration[^>]*%sname="([^"]*)"')
     local script_text = decodeHTMLEntities(getTagValue(content, "option", "SCRIPT_TEXT"))
+    local script_path = decodeHTMLEntities(getTagValue(content, "option", "SCRIPT_PATH"))
     local interpreter = getTagValue(content, "option", "INTERPRETER_PATH")
     local working_dir = getTagValue(content, "option", "SCRIPT_WORKING_DIRECTORY")
     local execute_in_terminal = getTagValue(content, "option", "EXECUTE_IN_TERMINAL")
@@ -91,6 +92,7 @@ local function parse_xml_file(file_path)
     return {
         name = name,
         script_text = script_text,
+        script_path = script_path,
         working_dir = working_dir,
         interpreter = interpreter,
         execute_in_terminal = execute_in_terminal == "true",
@@ -149,6 +151,35 @@ local intellij_provider = {
                             return {
                                 cmd = { config.interpreter },
                                 args = { "-c", config.script_text },
+                                name = config.name,
+                                cwd = path,
+                                components = components,
+                                metadata = {
+                                    intellij_config = true,
+                                },
+                            }
+                        end,
+                        desc = "IntelliJ run configuration: ",
+                        priority = 50,
+                        condition = {
+                            callback = function(search)
+                                return true
+                            end,
+                        },
+                    }
+                    table.insert(templates, template)
+                end
+            elseif config.script_path ~= nil and config.script_path ~= "" then
+                local cwd = config.working_dir:gsub("%$PROJECT_DIR%$", project_dir)
+                local script_path = config.script_path:gsub("%$PROJECT_DIR%$", project_dir)
+                local ok, path = pcall(uv.fs_realpath, cwd)
+                if ok then
+                    local template = {
+                        name = config.name,
+                        builder = function(params)
+                            return {
+                                cmd = { config.interpreter },
+                                args = { "-c", script_path },
                                 name = config.name,
                                 cwd = path,
                                 components = components,

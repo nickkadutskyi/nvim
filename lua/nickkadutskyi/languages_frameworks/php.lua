@@ -231,7 +231,7 @@ return {
             vim.list_extend(opts.ensure_installed, mason_install)
         end,
     },
-    {
+    { -- Excludes formatters defined in conform.nvim
         "zapling/mason-conform.nvim",
         dependencies = { "williamboman/mason.nvim", "stevearc/conform.nvim" },
         opts = function(_, opts)
