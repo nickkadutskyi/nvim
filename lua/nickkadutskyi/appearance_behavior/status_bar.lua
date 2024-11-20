@@ -40,9 +40,6 @@ return {
                         padding = { left = 1, right = 0 },
                         icon_only = true,
                     },
-                    -- function()
-                    --     return '%{&ft == "toggleterm" ? "terminal (".b:toggle_number.")" : ""}'
-                    -- end,
                     {
                         "filename",
                         file_status = true,
@@ -56,16 +53,13 @@ return {
 
                             if string.match(name, "term://.*toggleterm#.*") then
                                 local terms = require("toggleterm.terminal").get_all()
-                                -- local terms = require("toggleterm.termial").get_all(true)
-                                return "Term id: "
-                                    .. (vim.b.toggle_number or "0")
-                                    .. " (tot: "
-                                    .. #terms
-                                    .. ") "
-                                    .. (rest or "")
+                                local term = require("toggleterm.terminal").get(tonumber(vim.b.toggle_number))
+                                local termid = term and term.id or ""
+                                local termname = term and termid .. ": " .. (term:_display_name()) or ""
+                                return "Term " .. termname .. " (" .. #terms .. ") " .. (rest or "")
                             end
 
-                            local shorten_after = math.floor(vim.o.columns/238 * 60)
+                            local shorten_after = math.floor(vim.o.columns / 238 * 70)
                             if string.len(filePath) > shorten_after then
                                 local rightPart = vim.fs.basename(parentPath) .. "/" .. fileName
                                 local leftPart = string.sub(filePath, 1, shorten_after - string.len(rightPart))
