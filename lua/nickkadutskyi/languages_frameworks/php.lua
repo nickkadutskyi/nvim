@@ -32,9 +32,16 @@ return {
                         command = util.find_executable({
                             "tools/php-cs-fixer/vendor/bin/php-cs-fixer",
                             "vendor/bin/php-cs-fixer",
-                            -- checks for devenv.sh installation
                             ".devenv/profile/bin/php-cs-fixer",
+                            "~/.nix-profile/bin/php-cs-fixer",
                         }, "php-cs-fixer"),
+                    },
+                    phpcbf = {
+                        command = util.find_executable({
+                            "vendor/bin/phpcbf",
+                            ".devenv/profile/bin/phpcbf",
+                            "~/.nix-profile/bin/phpcbf",
+                        }, "phpcbf"),
                     },
                 },
             })
@@ -43,7 +50,9 @@ return {
     { -- Quality Tools
         "mfussenegger/nvim-lint",
         event = { "BufReadPre", "BufNewFile" },
+        dependencies = { "stevearc/conform.nvim" },
         opts = function() -- Configure in opts to run all configs for all languages
+            local util = require("nickkadutskyi.utils")
             local lint = require("lint")
             lint.linters_by_ft["php"] = {
                 "phpstan",
@@ -65,12 +74,17 @@ return {
             vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-php-lint-stdin", { clear = true }),
                 pattern = { "*.php", "*.php.inc" },
-                callback = function(e)
+                callback = function()
                     lint.try_lint({ "phpcs", "php", "phpmd" })
                 end,
             })
 
             -- PHPStan
+            lint.linters.phpstan.cmd = util.find_executable({
+                "vendor/bin/phpstan",
+                ".devenv/profile/bin/phpstan",
+                "~/.nix-profile/bin/phpstan",
+            }, "phpstan")
             -- Sets col and end_col to whole row
             lint.linters.phpstan.parser = function(output, bufnr)
                 if vim.trim(output) == "" or output == nil then
@@ -105,6 +119,12 @@ return {
             end
 
             -- Psalm
+            lint.linters.psalm.cmd = util.find_executable({
+                "vendor/bin/psalm",
+                "vendor/bin/psalm.phar",
+                ".devenv/profile/bin/psalm",
+                "~/.nix-profile/bin/psalm",
+            }, "psalm")
             -- Psalm exits with 2 when there are issues in file
             lint.linters.psalm.ignore_exitcode = true
             -- Adds type, link and shortcote to diagnostics entries
@@ -137,6 +157,11 @@ return {
             end
 
             -- PHP_CodeSniffer
+            lint.linters.phpcs.cmd = util.find_executable({
+                "vendor/bin/phpcs",
+                ".devenv/profile/bin/phpcs",
+                "~/.nix-profile/bin/phpcs",
+            }, "phpcs")
             -- Sets col and end_col to whole row
             lint.linters.phpcs.parser = function(output, bufnr)
                 local severities = {
@@ -181,49 +206,28 @@ return {
             end
 
             -- Mess Detector
-            -- Changes priority 3 to HINT instead of INFO
-            lint.linters.phpmd.parser = function(output, _)
-                local severities = {}
-                severities[1] = vim.diagnostic.severity.ERROR
-                severities[2] = vim.diagnostic.severity.WARN
-                severities[3] = vim.diagnostic.severity.HINT
-                severities[4] = vim.diagnostic.severity.HINT
-                severities[5] = vim.diagnostic.severity.HINT
-
-                local bin = "phpmd"
-
-                if vim.trim(output) == "" or output == nil then
-                    return {}
+            lint.linters.phpmd.cmd = util.find_executable({
+                "vendor/bin/phpmd",
+                ".devenv/profile/bin/phpmd",
+                "~/.nix-profile/bin/phpmd",
+            }, "phpmd")
+        end,
+    },
+    { -- Installs Quality Tools if missing in the system via Mason
+        "rshkarin/mason-nvim-lint",
+        dependencies = { "mfussenegger/nvim-lint", "williamboman/mason.nvim" },
+        opts = function(_, opts)
+            local mason_install = {}
+            local lint = require("lint")
+            for _, linter in ipairs(lint.linters_by_ft["php"]) do
+                if vim.fn.executable(lint.linters[linter].cmd) == 0 then
+                    table.insert(mason_install, linter)
                 end
-
-                if not vim.startswith(output, "{") then
-                    -- vim.notify(output)
-                    return {}
-                end
-
-                local decoded = vim.json.decode(output)
-                local diagnostics = {}
-                local messages = {}
-
-                if decoded["files"] and decoded["files"][1] and decoded["files"][1]["violations"] then
-                    messages = decoded["files"][1]["violations"]
-                end
-
-                for _, msg in ipairs(messages or {}) do
-                    table.insert(diagnostics, {
-                        lnum = msg.beginLine - 1,
-                        end_lnum = msg.endLine - 1,
-                        col = 0,
-                        end_col = 0,
-                        message = msg.description,
-                        code = msg.rule,
-                        source = bin,
-                        severity = assert(severities[msg.priority], "missing mapping for severity " .. msg.priority),
-                    })
-                end
-
-                return diagnostics
             end
+            if type(opts.ensure_installed) ~= "table" then
+                opts.ensure_installed = {}
+            end
+            vim.list_extend(opts.ensure_installed, mason_install)
         end,
     },
 }
