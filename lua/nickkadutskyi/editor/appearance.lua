@@ -30,6 +30,7 @@ return {
             },
             char = "▕",
             virtcolumn = "80,100,120",
+            exclude = { filetypes = { "netrw" } },
         },
     },
     { -- Indent guides
