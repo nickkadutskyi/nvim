@@ -27,12 +27,12 @@ return {
                         return (firstChars[1] or "")
                             .. (firstChars[2] or string.upper(string.sub(projectName, 2, 2)) or "")
                     end,
+                },
+                lualine_b = {
                     -- project name
                     function()
                         return vim.fs.basename(vim.fn.getcwd())
                     end,
-                },
-                lualine_b = {
                     "branch",
                     -- "diff",
                     {
