@@ -1,8 +1,6 @@
 return {
     {
         -- Git integration
-        -- FIXME resolve issue with headers when using split kind for log_view https://github.com/NeogitOrg/neogit/issues/1540
-        -- TODO test
         "NeogitOrg/neogit",
         dependencies = {
             "nvim-lua/plenary.nvim", -- required
@@ -27,24 +25,45 @@ return {
                     mode_padding = 2,
                     -- adds whitespace to the left of the mode text to put it further from sings and makes it shorter
                     mode_text = {
-                        M = " mod",
-                        N = " new",
-                        A = " add",
-                        D = " del",
-                        C = " cop",
-                        U = " upd",
-                        R = " ren",
-                        DD = " unm",
-                        AU = " unm",
-                        UD = " unm",
-                        UA = " unm",
-                        DU = " aunm",
-                        AA = " unm",
-                        UU = " unm",
+                        M = " modified",
+                        N = " new file",
+                        A = " added",
+                        D = " deleted",
+                        C = " copied",
+                        U = " updated",
+                        R = " renamed",
+                        DD = " unmerged",
+                        AU = " unmerged",
+                        UD = " unmerged",
+                        UA = " unmerged",
+                        DU = " unmerged",
+                        AA = " unmerged",
+                        UU = " unmerged",
                         ["?"] = " ",
                     },
                 },
+                kind = "split",
+                log_view = {
+                    kind = "split",
+                },
             })
+
+            -- Autocmds
+            vim.api.nvim_create_autocmd({ "User" }, {
+                group = vim.api.nvim_create_augroup("nickkadutskyi-neogit-status-gitsigns", { clear = true }),
+                pattern = { "GitSignsChanged" },
+                callback = function(e)
+                    require("nickkadutskyi.utils").set_neogit_status_hl(e.buf)
+                end,
+            })
+            vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "FocusGained" }, {
+                group = vim.api.nvim_create_augroup("nickkadutskyi-neogit-status", { clear = true }),
+                callback = function(e)
+                    require("nickkadutskyi.utils").set_neogit_status_hl(e.buf)
+                end,
+            })
+
+            -- Keymap
 
             for lhs, mode in pairs({
                 ["<leader>avc"] = { "n" },

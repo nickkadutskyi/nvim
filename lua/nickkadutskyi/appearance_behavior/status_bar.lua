@@ -17,22 +17,24 @@ return {
             },
             sections = {
                 lualine_a = {
-                    -- project abbreviation
-                    function()
-                        local projectName = vim.fs.basename(vim.fn.getcwd())
-                        local firstChars = {}
-                        for str in string.gmatch(projectName, "([^-_,%s.]+)") do
-                            table.insert(firstChars, string.upper(string.sub(str, 1, 1)))
-                        end
-                        return (firstChars[1] or "")
-                            .. (firstChars[2] or string.upper(string.sub(projectName, 2, 2)) or "")
-                    end,
+                    { -- Project abbreviation
+                        function()
+                            local projectName = vim.fs.basename(vim.fn.getcwd())
+                            local firstChars = {}
+                            for str in string.gmatch(projectName, "([^-_,%s.]+)") do
+                                table.insert(firstChars, string.upper(string.sub(str, 1, 1)))
+                            end
+                            return (firstChars[1] or "")
+                                .. (firstChars[2] or string.upper(string.sub(projectName, 2, 2)) or "")
+                        end,
+                    },
                 },
                 lualine_b = {
-                    -- project name
-                    function()
-                        return vim.fs.basename(vim.fn.getcwd())
-                    end,
+                    { -- Project name
+                        function()
+                            return vim.fs.basename(vim.fn.getcwd())
+                        end,
+                    },
                     "branch",
                     -- "diff",
                     {
@@ -44,7 +46,7 @@ return {
                         "filename",
                         file_status = true,
                         newfile_status = true,
-                        path = 1,
+                        path = 1, -- Show relative path
                         symbols = { newfile = "[new]", unnamed = "[no name]" },
                         fmt = function(name, _)
                             local filePath, rest = name:match("(.+)%s*(%[*.*%]*)")
@@ -67,6 +69,9 @@ return {
                             else
                                 return filePath .. " " .. (rest or "")
                             end
+                        end,
+                        color = function(_)
+                            return vim.b.custom_neogit_status_hl or "Custom_TabLine"
                         end,
                     },
                 },

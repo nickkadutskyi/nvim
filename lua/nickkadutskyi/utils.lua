@@ -38,4 +38,74 @@ function M.find_executable(paths, default, cwd)
     return default
 end
 
+function M.git_status(path, callback)
+    -- Create a temporary buffer for job output
+    local output = ""
+
+    -- Build the git command to check file status
+    local cmd = { "git", "status", "--porcelain", "--ignored", path }
+
+    -- Create the job
+    local job_id = vim.fn.jobstart(cmd, {
+        stdout_buffered = true,
+        on_stdout = function(_, data)
+            if data then
+                output = table.concat(data, "\n")
+            end
+        end,
+        on_exit = function(_, exit_code)
+            -- Parse the git status output
+            local status_code = ""
+            if exit_code == 0 and output ~= "" then
+                -- Get the first two characters which represent the status code
+                status_code = output:sub(1, 2)
+            end
+
+            -- Call the callback with the result
+            if callback then
+                callback(status_code, exit_code)
+            end
+        end,
+    })
+
+    -- Check if job creation was successful
+    if job_id <= 0 then
+        vim.notify("Failed to start git status check", vim.log.levels.ERROR)
+        if callback then
+            callback("", -1)
+        end
+    end
+end
+
+function M.set_neogit_status_hl(bufnr)
+    local file = vim.fn.fnamemodify(vim.fn.bufname(bufnr), ":p")
+    if file then
+        local cwd = vim.fn.getcwd()
+        local is_in_cwd = file:find(cwd, 1, true) == 1
+        if is_in_cwd then
+            M.git_status(file, function(status_code)
+                if status_code == "??" then
+                    vim.b[bufnr].custom_neogit_status_hl = "VCS_Unknown_StatusLine"
+                elseif status_code == "!!" then
+                    vim.b[bufnr].custom_neogit_status_hl = "VCS_IgnoredIgnorePlugin_StatusLine"
+                elseif status_code:match("^A[^A]") then
+                    vim.b[bufnr].custom_neogit_status_hl = "VCS_Added_StatusLine"
+                elseif status_code:match("^D ") then
+                    vim.b[bufnr].custom_neogit_status_hl = "VCS_Deleted_StatusLine"
+                elseif status_code:match("^[^D]D]") then
+                    vim.b[bufnr].custom_neogit_status_hl = "VCS_DeletedFromFileSystem_StatusLine"
+                elseif status_code:match("[MT]") then
+                    vim.b[bufnr].custom_neogit_status_hl = "VCS_Modified_StatusLine"
+                elseif status_code:match("[R]") then
+                    vim.b[bufnr].custom_neogit_status_hl = "VCS_Renamed_StatusLine"
+                elseif status_code:match("[UDA]") then
+                    vim.b[bufnr].custom_neogit_status_hl = "VCS_MergedWithConflicts_StatusLine"
+                else
+                    vim.b[bufnr].custom_neogit_status_hl = "Custom_TabLine"
+                end
+            end)
+        end
+    end
+end
+
 return M
