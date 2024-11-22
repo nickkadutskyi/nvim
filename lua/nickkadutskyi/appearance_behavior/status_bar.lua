@@ -9,10 +9,7 @@ return {
         opts = {
             options = {
                 globalstatus = true,
-                -- component_separators = { left = "", right = "" },
-                -- component_separators = { left = "|", right = "|" },
                 component_separators = { left = "", right = "" },
-                -- section_separators = { left = "", right = "" },
                 section_separators = { left = "", right = "" },
                 always_divide_middle = true,
             },
@@ -26,7 +23,11 @@ return {
                                 table.insert(firstChars, string.upper(string.sub(str, 1, 1)))
                             end
                             return (firstChars[1] or "")
-                                .. (firstChars[2] or string.upper(string.sub(projectName, 2, 2)) or "")
+                                .. (
+                                    #firstChars > 1 and firstChars[#firstChars]
+                                    or string.upper(string.sub(projectName, 2, 2))
+                                    or ""
+                                )
                         end,
                     },
                 },
