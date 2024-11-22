@@ -77,33 +77,37 @@ function M.git_status(path, callback)
     end
 end
 
-function M.set_neogit_status_hl(bufnr)
-    local file = vim.fn.fnamemodify(vim.fn.bufname(bufnr), ":p")
+function M.set_git_status_hl(bufnr)
+    local bufnr_valid = vim.api.nvim_buf_is_valid(bufnr)
+    local file = bufnr_valid and vim.fn.fnamemodify(vim.fn.bufname(bufnr), ":p") or nil
     if file then
         local cwd = vim.fn.getcwd()
         local is_in_cwd = file:find(cwd, 1, true) == 1
         if is_in_cwd then
-            M.git_status(file, function(status_code)
-                if status_code == "??" then
-                    vim.b[bufnr].custom_neogit_status_hl = "VCS_Unknown_StatusLine"
-                elseif status_code == "!!" then
-                    vim.b[bufnr].custom_neogit_status_hl = "VCS_IgnoredIgnorePlugin_StatusLine"
-                elseif status_code:match("^A[^A]") then
-                    vim.b[bufnr].custom_neogit_status_hl = "VCS_Added_StatusLine"
-                elseif status_code:match("^D ") then
-                    vim.b[bufnr].custom_neogit_status_hl = "VCS_Deleted_StatusLine"
-                elseif status_code:match("^[^D]D]") then
-                    vim.b[bufnr].custom_neogit_status_hl = "VCS_DeletedFromFileSystem_StatusLine"
-                elseif status_code:match("[MT]") then
-                    vim.b[bufnr].custom_neogit_status_hl = "VCS_Modified_StatusLine"
-                elseif status_code:match("[R]") then
-                    vim.b[bufnr].custom_neogit_status_hl = "VCS_Renamed_StatusLine"
-                elseif status_code:match("[UDA]") then
-                    vim.b[bufnr].custom_neogit_status_hl = "VCS_MergedWithConflicts_StatusLine"
-                else
-                    vim.b[bufnr].custom_neogit_status_hl = "Custom_TabLine"
-                end
-            end)
+            local path_stat = vim.loop.fs_stat(file)
+            if path_stat and path_stat.type == "file" then
+                M.git_status(file, function(status_code)
+                    if status_code == "??" then
+                        vim.b[bufnr].custom_git_status_hl = "VCS_Unknown_StatusLine"
+                    elseif status_code == "!!" then
+                        vim.b[bufnr].custom_git_status_hl = "VCS_IgnoredIgnorePlugin_StatusLine"
+                    elseif status_code:match("^A[^A]") then
+                        vim.b[bufnr].custom_git_status_hl = "VCS_Added_StatusLine"
+                    elseif status_code:match("^D ") then
+                        vim.b[bufnr].custom_git_status_hl = "VCS_Deleted_StatusLine"
+                    elseif status_code:match("^[^D]D]") then
+                        vim.b[bufnr].custom_git_status_hl = "VCS_DeletedFromFileSystem_StatusLine"
+                    elseif status_code:match("[MT]") then
+                        vim.b[bufnr].custom_git_status_hl = "VCS_Modified_StatusLine"
+                    elseif status_code:match("[R]") then
+                        vim.b[bufnr].custom_git_status_hl = "VCS_Renamed_StatusLine"
+                    elseif status_code:match("[UDA]") then
+                        vim.b[bufnr].custom_git_status_hl = "VCS_MergedWithConflicts_StatusLine"
+                    else
+                        vim.b[bufnr].custom_git_status_hl = "Custom_TabLine"
+                    end
+                end)
+            end
         end
     end
 end

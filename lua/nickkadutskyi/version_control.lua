@@ -53,13 +53,13 @@ return {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-neogit-status-gitsigns", { clear = true }),
                 pattern = { "GitSignsChanged" },
                 callback = function(e)
-                    require("nickkadutskyi.utils").set_neogit_status_hl(e.buf)
+                    require("nickkadutskyi.utils").set_git_status_hl(e.buf)
                 end,
             })
             vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "FocusGained" }, {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-neogit-status", { clear = true }),
                 callback = function(e)
-                    require("nickkadutskyi.utils").set_neogit_status_hl(e.buf)
+                    require("nickkadutskyi.utils").set_git_status_hl(e.buf)
                 end,
             })
 

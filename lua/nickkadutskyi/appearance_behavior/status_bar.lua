@@ -33,7 +33,18 @@ return {
                 lualine_b = {
                     { -- Project name
                         function()
-                            return vim.fs.basename(vim.fn.getcwd())
+                            local cwd = vim.fn.getcwd()
+                            local devpath = vim.fn.fnamemodify("~/Developer", ":p")
+
+                            if cwd:find(devpath, 1, true) == 1 then
+                                local name = vim.fs.basename(cwd)
+                                local code = vim.fs.basename(vim.fs.dirname(cwd))
+                                local account = vim.fs.basename(vim.fs.dirname(vim.fn.fnamemodify(cwd, ":h")))
+
+                                return account .. "" .. (tonumber(code) or code) .. " " .. name
+                            else
+                                return vim.fs.basename(cwd)
+                            end
                         end,
                     },
                     "branch",
@@ -72,7 +83,7 @@ return {
                             end
                         end,
                         color = function(_)
-                            return vim.b.custom_neogit_status_hl or "Custom_TabLine"
+                            return vim.b.custom_git_status_hl or "Custom_TabLine"
                         end,
                     },
                 },
