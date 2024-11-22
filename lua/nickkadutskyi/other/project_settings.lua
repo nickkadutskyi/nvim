@@ -11,7 +11,13 @@ return {
             })
             -- Change to project root on startup only
             vim.fn.timer_start(1, function()
+                local cwd_before = vim.fn.getcwd()
                 vim.cmd(":ProjectRoot")
+                local cwd_after = vim.fn.getcwd()
+                if cwd_before ~= cwd_after then
+                    -- Rerun colorscheme if cwd changed to regenerate ProjectColor
+                    vim.cmd("colorscheme jb")
+                end
             end)
 
             -- get a list of all git files into global variable

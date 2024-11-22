@@ -90,7 +90,7 @@ function M.set_git_status_hl(bufnr)
                     if status_code == "??" then
                         vim.b[bufnr].custom_git_status_hl = "VCS_Unknown_StatusLine"
                     elseif status_code == "!!" then
-                        vim.b[bufnr].custom_git_status_hl = "VCS_IgnoredIgnorePlugin_StatusLine"
+                        vim.b[bufnr].custom_git_status_hl = "VCS_Ignored_StatusLine"
                     elseif status_code:match("^A[^A]") then
                         vim.b[bufnr].custom_git_status_hl = "VCS_Added_StatusLine"
                     elseif status_code:match("^D ") then
