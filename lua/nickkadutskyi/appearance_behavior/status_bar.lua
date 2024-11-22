@@ -1,5 +1,6 @@
 return {
-    {
+    -- TODO Add git status to status bar like this one https://gittoolbox.lukasz-zielinski.com/docs/git-status-display/
+    { -- Status bar controller
         "nvim-lualine/lualine.nvim",
         dependencies = {
             "nvim-tree/nvim-web-devicons",
