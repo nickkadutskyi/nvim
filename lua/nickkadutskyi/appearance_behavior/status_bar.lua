@@ -84,7 +84,7 @@ return {
                             end
                         end,
                         color = function(_)
-                            return vim.b.custom_git_status_hl or "Custom_TabLine"
+                            return vim.b.custom_git_status_hl or "Custom_TabSel"
                         end,
                     },
                 },

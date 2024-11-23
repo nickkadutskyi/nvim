@@ -39,7 +39,7 @@ return {
                         DU = " unmerged",
                         AA = " unmerged",
                         UU = " unmerged",
-                        ["?"] = " ",
+                        ["?"] = " untracked",
                     },
                 },
                 kind = "split",

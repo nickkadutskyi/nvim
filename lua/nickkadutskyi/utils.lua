@@ -104,7 +104,7 @@ function M.set_git_status_hl(bufnr)
                     elseif status_code:match("[UDA]") then
                         vim.b[bufnr].custom_git_status_hl = "VCS_MergedWithConflicts_StatusLine"
                     else
-                        vim.b[bufnr].custom_git_status_hl = "Custom_TabLine"
+                        vim.b[bufnr].custom_git_status_hl = "Custom_TabSel"
                     end
                 end)
             end
