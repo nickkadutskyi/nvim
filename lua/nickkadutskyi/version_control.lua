@@ -10,6 +10,9 @@ return {
         config = function()
             local neogit = require("neogit")
             neogit.setup({
+                disable_hint = true,
+                disable_context_highlighting = false,
+                kind = "split",
                 process_spinner = false,
                 integrations = {
                     fzf_lua = true,
