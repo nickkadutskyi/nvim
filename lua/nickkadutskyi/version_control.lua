@@ -167,6 +167,7 @@ return {
             signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
             numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
             linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
+            culhl = true,
             word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
             diff_opts = {
                 internal = true,

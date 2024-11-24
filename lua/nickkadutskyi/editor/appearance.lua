@@ -1,3 +1,5 @@
+-- Sign column always visible
+vim.opt.signcolumn = "yes"
 -- Show line nubmers
 vim.opt.number = true
 -- Show line nubmers relative to the cursor position

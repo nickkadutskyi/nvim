@@ -118,7 +118,7 @@ function M.set_git_status_hl(bufnr)
             vim.b[bufnr].custom_git_status_hl = "Appearance_FileColors_NonProjectFile"
         end
         local ok, lualine = pcall(require, "lualine")
-        if ok then
+        if ok and bufnr == vim.fn.bufnr() then
             lualine.refresh()
         end
     end
