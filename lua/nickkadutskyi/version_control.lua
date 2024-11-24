@@ -46,7 +46,12 @@ return {
                         ["?"] = " untracked",
                     },
                 },
-                kind = "split",
+                commit_editor = {
+                    kind = "split",
+                    show_staged_diff = false,
+                    staged_diff_split_kind = "split_above",
+                    spell_check = true,
+                },
                 log_view = {
                     kind = "split",
                 },
@@ -78,8 +83,20 @@ return {
                 vim.keymap.set(mode[1], lhs, function()
                     vim.cmd("CloseNetrw")
                     vim.cmd("CloseNetrw")
-                    neogit.open()
-                end, { noremap = true, desc = mode[2] or "VCS: [a]ctivate [v]cs [c]ommit window" })
+                    local layout = vim.fn.winlayout()
+                    local splits = layout[1] == "row" and #layout[2] or vim.fn.winnr("$")
+                    local kind = "tab"
+                    if layout[1] == "row" or layout[1] == "leaf" then
+                        if vim.o.columns / (splits + 1) >= 55 then
+                            kind = "vsplit_left"
+                            for _ = 1, splits do
+                                vim.cmd("wincmd h")
+                            end
+                        end
+                    end
+
+                    neogit.open({ kind = kind })
+                end, { desc = mode[2] or "VCS: [a]ctivate [v]cs [c]ommit window" })
             end
 
             vim.keymap.set("n", "<leader>avf", function()
