@@ -112,14 +112,18 @@ function M.set_git_status_hl(bufnr)
                     else
                         vim.b[bufnr].custom_git_status_hl = "Custom_TabSel"
                     end
+                    local ok, lualine = pcall(require, "lualine")
+                    if ok and bufnr == vim.fn.bufnr() then
+                        lualine.refresh()
+                    end
                 end)
             end
         else -- Not in the current project
             vim.b[bufnr].custom_git_status_hl = "Appearance_FileColors_NonProjectFile"
-        end
-        local ok, lualine = pcall(require, "lualine")
-        if ok and bufnr == vim.fn.bufnr() then
-            lualine.refresh()
+            local ok, lualine = pcall(require, "lualine")
+            if ok and bufnr == vim.fn.bufnr() then
+                lualine.refresh()
+            end
         end
     end
 end
