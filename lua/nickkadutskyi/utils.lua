@@ -89,6 +89,10 @@ function M.set_git_status_hl(bufnr)
             local path_stat = vim.loop.fs_stat(file)
             if path_stat and path_stat.type == "file" then
                 M.git_status(file, function(status_code)
+                    local still_bufnr_valid = vim.api.nvim_buf_is_valid(bufnr)
+                    if not still_bufnr_valid then
+                        return
+                    end
                     if status_code == "??" then
                         vim.b[bufnr].custom_git_status_hl = "VCS_Unknown_StatusLine"
                     elseif status_code == "!!" then
