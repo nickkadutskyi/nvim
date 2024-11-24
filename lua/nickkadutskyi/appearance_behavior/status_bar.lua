@@ -5,6 +5,7 @@ return {
         dependencies = {
             "nvim-tree/nvim-web-devicons",
             "akinsho/toggleterm.nvim",
+            "arkav/lualine-lsp-progress",
         },
         opts = {
             options = {
@@ -107,6 +108,7 @@ return {
                     },
                 },
                 lualine_x = {
+                    { "lsp_progress" },
                     { "diagnostics" },
                     {
                         "overseer",

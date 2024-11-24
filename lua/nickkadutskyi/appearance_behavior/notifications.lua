@@ -1,4 +1,3 @@
--- TODO add ability to move fidget on top of notifications in the bottom right
 return {
     {
         -- Notifications
@@ -16,16 +15,5 @@ return {
         init = function()
             vim.notify = require("notify")
         end,
-    },
-    {
-        -- Progress (LSP)
-        "j-hui/fidget.nvim",
-        opts = {
-            notification = {
-                window = {
-                    x_padding = 2,
-                },
-            },
-        },
     },
 }

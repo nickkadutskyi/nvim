@@ -26,7 +26,6 @@ return {
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
             "hrsh7th/cmp-nvim-lsp",
-            "j-hui/fidget.nvim",
         },
         config = function(plugin, _)
             -- FIXME is this a proper api?

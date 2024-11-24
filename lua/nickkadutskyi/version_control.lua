@@ -20,12 +20,13 @@ return {
                 },
                 signs = {
                     -- { CLOSED, OPENED }
-                    hunk = { "", "" },
+                    hunk = { "", "" },
                     item = { " ", " " },
                     section = { "", "" },
                 },
                 status = {
-                    mode_padding = 2,
+                    HEAD_folded = true,
+                    mode_padding = 3,
                     -- adds whitespace to the left of the mode text to put it further from sings and makes it shorter
                     mode_text = {
                         M = " modified",
