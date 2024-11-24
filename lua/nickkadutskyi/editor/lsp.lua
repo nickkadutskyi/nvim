@@ -16,6 +16,7 @@ return {
         -- Uses LSP to show current code context—used in status line
         "SmiteshP/nvim-navic",
         dependencies = { "neovim/nvim-lspconfig" },
+        opts = { highlight = true, color_correction = "static" },
     },
     {
         -- LSP config
