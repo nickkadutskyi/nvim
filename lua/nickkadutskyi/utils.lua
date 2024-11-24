@@ -1,3 +1,5 @@
+local defaults = require("nickkadutskyi.config").default
+
 local M = {}
 
 ---Search parent directories for a relative path to a command
@@ -109,6 +111,50 @@ function M.set_git_status_hl(bufnr)
                 end)
             end
         end
+    end
+end
+
+---@param path string
+---@param paths string[]|string
+function M.is_path_in_paths(path, paths)
+    path = vim.fn.fnamemodify(path, ":p")
+    if type(paths) == "string" then
+        paths = { paths }
+    end
+    for _, p in ipairs(paths) do
+        if path:find(vim.fn.fnamemodify(p, ":p"), 1, true) == 1 then
+            return true
+        end
+    end
+end
+
+---@param item any
+---@param table_name string
+---@return any[] -- Copy of the global table
+function M.add_to_global_list(item, table_name)
+    if type(vim.g[table_name]) == "table" then
+        local l_table = vim.g[table_name]
+        table.insert(l_table, item)
+        vim.g[table_name] = l_table
+    elseif vim.g[table_name] == nil then
+        vim.g[table_name] = { item }
+    else
+        error("Variable is not a table. " .. table_name .. " is a " .. type(vim.g[table_name]))
+    end
+    return vim.g[table_name]
+end
+
+---Copilot (github/copilot.vim) configuration
+function M.add_cwd_to_copilot_workspace_folders()
+    local cwd = vim.fn.getcwd()
+    if M.is_path_in_paths(cwd, defaults.copilot_allowed_paths) then
+        M.add_to_global_list(cwd, "copilot_workspace_folders")
+    else
+        vim.notify(
+            "Current directory (" .. cwd .. ") is not in the allowed paths for Copilot",
+            vim.log.levels.WARN,
+            { title = "Utils.Copilot" }
+        )
     end
 end
 

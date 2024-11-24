@@ -1,3 +1,5 @@
+local utils = require("nickkadutskyi.utils")
+
 return {
     {
         "ahmedkhalf/project.nvim",
@@ -8,17 +10,24 @@ return {
             require("project_nvim").setup({
                 manual_mode = true,
                 detection_methods = { "pattern", "lsp" },
+                silent_chdir = true,
             })
-            -- Change to project root on startup only
-            vim.fn.timer_start(1, function()
-                local cwd_before = vim.fn.getcwd()
-                vim.cmd(":ProjectRoot")
-                local cwd_after = vim.fn.getcwd()
-                if cwd_before ~= cwd_after then
-                    -- Rerun colorscheme if cwd changed to regenerate ProjectColor
-                    vim.cmd("colorscheme jb")
-                end
-            end)
+
+            -- Change to project root on startup only becasue
+            -- `manual_mode = false` runs on BufEnter as well
+            vim.api.nvim_create_autocmd({ "VimEnter" }, {
+                callback = function()
+                    local cwd_before = vim.fn.getcwd()
+                    require("project_nvim.project").on_buf_enter()
+                    local cwd_after = vim.fn.getcwd()
+                    if cwd_before ~= cwd_after then
+                        -- Rerun colorscheme if cwd changed to regenerate ProjectColor
+                        vim.cmd("colorscheme jb")
+                        -- Add cwd to copilot_workspace_folders if in allowed paths
+                        utils.add_cwd_to_copilot_workspace_folders()
+                    end
+                end,
+            })
 
             -- get a list of all git files into global variable
             -- Checks if it's a git repo

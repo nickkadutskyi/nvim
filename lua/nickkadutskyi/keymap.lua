@@ -134,10 +134,19 @@ return {
                 { "<A-Up>", desc = "TS: Init Incremental Selection | Increment Node" },
                 { "<A-s>", desc = "TS: Increment Scope" },
                 { "<A-Down>", desc = "TS: Decrement Node" },
+                { "<Tab>", desc = "AI Assist: Accept suggestion" },
+                { "<A-Tab>", desc = "AI Assist: Accept word suggestion" },
+                { "<S-Tab>", desc = "AI Assist: Accept line suggestion" },
+                { "<A-]>", desc = "AI Assist: Next suggestion" },
+                { "<A-[>", desc = "AI Assist: Previous suggestion" },
+                { "<C-]>", desc = "AI Assist: Dismiss suggestion" },
             })
             -- Keymaps
-            vim.keymap.set("n", "<leader>?", function()
+            vim.keymap.set("n", "<leader>?n", function()
                 wk.show({ mode = "n", global = false })
+            end, { silent = true, desc = "Buffer Local Keymaps (which-key)" })
+            vim.keymap.set("n", "<leader>?a", function()
+                wk.show({})
             end, { silent = true, desc = "Buffer Local Keymaps (which-key)" })
         end,
     },
