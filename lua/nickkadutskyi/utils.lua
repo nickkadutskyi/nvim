@@ -82,7 +82,7 @@ end
 function M.set_git_status_hl(bufnr)
     local bufnr_valid = vim.api.nvim_buf_is_valid(bufnr)
     local file = bufnr_valid and vim.fn.fnamemodify(vim.fn.bufname(bufnr), ":p") or nil
-    if file then
+    if file and vim.fn.filereadable(file) == 1 then
         local cwd = vim.fn.getcwd()
         local is_in_cwd = file:find(cwd, 1, true) == 1
         if is_in_cwd then

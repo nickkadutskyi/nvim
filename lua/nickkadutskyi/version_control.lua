@@ -86,13 +86,15 @@ return {
                     local layout = vim.fn.winlayout()
                     local splits = layout[1] == "row" and #layout[2] or vim.fn.winnr("$")
                     local kind = "tab"
-                    if layout[1] == "row" or layout[1] == "leaf" then
+                    if layout[1] == "row" then
                         if vim.o.columns / (splits + 1) >= 55 then
                             kind = "vsplit_left"
                             for _ = 1, splits do
                                 vim.cmd("wincmd h")
                             end
                         end
+                    elseif layout[1] == "leaf" then
+                        kind = "vsplit_left"
                     end
 
                     neogit.open({ kind = kind })

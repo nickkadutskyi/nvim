@@ -94,7 +94,7 @@ return {
                         "navic",
 
                         -- Component specific options
-                        color_correction = "static", -- Can be nil, "static" or "dynamic". This option is useful only when you have highlights enabled.
+                        color_correction = "dynamic", -- Can be nil, "static" or "dynamic". This option is useful only when you have highlights enabled.
                         -- Many colorschemes don't define same backgroud for nvim-navic as their lualine statusline backgroud.
                         -- Setting it to "static" will perform a adjustment once when the component is being setup. This should
                         --   be enough when the lualine section isn't changing colors based on the mode.
