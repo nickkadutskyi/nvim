@@ -48,7 +48,10 @@ function _G.custom_tabline()
         elseif bufname:match("term://") then
             -- Get the terminal name
             local path_parts = vim.fn.split(bufname, ":")
-            name = "Term " .. path_parts[#path_parts]
+            name = "term " .. path_parts[#path_parts]
+        elseif bufname:match("diffview://") then
+            -- Get the diffview name
+            name = "diff " .. bufname:gsub(vim.fn.getcwd(), ""):gsub("diffview:///", "")
         elseif bufname:match("^.+://") then
             -- Keep full name for special buffers
             name = bufname
