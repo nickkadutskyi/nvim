@@ -2,6 +2,7 @@ return {
     {
         -- Git integration
         "NeogitOrg/neogit",
+        -- TODO Contribute a fix for `vim.opt.cmdheight = 0` case where Neogit Popup doesnt' reach the bottom
         dependencies = {
             "nvim-lua/plenary.nvim", -- required
             "sindrets/diffview.nvim", -- optional - Diff integration
@@ -58,6 +59,7 @@ return {
             })
 
             -- Autocmds
+            ---Updates file status hl when hunks are changed
             vim.api.nvim_create_autocmd({ "User" }, {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-neogit-status-gitsigns", { clear = true }),
                 pattern = { "GitSignsChanged" },
@@ -65,10 +67,42 @@ return {
                     require("nickkadutskyi.utils").set_git_status_hl(e.buf)
                 end,
             })
+            ---Updates file status hl when buffer is entered or saved
             vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "FocusGained" }, {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-neogit-status", { clear = true }),
                 callback = function(e)
                     require("nickkadutskyi.utils").set_git_status_hl(e.buf)
+                end,
+            })
+            ---Sets Normal background for Neogit editors
+            vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
+                group = vim.api.nvim_create_augroup("nickkadutskyi-neogit-popup-editor", { clear = true }),
+                ---Defined in Neogit
+                ---https://github.com/NeogitOrg/neogit/blob/master/lua/neogit/client.lua#L101
+                pattern = {
+                    "COMMIT_EDITMSG",
+                    "MERGE_MSG",
+                    "TAG_EDITMSG",
+                    "EDIT_DESCRIPTION",
+                    "git%-rebase%-todo",
+                },
+                callback = function(e)
+                    -- Is delayed to get set after Neogit sets its own colors
+                    vim.fn.timer_start(1, function()
+                        vim.opt_local.winhl:append("Normal:Normal")
+                        vim.opt_local.winhl:append("CursorLine:NeogitCursorLineEditor")
+                    end)
+                end,
+            })
+            ---Sets Normal background for Neogit editors
+            vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
+                group = vim.api.nvim_create_augroup("nickkadutskyi-neogit-popup", { clear = true }),
+                pattern = { "Neogit*" },
+                callback = function(e)
+                    -- Is delayed to get set after Neogit sets its own colors
+                    vim.fn.timer_start(1, function()
+                        vim.opt_local.winhl:append("CursorLine:NeogitCursorLine")
+                    end)
                 end,
             })
 
