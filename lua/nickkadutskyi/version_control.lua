@@ -86,7 +86,7 @@ return {
                     "EDIT_DESCRIPTION",
                     "git%-rebase%-todo",
                 },
-                callback = function(e)
+                callback = function(_)
                     -- Is delayed to get set after Neogit sets its own colors
                     vim.fn.timer_start(1, function()
                         vim.opt_local.winhl:append("Normal:Normal")
@@ -98,7 +98,7 @@ return {
             vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-neogit-popup", { clear = true }),
                 pattern = { "Neogit*" },
-                callback = function(e)
+                callback = function(_)
                     -- Is delayed to get set after Neogit sets its own colors
                     vim.fn.timer_start(1, function()
                         vim.opt_local.winhl:append("CursorLine:NeogitCursorLine")
