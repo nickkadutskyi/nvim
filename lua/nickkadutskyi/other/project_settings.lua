@@ -11,6 +11,7 @@ return {
                 manual_mode = true,
                 detection_methods = { "pattern", "lsp" },
                 silent_chdir = true,
+                scope_chdir = 'win', -- 'global' | 'win' | 'tab'
             })
 
             -- Change to project root on startup only becasue

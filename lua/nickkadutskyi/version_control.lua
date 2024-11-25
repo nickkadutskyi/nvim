@@ -26,7 +26,7 @@ return {
                     section = { "", "" },
                 },
                 status = {
-                    HEAD_folded = true,
+                    HEAD_folded = false,
                     mode_padding = 3,
                     -- adds whitespace to the left of the mode text to put it further from sings and makes it shorter
                     mode_text = {
@@ -94,13 +94,18 @@ return {
                     end)
                 end,
             })
-            ---Sets Normal background for Neogit editors
+            ---Neogit Popup adjustments
             vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-neogit-popup", { clear = true }),
                 pattern = { "Neogit*" },
-                callback = function(_)
+                callback = function(e)
                     -- Is delayed to get set after Neogit sets its own colors
                     vim.fn.timer_start(1, function()
+                        if vim.fn.bufname(e.buf):match("NeogitLogView") then
+                            ---Sets Special background for Neogit LogViewer
+                            vim.opt_local.winhl:append("Normal:CustomNeogitLogsNormal")
+                        end
+                        ---Sets CursorlLine to look like selector
                         vim.opt_local.winhl:append("CursorLine:NeogitCursorLine")
                     end)
                 end,
@@ -138,13 +143,25 @@ return {
             vim.keymap.set("n", "<leader>avf", function()
                 vim.cmd("CloseNetrw")
                 vim.cmd("CloseNetrw")
-                neogit.action("log", "log_current", { "--", vim.fn.expand("%") })()
+                neogit.action("log", "log_all_references", {
+                    "--graph",
+                    "--color",
+                    "--show-signature",
+                    "--decorate",
+                    "--",
+                    vim.fn.expand("%"),
+                })()
             end, { noremap = true, desc = "VCS: [a]ctivate [v]sc log for current [f]ile" })
 
             vim.keymap.set("n", "<leader>avl", function()
                 vim.cmd("CloseNetrw")
                 vim.cmd("CloseNetrw")
-                neogit.action("log", "log_head")()
+                neogit.action("log", "log_all_references", {
+                    "--graph",
+                    "--color",
+                    "--show-signature",
+                    "--decorate",
+                })()
             end, { noremap = true, desc = "VCS: [a]ctivate [v]sc [l]og" })
 
             for lhs, mode in pairs({
