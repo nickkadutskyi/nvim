@@ -77,7 +77,7 @@ return {
         "zbirenbaum/copilot-cmp",
         config = true,
     },
-    { -- AI Suggestions from Supermaven (works way faster than GitHub Copilot)
+    { -- AI Suggestions from Supermaven (works way faster than GitHub Copilot implemented in copilot.lua or copilot.vim)
         "supermaven-inc/supermaven-nvim",
         enabled = true,
         config = function()
