@@ -6,6 +6,8 @@ return {
             "nvim-tree/nvim-web-devicons",
             "akinsho/toggleterm.nvim",
             "arkav/lualine-lsp-progress",
+            -- "ofseed/copilot-status.nvim",
+            "AndreM222/copilot-lualine",
         },
         opts = {
             options = {
@@ -110,6 +112,7 @@ return {
                 },
                 lualine_x = {
                     { "lsp_progress" },
+                    { "copilot" },
                     { "diagnostics" },
                     {
                         "overseer",

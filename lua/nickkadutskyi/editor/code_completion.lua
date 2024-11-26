@@ -19,6 +19,7 @@ return {
                 "fbuchlak/cmp-symfony-router",
                 dependencies = { "nvim-lua/plenary.nvim" },
             },
+            "zbirenbaum/copilot-cmp",
         },
         config = function()
             local luasnip = require("luasnip")
@@ -32,7 +33,7 @@ return {
                     end,
                 },
                 completion = {
-                    completeopt = "menu,menuone",
+                    completeopt = "menu,menuone,noinsert,popup",
                 },
                 formatting = {
                     expandable_indicator = true,
@@ -85,32 +86,66 @@ return {
                         end
                     end, { "i", "s" }),
                 }),
-                sources = cmp.config.sources({
-                    { name = "nvim_lsp" },
-                    { name = "nvim_lsp_signature_help" },
-                    { name = "nvim_lsp_document_symbol" },
-                    { name = "nvim_lua" },
-                    { name = "luasnip" }, -- For luasnip users.
-                    { name = "path" },
-                    { name = "lazydev" },
+                -- TODO Restructure this config to make it composable from different files
+                sources = cmp.config.sources(
+                    -- Group 0
                     {
-                        name = "symfony_router",
-                        -- these options are default, you don't need to include them in setup
-                        option = {
-                            console_command = { "php", "bin/console" }, -- see Configuration section
-                            cwd = nil, -- string|nil Defaults to vim.loop.cwd()
-                            cwd_files = { "composer.json", "bin/console" }, -- all these files must exist in cwd to trigger completion
-                            filetypes = { "php", "twig" },
-                        },
+                        -- Prioritizes this over LuaLS from nvim_lsp
+                        { name = "lazydev", priority = 500 },
                     },
-                }, {
-                    { name = "buffer" },
-                }, {
-                    -- { name = "supermaven" }, -- disabled to keep it as ghost text only
-                }),
+                    -- Group 1
+                    {
+                        { name = "nvim_lsp", priority = 1000 },
+                        ---Shows signauter documentation when entering `(` after a function
+                        { name = "nvim_lsp_signature_help", priority = 1000 },
+                        ---Snippets
+                        { name = "luasnip", priority = 1000 }, -- For luasnip users.
+                        { name = "nvim_lua", priority = 750 },
+                        { name = "path", priority = 500 },
+                        -- TODO move this to Symfony specific file
+                        {
+                            name = "symfony_router",
+                            -- these options are default, you don't need to include them in setup
+                            option = {
+                                -- see Configuration section
+                                console_command = { "php", "bin/console" },
+                                -- string|nil Defaults to vim.loop.cwd()
+                                cwd = nil,
+                                -- all these files must exist in cwd to trigger completion
+                                cwd_files = { "composer.json", "bin/console" },
+                                filetypes = { "php", "twig" },
+                            },
+                            priority = 500,
+                        },
+                        { name = "copilot", priority = 100 },
+                        -- { name = "supermaven" }, -- disabled to keep it as ghost text only
+                    },
+                    -- Group 2
+                    {
+                        { name = "buffer" },
+                    }
+                ),
                 experimental = {
                     ghost_text = false, -- this feature conflict with ai assistant inline preview
                 },
+                -- sorting = {
+                --     priority_weight = 2,
+                --     comparators = {
+                --
+                --         -- Below is the default comparitor list and order for nvim-cmp
+                --         cmp.config.compare.offset,
+                --         -- cmp.config.compare.scopes, --this is commented in nvim-cmp too
+                --         cmp.config.compare.exact,
+                --         cmp.config.compare.score,
+                --         cmp.config.compare.recently_used,
+                --         require("copilot_cmp.comparators").prioritize,
+                --         cmp.config.compare.locality,
+                --         cmp.config.compare.kind,
+                --         -- cmp.config.compare.sort_text,
+                --         cmp.config.compare.length,
+                --         cmp.config.compare.order,
+                --     },
+                -- },
             })
 
             cmp.setup.cmdline("/", {
@@ -119,11 +154,17 @@ return {
                     completeopt = "menu,menuone,noselect",
                 },
                 mapping = cmp.mapping.preset.cmdline(),
-                sources = cmp.config.sources({
-                    { name = "nvim_lsp_document_symbol" },
-                }, {
-                    { name = "buffer" },
-                }),
+                sources = cmp.config.sources(
+                    -- Group 1
+                    {
+                        ---Completion for LSP symbols during search
+                        { name = "nvim_lsp_document_symbol" },
+                    },
+                    -- Group 2
+                    {
+                        { name = "buffer" },
+                    }
+                ),
             })
 
             cmp.setup.cmdline(":", {
@@ -132,16 +173,21 @@ return {
                     completeopt = "menu,menuone,noselect",
                 },
                 mapping = cmp.mapping.preset.cmdline(),
-                sources = cmp.config.sources({
-                    { name = "path" },
-                }, {
+                sources = cmp.config.sources(
+                    -- Group 1
                     {
-                        name = "cmdline",
-                        option = {
-                            ignore_cmds = { "Man", "!" },
-                        },
+                        { name = "path" },
                     },
-                }),
+                    -- Group 2
+                    {
+                        {
+                            name = "cmdline",
+                            option = {
+                                ignore_cmds = { "Man", "!" },
+                            },
+                        },
+                    }
+                ),
             })
         end,
     },

@@ -86,30 +86,44 @@ return {
         -- Keymap search and documentation
         "folke/which-key.nvim",
         event = "VeryLazy",
-        keys = {
-            {
-                "<leader>?",
-                function()
-                    require("which-key").show({ global = false })
-                end,
-                desc = "Buffer Local Keymaps (which-key)",
+        opts = {
+            sort = { "desc", "group", "alphanum", "local", "order", "mod" },
+            keys = {
+                scroll_down = "<c-n>", -- binding to scroll down inside the popup
+                scroll_up = "<c-p>", -- binding to scroll up inside the popup
+            },
+            plugins = {
+                marks = false, -- shows a list of your marks on ' and `
+                registers = false, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
+                -- the presets plugin, adds help for a bunch of default keybindings in Neovim
+                -- No actual key bindings are created
+                presets = {
+                    operators = true, -- adds help for operators like d, y, ...
+                    motions = true, -- adds help for motions
+                    text_objects = true, -- help for text objects triggered after entering an operator
+                    windows = true, -- default bindings on <c-w>
+                    nav = true, -- misc bindings to work with windows
+                    z = true, -- bindings for folds, spelling and others prefixed with z
+                    g = true, -- bindings for prefixed with g
+                },
             },
         },
-        config = function()
+        config = function(_, opts)
             local wk = require("which-key")
-            wk.setup({
-                sort = { "desc", "group", "alphanum", "local", "order", "mod" },
-                keys = {
-                    scroll_down = "<c-n>", -- binding to scroll down inside the popup
-                    scroll_up = "<c-p>", -- binding to scroll up inside the popup
-                },
-            })
-            -- Groups: [Leader|None] > [Action] > [Modifier|None] > [Object]
+            wk.setup(opts)
+            -- Provides Keymap Groups: [Leader|None] > [Action] > [Modifier|None] > [Object]
             wk.add({
                 {
                     "<leader>",
                     group = "Leader",
 
+                    {
+                        "<leader>?",
+                        group = "[?]which-key help",
+
+                        { "<leader>?g", group = "[g]lobal" },
+                        { "<leader>?l", group = "[l]ocal" },
+                    },
                     {
                         "<leader>a",
                         group = "[a]ctivate",
@@ -131,23 +145,26 @@ return {
                 },
                 { "]", group = "[n]ext" },
                 { "[", group = "[p]rev" },
+                -- TODO moves to a file related to Treesitter
+                -- Treesitter
                 { "<A-Up>", desc = "TS: Init Incremental Selection | Increment Node" },
                 { "<A-s>", desc = "TS: Increment Scope" },
                 { "<A-Down>", desc = "TS: Decrement Node" },
-                { "<Tab>", desc = "AI Assist: Accept suggestion" },
-                { "<A-Tab>", desc = "AI Assist: Accept word suggestion" },
-                { "<S-Tab>", desc = "AI Assist: Accept line suggestion" },
-                { "<A-]>", desc = "AI Assist: Next suggestion" },
-                { "<A-[>", desc = "AI Assist: Previous suggestion" },
-                { "<C-]>", desc = "AI Assist: Dismiss suggestion" },
             })
-            -- Keymaps
-            vim.keymap.set("n", "<leader>?n", function()
+
+            -- Keymap
+            vim.keymap.set("n", "<leader>?gn", function()
+                wk.show({ mode = "n", global = true })
+            end, { silent = true, desc = "Global keymap for normal mode" })
+            vim.keymap.set("n", "<leader>?gi", function()
+                wk.show({ mode = "i", global = true })
+            end, { silent = true, desc = "Global keymaps for insert mode" })
+            vim.keymap.set("n", "<leader>?ln", function()
                 wk.show({ mode = "n", global = false })
-            end, { silent = true, desc = "Buffer Local Keymaps (which-key)" })
-            vim.keymap.set("n", "<leader>?a", function()
-                wk.show({})
-            end, { silent = true, desc = "Buffer Local Keymaps (which-key)" })
+            end, { silent = true, desc = "Buffer local keymap for normal mode" })
+            vim.keymap.set("n", "<leader>?li", function()
+                wk.show({ mode = "i", global = false })
+            end, { silent = true, desc = "Buffer local keymaps for insert mode" })
         end,
     },
 }
