@@ -171,7 +171,7 @@ return {
                 },
                 ["intelephense"] = {
                     init_options = {
-                        licenceKey = vim.fn.expand("~/.config/php/intelephense_license.txt"),
+                        licenceKey = vim.fn.expand("~/.config/private_php/intelephense_license.txt"),
                     },
                     intelephense = {
                         telemetry = {
@@ -416,6 +416,7 @@ return {
             library = {
                 -- Load luvit types when the `vim.uv` word is found
                 { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+                { path = "lazy.nvim", words = { "Lazy" } },
             },
         },
     },
