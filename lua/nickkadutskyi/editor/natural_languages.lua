@@ -1,6 +1,7 @@
 ---Config
 vim.opt.spell = true
-vim.opt.spelllang = "en,en_us"
+vim.opt.spelllang = { "en_us", "en", "ru", "uk" }
+vim.cmd('set spellfile=~/.config/nvim_spell/en.utf-8.add')
 vim.api.nvim_create_autocmd({ "TermOpen" }, {
     group = vim.api.nvim_create_augroup("nickkadutskyi-term-spell-check", { clear = true }),
     callback = function()
@@ -20,4 +21,10 @@ return {
             },
         },
     },
+    -- { -- Completion source for spelling suggestions
+    --     "hrsh7th/nvim-cmp",
+    --     dependencies = {
+    --         "r3fora/cmp-spell", -- spelling suggestions
+    --     },
+    -- },
 }

@@ -1,6 +1,6 @@
 return {
-    { -- Color Scheme
-        "nvim-treesitter/nvim-treesitter",
+    { -- Color scheme enhancement
+        "nvim-treesitter",
         opts = function(_, opts)
             vim.list_extend(opts.ensure_installed, {
                 "lua",
@@ -8,7 +8,7 @@ return {
         end,
     },
     { -- Code Style
-        "stevearc/conform.nvim",
+        "conform.nvim",
         opts = {
             formatters_by_ft = {
                 lua = { "stylua" },
@@ -16,7 +16,7 @@ return {
         },
     },
     { -- Quality Tools
-        "mfussenegger/nvim-lint",
+        "nvim-lint",
         opts = function()
             local lint = require("lint")
             lint.linters_by_ft["lua"] = { "luacheck" }

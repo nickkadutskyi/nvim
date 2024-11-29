@@ -42,44 +42,58 @@ function _G.TitleString()
     end
 end
 
+local function set_background(callback)
+    -- looks for env variables to fore a specific background
+    local theme = os.getenv("theme") or os.getenv("colorscheme_bg") or os.getenv("neovim_bg")
+    if theme == nil then
+        return type(callback) == "function" and callback()
+    else
+        if theme == "light" or theme == "l" then
+            vim.o.background = "light"
+        elseif theme == "dark" or theme == "d" then
+            vim.o.background = "dark"
+        else
+            if vim.fn.has("macunix") == 1 then -- Sets default jb_style based on MacOs theme
+                if io.popen("defaults read -g AppleInterfaceStyle 2>/dev/null"):read() == "Dark" then
+                    vim.o.background = "dark"
+                else
+                    vim.o.background = "light"
+                end
+            end
+            vim.notify(
+                string.format(
+                    "Invalid theme: '%s'.\nKeeping current: '%s'.\nExpected: 'light', 'l', 'dark' or 'd'.",
+                    theme,
+                    vim.o.background
+                ),
+                vim.log.levels.WARN,
+                { title = "Appearance & Behavior | Appearance" }
+            )
+            return type(callback) == "function" and callback()
+        end
+    end
+end
+
 -- Mouse reporting
 vim.opt.mouse = "a"
+-- Check if Neovim is running RPC server
+local servername = vim.fn.has("nvim-0.9") and vim.api.nvim_get_vvar("servername") or ""
+if servername ~= "" then
+    set_background()
+end
 
--- Lazy.nvim module
+---@type LazySpec
 return {
     {
         -- Sync theme with OS
         "f-person/auto-dark-mode.nvim",
+        -- Only enable if Neovim is not running RPC server
+        enabled = servername == "",
         config = function(_)
-            local theme = os.getenv("theme") or os.getenv("colorscheme_bg") or os.getenv("neovim_bg")
             -- Auto change background only if theme is not hardcoded
-            if theme == nil then
+            set_background(function()
                 require("auto-dark-mode").setup({})
-            else
-                if theme == "light" or theme == "l" then
-                    vim.o.background = "light"
-                elseif theme == "dark" or theme == "d" then
-                    vim.o.background = "dark"
-                else
-                    if vim.fn.has("macunix") == 1 then -- Sets default jb_style based on MacOs theme
-                        if io.popen("defaults read -g AppleInterfaceStyle 2>/dev/null"):read() == "Dark" then
-                            vim.o.background = "dark"
-                        else
-                            vim.o.background = "light"
-                        end
-                    end
-                    require("auto-dark-mode").setup({})
-                    vim.notify(
-                        string.format(
-                            "Invalid theme: '%s'.\nKeeping current: '%s'.\nExpected: 'light', 'l', 'dark' or 'd'.",
-                            theme,
-                            vim.o.background
-                        ),
-                        vim.log.levels.WARN,
-                        { title = "Plugin " .. _.name .. " config()" }
-                    )
-                end
-            end
+            end)
         end,
     },
     {

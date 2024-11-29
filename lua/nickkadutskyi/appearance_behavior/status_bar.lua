@@ -74,7 +74,7 @@ return {
                                 local term = require("toggleterm.terminal").get(tonumber(vim.b.toggle_number))
                                 local termid = term and term.id or ""
                                 local termname = term and termid .. ": " .. (term:_display_name()) or ""
-                                return "Term " .. termname .. " (" .. #terms .. ") " .. (rest or "")
+                                return "term " .. termname .. " (" .. #terms .. ") " .. (rest or "")
                             end
 
                             local shorten_after = math.floor(vim.o.columns / 238 * 70)

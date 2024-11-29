@@ -1,4 +1,7 @@
+---Config
+
 -- Netrw
+vim.g.netrw_keepdir = 1 -- To avoid changing cwd when navigating in netrw
 vim.g.window_id_before_netrw = nil
 
 local function close_netrw()

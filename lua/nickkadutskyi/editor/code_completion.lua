@@ -18,8 +18,8 @@ return {
             {
                 "fbuchlak/cmp-symfony-router",
                 dependencies = { "nvim-lua/plenary.nvim" },
-            },
-            "zbirenbaum/copilot-cmp",
+            }, -- Symfony router in completion
+            "zbirenbaum/copilot-cmp", -- copilot suggestions
         },
         config = function()
             local luasnip = require("luasnip")

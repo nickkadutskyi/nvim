@@ -1,6 +1,7 @@
+---Config
 -- Soft wrap
 vim.opt.wrap = false
--- Soft wrap at linebreak - disabled for now
+-- Soft wrap at line break - disabled for now
 vim.opt.linebreak = false
 -- Better indentation for wrapped lines
 if vim.fn.has("linebreak") == 1 then
@@ -23,12 +24,11 @@ vim.opt.smartindent = true
 -- Allow to move to one column past the end of the line
 vim.opt.virtualedit = "onemore"
 
--- Lazy.nvim module
+---@type LazySpec
 return {
-    {
-        -- Initializes conform.nvim fro code formatting
+    { -- Code formatting configuration
         "stevearc/conform.nvim",
-        -- Merged with nickkadutskyi.lanaguages_frameworks
+        dependencies = { "mason.nvim" },
         opts = {
             default_format_opts = {
                 lsp_format = "fallback",
@@ -36,21 +36,20 @@ return {
             },
         },
         config = function(_, opts)
-            local conform = require("conform")
+            require("conform").setup(opts)
 
-            conform.setup(opts)
-            vim.keymap.set("n", "<leader>rc", conform.format, {
-                noremap = true,
+            -- Keymap
+            vim.keymap.set("n", "<leader>rc", require("conform").format, {
                 desc = "Code: [r]eformat [c]ode",
             })
         end,
     },
-    {
+    { -- Code formatting tools installation
         "zapling/mason-conform.nvim",
-        dependencies = { "williamboman/mason.nvim", "stevearc/conform.nvim" },
-        -- ignore_install is merged from nickkadutskyi.languages_frameworks
+        dependencies = { "mason.nvim", "conform.nvim" },
         opts = { ignore_install = {} },
         config = function(_, opts)
+            -- Manually install code format tools if missing in the system
             vim.api.nvim_create_user_command("CodeFormattersInstall", function()
                 require("mason-conform").setup(opts)
             end, {})

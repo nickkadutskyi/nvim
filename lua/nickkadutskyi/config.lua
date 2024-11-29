@@ -8,6 +8,7 @@ M.default = {
         "~/Developer",
         "~/Library/Mobile Documents/com~apple~CloudDocs/Sync/HOME/.config/nvim",
         "~/Library/Mobile Documents/com~apple~CloudDocs/Sync/HOME/.config/nixpkgs",
+        "~/Library/Mobile Documents/com~apple~CloudDocs/Sync/HOME/.config/alacritty",
     },
 }
 

@@ -214,7 +214,7 @@ return {
 
                     -- Close terminal
                     for lhs, mode in pairs({
-                        ["<A-W>"] = { "n", "t" },
+                        ["<A-w>"] = { "n", "t" },
                         ["∑"] = { "n", "t" },
                     }) do
                         vim.keymap.set(mode, lhs, function()
