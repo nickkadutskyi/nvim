@@ -4,6 +4,8 @@ return {
         opts = function(_, opts)
             vim.list_extend(opts.ensure_installed, {
                 "lua",
+                "luadoc",
+                "luap", -- for regex patterns (Lua Patterns)
             })
         end,
     },
