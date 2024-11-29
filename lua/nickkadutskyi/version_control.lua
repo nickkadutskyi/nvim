@@ -132,7 +132,7 @@ return {
                                 vim.cmd("wincmd h")
                             end
                         end
-                    elseif layout[1] == "leaf" then
+                    elseif layout[1] == "leaf" and vim.o.columns / (splits + 1) >= 55 then
                         kind = "vsplit_left"
                     end
 
