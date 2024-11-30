@@ -2,8 +2,6 @@
 -- Case-insensitive searching UNLESS \C or capital in search
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
--- Highlight search results
-vim.opt.hlsearch = true
 -- Incremental search
 vim.opt.incsearch = true
 

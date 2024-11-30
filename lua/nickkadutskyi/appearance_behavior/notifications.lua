@@ -10,7 +10,7 @@ return {
                 WARN = "",
             },
             top_down = false,
-            stages = "static",
+            stages = "fade_in_slide_out",
         },
         init = function()
             vim.notify = require("notify")

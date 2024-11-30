@@ -81,12 +81,16 @@ local function toggle_terminal()
         --         focused = true
         --     end
         -- end
-        if windows[1].window == vim.api.nvim_get_current_win() then
+        local current_win = vim.api.nvim_get_current_win()
+        if windows[1].window == current_win then
             ui.close_and_save_terminal_view(windows)
         else
             vim.api.nvim_set_current_win(windows[1].window)
+            vim.g.term_activated_from = current_win
         end
     else
+        local current_win = vim.api.nvim_get_current_win()
+        vim.g.term_activated_from = current_win
         if not ui.open_terminal_view() then
             local term_id = terms.get_toggled_id()
             terms.get_or_create_term(term_id):open()
@@ -107,7 +111,7 @@ return {
             toggleterm.setup({
                 start_in_insert = true,
                 persist_mode = false,
-                on_open = function(t)
+                on_open = function(_)
                     vim.fn.timer_start(1, function()
                         vim.cmd("startinsert!")
                     end)
@@ -161,23 +165,25 @@ return {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-term-open", { clear = true }),
                 pattern = toggleterm_pattern,
                 callback = function(event)
-                    -- Hide terminal
-                    vim.keymap.set({ "t", "n" }, "<S-Esc>", function()
-                        toggle_terminal()
-                    end, {
+                    -- Keymap
+                    -- Hide active terminal tool window
+                    vim.keymap.set({ "t", "n" }, "<S-Esc>", toggle_terminal, {
                         desc = "Term: Hide terminal",
                         buffer = event.buf,
                     })
-
                     -- Leave terminal mode
                     vim.keymap.set({ "t" }, "<Esc>", "<C-\\><C-N>", {
                         desc = "Term: Leave terminal mode",
                         buffer = event.buf,
                     })
-
                     -- Leave terminal to previous window
                     vim.keymap.set({ "n" }, "<Esc>", function()
-                        require("toggleterm.ui").goto_previous()
+                        if vim.g.term_activated_from ~= nil then
+                            vim.api.nvim_set_current_win(vim.g.term_activated_from)
+                        else
+                            -- Simply go to another window
+                            vim.cmd("wincmd w")
+                        end
                     end, {
                         desc = "Term: Leave terminal to previous window",
                         buffer = event.buf,
