@@ -3,43 +3,56 @@
 vim.opt.cmdheight = 0
 -- File name and path in Window header
 vim.opt.title = true
-vim.opt.titlestring = [[%{fnamemodify(getcwd(),':t')}%{expand('%:t')!=''?'  – '.v:lua.TitleString():''}]]
+vim.opt.titlestring = [[%{v:lua.TitleString()}]]
 -- Ensures relative file path if there are multiple files with same name in project
 function _G.TitleString()
+    local project = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
     local rootPath = vim.fn.resolve(vim.fn.getcwd())
     local relativeFilePath = vim.fn.expand("%")
     local filePath = vim.fn.expand("%:p")
     local fileName = vim.fn.expand("%:t")
     local home = vim.env.HOME .. "/"
     local all_files_str = vim.g.all_files_str or ""
+    local delim = fileName ~= "" and " – " or ""
 
+    local title_filename
     -- If Neovim didn't define all_files_str variable
     if all_files_str == "" then
         if string.match(filePath, "^" .. home) and vim.fn.resolve(filePath) ~= filePath then
             -- if file is in home directory and symlink
-            return "./" .. vim.fn.fnamemodify(filePath, ":t")
+            title_filename = "./" .. vim.fn.fnamemodify(filePath, ":t")
         else
-            return vim.fn.fnamemodify(vim.fn.resolve(filePath), ":~:.:h") .. "/" .. vim.fn.expand("%:t")
+            title_filename = vim.fn.fnamemodify(vim.fn.resolve(filePath), ":~:.:h") .. "/" .. vim.fn.expand("%:t")
         end
     else
         -- Count occurrences of fileName in all_files_str
         local count = select(2, string.gsub(all_files_str, fileName, ""))
 
         if count > 1 then -- if other files with same name exist in project
-            return vim.fn.fnamemodify(vim.fn.resolve(filePath), ":~:.:h") .. "/" .. vim.fn.expand("%:t")
+            title_filename = vim.fn.fnamemodify(vim.fn.resolve(filePath), ":~:.:h") .. "/" .. vim.fn.expand("%:t")
         elseif count == 0 then -- if not in project
             if string.match(relativeFilePath, "^term://") then
                 local path_parts = vim.fn.split(relativeFilePath, ":")
-                return "term " .. path_parts[#path_parts]
+                title_filename = "term " .. path_parts[#path_parts]
             else
-                return relativeFilePath .. " -[1]"
+                title_filename = relativeFilePath .. " -[1]"
             end
         elseif string.sub(filePath, 1, #rootPath) == rootPath then -- if file is in root directory
-            return fileName
+            title_filename = fileName
         else
-            return vim.fn.fnamemodify(vim.fn.resolve(filePath), ":~:.:h") .. "/" .. vim.fn.expand("%:t")
+            title_filename = vim.fn.fnamemodify(vim.fn.resolve(filePath), ":~:.:h") .. "/" .. vim.fn.expand("%:t")
         end
     end
+    return project .. (delim ~= "" and delim .. title_filename or "")
+end
+
+if vim.env.TMUX then
+    vim.api.nvim_create_autocmd("BufEnter", {
+        callback = function()
+            -- Rename tmux window using the evaluated titlestring
+            vim.fn.system(string.format('tmux rename-window "%s"', _G.TitleString()))
+        end,
+    })
 end
 
 local function set_background(callback)

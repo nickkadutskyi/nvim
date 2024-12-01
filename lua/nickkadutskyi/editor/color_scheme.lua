@@ -24,7 +24,6 @@ return {
             -- merged from:
             -- nickkadutskyi.languages_frameworks
             ensure_installed = {
-                "bash",
                 "vim",
                 "vimdoc",
                 "yaml",

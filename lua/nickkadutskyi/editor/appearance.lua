@@ -20,6 +20,9 @@ vim.opt.scrolloff = 3
 -- Adds visual guides
 -- vim.opt.colorcolumn = "80,100,120" -- defined in plugin
 
+-- Removes chars from empty lines
+vim.opt.fillchars = { eob = " " }
+
 ---Tabs to show only file name without labels and path
 function _G.custom_tabline()
     local tabline = ""
