@@ -63,6 +63,18 @@ return {
                     documentation = cmp.config.window.bordered(),
                 },
                 mapping = cmp.mapping.preset.insert({
+                    ["<Down>"] = function(fallback)
+                        if cmp.visible() then
+                            cmp.close()
+                        end
+                        fallback()
+                    end,
+                    ["<Up>"] = function(fallback)
+                        if cmp.visible() then
+                            cmp.close()
+                        end
+                        fallback()
+                    end,
                     ["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
                     ["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
                     ["<C-y>"] = cmp.mapping.confirm({ select = true }),

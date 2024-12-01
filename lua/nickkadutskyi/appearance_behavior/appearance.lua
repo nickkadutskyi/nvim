@@ -17,7 +17,12 @@ function _G.TitleString()
 
     local title_filename
     -- If Neovim didn't define all_files_str variable
-    if string.match(relativeFilePath, "^term://") then
+    if string.match(relativeFilePath, "^term://.*toggleterm#.*") then
+        local path_parts = vim.fn.split(relativeFilePath, ":")
+        local term_cmd = path_parts[#path_parts]
+        local term_cmd_no_comments = term_cmd:gsub("%s*;.*", "")
+        return "term " .. vim.b.toggle_number .. ": " .. term_cmd_no_comments
+    elseif string.match(relativeFilePath, "^term://") then
         local path_parts = vim.fn.split(relativeFilePath, ":")
         title_filename = "term " .. path_parts[#path_parts]
     elseif all_files_str == "" then

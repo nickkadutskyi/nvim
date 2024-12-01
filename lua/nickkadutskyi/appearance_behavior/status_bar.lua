@@ -78,7 +78,10 @@ return {
                             end
                             if string.match(name, "term://.*") then
                                 local path_parts = vim.fn.split(vim.fn.expand("%"), ":")
-                                return "term " .. path_parts[#path_parts]
+                                local last = path_parts[#path_parts]
+                                if type(last) == "string" and last ~= "" then
+                                    return last and "term " .. last
+                                end
                             end
 
                             local shorten_after = math.floor(vim.o.columns / 238 * 70)
