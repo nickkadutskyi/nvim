@@ -17,7 +17,10 @@ function _G.TitleString()
 
     local title_filename
     -- If Neovim didn't define all_files_str variable
-    if all_files_str == "" then
+    if string.match(relativeFilePath, "^term://") then
+        local path_parts = vim.fn.split(relativeFilePath, ":")
+        title_filename = "term " .. path_parts[#path_parts]
+    elseif all_files_str == "" then
         if string.match(filePath, "^" .. home) and vim.fn.resolve(filePath) ~= filePath then
             -- if file is in home directory and symlink
             title_filename = "./" .. vim.fn.fnamemodify(filePath, ":t")

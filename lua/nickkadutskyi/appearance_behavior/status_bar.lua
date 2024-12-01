@@ -76,6 +76,10 @@ return {
                                 local termname = term and termid .. ": " .. (term:_display_name()) or ""
                                 return "term " .. termname .. " (" .. #terms .. ") " .. (rest or "")
                             end
+                            if string.match(name, "term://.*") then
+                                local path_parts = vim.fn.split(vim.fn.expand("%"), ":")
+                                return "term " .. path_parts[#path_parts]
+                            end
 
                             local shorten_after = math.floor(vim.o.columns / 238 * 70)
                             if string.len(filePath) > shorten_after then
