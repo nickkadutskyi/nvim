@@ -13,7 +13,13 @@ return {
             stages = "static",
         },
         init = function()
-            vim.notify = require("notify")
+            vim.notify = function(message, level, opts)
+                opts = opts or {}
+                if opts.title == nil then
+                    opts.title = "Notification"
+                end
+                return require("notify")(message, level, opts)
+            end
 
             -- Fixes overlap with statusline
             -- See https://github.com/rcarriga/nvim-notify/issues/189#issuecomment-2225599658
