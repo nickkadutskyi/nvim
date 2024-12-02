@@ -12,47 +12,47 @@ return {
         -- Faster fzf in case of a large project
         -- DEPENDENCIES: Linux or Mac, fzf or skim, OPTIONAL: fd, rg, bat, delta, chafa
         "ibhagwan/fzf-lua",
+        dependencies = {
+            "nickkadutskyi/jb.nvim",
+        },
         opts = {
             "telescope", -- Sets telescope profile for look and feel
             winopts = {
                 title_pos = "left",
-                height = 30, -- window height
+                height = 25, -- window height
                 width = 85,
-                row = 0.75,
+                row = 0.35,
                 preview = {
                     scrollbar = false,
                     layout = "vertical",
                     vertical = "down:60%",
                 },
+                border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
             },
-            fzf_colors = {
-                ["fg"] = { "fg", "CursorLine" },
-                ["bg"] = { "bg", "Normal" },
-                ["hl"] = { "fg", "Comment" },
-                ["fg+"] = { "fg", "Normal" },
-                ["bg+"] = { "bg", "CursorLine" },
-                ["hl+"] = { "fg", "Statement" },
-                ["info"] = { "fg", "PreProc" },
-                ["prompt"] = { "fg", "Conditional" },
-                ["pointer"] = { "fg", "Exception" },
-                ["marker"] = { "fg", "Keyword" },
-                ["spinner"] = { "fg", "Label" },
-                ["header"] = { "fg", "Comment" },
-                ["gutter"] = { "bg", "EndOfBuffer" },
-            },
+            fzf_colors = true,
             fzf_opts = {
                 ["--layout"] = "reverse",
+                ["--border"] = "top",
             },
             defaults = {
                 winopts = {
                     title_pos = "left",
+                    height = 25, -- window height
+                    width = 85,
+                    row = 0.35,
                 },
                 previewer = false,
                 cwd_prompt = false,
                 prompt = "  ",
             },
             files = {
-                winopts = { title = " Files ", title_pos = "left" },
+                winopts = {
+                    title = " Files ",
+                    title_pos = "left",
+                    height = 25, -- window height
+                    width = 85,
+                    row = 0.35,
+                },
                 prompt = "  ",
             },
             buffers = {
@@ -60,7 +60,13 @@ return {
                 prompt = "  ",
             },
             grep = {
-                winopts = { title = " Find in Files ", title_pos = "left" },
+                winopts = {
+                    title = " Find in Files ",
+                    title_pos = "left",
+                    height = 25, -- window height
+                    width = 85,
+                    row = 0.35,
+                },
                 prompt = "  ",
                 previewer = "builtin",
             },

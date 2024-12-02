@@ -25,6 +25,8 @@ function _G.TitleString()
     elseif string.match(relativeFilePath, "^term://") then
         local path_parts = vim.fn.split(relativeFilePath, ":")
         title_filename = "term " .. path_parts[#path_parts]
+    elseif string.match(relativeFilePath, "^.*://") then
+        title_filename = relativeFilePath
     elseif all_files_str == "" then
         if string.match(filePath, "^" .. home) and vim.fn.resolve(filePath) ~= filePath then
             -- if file is in home directory and symlink
@@ -43,7 +45,7 @@ function _G.TitleString()
                 local path_parts = vim.fn.split(relativeFilePath, ":")
                 title_filename = "term " .. path_parts[#path_parts]
             else
-                title_filename = relativeFilePath .. " -[1]"
+                title_filename = relativeFilePath
             end
         elseif string.sub(filePath, 1, #rootPath) == rootPath then -- if file is in root directory
             title_filename = fileName
@@ -51,7 +53,8 @@ function _G.TitleString()
             title_filename = vim.fn.fnamemodify(vim.fn.resolve(filePath), ":~:.:h") .. "/" .. vim.fn.expand("%:t")
         end
     end
-    return project .. (delim ~= "" and delim .. title_filename or "")
+    -- return project .. (delim ~= "" and delim .. title_filename or "")
+    return project .. " - " .. title_filename
 end
 
 if vim.env.TMUX then
