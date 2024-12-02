@@ -18,7 +18,7 @@ return {
         opts = {
             "telescope", -- Sets telescope profile for look and feel
             winopts = {
-                title_pos = "left",
+                title_pos = "center",
                 height = 25, -- window height
                 width = 85,
                 row = 0.35,
@@ -36,7 +36,7 @@ return {
             },
             defaults = {
                 winopts = {
-                    title_pos = "left",
+                    title_pos = "center",
                     height = 25, -- window height
                     width = 85,
                     row = 0.35,
@@ -48,7 +48,7 @@ return {
             files = {
                 winopts = {
                     title = " Files ",
-                    title_pos = "left",
+                    title_pos = "center",
                     height = 25, -- window height
                     width = 85,
                     row = 0.35,
@@ -56,13 +56,13 @@ return {
                 prompt = "  ",
             },
             buffers = {
-                winopts = { title = " Switcher ", title_pos = "left" },
+                winopts = { title = " Switcher ", title_pos = "center" },
                 prompt = "  ",
             },
             grep = {
                 winopts = {
                     title = " Find in Files ",
-                    title_pos = "left",
+                    title_pos = "center",
                     height = 25, -- window height
                     width = 85,
                     row = 0.35,
