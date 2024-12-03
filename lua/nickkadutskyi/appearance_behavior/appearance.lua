@@ -21,7 +21,7 @@ function _G.TitleString()
         local path_parts = vim.fn.split(relativeFilePath, ":")
         local term_cmd = path_parts[#path_parts]
         local term_cmd_no_comments = term_cmd:gsub("%s*;.*", "")
-        return "term " .. vim.b.toggle_number .. ": " .. term_cmd_no_comments
+        return "term " ..( vim.b.toggle_number or "" ).. ": " .. term_cmd_no_comments
     elseif string.match(relativeFilePath, "^term://") then
         local path_parts = vim.fn.split(relativeFilePath, ":")
         title_filename = "term " .. path_parts[#path_parts]
