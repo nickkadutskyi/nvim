@@ -168,13 +168,15 @@ return {
                 mapping = cmp.mapping.preset.cmdline(),
                 sources = cmp.config.sources(
                     -- Group 1
+                    ---@type cmp.SourceConfig[]
                     {
                         ---Completion for LSP symbols during search
-                        { name = "nvim_lsp_document_symbol" },
+                        { name = "nvim_lsp_document_symbol", max_item_count = 10 },
                     },
                     -- Group 2
+                    ---@type cmp.SourceConfig[]
                     {
-                        { name = "buffer" },
+                        { name = "buffer", max_item_count = 10 },
                     }
                 ),
             })
@@ -187,18 +189,20 @@ return {
                 mapping = cmp.mapping.preset.cmdline(),
                 sources = cmp.config.sources(
                     -- Group 1
+                    ---@type cmp.SourceConfig[]
                     {
-                        { name = "path" },
-                    },
-                    -- Group 2
-                    {
+                        { name = "path", max_item_count = 10 },
                         {
                             name = "cmdline",
                             option = {
                                 ignore_cmds = { "Man", "!" },
                             },
+                            max_item_count = 10,
                         },
-                    }
+                    },
+                    -- Group 2
+                    ---@type cmp.SourceConfig[]
+                    {}
                 ),
             })
         end,

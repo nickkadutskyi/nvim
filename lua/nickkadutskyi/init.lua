@@ -1,6 +1,8 @@
--- mapleader needs to be set before loading any plugin or module
+-- leader needs to be set before loading any plugin or module
 vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+vim.g.maplocalleader = "\\"
+
+vim.g.nerd_font_is_present = true
 
 -- If opened a dir then set it as the cwd and if opened a file then set the
 -- file's parent dir as the cwd to narrow down the scope for fzf
@@ -47,6 +49,7 @@ require("lazy").setup({
         { import = "nickkadutskyi.other" },
     },
     change_detection = { enable = true, notify = false },
-    ui = { border = "rounded", title = " Plugin Manager " },
+    install = { colorscheme = { "jb" } },
+    ui = { border = "rounded", title = " Plugins ", size = { width = 0.5 } },
     dev = { path = "~/Developer/PE/0027", patterns = { "nickkadutskyi" }, fallback = true },
 })

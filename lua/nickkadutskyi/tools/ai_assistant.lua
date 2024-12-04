@@ -135,7 +135,7 @@ return {
             -- Keymap
 
             vim.keymap.set("n", "<leader>aa", "<cmd>CopilotChat<cr>", {
-                desc = "AI Assist: [a]ctivate [a]i assistant",
+                desc = "AI: [a]ctivate [a]i assistant",
             })
 
             -- Integrations

@@ -12,7 +12,7 @@ vim.api.nvim_create_autocmd({ "TermOpen" }, {
 ---Lazy modules
 return {
     { -- Provides spelling suggestions popup instead of the default list
-        "folke/which-key.nvim",
+        "which-key.nvim",
         event = "VeryLazy",
         opts = {
             spelling = {
