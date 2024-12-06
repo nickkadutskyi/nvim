@@ -1,3 +1,5 @@
+-- TODO Add custom syntax regex to highlight files ignored by git
+
 local utils = require("nickkadutskyi.utils")
 
 -- Netrw
@@ -7,7 +9,7 @@ vim.g.netrw_preview = 1
 vim.g.netrw_liststyle = 3 -- default directory view. Cycle with i
 
 local function close_project_view()
-    if vim.t.project_view_winid ~= nil and  vim.api.nvim_win_is_valid(vim.t.project_view_winid) then
+    if vim.t.project_view_winid ~= nil and vim.api.nvim_win_is_valid(vim.t.project_view_winid) then
         vim.api.nvim_win_close(vim.t.project_view_winid, true)
     end
     vim.t.project_view_winid = nil
@@ -64,6 +66,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
     callback = function(e)
         -- Clears Neovim's built-in group that triggers Netrw on directories
         vim.api.nvim_clear_autocmds({ group = "FileExplorer" })
+        -- Opens Netrw on directories only on startup
         if vim.fn.isdirectory(vim.fn.expand("%:p")) == 1 then
             vim.schedule(function()
                 toggle_vim_explorer_float()
@@ -74,7 +77,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
 
 -- Global command to close Project view in other keybindings
 vim.api.nvim_create_user_command("CloseProjectView", close_project_view, {})
-
 
 -- Lazy.nvim module
 return {}
