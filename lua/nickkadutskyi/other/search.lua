@@ -37,9 +37,12 @@ return {
                     files = {
                         -- ["enter"] = actions.file_switch_or_edit,
                         ["enter"] = function(selected, opts)
-
-                            local _, winid = utils.get_win_with_normal_buffer(vim.api.nvim_get_current_buf())
-                            if winid ~= nil then
+                            local curr_bufnr = vim.api.nvim_get_current_buf()
+                            local curr_winid = vim.api.nvim_get_current_win()
+                            local bufnr, winid = utils.get_win_with_normal_buffer(curr_bufnr)
+                            if bufnr == curr_bufnr then
+                                vim.api.nvim_set_current_win(curr_winid)
+                            elseif winid ~= nil then
                                 vim.api.nvim_set_current_win(winid)
                             end
                             vim.schedule(function()

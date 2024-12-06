@@ -100,13 +100,7 @@ return {
                     "<Leader>",
                     group = "Leader",
 
-                    {
-                        "<leader>?",
-                        group = "[?]which-key help",
-
-                        { "<leader>?g", group = "[g]lobal" },
-                        { "<leader>?l", group = "[l]ocal" },
-                    },
+                    { "<leader>?", group = "[?]which-key help" },
                     {
                         "<leader>a",
                         group = "[a]ctivate",
@@ -127,7 +121,17 @@ return {
                     },
                     { "<leader>t", group = "[t]oggle" },
                 },
-                { "<LocalLeader>", group = "LocalLeader", { "<localleader>av", group = "[v]ersion control local" } },
+                {
+                    "<LocalLeader>",
+                    group = "LocalLeader",
+                    {
+                        "<localleader>a",
+                        group = "[a]ctivate",
+
+                        { "<localleader>?", group = "[?]which-key help" },
+                        { "<localleader>av", group = "[v]ersion control" },
+                    },
+                },
                 { "]", group = "[n]ext" },
                 { "[", group = "[p]rev" },
                 -- TODO moves to a file related to Treesitter
@@ -145,6 +149,7 @@ return {
                     { pattern = "^terminal:.*", icon = "", color = "grey" },
                     { pattern = "^run:.*", icon = "󰑮", color = "grey" },
                     { pattern = "^ai:.*", icon = "󱙺", color = "grey" },
+                    { pattern = "^project:.*", icon = "", color = "grey" },
                 },
                 mappings = vim.g.nerd_font_is_present,
                 keys = vim.g.nerd_font_is_present and {} or {

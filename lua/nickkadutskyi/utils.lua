@@ -225,9 +225,9 @@ function M.create_tool_window(
         border = {
             { " ", "ToolWindowFloatBorderTop" },
             { " ", "ToolWindowFloatBorderTop" }, -- Title border
-            "│",
-            "│",
-            "│",
+            "▕",
+            "▕",
+            "▕",
             " ",
             { " ", "ToolWindowFloatBorderTop" },
             { " ", "ToolWindowFloatBorderTop" },
@@ -235,14 +235,14 @@ function M.create_tool_window(
     elseif position == "right" then
         col = vim.o.columns - width
         border = {
-            "│",
+            "▕",
             { " ", "ToolWindowFloatBorderTop" }, -- Title border
             { " ", "ToolWindowFloatBorderTop" },
             { " ", "ToolWindowFloatBorderTop" },
             { " ", "ToolWindowFloatBorderTop" },
             " ",
-            "│",
-            "│",
+            "▕",
+            "▕",
         }
     else
         error("Position must be either 'left' or 'right'")
