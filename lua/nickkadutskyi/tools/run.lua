@@ -38,12 +38,10 @@ return {
             vim.keymap.set("n", "<leader>ar", function()
                 local winid = vim.api.nvim_get_current_win()
                 if winid ~= "" and (not overseer_window.is_open()) then
-                    vim.cmd("CloseNetrw")
-                    vim.cmd("CloseNetrw")
+                    vim.cmd("CloseProjectView")
                     overseer.open()
                 elseif overseer_window.is_open() and overseer_window.get_win_id() ~= winid then
-                    vim.cmd("CloseNetrw")
-                    vim.cmd("CloseNetrw")
+                    vim.cmd("CloseProjectView")
                     overseer.open()
                 else
                     overseer.close()
