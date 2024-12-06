@@ -155,10 +155,9 @@ return {
                 ["<F60>"] = { "n", "t" },
             }) do
                 vim.keymap.set(mode, lhs, function()
-                    vim.cmd("CloseNetrw")
-                    vim.cmd("CloseNetrw")
+                    vim.cmd("CloseProjectView")
                     toggle_terminal()
-                end, { noremap = true, desc = "[a]ctivate [t]erminal tool window (Terminal)" })
+                end, { noremap = true, desc = "Terminal: [a]ctivate [t]erminal tool window." })
             end
 
             vim.api.nvim_create_autocmd("TermOpen", {
@@ -167,7 +166,7 @@ return {
                 callback = function(event)
                     -- Keymap
                     -- Hide active terminal tool window
-                    vim.keymap.set({ "t", "n" }, "<S-Esc>", toggle_terminal, {
+                    vim.keymap.set({ "t", "n" }, "<A-Esc>", toggle_terminal, {
                         desc = "Term: Hide terminal",
                         buffer = event.buf,
                     })

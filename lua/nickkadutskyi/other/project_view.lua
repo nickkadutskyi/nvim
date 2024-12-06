@@ -7,8 +7,7 @@ vim.g.netrw_preview = 1
 vim.g.netrw_liststyle = 3 -- default directory view. Cycle with i
 
 local function close_project_view()
-    vim.notify("Closing Project view")
-    if vim.api.nvim_win_is_valid(vim.t.project_view_winid) then
+    if vim.t.project_view_winid ~= nil and  vim.api.nvim_win_is_valid(vim.t.project_view_winid) then
         vim.api.nvim_win_close(vim.t.project_view_winid, true)
     end
     vim.t.project_view_winid = nil
@@ -17,7 +16,7 @@ end
 
 local function toggle_vim_explorer_float()
     -- Configures a proper window to open a file in after selection
-    local _, open_in_winid = utils.get_normal_buffer(vim.api.nvim_get_current_buf())
+    local _, open_in_winid = utils.get_win_with_normal_buffer(vim.api.nvim_get_current_buf())
     if open_in_winid ~= nil then
         vim.g.netrw_chgwin = vim.api.nvim_win_get_number(open_in_winid)
     end

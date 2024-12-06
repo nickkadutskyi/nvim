@@ -183,7 +183,7 @@ end
 
 ---@param bufnr? number
 ---@return number?, number?
-function M.get_normal_buffer(bufnr)
+function M.get_win_with_normal_buffer(bufnr)
     if bufnr ~= nil and M.is_normal_buffer(bufnr) then
         return bufnr, vim.fn.bufwinid(bufnr)
     end

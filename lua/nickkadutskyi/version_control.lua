@@ -120,8 +120,7 @@ return {
                 ["<leader>ac"] = { "n", "VCS: [a]ctivate vcs [c]ommit window" },
             }) do
                 vim.keymap.set(mode[1], lhs, function()
-                    vim.cmd("CloseNetrw")
-                    vim.cmd("CloseNetrw")
+                    vim.cmd("CloseProjectView")
                     local layout = vim.fn.winlayout()
                     local splits = layout[1] == "row" and #layout[2] or vim.fn.winnr("$")
                     local kind = "tab"
@@ -141,8 +140,7 @@ return {
             end
 
             vim.keymap.set("n", "<leader>avf", function()
-                vim.cmd("CloseNetrw")
-                vim.cmd("CloseNetrw")
+                vim.cmd("CloseProjectView")
                 neogit.action("log", "log_all_references", {
                     "--graph",
                     "--color",
@@ -154,8 +152,7 @@ return {
             end, { noremap = true, desc = "VCS: [a]ctivate [v]sc log for current [f]ile" })
 
             vim.keymap.set("n", "<leader>avl", function()
-                vim.cmd("CloseNetrw")
-                vim.cmd("CloseNetrw")
+                vim.cmd("CloseProjectView")
                 neogit.action("log", "log_all_references", {
                     "--graph",
                     "--color",
@@ -170,8 +167,7 @@ return {
                 [""] = { "n", "i" }, -- macOS char for the <S-A-K> key
             }) do
                 vim.keymap.set(mode, lhs, function()
-                    vim.cmd("CloseNetrw")
-                    vim.cmd("CloseNetrw")
+                    vim.cmd("CloseProjectView")
                     neogit.open({ "push" })
                 end, { noremap = true, desc = "VCS: [a]ctivate [v]cs [p]ush window" })
             end
@@ -182,8 +178,7 @@ return {
                 ["†"] = { "n", "i" }, -- macOS char for the <A-T> key
             }) do
                 vim.keymap.set(mode, lhs, function()
-                    vim.cmd("CloseNetrw")
-                    vim.cmd("CloseNetrw")
+                    vim.cmd("CloseProjectView")
                     neogit.open({ "pull" })
                 end, { noremap = true, desc = "VCS: [a]ctivate [v]cs [p]ull window" })
             end
@@ -269,23 +264,23 @@ return {
                 end
 
                 -- Navigation
-                -- map('n', ']c', function()
-                --   if vim.wo.diff then
-                --     vim.cmd.normal({ ']c', bang = true })
-                --   else
-                --     gitsigns.nav_hunk('next')
-                --   end
-                -- end)
+                map('n', ']c', function()
+                  if vim.wo.diff then
+                    vim.cmd.normal({ ']c', bang = true })
+                  else
+                    gitsigns.nav_hunk('next')
+                  end
+                end)
                 --
                 --
 
-                -- map('n', '[c', function()
-                --   if vim.wo.diff then
-                --     vim.cmd.normal({ '[c', bang = true })
-                --   else
-                --     gitsigns.nav_hunk('prev')
-                --   end
-                -- end)
+                map('n', '[c', function()
+                  if vim.wo.diff then
+                    vim.cmd.normal({ '[c', bang = true })
+                  else
+                    gitsigns.nav_hunk('prev')
+                  end
+                end)
 
                 -- Actions
                 map("n", "<leader>hs", gitsigns.stage_hunk)
