@@ -7,10 +7,11 @@ vim.g.nerd_font_is_present = true
 -- If opened a dir then set it as the cwd and if opened a file then set the
 -- file's parent dir as the cwd to narrow down the scope for fzf
 -- Later ahmedkhalf/project.nvim will adjust cwd based on .git or LSP
+local curr_path = vim.fn.resolve(vim.fn.expand("%"))
 if vim.fn.isdirectory(vim.fn.expand("%")) == 1 then
-    vim.api.nvim_set_current_dir(vim.fn.expand("%"))
+    vim.api.nvim_set_current_dir(curr_path)
 elseif vim.fn.filereadable(vim.fn.expand("%")) == 1 then
-    vim.api.nvim_set_current_dir(vim.fn.expand("%:p:h"))
+    vim.api.nvim_set_current_dir(vim.fn.fnamemodify(curr_path, ":p:h"))
 end
 
 -- Bootstraps lazy.nvim for loading all the plugins and modules
