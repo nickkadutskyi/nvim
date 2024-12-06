@@ -17,9 +17,9 @@ end
 
 local function toggle_vim_explorer_float()
     -- Configures a proper window to open a file in after selection
-    local open_in_bufnr = utils.get_normal_buffer(vim.api.nvim_get_current_buf())
-    if open_in_bufnr ~= nil then
-        vim.g.netrw_chgwin = vim.fn.bufwinnr(open_in_bufnr)
+    local _, open_in_winid = utils.get_normal_buffer(vim.api.nvim_get_current_buf())
+    if open_in_winid ~= nil then
+        vim.g.netrw_chgwin = vim.api.nvim_win_get_number(open_in_winid)
     end
     if vim.t.project_view_winid ~= nil then
         -- Close Netrw window if it's open

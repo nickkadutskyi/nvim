@@ -182,18 +182,23 @@ function M.is_normal_buffer(bufnr)
 end
 
 ---@param bufnr? number
----@return number?
+---@return number?, number?
 function M.get_normal_buffer(bufnr)
     if bufnr ~= nil and M.is_normal_buffer(bufnr) then
-        return bufnr
+        return bufnr, vim.fn.bufwinid(bufnr)
     end
-    local bufs = vim.api.nvim_list_bufs()
-    for _, buf in ipairs(bufs) do
+    -- local bufs = vim.fn.tabpagebuflist()
+    local bufs = {}
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        bufs[vim.api.nvim_win_get_buf(win)] = win
+        -- table.insert(bufs, vim.api.nvim_win_get_buf(win))
+    end
+    for buf, win in pairs(bufs) do
         if M.is_normal_buffer(buf) then
-            return buf
+            return buf, win
         end
     end
-    return nil
+    return nil, nil
 end
 
 ---@param position? "left"|"right"
