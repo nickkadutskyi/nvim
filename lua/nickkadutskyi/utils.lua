@@ -172,4 +172,127 @@ function M.add_cwd_to_copilot_workspace_folders()
     end
 end
 
+---@param bufnr number
+---@return boolean
+function M.is_normal_buffer(bufnr)
+    if vim.api.nvim_buf_is_valid(bufnr) then
+        return vim.api.nvim_get_option_value("buftype", { buf = bufnr }) == "" and vim.fn.buflisted(bufnr) == 1
+    end
+    return false
+end
+
+---@param bufnr? number
+---@return number?
+function M.get_normal_buffer(bufnr)
+    if bufnr ~= nil and M.is_normal_buffer(bufnr) then
+        return bufnr
+    end
+    local bufs = vim.api.nvim_list_bufs()
+    for _, buf in ipairs(bufs) do
+        if M.is_normal_buffer(buf) then
+            return buf
+        end
+    end
+    return nil
+end
+
+---@param position? "left"|"right"
+---@param close_on_leave? boolean
+---@param callaback_on_leave? function(e: table, winid: integer, winnr: integer, bufnr: integer)
+---@param callaback_on_close? function(e: table, winid: integer, winnr: integer, bufnr: integer)
+function M.create_tool_window(title, position, close_on_leave, callaback_on_leave, callaback_on_close)
+    position = position or "left"
+    close_on_leave = close_on_leave or true
+    local width = 45 -- TODO: do I need make it dynamic?
+    local col, border
+    if position == "left" then
+        col = 0
+        border = {
+            { " ", "ToolWindowFloatBorderTop" },
+            { " ", "ToolWindowFloatBorderTop" }, -- Title border
+            "│",
+            "│",
+            "│",
+            " ",
+            { " ", "ToolWindowFloatBorderTop" },
+            { " ", "ToolWindowFloatBorderTop" },
+        }
+    elseif position == "right" then
+        col = vim.o.columns - width
+        border = {
+            "│",
+            { " ", "ToolWindowFloatBorderTop" }, -- Title border
+            { " ", "ToolWindowFloatBorderTop" },
+            { " ", "ToolWindowFloatBorderTop" },
+            { " ", "ToolWindowFloatBorderTop" },
+            " ",
+            "│",
+            "│",
+        }
+    else
+        error("Position must be either 'left' or 'right'")
+    end
+    local opts = {
+        relative = "editor",
+        width = width,
+        height = vim.o.lines - (vim.o.cmdheight + 3),
+        row = 0,
+        col = col,
+        zindex = 10,
+        style = "minimal",
+        border = border,
+        title = title,
+        title_pos = "left",
+        -- Provides empty full-width footer to use its underline as border
+        footer = string.rep(" ", width),
+    }
+    local bufnr = vim.api.nvim_create_buf(false, true)
+    local winid = vim.api.nvim_open_win(bufnr, true, opts)
+    local winnr = vim.api.nvim_win_get_number(winid)
+    vim.api.nvim_set_option_value(
+        "winhl",
+        "FloatTitle:ToolWindowFloatTitle,"
+            .. "FloatBorder:ToolWindowFloatBorder,"
+            .. "FloatFooter:ToolWindowFloatFooter",
+        { win = winid }
+    )
+    local group = vim.api.nvim_create_augroup("nickkadutskyi-tool-window-" .. winid, { clear = true })
+    vim.api.nvim_create_autocmd("WinLeave", {
+        group = group,
+        nested = true,
+        callback = function(e)
+            local win_curr_bufnr = vim.fn.winbufnr(winid)
+            if e.buf == win_curr_bufnr then
+                if type(callaback_on_leave) == "function" then
+                    callaback_on_leave(e, winid, winnr, bufnr)
+                end
+                if close_on_leave then
+                    -- Requires delay to ensure the window is left
+                    vim.fn.timer_start(1, function()
+                        if vim.api.nvim_win_is_valid(winid) then
+                            vim.api.nvim_win_close(winid, true)
+                        end
+                    end)
+                end
+            end
+        end,
+    })
+    vim.api.nvim_create_autocmd("VimResized", {
+        group = group,
+        callback = function(e)
+            vim.api.nvim_win_set_height(winid, vim.o.lines - (vim.o.cmdheight + 3))
+        end,
+    })
+    vim.api.nvim_create_autocmd("WinClosed", {
+        pattern = tostring(winid),
+        group = group,
+        callback = function(e)
+            vim.api.nvim_del_augroup_by_id(group)
+            if type(callaback_on_close) == "function" then
+                callaback_on_close(e, winid, winnr, bufnr)
+            end
+        end,
+    })
+    return bufnr, winid, winnr
+end
 return M
