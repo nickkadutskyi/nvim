@@ -326,7 +326,7 @@ function M.create_tool_window(
             local ebuf_curr_winid = vim.fn.bufwinid(e.buf)
             if ebuf_curr_winid == winid then
                 bufnrs[e.buf] = true
-                for _, lhs in ipairs({ "<Esc>", "q" }) do
+                for _, lhs in ipairs({ "<Esc>", "q", "<A-Esc>" }) do
                     vim.keymap.set("n", lhs, function()
                         if close_on_leave or lhs == "q" then
                             vim.api.nvim_win_close(winid, true)
@@ -335,6 +335,7 @@ function M.create_tool_window(
                 end
             else
                 -- Entering Terminal mode doesn't trigger WinLeave in previous window
+                -- So it is tracked here to indicate WinLeave
                 if e.event == "TermEnter" then
                     leave_tool_window(e)
                 end
