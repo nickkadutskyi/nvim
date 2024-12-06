@@ -200,9 +200,19 @@ end
 ---@param close_on_leave? boolean
 ---@param callaback_on_leave? function(e: table, winid: integer, winnr: integer, bufnr: integer)
 ---@param callaback_on_close? function(e: table, winid: integer, winnr: integer, bufnr: integer)
-function M.create_tool_window(title, position, close_on_leave, callaback_on_leave, callaback_on_close)
+function M.create_tool_window(
+    title,
+    position,
+    close_on_leave,
+    callback_before_entering,
+    callaback_on_leave,
+    callaback_on_close
+)
     position = position or "left"
-    close_on_leave = close_on_leave or true
+    if close_on_leave == nil then
+        close_on_leave = true
+    end
+    -- close_on_leave = close_on_leave ~= nil and close_on_leave or true
     local width = 45 -- TODO: do I need make it dynamic?
     local col, border
     if position == "left" then
@@ -247,8 +257,9 @@ function M.create_tool_window(title, position, close_on_leave, callaback_on_leav
         footer = string.rep(" ", width),
     }
     local bufnr = vim.api.nvim_create_buf(false, true)
-    local winid = vim.api.nvim_open_win(bufnr, true, opts)
+    local winid = vim.api.nvim_open_win(bufnr, false, opts)
     local winnr = vim.api.nvim_win_get_number(winid)
+    local bufnrs = { [bufnr] = true }
     vim.api.nvim_set_option_value(
         "winhl",
         "FloatTitle:ToolWindowFloatTitle,"
@@ -256,24 +267,30 @@ function M.create_tool_window(title, position, close_on_leave, callaback_on_leav
             .. "FloatFooter:ToolWindowFloatFooter",
         { win = winid }
     )
+    local close_tool_window = function()
+        -- Requires delay to ensure the window is left
+        vim.schedule(function()
+            if vim.api.nvim_win_is_valid(winid) then
+                vim.api.nvim_win_close(winid, true)
+            end
+        end)
+    end
+    local leave_tool_window = function(e)
+        if type(callaback_on_leave) == "function" then
+            callaback_on_leave(e, winid, winnr, bufnr)
+        end
+        if close_on_leave then
+            close_tool_window()
+        end
+    end
     local group = vim.api.nvim_create_augroup("nickkadutskyi-tool-window-" .. winid, { clear = true })
-    vim.api.nvim_create_autocmd("WinLeave", {
+    vim.api.nvim_create_autocmd({ "WinLeave" }, {
         group = group,
         nested = true,
         callback = function(e)
-            local win_curr_bufnr = vim.fn.winbufnr(winid)
-            if e.buf == win_curr_bufnr then
-                if type(callaback_on_leave) == "function" then
-                    callaback_on_leave(e, winid, winnr, bufnr)
-                end
-                if close_on_leave then
-                    -- Requires delay to ensure the window is left
-                    vim.fn.timer_start(1, function()
-                        if vim.api.nvim_win_is_valid(winid) then
-                            vim.api.nvim_win_close(winid, true)
-                        end
-                    end)
-                end
+            local ebuf_curr_winid = vim.fn.bufwinid(e.buf)
+            if ebuf_curr_winid == winid then
+                leave_tool_window(e)
             end
         end,
     })
@@ -287,12 +304,46 @@ function M.create_tool_window(title, position, close_on_leave, callaback_on_leav
         pattern = tostring(winid),
         group = group,
         callback = function(e)
+            bufnrs[e.buf] = true
             vim.api.nvim_del_augroup_by_id(group)
+            for nr, _ in pairs(bufnrs) do
+                vim.api.nvim_buf_delete(nr, { force = true })
+            end
             if type(callaback_on_close) == "function" then
                 callaback_on_close(e, winid, winnr, bufnr)
             end
         end,
     })
+    vim.api.nvim_create_autocmd({ "WinEnter", "TermEnter" }, {
+        group = group,
+        nested = true,
+        callback = function(e)
+            local ebuf_curr_winid = vim.fn.bufwinid(e.buf)
+            if ebuf_curr_winid == winid then
+                bufnrs[e.buf] = true
+                for _, lhs in ipairs({ "<Esc>", "q" }) do
+                    vim.keymap.set("n", lhs, function()
+                        if close_on_leave or lhs == "q" then
+                            vim.api.nvim_win_close(winid, true)
+                        end
+                    end, { buffer = e.buf })
+                end
+            else
+                -- Entering Terminal mode doesn't trigger WinLeave in previous window
+                if e.event == "TermEnter" then
+                    leave_tool_window(e)
+                end
+            end
+        end,
+    })
+    if type(callback_before_entering) == "function" then
+        callback_before_entering(winid, winnr, bufnr)
+    end
+
+    vim.schedule(function()
+        vim.fn.win_gotoid(winid)
+    end)
+
     return bufnr, winid, winnr
 end
 return M
