@@ -1,4 +1,5 @@
 -- TODO Add custom syntax regex to highlight files ignored by git
+-- TODO Contribute to https://github.com/prichrd/netrw.nvim to get Git support
 
 local utils = require("nickkadutskyi.utils")
 
@@ -83,7 +84,6 @@ vim.api.nvim_create_user_command("CloseProjectView", close_project_view, {})
 
 ---@type LazySpec
 return {
-
     { -- Adds icons to Netrw
         "prichrd/netrw.nvim",
         opts = {
