@@ -1,86 +1,81 @@
----Config
+local utils = require("nickkadutskyi.utils")
 
 -- Netrw
 vim.g.netrw_keepdir = 1 -- To avoid changing cwd when navigating in netrw
-vim.g.window_id_before_netrw = nil
+vim.g.netrw_banner = 0 -- remove the banner at the top
+vim.g.netrw_preview = 1
+vim.g.netrw_liststyle = 3 -- default directory view. Cycle with i
 
-local function close_netrw()
-    for bufn = 1, vim.fn.bufnr("$") do
-        if vim.fn.bufexists(bufn) == 1 and vim.fn.getbufvar(bufn, "&filetype") == "netrw" then
-            if vim.t.expl_buf_num then
-                vim.t.expl_buf_num = nil
-            end
-            vim.cmd("silent! bwipeout " .. bufn)
-            if vim.fn.getline(2):match('^" Netrw ') then
-                vim.cmd("silent! bwipeout")
-            end
-            -- Switch to previous window
-            if vim.g.window_id_before_netrw then
-                vim.fn.win_gotoid(vim.g.window_id_before_netrw)
-                vim.g.window_id_before_netrw = nil
-            end
-            return
-        end
+local function close_project_view()
+    vim.notify("Closing Project view")
+    if vim.api.nvim_win_is_valid(vim.t.project_view_winid) then
+        vim.api.nvim_win_close(vim.t.project_view_winid, true)
     end
+    vim.t.project_view_winid = nil
+    vim.t.project_view_winnr = nil
 end
 
--- File Browser toggle and keep its width consistent
-local function toggle_vim_explorer()
-    -- ID of the window before the switch to netrw
-    vim.g.window_id_before_netrw = vim.fn.win_getid()
-    if vim.t.expl_buf_num then
-        close_netrw()
+local function toggle_vim_explorer_float()
+    -- Configures a proper window to open a file in after selection
+    local open_in_bufnr = utils.get_normal_buffer(vim.api.nvim_get_current_buf())
+    if open_in_bufnr ~= nil then
+        vim.g.netrw_chgwin = vim.fn.bufwinnr(open_in_bufnr)
+    end
+    if vim.t.project_view_winid ~= nil then
+        -- Close Netrw window if it's open
+        close_project_view()
     else
-        vim.cmd("1wincmd w")
-        vim.cmd("Lexplore")
-        -- After switching to netwr buff, lets resize to 45
-        vim.cmd("vertical resize 45")
-        vim.t.expl_buf_num = vim.fn.bufnr("%")
+        -- Create floating window
+        local _, winid, winnr = utils.create_tool_window(
+            "Project",
+            "left",
+            true,
+            function(winid)
+                vim.fn.win_execute(winid, "Explore")
+            end,
+            nil,
+            function()
+                -- Clear Netrw variables on close
+                vim.t.project_view_winid = nil
+                vim.t.project_view_winnr = nil
+            end
+        )
+        vim.t.project_view_winid = winid
+        vim.t.project_view_winnr = winnr
+        -- Adds custom CursorLine highlight group
+        vim.api.nvim_set_option_value(
+            "winhl",
+            (vim.api.nvim_get_option_value("winhl", { win = winid }) or "") .. ",CursorLine:NetrwCursorLine",
+            { win = winid }
+        )
     end
 end
 
-vim.keymap.set("n", "<leader>fb", toggle_vim_explorer, { desc = "Toggle file browser" })
-
-vim.api.nvim_create_user_command("CloseNetrw", close_netrw, {})
-
-local function netrw_mapping()
-    -- Buffer-local mappings
-    vim.keymap.set("n", "<Esc>", close_netrw, { buffer = true, silent = true })
-    vim.keymap.set("n", "q", close_netrw, { buffer = true, silent = true })
-
-    -- Netrw settings
-    vim.g.netrw_banner = 0 -- remove the banner at the top
-    vim.g.netrw_preview = 1
-    vim.g.netrw_liststyle = 3 -- default directory view. Cycle with i
-end
-
--- Netrw mappings autogroup
-vim.api.nvim_create_autocmd("FileType", {
-    group = vim.api.nvim_create_augroup("nickkadutskyi-netrw-mappings", { clear = true }),
-    pattern = "netrw",
-    callback = netrw_mapping,
+vim.keymap.set("n", "<leader>ap", toggle_vim_explorer_float, {
+    desc = "Project: [a]ctivate [p]roject tool window.",
+})
+-- FIXME: This doesn't work
+vim.keymap.set({ "n", "i" }, "<A-1>", toggle_vim_explorer_float, {
+    desc = "Project: [a]ctivate [p]roject tool window.",
 })
 
--- Close Netrw when selecting a file
-vim.api.nvim_create_autocmd("BufWinEnter", {
-    group = vim.api.nvim_create_augroup("nickkadutskyi-netrw-close", { clear = true }),
-    callback = function()
-        local filetype = vim.fn.getbufvar(vim.fn.winbufnr(vim.fn.winnr()), "&filetype")
-        if filetype ~= "netrw" then
-            close_netrw()
+local group_start = vim.api.nvim_create_augroup("nickkadutskyi-netrw-start", { clear = true })
+vim.api.nvim_create_autocmd("VimEnter", {
+    group = group_start,
+    callback = function(e)
+        -- Clears Neovim's built-in group that triggers Netrw on directories
+        vim.api.nvim_clear_autocmds({ group = "FileExplorer" })
+        if vim.fn.isdirectory(vim.fn.expand("%:p")) == 1 then
+            vim.schedule(function()
+                toggle_vim_explorer_float()
+            end)
         end
     end,
 })
 
--- Commented out as in original:
--- vim.api.nvim_create_autocmd({'FileType', 'BufLeave'}, {
---     pattern = 'netrw',
---     callback = function()
---         if vim.bo.filetype == 'netrw' then
---             close_netrw()
---         end
---     end
--- })
+-- Global command to close Project view in other keybindings
+vim.api.nvim_create_user_command("CloseProjectView", close_project_view, {})
+
 
 -- Lazy.nvim module
 return {}
