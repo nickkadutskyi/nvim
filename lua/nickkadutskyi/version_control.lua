@@ -139,7 +139,7 @@ return {
                 end, { desc = mode[2] or "VCS: [a]ctivate [v]cs [c]ommit window" })
             end
 
-            vim.keymap.set("n", "<leader>avf", function()
+            vim.keymap.set("n", "<localleader>avl", function()
                 vim.cmd("CloseProjectView")
                 neogit.action("log", "log_all_references", {
                     "--graph",
