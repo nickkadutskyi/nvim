@@ -53,6 +53,8 @@ return {
                     },
                     "branch",
                     -- "diff",
+                },
+                lualine_c = {
                     {
                         "filetype",
                         padding = { left = 1, right = 0 },
@@ -97,8 +99,6 @@ return {
                             return vim.b.custom_git_status_hl or "Custom_TabSel"
                         end,
                     },
-                },
-                lualine_c = {
                     {
                         "navic",
 
@@ -168,8 +168,8 @@ return {
             inactive_sections = {
                 lualine_a = {},
                 lualine_b = {},
-                lualine_c = { "filename" },
-                lualine_x = { "location" },
+                lualine_c = {},
+                lualine_x = {},
                 lualine_y = {},
                 lualine_z = {},
             },
