@@ -205,13 +205,15 @@ end
 ---@param close_on_leave? boolean
 ---@param callaback_on_leave? function(e: table, winid: integer, winnr: integer, bufnr: integer)
 ---@param callaback_on_close? function(e: table, winid: integer, winnr: integer, bufnr: integer)
+---@param bufnr? number
 function M.create_tool_window(
     title,
     position,
     close_on_leave,
     callback_before_entering,
     callaback_on_leave,
-    callaback_on_close
+    callaback_on_close,
+    bufnr
 )
     position = position or "left"
     if close_on_leave == nil then
@@ -261,7 +263,7 @@ function M.create_tool_window(
         -- Provides empty full-width footer to use its underline as border
         footer = string.rep(" ", width),
     }
-    local bufnr = vim.api.nvim_create_buf(false, true)
+    bufnr = (bufnr and vim.api.nvim_buf_is_valid(bufnr)) and bufnr or vim.api.nvim_create_buf(false, true)
     local winid = vim.api.nvim_open_win(bufnr, false, opts)
     local winnr = vim.api.nvim_win_get_number(winid)
     local bufnrs = { [bufnr] = true }

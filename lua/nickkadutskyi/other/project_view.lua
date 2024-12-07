@@ -8,6 +8,7 @@ vim.g.netrw_keepdir = 1 -- To avoid changing cwd when navigating in netrw
 vim.g.netrw_banner = 0 -- remove the banner at the top
 vim.g.netrw_preview = 1
 vim.g.netrw_liststyle = 3 -- default directory view. Cycle with i
+vim.g.netrw_fastbrowse = 2 -- Use fast browsing
 
 local function close_project_view()
     if vim.t.project_view_winid ~= nil and vim.api.nvim_win_is_valid(vim.t.project_view_winid) then
