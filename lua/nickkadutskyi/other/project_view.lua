@@ -1,5 +1,6 @@
 -- TODO Add custom syntax regex to highlight files ignored by git
 -- TODO Contribute to https://github.com/prichrd/netrw.nvim to get Git support
+-- TODO keep the window open when marking directory as a target with `mt` in netrw
 
 local utils = require("nickkadutskyi.utils")
 
