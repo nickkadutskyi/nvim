@@ -11,6 +11,18 @@ vim.g.netrw_preview = 1
 vim.g.netrw_liststyle = 3 -- default directory view. Cycle with i
 vim.g.netrw_fastbrowse = 2 -- Use fast browsing
 
+vim.api.nvim_create_user_command("ExploreFind", function()
+    local current_file = vim.g.current_file or vim.fn.expand("%:p")
+    local filename = vim.fn.fnamemodify(current_file, ":t")
+    local directory = vim.fn.fnamemodify(current_file, ":h")
+
+    vim.fn.setreg("/", filename) -- Set search register
+    vim.cmd("Explore " .. directory)
+    vim.cmd("normal n") -- Go to next search match
+    vim.cmd("noh")
+    vim.g.current_file = nil
+end, {})
+
 local function close_project_view()
     if vim.t.project_view_winid ~= nil and vim.api.nvim_win_is_valid(vim.t.project_view_winid) then
         vim.api.nvim_win_close(vim.t.project_view_winid, true)
@@ -35,7 +47,12 @@ local function toggle_vim_explorer_float()
             "left",
             true,
             function(winid)
-                vim.fn.win_execute(winid, "Explore")
+                vim.g.current_file = vim.fn.expand("%:p")
+                if vim.fn.isdirectory(vim.g.current_file) == 1 then
+                    vim.fn.win_execute(winid, "Explore")
+                else
+                    vim.fn.win_execute(winid, "ExploreFind")
+                end
             end,
             nil,
             function()
