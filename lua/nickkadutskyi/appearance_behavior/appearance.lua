@@ -6,7 +6,16 @@ vim.opt.title = true
 vim.opt.titlestring = [[%{v:lua.TitleString()}]]
 -- Ensures relative file path if there are multiple files with same name in project
 function _G.TitleString()
-    local project = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+    local devpath = vim.fn.fnamemodify("~/Developer", ":p")
+    local cwd = vim.fn.getcwd()
+    local projectName = vim.fn.fnamemodify(cwd, ":t")
+    local code = vim.fs.basename(vim.fs.dirname(cwd))
+    code = tonumber(code) or code
+    local account = vim.fs.basename(vim.fs.dirname(vim.fn.fnamemodify(cwd, ":h")))
+    local project = projectName
+    if cwd:find(devpath, 1, true) == 1 then
+        project = account .. "" .. code .. " " .. projectName
+    end
     local rootPath = vim.fn.resolve(vim.fn.getcwd())
     local relativeFilePath = vim.fn.expand("%")
     local filePath = vim.fn.expand("%:p")
@@ -21,7 +30,7 @@ function _G.TitleString()
         local path_parts = vim.fn.split(relativeFilePath, ":")
         local term_cmd = path_parts[#path_parts]
         local term_cmd_no_comments = term_cmd:gsub("%s*;.*", "")
-        return "term " ..( vim.b.toggle_number or "" ).. ": " .. term_cmd_no_comments
+        return "term " .. (vim.b.toggle_number or "") .. ": " .. term_cmd_no_comments
     elseif string.match(relativeFilePath, "^term://") then
         local path_parts = vim.fn.split(relativeFilePath, ":")
         title_filename = "term " .. path_parts[#path_parts]
