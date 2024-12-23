@@ -11,7 +11,7 @@ return {
                 manual_mode = true,
                 detection_methods = { "pattern", "lsp" },
                 silent_chdir = true,
-                scope_chdir = 'win', -- 'global' | 'win' | 'tab'
+                scope_chdir = "win", -- 'global' | 'win' | 'tab'
             })
 
             -- Change to project root on startup only becasue
@@ -23,9 +23,9 @@ return {
                     local cwd_after = vim.fn.getcwd()
                     if cwd_before ~= cwd_after then
                         -- Rerun colorscheme if cwd changed to regenerate ProjectColor
-                        vim.cmd("colorscheme jb")
-                        -- Add cwd to copilot_workspace_folders if in allowed paths
-                        utils.add_cwd_to_copilot_workspace_folders()
+                        vim.schedule(function()
+                            vim.cmd("colorscheme jb")
+                        end)
                     end
                 end,
             })
