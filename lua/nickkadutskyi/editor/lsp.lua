@@ -171,7 +171,7 @@ return {
                 },
                 ["intelephense"] = {
                     init_options = {
-                        licenceKey = vim.fn.expand("~/.config/private_php/intelephense_license.txt"),
+                        licenceKey = vim.fn.expand("/run/secrets/php/intelephense_license"),
                     },
                     intelephense = {
                         telemetry = {
