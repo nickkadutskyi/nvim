@@ -9,11 +9,6 @@ vim.opt.guicursor = {
   'a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor',
   'sm:block-blinkwait175-blinkoff150-blinkon175'
 }
--- vim.opt.guicursor = {
---   'n-v-c:block-Cursor/lCursor-blinkon1',
---   'i-ci-ve:ver25-Cursor/lCursor-blinkon1',
---   't:ver25-Cursor/lCursor-blinkon1'
--- }
 -- Removes cmd line to allow more space
 vim.opt.cmdheight = 0
 -- File name and path in Window header
