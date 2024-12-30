@@ -141,9 +141,9 @@ return {
             -- Integrations
 
             -- Registers copilot-chat filetype for markdown rendering
-            require("render-markdown").setup({
-                file_types = { "markdown", "copilot-chat" },
-            })
+            -- require("render-markdown").setup({
+            --     file_types = { "markdown", "copilot-chat" },
+            -- })
         end,
     },
 }
