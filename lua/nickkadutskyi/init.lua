@@ -52,5 +52,5 @@ require("lazy").setup({
     change_detection = { enable = true, notify = false },
     install = { colorscheme = { "jb" } },
     ui = { border = "rounded", title = " Plugins ", size = { width = 0.6 } },
-    dev = { path = "~/Developer/PE/0027", patterns = { "nickkadutskyi" }, fallback = true },
+    dev = { path = "~/Developer/PERS/0027", patterns = { "nickkadutskyi" }, fallback = true },
 })
