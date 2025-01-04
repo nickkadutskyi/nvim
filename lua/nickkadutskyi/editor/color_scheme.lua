@@ -24,18 +24,20 @@ return {
             -- merged from:
             -- nickkadutskyi.languages_frameworks
             ensure_installed = {
+                "c",
+                "comment",
+                "cpp",
+                "css",
+                "doxygen",
+                "gitignore",
+                "html",
+                "http",
+                "regex",
+                "sql",
+                "typescript",
                 "vim",
                 "vimdoc",
                 "yaml",
-                "regex",
-                "html",
-                "c",
-                "typescript",
-                "css",
-                "gitignore",
-                "http",
-                "sql",
-                "comment",
             },
             auto_install = true, -- Automatically install missing parsers
             sync_install = false, -- Install parsers synchronously
