@@ -220,7 +220,7 @@ return {
                     -- Close terminal
                     for lhs, mode in pairs({
                         ["<A-w>"] = { "n", "t" },
-                        ["∑"] = { "n", "t" },
+                        -- ["∑"] = { "n", "t" },
                     }) do
                         vim.keymap.set(mode, lhs, function()
                             local to_close = terms.get(terms.get_focused_id())
