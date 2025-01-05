@@ -1,4 +1,37 @@
 return {
+    {
+        "nvim-lspconfig",
+        opts = {
+            servers = {
+                ["nixd"] = {
+                    settings = {
+                        nixd = {
+                            formatting = {
+                                command = { "nixfmt" },
+                            },
+                        },
+                    },
+                },
+                ["nil_ls"] = {
+                    capabilities = {
+                        workspace = {
+                            didChangeWatchedFiles = {
+                                dynamicRegistration = true,
+                            },
+                        },
+                    },
+                    settings = {
+                        ["nil"] = {
+                            testSetting = 42,
+                            formatting = {
+                                command = { "nixfmt" },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
     { -- Code Style
         "stevearc/conform.nvim",
         opts = {

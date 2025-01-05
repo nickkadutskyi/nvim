@@ -9,6 +9,36 @@ return {
             })
         end,
     },
+    { -- Language Servers
+        "nvim-lspconfig",
+        opts = {
+            servers = {
+                ["lua_ls"] = {
+                    settings = {
+                        Lua = {
+                            -- Disable telemetry
+                            telemetry = { enable = false },
+                            -- runtime = {
+                            --     version = "LuaJIT",
+                            --     path = runtime_path,
+                            -- },
+                            diagnostics = {
+                                globals = { "vim" },
+                            },
+                            workspace = {
+                                checkThirdParty = false,
+                                library = {
+                                    vim.env.VIMRUNTIME,
+                                    "${3rd}/luv/library",
+                                },
+                            },
+                            hint = { enable = true },
+                        },
+                    },
+                },
+            },
+        },
+    },
     { -- Code Style
         "conform.nvim",
         opts = {

@@ -33,6 +33,7 @@ return {
                 "html",
                 "http",
                 "regex",
+                "scss",
                 "sql",
                 "typescript",
                 "vim",

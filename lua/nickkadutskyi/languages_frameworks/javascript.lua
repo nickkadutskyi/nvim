@@ -1,7 +1,8 @@
+---@type LazySpec
 return {
     {
         -- Better highlighting
-        "nvim-treesitter/nvim-treesitter",
+        "nvim-treesitter",
         opts = function(_, opts)
             vim.list_extend(opts.ensure_installed, {
                 "javascript",
@@ -9,6 +10,7 @@ return {
             })
         end,
     },
+    { "nvim-lspconfig", opts = { servers = {} } },
     {
         -- Formatting
         "stevearc/conform.nvim",

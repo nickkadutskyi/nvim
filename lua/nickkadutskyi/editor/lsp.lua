@@ -28,199 +28,109 @@ return {
             "williamboman/mason-lspconfig.nvim",
             "hrsh7th/cmp-nvim-lsp",
         },
-        config = function(plugin, _)
-            -- FIXME is this a proper api?
-            require("lspconfig.ui.windows").default_options.border = "rounded"
+        config = function(plugin, opts)
+            local servers = opts.servers or {}
 
-            local ensure_ls = {
-                "lua_ls",
-                "ts_ls",
-                "jsonls",
-                "emmet_ls",
-                "bashls",
-                -- "nixd",
-                "nil_ls",
+            -- Capabilities to provide to lspconfig
+            local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+            local capabilities = vim.tbl_deep_extend(
+                "force",
+                {},
+                vim.lsp.protocol.make_client_capabilities(),
+                has_cmp and cmp_nvim_lsp.default_capabilities() or {},
+                opts.capabilities or {}
+            )
 
-                -- PHP
-                "intelephense",
-                "phpactor", -- use either phpactor or intelephense to avoid duplcates
-                -- "psalm", -- disabled because it's not working as if ran as cli tool via nvim-lint
-            }
+            ---@param server_name string
+            ---@param user_config ?lspconfig.Config
+            local function setup(server_name, user_config)
+                local server_opts = vim.tbl_deep_extend(
+                    "force",
+                    { capabilities = vim.deepcopy(capabilities) },
+                    servers[server_name] or {},
+                    user_config or {}
+                )
 
-            -- language servers to install and configure with mason
-            local mason_ls = {}
-            -- language servers existing in the system to configure with lspconfig
-            local lspconfig_ls = {}
-            -- language servers non existing in the system but to try to run via nix run
-            local nix_ls = {}
+                if server_opts.enabled == false then
+                    return
+                end
+
+                require("lspconfig")[server_name].setup(server_opts)
+            end
+
+            -- get all the servers that are available through mason-lspconfig
+            local has_mason_lspconfig, mlsp = pcall(require, "mason-lspconfig")
+            local mason_servers = {}
+            if has_mason_lspconfig then
+                mason_servers = require("mason-lspconfig").get_mappings().lspconfig_to_mason
+            end
 
             local mason_dir = require("mason.settings").current.install_root_dir
             local nix_path = vim.fn.exepath("nix")
-            -- categorize language servers by how they are configured
-            for _, server_name in ipairs(ensure_ls) do
-                local success, config = pcall(require, "lspconfig.configs." .. server_name)
-                if success then
-                    local cmd = config.default_config.cmd
-                    if cmd and type(cmd) == "table" and not vim.tbl_isempty(cmd) then
-                        local path = vim.fn.exepath(cmd[1])
-                        -- missing from the system or already installed with mason
-                        if
-                            (#path == 0 or string.find(path, mason_dir) ~= nil)
-                            and require("mason-lspconfig").get_mappings().lspconfig_to_mason[server_name] ~= nil
-                        then
-                            mason_ls[server_name] = config.default_config
-                        elseif #path ~= 0 then
-                            lspconfig_ls[server_name] = config.default_config
-                        elseif #nix_path ~= 0 then
-                            nix_ls[server_name] = config.default_config
-                        else
-                            vim.notify(
-                                string.format(
-                                    "Packag %s is not provided by Mason and nix is not installead. Try to install it manually.",
-                                    server_name
-                                ),
-                                vim.log.levels.WARN,
-                                { title = "Plugin " .. plugin.name .. " config()" }
-                            )
+
+            local install_via_mason = {}
+            local install_via_nix = {}
+            for server_name, server_opts in pairs(servers) do
+                -- Checks if server is available in lspconfig
+                local has_lspconfig, lspconfig = pcall(require, "lspconfig.configs." .. server_name)
+                if has_lspconfig then
+                    server_opts = server_opts == true and {} or server_opts
+                    if server_opts and server_opts.enabled ~= false then
+                        local cmd = lspconfig.default_config.cmd
+                        if cmd and type(cmd) == "table" and not vim.tbl_isempty(cmd) then
+                            local cmd_path = vim.fn.exepath(cmd[1])
+                            if
+                                mason_servers[server_name] ~= nil
+                                and (string.find(cmd_path, mason_dir) ~= nil or server_opts.mason == true)
+                            then
+                                install_via_mason[#install_via_mason + 1] = server_name
+                            elseif #cmd_path ~= 0 then
+                                setup(server_name)
+                            elseif #nix_path ~= 0 then
+                                install_via_nix[server_name] = lspconfig.default_config
+                            end
                         end
                     end
                 else
                     vim.notify(
-                        string.format(
-                            'Config "%s" not found. Ensure it is listed in `neovim/nvim-lspconfig/doc/configs.md`.',
-                            server_name
-                        ),
+                        string.format("Missing lspconfig: `%s`", server_name),
                         vim.log.levels.WARN,
                         { title = "Plugin " .. plugin.name .. " config()" }
                     )
                 end
             end
 
-            -- capabilities to provide to lspconfig
-            local cmp_lsp = require("cmp_nvim_lsp")
-            local capabilities = vim.tbl_deep_extend(
-                "force",
-                {},
-                vim.lsp.protocol.make_client_capabilities(),
-                cmp_lsp.default_capabilities()
-            )
-
-            -- local runtime_path = vim.split(package.path, ";")
-            -- table.insert(runtime_path, "lua/?.lua")
-            -- table.insert(runtime_path, "lua/?/init.lua")
-            local ls_configs = {
-                ["lua_ls"] = {
-                    settings = {
-                        Lua = {
-                            -- Disable telemetry
-                            telemetry = { enable = false },
-                            -- runtime = {
-                            --     version = "LuaJIT",
-                            --     path = runtime_path,
-                            -- },
-                            diagnostics = {
-                                globals = { "vim" },
-                            },
-                            workspace = {
-                                checkThirdParty = false,
-                                library = {
-                                    vim.env.VIMRUNTIME,
-                                    "${3rd}/luv/library",
-                                },
-                            },
-                            hint = { enable = true },
-                        },
-                    },
-                },
-                ["emmet_ls"] = {
-                    filetypes = {
-                        "html",
-                        "css",
-                        "php",
-                        "sass",
-                        "scss",
-                        "vue",
-                        "javascript",
-                    },
-                },
-                ["nixd"] = {
-                    settings = {
-                        ["nixd"] = {
-                            formatting = {
-                                command = { "nixfmt" },
-                            },
-                        },
-                    },
-                },
-                ["nil_ls"] = {
-                    capabilities = { workspace = { didChangeWatchedFiles = { dynamicRegistration = true } } },
-                    settings = {
-                        ["nil"] = {
-                            testSetting = 42,
-                            formatting = {
-                                command = { "nixfmt" },
-                            },
-                        },
-                    },
-                },
-                ["bashls"] = {
-                    filetypes = { "sh", "zsh" },
-                },
-                ["psalm"] = {
-                    cmd = { "psalm", "--language-server", "--config=psalm.xml" },
-                },
-                ["intelephense"] = {
-                    init_options = {
-                        licenceKey = vim.fn.expand("/run/secrets/php/intelephense_license"),
-                    },
-                    intelephense = {
-                        telemetry = {
-                            enabled = false,
-                        },
-                        files = {
-                            maxSize = 1000000,
-                        },
-                    },
-                },
-            }
-
-            ---@param server_name string
-            ---@param user_config ?lspconfig.Config
-            local setup_ls = function(server_name, user_config)
-                local conf = vim.tbl_deep_extend(
-                    "force",
-                    { capabilities = capabilities },
-                    ls_configs[server_name] or {},
-                    user_config or {}
-                )
-                require("lspconfig")[server_name].setup(conf)
+            -- Installs servers via Mason
+            if has_mason_lspconfig then
+                mlsp.setup({
+                    automatic_installation = false,
+                    ensure_installed = install_via_mason,
+                    handlers = { setup },
+                })
             end
 
-            -- install language servers with mason and configure
-            require("mason-lspconfig").setup({
-                ensure_installed = vim.tbl_keys(mason_ls),
-                handlers = { setup_ls },
-            })
-
-            -- configure language servers with lspconfig
-            for server_name, _ in pairs(lspconfig_ls) do
-                setup_ls(server_name)
-            end
-
-            -- configure language servers with lspconfig to run via `nix run`
-            for server_name, config in pairs(nix_ls) do
-                local cmd = config.cmd[1]
-                -- confirm store path
-                vim.system({ "nix", "path-info", "--json", "nixpkgs#" .. cmd }, { text = true }, function(o)
+            -- Installs servers via Nix (`nir run nixpkgs#<pkg> --`)
+            for server_name, default_config in pairs(install_via_nix) do
+                local cmd = servers[server_name].cmd or default_config.cmd
+                local nix_pkg = servers[server_name].nix_pkg or cmd[1]
+                -- Checks if Nix package is available
+                vim.system({ "nix", "path-info", "--json", "nixpkgs#" .. nix_pkg }, { text = true }, function(o)
                     if o.code == 0 then
                         vim.schedule(function()
                             -- configure languge server with lspconfig
-                            table.remove(config.cmd, 1)
-                            local nix_cmd = vim.list_extend({ "nix", "run", "nixpkgs#" .. cmd, "--" }, config.cmd)
-                            setup_ls(server_name, { cmd = nix_cmd })
+                            table.remove(cmd, 1)
+                            local nix_cmd = vim.list_extend({
+                                "nix",
+                                "run",
+                                "nixpkgs#" .. nix_pkg,
+                                "--",
+                            }, cmd)
 
-                            -- try to start language server if filetype matches in case server was configured after opening a file
-                            for _, ext in ipairs(config.filetypes) do
+                            setup(server_name, { cmd = nix_cmd })
+
+                            -- Start language server in case server was
+                            -- configured after opening a matching file type
+                            for _, ext in ipairs(default_config.filetypes) do
                                 if string.match(vim.api.nvim_buf_get_name(0), "%." .. ext .. "$") ~= nil then
                                     vim.cmd("LspStart " .. server_name)
                                     break
@@ -229,8 +139,8 @@ return {
                         end)
                     else
                         vim.notify(
-                            string.format("Failed to get path-info fro %s nix package due: %s", cmd, o.stderr),
-                            vim.log.levels.ERROR,
+                            string.format("Did't find `%s` nix package due: %s", nix_pkg, o.stderr),
+                            vim.log.levels.WARN,
                             { title = "Plugin " .. plugin.name .. " config()" }
                         )
                     end

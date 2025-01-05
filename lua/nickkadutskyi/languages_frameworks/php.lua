@@ -8,6 +8,32 @@ return {
             })
         end,
     },
+    { -- Language Servers
+        "nvim-lspconfig",
+        opts = {
+            servers = {
+                ["intelephense"] = {
+                    init_options = {
+                        licenceKey = vim.fn.expand("/run/secrets/php/intelephense_license"),
+                    },
+                    intelephense = {
+                        telemetry = {
+                            enabled = false,
+                        },
+                        files = {
+                            maxSize = 1000000,
+                        },
+                    },
+                },
+                ["phpactor"] = {},
+                ["psalm"] = {
+                    -- enabled = false, -- nix package throws runtime PHP error, use as CLI tool
+                    nix_pkg = "php84Packages.psalm",
+                    cmd = { "psalm", "--language-server", "--config=psalm.xml" },
+                },
+            },
+        },
+    },
     { -- Code Style
         "stevearc/conform.nvim",
         opts = function(_, opts)
