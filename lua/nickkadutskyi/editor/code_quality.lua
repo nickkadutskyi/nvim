@@ -19,11 +19,60 @@ return {
                     lint.linters[linter_name] = linter_opts
                 end
             end
-            lint.linters_by_ft = vim.tbl_map(function(linters)
-                return vim.tbl_filter(function(linter)
-                    return vim.fn.executable(lint.linters[linter].cmd) == 1
-                end, linters)
-            end, opts.linters_by_ft)
+
+            local nix_path = vim.fn.exepath("nix")
+            local install_via_nix = {}
+            -- Only use linters that present in the system
+            -- lint.linters_by_ft = vim.tbl_map(function(linters)
+            --     return vim.tbl_filter(function(linter_name)
+            --         if vim.fn.executable(lint.linters[linter_name].cmd) == 1 then
+            --             return true
+            --         else
+            --             if #nix_path ~= 0 then
+            --                 table.insert(install_via_nix, linter_name)
+            --             end
+            --             return false
+            --         end
+            --     end, linters)
+            -- end, opts.linters_by_ft)
+            lint.linters_by_ft = {}
+            for ft, linters in pairs(opts.linters_by_ft) do
+                for _, linter_name in ipairs(linters) do
+                    if vim.fn.executable(lint.linters[linter_name].cmd) == 1 then
+                        lint.linters_by_ft[ft] = lint.linters_by_ft[ft] or {}
+                        table.insert(lint.linters_by_ft[ft], linter_name)
+                    else
+                        if #nix_path ~= 0 then
+                            lint.linters[linter_name].fts = lint.linters[linter_name].fts or {}
+                            table.insert(lint.linters[linter_name].fts, ft)
+                            table.insert(install_via_nix, linter_name)
+                        end
+                    end
+                end
+            end
+
+            -- Installs linters via Nix (`nir run nixpkgs#<pkg> --`)
+            for _, linter_name in ipairs(install_via_nix) do
+                local linter_opts = lint.linters[linter_name]
+                local nix_pkg = linter_opts.nix_pkg or linter_opts.cmd
+                -- Checks if Nix package is available
+                vim.system({ "nix", "path-info", "--json", "nixpkgs#" .. nix_pkg }, { text = true }, function(o)
+                    if o.code == 0 then
+                        vim.schedule(function()
+                            linter_opts.cmd = "nix"
+                            linter_opts.args = vim.list_extend({
+                                "run",
+                                "nixpkgs#" .. nix_pkg,
+                                "--",
+                            }, linter_opts.args or {})
+                            for _, ft in ipairs(linter_opts.fts or {}) do
+                                lint.linters_by_ft[ft] = lint.linters_by_ft[ft] or {}
+                                vim.list_extend(lint.linters_by_ft[ft], { linter_name })
+                            end
+                        end)
+                    end
+                end)
+            end
 
             local function debounce(ms, fn)
                 local timer = vim.uv.new_timer()

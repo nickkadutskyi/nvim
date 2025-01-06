@@ -97,6 +97,7 @@ return {
                 linters = {
                     phpcs = { -- Code Sniffer
                         cmd = get_executable("phpcs"),
+                        nix_pkg = "php83Packages.php-codesniffer",
                         -- Sets col and end_col to whole row
                         parser = function(output, bufnr)
                             local severities = {
@@ -145,9 +146,11 @@ return {
                     },
                     phpmd = { -- Mess Detector
                         cmd = get_executable("phpmd"),
+                        nix_pkg = "php83Packages.phpmd",
                     },
                     phpstan = { -- PHPStan
                         cmd = get_executable("phpstan"),
+                        nix_pkg = "php83Packages.phpstan",
                         -- Sets col and end_col to whole row
                         parser = function(output, bufnr)
                             if vim.trim(output) == "" or output == nil then
@@ -183,6 +186,7 @@ return {
                     },
                     psalm = { -- Psalm
                         cmd = get_executable("psalm"),
+                        nix_pkg = "php83Packages.psalm",
                         -- Psalm exits with 2 when there are issues in file
                         ignore_exitcode = true,
                         -- Adds type, link and shortcote to diagnostics entries
