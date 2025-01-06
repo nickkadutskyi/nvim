@@ -1,3 +1,4 @@
+---@type LazySpec
 return {
     { -- Code Quality
         "mfussenegger/nvim-lint",
@@ -18,7 +19,11 @@ return {
                     lint.linters[linter_name] = linter_opts
                 end
             end
-            lint.linters_by_ft = opts.linters_by_ft
+            lint.linters_by_ft = vim.tbl_map(function(linters)
+                return vim.tbl_filter(function(linter)
+                    return vim.fn.executable(lint.linters[linter].cmd) == 1
+                end, linters)
+            end, opts.linters_by_ft)
 
             local function debounce(ms, fn)
                 local timer = vim.uv.new_timer()
