@@ -44,28 +44,32 @@ return {
             if #nix_path ~= 0 then
                 for _, formatters in pairs(conform.formatters_by_ft) do
                     local cmd_formatter = nil
-                    for ind, formatter_name in ipairs(formatters) do
+                    for ind, formatter_name in
+                        ipairs(formatters --[=[@as string[]]=])
+                    do
                         local formatter_info = conform.get_formatter_info(formatter_name)
                         local formatter_config = conform.get_formatter_config(formatter_name)
-                        if
-                            formatter_config
-                            and formatter_config.command
-                            and formatter_config.options
-                            and formatter_config.options.nix_pkg
-                            and cmd_formatter == nil
-                        then
-                            cmd_formatter = formatter_config
-                            cmd_formatter.options.name = formatter_name
-                        end
-                        if formatter_info.available then
-                            break
-                        elseif ind == #formatters and cmd_formatter then
-                            conform.formatters[cmd_formatter.options.name].command = "nix"
-                            conform.formatters[cmd_formatter.options.name].prepend_args = {
-                                "run",
-                                "nixpkgs#" .. cmd_formatter.options.nix_pkg,
-                                "--",
-                            }
+                        if formatter_config ~= nil then
+                            formatter_config.options = formatter_config.options or {}
+                            if
+                                formatter_config
+                                and formatter_config.command
+                                and formatter_config.options.nix_pkg
+                                and cmd_formatter == nil
+                            then
+                                cmd_formatter = formatter_config
+                                cmd_formatter.options.name = formatter_name
+                            end
+                            if formatter_info.available then
+                                break
+                            elseif ind == #formatters and cmd_formatter then
+                                conform.formatters[cmd_formatter.options.name].command = "nix"
+                                conform.formatters[cmd_formatter.options.name].prepend_args = {
+                                    "run",
+                                    "nixpkgs#" .. cmd_formatter.options.nix_pkg,
+                                    "--",
+                                }
+                            end
                         end
                     end
                 end
