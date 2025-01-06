@@ -1,5 +1,3 @@
----Config
-
 ---@type LazySpec
 return {
     { -- Code Style
@@ -9,5 +7,14 @@ return {
                 toml = { "taplo" },
             },
         },
-    }
+    },
+    { -- Language Servers
+        "nvim-lspconfig",
+        opts = {
+            servers = {
+                -- Works as a linter
+                taplo = {},
+            },
+        },
+    },
 }
