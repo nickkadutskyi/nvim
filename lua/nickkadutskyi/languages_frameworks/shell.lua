@@ -8,6 +8,16 @@ return {
             })
         end,
     },
+    { -- Language Servers
+        "nvim-lspconfig",
+        opts = {
+            servers = {
+                ["bashls"] = {
+                    filetypes = { "sh", "zsh" },
+                },
+            },
+        },
+    },
     { -- Code Style
         "conform.nvim",
         opts = {
