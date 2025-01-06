@@ -35,7 +35,7 @@ return {
         },
     },
     { -- Code Style
-        "stevearc/conform.nvim",
+        "conform.nvim",
         opts = function(_, opts)
             local util = require("conform.util")
             return vim.tbl_deep_extend("force", opts, {
@@ -60,12 +60,18 @@ return {
                             "vendor/bin/php-cs-fixer",
                             ".devenv/profile/bin/php-cs-fixer",
                         }, "php-cs-fixer"),
+                        options = {
+                            nix_pkg = "php83Packages.php-cs-fixer",
+                        },
                     },
                     phpcbf = {
                         command = util.find_executable({
                             "vendor/bin/phpcbf",
                             ".devenv/profile/bin/phpcbf",
                         }, "phpcbf"),
+                        options = {
+                            nix_pkg = "php83Packages.php-codesniffer",
+                        },
                     },
                 },
             })
@@ -220,24 +226,6 @@ return {
                     },
                 },
             })
-        end,
-    },
-    { -- Installs Quality Tools if missing in the system via Mason
-        "mason-nvim-lint",
-        dependencies = { "mfussenegger/nvim-lint", "williamboman/mason.nvim" },
-        opts = function(_, opts)
-            -- Define PHP linters to ensure installed via Mason
-            local mason_install = {}
-            local lint = require("lint")
-            -- for _, linter in ipairs(lint.linters_by_ft["php"]) do
-            --     if vim.fn.executable(lint.linters[linter].cmd) == 0 then
-            --         table.insert(mason_install, linter)
-            --     end
-            -- end
-            if type(opts.ensure_installed) ~= "table" then
-                opts.ensure_installed = {}
-            end
-            vim.list_extend(opts.ensure_installed, mason_install)
         end,
     },
     { -- Excludes formatters defined in conform.nvim

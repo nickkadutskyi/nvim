@@ -106,9 +106,17 @@ return {
         "rshkarin/mason-nvim-lint",
         dependencies = { "mfussenegger/nvim-lint", "williamboman/mason.nvim" },
         -- ensure_installed is merged from nickkadutskyi.languages_frameworks
-        opts = { automatic_installation = false },
+        opts = { automatic_installation = false, ensure_installed = {} },
         config = function(_, opts)
             vim.api.nvim_create_user_command("CodeLintersInstall", function()
+                local lint = require("lint")
+                for _, linters in pairs(lint.linters_by_ft) do
+                    for _, linter in ipairs(linters) do
+                        if vim.fn.executable(lint.linters[linter].cmd) == 0 then
+                            table.insert(opts.ensure_installed, linter)
+                        end
+                    end
+                end
                 require("mason-nvim-lint").setup(opts)
             end, {})
         end,
