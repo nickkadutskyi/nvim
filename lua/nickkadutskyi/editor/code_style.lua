@@ -60,7 +60,6 @@ return {
                         if formatter_info.available then
                             break
                         elseif ind == #formatters and cmd_formatter then
-                            vim.notify("Setting Nix command for " .. cmd_formatter.options.name)
                             conform.formatters[cmd_formatter.options.name].command = "nix"
                             conform.formatters[cmd_formatter.options.name].prepend_args = {
                                 "run",
