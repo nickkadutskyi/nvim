@@ -22,19 +22,7 @@ return {
 
             local nix_path = vim.fn.exepath("nix")
             local install_via_nix = {}
-            -- Only use linters that present in the system
-            -- lint.linters_by_ft = vim.tbl_map(function(linters)
-            --     return vim.tbl_filter(function(linter_name)
-            --         if vim.fn.executable(lint.linters[linter_name].cmd) == 1 then
-            --             return true
-            --         else
-            --             if #nix_path ~= 0 then
-            --                 table.insert(install_via_nix, linter_name)
-            --             end
-            --             return false
-            --         end
-            --     end, linters)
-            -- end, opts.linters_by_ft)
+            -- Only use linters that present in the system or use `nix run`
             lint.linters_by_ft = {}
             for ft, linters in pairs(opts.linters_by_ft) do
                 for _, linter_name in ipairs(linters) do
