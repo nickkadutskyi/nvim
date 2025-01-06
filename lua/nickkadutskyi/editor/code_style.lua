@@ -81,15 +81,4 @@ return {
             })
         end,
     },
-    { -- Code formatting tools installation
-        "zapling/mason-conform.nvim",
-        dependencies = { "mason.nvim", "conform.nvim" },
-        opts = { ignore_install = {} },
-        config = function(_, opts)
-            -- Manually install code format tools if missing in the system
-            vim.api.nvim_create_user_command("CodeFormattersInstall", function()
-                require("mason-conform").setup(opts)
-            end, {})
-        end,
-    },
 }

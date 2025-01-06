@@ -1,6 +1,7 @@
+---@type LazySpec
 return {
     { -- Color Scheme
-        "nvim-treesitter/nvim-treesitter",
+        "nvim-treesitter",
         opts = function(_, opts)
             vim.list_extend(opts.ensure_installed, {
                 "php",
@@ -226,18 +227,6 @@ return {
                     },
                 },
             })
-        end,
-    },
-    { -- Excludes formatters defined in conform.nvim
-        "zapling/mason-conform.nvim",
-        dependencies = { "williamboman/mason.nvim", "stevearc/conform.nvim" },
-        opts = function(_, opts)
-            -- Define PHP formatters to ignore installing via Mason
-            local mason_ignore = {}
-            if type(opts.ignore_install) ~= "table" then
-                opts.ignore_install = {}
-            end
-            vim.list_extend(opts.ignore_install, mason_ignore)
         end,
     },
 }
