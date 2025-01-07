@@ -164,6 +164,8 @@ return {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-term-open", { clear = true }),
                 pattern = toggleterm_pattern,
                 callback = function(event)
+                    vim.opt_local.conceallevel = 2
+                    vim.cmd([[syntax match Conceal /\%u200b/ conceal]])
                     -- Keymap
                     -- Hide active terminal tool window
                     vim.keymap.set({ "t", "n" }, "<A-Esc>", toggle_terminal, {
