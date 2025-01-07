@@ -2,12 +2,12 @@
 -- Cursor
 -- vgcuim.opt.guicursor = "aaa::blinkon100"
 vim.opt.guicursor = {
-  'n-v-c:block-Cursor/lCursor-blinkon1',
-  'i-ci-ve:ver25-Cursor/lCursor-blinkon1',
-  'r-cr:hor20',
-  'o:hor50',
-  'a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor',
-  'sm:block-blinkwait175-blinkoff150-blinkon175'
+    "n-v-c:block-Cursor/lCursor-blinkon1",
+    "i-ci-ve:ver25-Cursor/lCursor-blinkon1",
+    "r-cr:hor20",
+    "o:hor50",
+    "a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor",
+    "sm:block-blinkwait175-blinkoff150-blinkon175",
 }
 -- Removes cmd line to allow more space
 vim.opt.cmdheight = 0
@@ -72,8 +72,19 @@ function _G.TitleString()
             title_filename = vim.fn.fnamemodify(vim.fn.resolve(filePath), ":~:.:h") .. "/" .. vim.fn.expand("%:t")
         end
     end
+
+    -- Get SSH connection info if available
+    local ssh_connection = os.getenv("SSH_CONNECTION")
+    local host_prefix = ""
+
+    if ssh_connection then
+        local user = vim.fn.expand("$USER")
+        local hostname = vim.fn.hostname()
+        host_prefix = string.format("[%s@%s] ", user, hostname)
+    end
+
     -- return project .. (delim ~= "" and delim .. title_filename or "")
-    return project .. " - " .. title_filename
+    return host_prefix .. project .. " - " .. title_filename .. " (nvim)"
 end
 
 if vim.env.TMUX then
