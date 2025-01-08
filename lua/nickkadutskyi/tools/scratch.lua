@@ -7,30 +7,14 @@ return {
             vim.keymap.set({ "n", "v", "i" }, "<A-C><A-A>", "<cmd>Scratch<cr>", {
                 desc = "Scratch: Create new scratch file",
             })
-            -- MacOS char for the <A-C> and <A-A> keys
-            vim.keymap.set({ "n", "v", "i" }, "çå", "<cmd>Scratch<cr>", {
-                desc = "Scratch: Create new scratch file",
-            })
             vim.keymap.set({ "n", "v", "i" }, "<A-S-N>", "<cmd>Scratch<cr>", {
-                desc = "Scratch: Create new scratch file",
-            })
-            -- MacOS char for the <A-S-N> key combo
-            vim.keymap.set({ "n", "v", "i" }, "˜", "<cmd>Scratch<cr>", {
                 desc = "Scratch: Create new scratch file",
             })
 
             vim.keymap.set({ "n", "v", "i" }, "<A-C><A-S>", "<cmd>ScratchOpen<cr>", {
                 desc = "Scratch: Show list of scratch files",
             })
-            -- MacOS char for the <A-C> and <A-S> keys
-            vim.keymap.set({ "n", "v", "i" }, "çß", "<cmd>ScratchOpen<cr>", {
-                desc = "Scratch: Show list of scratch files",
-            })
             vim.keymap.set({ "n", "v", "i" }, "<A-S-O>", "<cmd>ScratchOpen<cr>", {
-                desc = "Scratch: Show list of scratch files",
-            })
-            -- MacOS char for the <A-S-O> key combo
-            vim.keymap.set({ "n", "v", "i" }, "Ø", "<cmd>ScratchOpen<cr>", {
                 desc = "Scratch: Show list of scratch files",
             })
 

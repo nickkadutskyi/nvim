@@ -116,7 +116,6 @@ return {
             for lhs, mode in pairs({
                 ["<leader>avc"] = { "n" },
                 ["<A-K>"] = { { "n", "i" } }, -- Similar to Intellij <CMD-K>
-                ["˚"] = { { "n", "i" } }, -- macOS char for the <A-K> key
                 ["<leader>ac"] = { "n", "VCS: [a]ctivate vcs [c]ommit window" },
             }) do
                 vim.keymap.set(mode[1], lhs, function()
@@ -175,7 +174,6 @@ return {
             for lhs, mode in pairs({
                 ["<leader>avp"] = "n",
                 ["<A-T>"] = { "n", "i" }, -- Similar to Intellij <D-T>
-                ["†"] = { "n", "i" }, -- macOS char for the <A-T> key
             }) do
                 vim.keymap.set(mode, lhs, function()
                     vim.cmd("CloseProjectView")

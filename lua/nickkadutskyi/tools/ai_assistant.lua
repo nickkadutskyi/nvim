@@ -17,9 +17,6 @@ return {
             vim.keymap.set("i", "<S-Tab>", "<Plug>(copilot-accept-line)", {
                 desc = "AI: Accept line suggestion (copilot.vim)",
             })
-            -- macOS specific aliases
-            vim.keymap.set("i", "‘", "<A-]>", { remap = true, desc = "AI: Next suggestion (macOS alias)" })
-            vim.keymap.set("i", "“", "<A-[>", { remap = true, desc = "AI: Previous suggestion (macOS alias)" })
             -- Documents built-in keymap
             require("which-key").add({
                 { "<Tab>", desc = "AI: Accept suggestion (copilot.vim)", mode = "i" },
@@ -62,9 +59,6 @@ return {
                 vim.keymap.set("i", "<S-Tab>", suggestion.accept_line, {
                     desc = "AI: Accept line suggestion (copilot.lua)",
                 })
-                -- macOS specific aliases
-                vim.keymap.set("i", "‘", "<A-]>", { remap = true, desc = "AI: Next suggestion (macOS alias)" })
-                vim.keymap.set("i", "“", "<A-[>", { remap = true, desc = "AI: Previous suggestion (macOS alias)" })
                 -- Documents built-in keymap
                 require("which-key").add({
                     { "<Tab>", desc = "AI: Accept suggestion (copilot.lua)", mode = "i" },

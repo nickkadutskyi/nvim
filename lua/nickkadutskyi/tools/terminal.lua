@@ -197,7 +197,6 @@ return {
                     -- Create new terminal tab
                     for lhs, mode in pairs({
                         ["<A-t>"] = { "n", "t" },
-                        ["†"] = { "n", "t" },
                     }) do
                         vim.keymap.set(mode, lhs, function()
                             terms.get(terms.get_focused_id()):close()
@@ -227,7 +226,6 @@ return {
                     -- Close terminal
                     for lhs, mode in pairs({
                         ["<A-w>"] = { "n", "t" },
-                        -- ["∑"] = { "n", "t" },
                     }) do
                         vim.keymap.set(mode, lhs, function()
                             local to_close = terms.get(terms.get_focused_id())
