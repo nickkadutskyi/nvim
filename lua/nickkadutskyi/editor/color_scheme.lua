@@ -32,6 +32,8 @@ return {
                 "gitignore",
                 "html",
                 "http",
+                "markdown",
+                "markdown_inline",
                 "regex",
                 "scss",
                 "sql",

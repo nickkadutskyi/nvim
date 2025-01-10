@@ -7,6 +7,7 @@ return {
                 stylelint_lsp = {},
                 somesass_ls = { mason = true },
                 cssls = {},
+                css_variables = { mason = true },
             },
         },
     },
