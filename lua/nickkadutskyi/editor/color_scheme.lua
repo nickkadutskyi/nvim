@@ -12,9 +12,6 @@ return {
         opts = {},
         dev = true,
         config = function()
-            require("jb").setup({
-                transparent = false,
-            })
             vim.cmd("colorscheme jb")
         end,
     },
