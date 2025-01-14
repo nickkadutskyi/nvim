@@ -12,6 +12,9 @@ return {
         opts = {},
         dev = true,
         config = function()
+            require("jb").setup({
+                transparent = false,
+            })
             vim.cmd("colorscheme jb")
         end,
     },
@@ -29,8 +32,8 @@ return {
                 "cpp",
                 "css",
                 "doxygen",
+                "editorconfig",
                 "gitignore",
-                "html",
                 "http",
                 "markdown",
                 "markdown_inline",
