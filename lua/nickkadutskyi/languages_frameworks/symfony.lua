@@ -1,17 +1,11 @@
 ---@type LazySpec
 return {
-    {
-        -- Better highlighting
+    { -- Color Scheme
         "nvim-treesitter",
         opts = function(_, opts)
             vim.list_extend(opts.ensure_installed, {
-                "json",
+                "twig",
             })
         end,
     },
-    { "nvim-lspconfig", opts = {
-        servers = {
-            ["jsonls"] = {},
-        },
-    } },
 }
