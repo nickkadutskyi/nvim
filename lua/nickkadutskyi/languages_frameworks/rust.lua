@@ -4,7 +4,7 @@ return {
         "nvim-treesitter",
         opts = function(_, opts)
             vim.list_extend(opts.ensure_installed, {
-                "python",
+                "rust",
             })
         end,
     },
@@ -12,7 +12,7 @@ return {
         "conform.nvim",
         opts = {
             formatters_by_ft = {
-                python = { "isort", "black" },
+                rust = { "rustfmt", lsp_format = "fallback" },
             },
         },
     },
@@ -20,8 +20,7 @@ return {
         "nvim-lspconfig",
         opts = {
             servers = {
-                pylsp = {},
-                pyright = {},
+                rust_analyzer = {},
             },
         },
     },
@@ -29,7 +28,7 @@ return {
         "nvim-lint",
         opts = {
             linters_by_ft = {
-                python = { "ruff", "flake8", "pylint" },
+                rust = { "clippy" },
             },
         },
     },
