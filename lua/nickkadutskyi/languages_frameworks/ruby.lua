@@ -16,17 +16,6 @@ return {
             },
         },
     },
-    { -- Language Servers
-        "nvim-lspconfig",
-        opts = {
-            servers = {
-                ruby_lsp = {},
-                standardrb = {}, -- as linter
-                rubocop = {}, -- as linter
-                solargraph = {},
-            },
-        },
-    },
     { -- Quality Tools (moved to LSP)
         -- "nvim-lint",
         -- opts = {
@@ -34,5 +23,16 @@ return {
         --         ruby = { "RuboCop", "StandardRB" },
         --     },
         -- },
+    },
+    { -- Language Servers
+        "nvim-lspconfig",
+        opts = {
+            servers = {
+                rubocop = {}, -- as linter
+                ruby_lsp = {},
+                solargraph = {},
+                standardrb = {}, -- as linter
+            },
+        },
     },
 }

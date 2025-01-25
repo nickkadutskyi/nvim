@@ -9,7 +9,7 @@ return {
         end,
     },
     { -- Code Style
-        "stevearc/conform.nvim",
+        "conform.nvim",
         opts = {
             formatters_by_ft = {
                 toml = { "taplo" },

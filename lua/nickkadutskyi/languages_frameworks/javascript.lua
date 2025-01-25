@@ -13,7 +13,7 @@ return {
     { "nvim-lspconfig", opts = { servers = {} } },
     {
         -- Formatting
-        "stevearc/conform.nvim",
+        "conform.nvim",
         opts = {
             formatters_by_ft = {
                 javascript = { "prettierd", "prettier" },
