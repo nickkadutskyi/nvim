@@ -1,4 +1,20 @@
 return {
+    { -- Color Scheme
+        "nvim-treesitter",
+        opts = function(_, opts)
+            vim.list_extend(opts.ensure_installed, {
+                "gitignore",
+            })
+        end,
+    },
+    { -- Quality Tools (moved to LSP)
+        "nvim-lint",
+        opts = {
+            linters_by_ft = {
+                gitcommit = { "gitlint" },
+            },
+        },
+    },
     {
         -- Git integration
         "NeogitOrg/neogit",
@@ -262,22 +278,22 @@ return {
                 end
 
                 -- Navigation
-                map('n', ']c', function()
-                  if vim.wo.diff then
-                    vim.cmd.normal({ ']c', bang = true })
-                  else
-                    gitsigns.nav_hunk('next')
-                  end
+                map("n", "]c", function()
+                    if vim.wo.diff then
+                        vim.cmd.normal({ "]c", bang = true })
+                    else
+                        gitsigns.nav_hunk("next")
+                    end
                 end)
                 --
                 --
 
-                map('n', '[c', function()
-                  if vim.wo.diff then
-                    vim.cmd.normal({ '[c', bang = true })
-                  else
-                    gitsigns.nav_hunk('prev')
-                  end
+                map("n", "[c", function()
+                    if vim.wo.diff then
+                        vim.cmd.normal({ "[c", bang = true })
+                    else
+                        gitsigns.nav_hunk("prev")
+                    end
                 end)
 
                 -- Actions
