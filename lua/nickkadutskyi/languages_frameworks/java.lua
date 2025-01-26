@@ -12,7 +12,9 @@ return {
         "nvim-lspconfig",
         opts = {
             servers = {
-                java_language_server = {},
+                java_language_server = {
+                    cmd = { "java-language-server" },
+                },
             },
         },
     },

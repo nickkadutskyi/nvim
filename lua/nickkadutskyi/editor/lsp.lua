@@ -76,7 +76,7 @@ return {
                 if has_lspconfig then
                     server_opts = server_opts == true and {} or server_opts
                     if server_opts and server_opts.enabled ~= false then
-                        local cmd = lspconfig.default_config.cmd
+                        local cmd = server_opts.cmd or lspconfig.default_config.cmd
                         if cmd and type(cmd) == "table" and not vim.tbl_isempty(cmd) then
                             local cmd_path = vim.fn.exepath(cmd[1])
                             if
