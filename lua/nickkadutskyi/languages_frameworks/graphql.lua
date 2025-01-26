@@ -13,7 +13,7 @@ return {
         "nvim-lspconfig",
         opts = {
             servers = {
-                graphql = {},
+                graphql = { mason = true },
             },
         },
     },
