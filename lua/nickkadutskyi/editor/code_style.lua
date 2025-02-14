@@ -76,7 +76,7 @@ return {
             end
 
             -- Keymap
-            vim.keymap.set("n", "<leader>rc", require("conform").format, {
+            vim.keymap.set({ "n", "v" }, "<leader>rc", require("conform").format, {
                 desc = "Code: [r]eformat [c]ode",
             })
         end,
