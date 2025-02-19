@@ -95,7 +95,7 @@ return {
         ---@type wk.Opts
         opts = {
             spec = {
-                -- Provides Keymap Groups: [Leader|None] > [Action] > [Modifier|None] > [Object]
+                -- Provides Keymap Groups: [Leader|LocalLeader|None] > [Action] > [Modifier|None] > [Object]
                 {
                     "<Leader>",
                     group = "Leader",
@@ -127,10 +127,12 @@ return {
                     {
                         "<localleader>a",
                         group = "[a]ctivate",
+                        mode = { "v", "n" },
 
                         { "<localleader>?", group = "[?]which-key help" },
                         { "<localleader>av", group = "[v]ersion control" },
                     },
+                    { "<localleader>e", group = "[e]dit", mode = { "v", "n" } },
                 },
                 { "]", group = "[n]ext" },
                 { "[", group = "[p]rev" },
