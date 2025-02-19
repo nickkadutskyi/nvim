@@ -20,7 +20,7 @@ return {
             local fzf = require("fzf-lua")
             local actions = require("fzf-lua.actions")
             fzf.setup({
-                "telescope", -- Sets telescope profile for look and feel
+                { "telescope", "hide" },
                 winopts = {
                     title_pos = "center",
                     height = 25, -- window height
@@ -34,9 +34,13 @@ return {
                     border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
                 },
                 actions = {
+                    -- Pickers inheriting these actions:
+                    --   files, git_files, git_status, grep, lsp, oldfiles, quickfix, loclist,
+                    --   tags, btags, args, buffers, tabs, lines, blines
                     files = {
                         -- ["enter"] = actions.file_switch_or_edit,
                         ["enter"] = function(selected, opts)
+                            -- Switch to a normal buffer if current buffer is not a normal buffer
                             local curr_bufnr = vim.api.nvim_get_current_buf()
                             local curr_winid = vim.api.nvim_get_current_win()
                             local bufnr, winid = utils.get_win_with_normal_buffer(curr_bufnr)
@@ -50,6 +54,9 @@ return {
                             end)
                             -- actions.file_edit_or_qf(selected, opts)
                         end,
+                        ["ctrl-i"] = actions.toggle_ignore,
+                        ["ctrl-h"] = actions.toggle_hidden,
+                        ["ctrl-f"] = actions.toggle_follow,
                     },
                 },
                 fzf_colors = true,
@@ -103,16 +110,18 @@ return {
                     },
                 },
             })
-            -- Go to file
 
+            -- Go to file
             vim.keymap.set("n", "<leader>gf", function()
                 -- fzf.files({ resume = true })
                 fzf.files()
             end, { noremap = true, desc = "[g]o to [f]ile" })
+
             -- Find in path
             vim.keymap.set("n", "<leader>fp", function()
                 fzf.live_grep({ resume = true })
             end, { noremap = true, desc = "[f]ind in [p]ath" })
+
             -- Go to buffer (Similar to Switcher in Intellij)
             vim.keymap.set("n", "<leader>gb", fzf.buffers, { noremap = true, desc = "[g]o to [b]uffer" })
             -- Go to git status
