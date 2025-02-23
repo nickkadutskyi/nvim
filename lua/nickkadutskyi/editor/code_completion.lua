@@ -56,9 +56,9 @@ return {
                         if n == "nvim_lsp" then
                             label = "[lsp]"
                         elseif n == "nvim_lua" then
-                            label = "[nvim]"
+                            label = "[nvm]"
                         elseif n == "copilot" then
-                            label = "[ai]"
+                            label = "[llm]"
                         else
                             label = string.format("[%s]", n)
                         end
@@ -73,9 +73,11 @@ return {
                 },
                 window = {
                     completion = cmp.config.window.bordered({
-                        winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+                        winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
                     }),
-                    documentation = cmp.config.window.bordered(),
+                    documentation = cmp.config.window.bordered({
+                        winhighlight = "Normal:Pmenu,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+                    }),
                 },
                 mapping = cmp.mapping.preset.insert({
                     ["<Down>"] = function(fallback)
