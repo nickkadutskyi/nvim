@@ -34,6 +34,7 @@ return {
                     else
                         if #nix_path ~= 0 then
                             lint.linters[linter_name].fts = lint.linters[linter_name].fts or {}
+                            lint.linters[linter_name].cmd = binary
                             table.insert(lint.linters[linter_name].fts, ft)
                             table.insert(install_via_nix, linter_name)
                         end
