@@ -26,7 +26,9 @@ return {
             lint.linters_by_ft = {}
             for ft, linters in pairs(opts.linters_by_ft) do
                 for _, linter_name in ipairs(linters) do
-                    if vim.fn.executable(lint.linters[linter_name].cmd) == 1 then
+                    local cmd = lint.linters[linter_name].cmd
+                    local binary = type(cmd) == "function" and cmd() or cmd
+                    if vim.fn.executable(binary) == 1 then
                         lint.linters_by_ft[ft] = lint.linters_by_ft[ft] or {}
                         table.insert(lint.linters_by_ft[ft], linter_name)
                     else
