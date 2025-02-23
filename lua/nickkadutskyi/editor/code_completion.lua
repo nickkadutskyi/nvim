@@ -26,6 +26,17 @@ return {
             local cmp = require("cmp")
             local cmp_select = { behavior = cmp.SelectBehavior.Select }
             cmp.setup({
+                view = {
+                    entries = {
+                        -- name = "native",
+                        name = "custom",
+                        -- selection_order = "top_down",
+                        follow_cursor = false,
+                    },
+                    docs = {
+                        auto_open = true,
+                    },
+                },
                 preselect = cmp.PreselectMode.Item,
                 snippet = {
                     expand = function(args)
@@ -43,9 +54,11 @@ return {
                         local label = ""
 
                         if n == "nvim_lsp" then
-                            label = "[LSP]"
+                            label = "[lsp]"
                         elseif n == "nvim_lua" then
                             label = "[nvim]"
+                        elseif n == "copilot" then
+                            label = "[ai]"
                         else
                             label = string.format("[%s]", n)
                         end
@@ -59,7 +72,9 @@ return {
                     end,
                 },
                 window = {
-                    completion = cmp.config.window.bordered(),
+                    completion = cmp.config.window.bordered({
+                        winhighlight = "Normal:Normal,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
+                    }),
                     documentation = cmp.config.window.bordered(),
                 },
                 mapping = cmp.mapping.preset.insert({
