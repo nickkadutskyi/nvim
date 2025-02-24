@@ -212,7 +212,7 @@ return {
         config = function()
             require("avante_lib").load()
             require("avante").setup({
-                provider = "copilot",
+                provider = "claude",
                 copilot = {
                     endpoint = "https://api.githubcopilot.com/",
                     -- model = "o1",
