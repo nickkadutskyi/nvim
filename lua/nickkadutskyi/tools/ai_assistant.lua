@@ -10,7 +10,7 @@ return {
             require("copilot").setup({
                 panel = { enabled = false }, -- disabled to use only in completion dialog
                 suggestion = {
-                    enabled = false, -- disabled to use only in completion dialog
+                    enabled = true, -- disabled to use only in completion dialog
                     auto_trigger = true,
                     keymap = {
                         accept = "<Tab>",

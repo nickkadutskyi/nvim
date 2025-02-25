@@ -146,7 +146,7 @@ return {
                             },
                             priority = 500,
                         },
-                        { name = "copilot", priority = 100 },
+                        -- { name = "copilot", priority = 100 },
                         -- { name = "supermaven" }, -- disabled to keep it as ghost text only
                     },
                     -- Group 2
