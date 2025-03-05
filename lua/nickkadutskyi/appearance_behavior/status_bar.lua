@@ -70,6 +70,7 @@ return {
                                     local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
                                     local line_count = vim.api.nvim_buf_line_count(buf)
                                     local cwd = vim.fn.getcwd()
+                                    local filename_resolved = vim.fn.resolve(filename)
 
                                     -- Skip special buffers and the initial empty unmodified buffer
                                     if
@@ -78,7 +79,7 @@ return {
                                         and filetype ~= "NvimTree"
                                         and filetype ~= "fzf"
                                         and filetype ~= "netrw"
-                                        and not (filename == cwd and not is_modified and line_count <= 1)
+                                        and not (filename_resolved == cwd and not is_modified and line_count <= 1)
                                     then
                                         total_buffers = total_buffers + 1
                                         if is_modified then
