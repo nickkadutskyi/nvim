@@ -1,3 +1,4 @@
+local buffer_modified_count = 0
 return {
     -- TODO Add git status to status bar like this one https://gittoolbox.lukasz-zielinski.com/docs/git-status-display/
     { -- Status bar controller
@@ -52,9 +53,69 @@ return {
                         end,
                     },
                     "branch",
-                    -- "diff",
+                    {
+                        function()
+                            local unsaved = 0
+                            local new_unsaved = 0
+                            local new_buffers = 0
+                            local total_buffers = 0
+
+                            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                                if
+                                    vim.api.nvim_buf_is_loaded(buf)
+                                    and vim.api.nvim_get_option_value("buflisted", { buf = buf })
+                                then
+                                    local is_modified = vim.api.nvim_get_option_value("modified", { buf = buf })
+                                    local filename = vim.api.nvim_buf_get_name(buf)
+                                    local filetype = vim.api.nvim_get_option_value("filetype", { buf = buf })
+                                    local line_count = vim.api.nvim_buf_line_count(buf)
+                                    local cwd = vim.fn.getcwd()
+
+                                    -- Skip special buffers and the initial empty unmodified buffer
+                                    if
+                                        filetype ~= "qf"
+                                        and filetype ~= "help"
+                                        and filetype ~= "NvimTree"
+                                        and filetype ~= "fzf"
+                                        and filetype ~= "netrw"
+                                        and not (filename == cwd and not is_modified and line_count <= 1)
+                                    then
+                                        total_buffers = total_buffers + 1
+                                        if is_modified then
+                                            if filename == "" then
+                                                -- Unnamed buffer that's been modified
+                                                new_unsaved = new_unsaved + 1
+                                            else
+                                                -- Existing file with unsaved changes
+                                                unsaved = unsaved + 1
+                                            end
+                                        elseif filename ~= "" and not vim.loop.fs_stat(filename) then
+                                            -- Buffer has a name but file doesn't exist on disk yet
+                                            new_buffers = new_buffers + 1
+                                        end
+                                    end
+                                end
+                            end
+
+                            buffer_modified_count = unsaved + new_unsaved + new_buffers
+                            -- return modified_count > 0 and "󰽃 " .. modified_count .. "/" .. total_buffers or ""
+                            return (buffer_modified_count > 0 and "󰽃 " or "󱣫 ")
+                                .. buffer_modified_count
+                                .. "/"
+                                .. total_buffers
+                        end,
+                        color = function()
+                            -- Red color for better visibility
+                            return buffer_modified_count > 0 and { fg = "#f7768e" } or {}
+                        end,
+                        cond = function()
+                            -- Always show the buffer count
+                            return true
+                        end,
+                    },
                 },
                 lualine_c = {
+                    -- "diff",
                     {
                         "filetype",
                         padding = { left = 1, right = 0 },
