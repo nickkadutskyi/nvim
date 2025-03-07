@@ -6,6 +6,7 @@ local defaultDeclaration = {
 M.default = {
     copilot_allowed_paths = {
         "~/Developer",
+        "~/.config/nvim",
     },
 }
 
