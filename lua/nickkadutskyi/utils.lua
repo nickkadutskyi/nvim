@@ -163,7 +163,7 @@ function M.add_cwd_to_copilot_workspace_folders()
     local cwd = vim.fn.getcwd()
     if M.is_path_in_paths(cwd, defaults.copilot_allowed_paths) then
         M.add_to_global_list(cwd, "copilot_workspace_folders")
-    else
+    elseif not M.is_path_in_paths(cwd, defaults.copilot_not_allowed_paths) then
         vim.notify(
             "Current directory (" .. cwd .. ") is not in the allowed paths for Copilot",
             vim.log.levels.WARN,

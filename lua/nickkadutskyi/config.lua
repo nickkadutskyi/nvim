@@ -8,6 +8,9 @@ M.default = {
         "~/Developer",
         "~/.config/nvim",
     },
+    copilot_not_allowed_paths = {
+        "~/Library/Mobidle Documents",
+    },
 }
 
 setmetatable(M.default, {
