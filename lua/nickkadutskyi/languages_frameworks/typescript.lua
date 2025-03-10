@@ -24,7 +24,7 @@ return {
             return vim.tbl_deep_extend("force", opts, {
                 formatters_by_ft = {
                     typescript = {
-                        "eslint_d",
+                        "prettierd",
                     },
                 },
             })
