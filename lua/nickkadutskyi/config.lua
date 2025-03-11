@@ -7,6 +7,7 @@ M.default = {
     copilot_allowed_paths = {
         "~/Developer",
         "~/.config/nvim",
+        "~/.config/nixos-config/",
     },
     copilot_not_allowed_paths = {
         "~/Library/Mobidle Documents",
