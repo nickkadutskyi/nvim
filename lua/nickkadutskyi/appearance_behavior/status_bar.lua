@@ -101,7 +101,7 @@ return {
                             buffer_modified_count = unsaved + new_unsaved + new_buffers
                             -- return modified_count > 0 and "󰽃 " .. modified_count .. "/" .. total_buffers or ""
                             return (buffer_modified_count > 0 and "󰽃 " or "󱣫 ")
-                                -- .. buffer_modified_count
+                                .. buffer_modified_count
                                 -- .. "/"
                                 -- .. total_buffers
                         end,
