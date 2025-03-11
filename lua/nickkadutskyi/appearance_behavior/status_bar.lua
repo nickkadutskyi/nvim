@@ -55,22 +55,37 @@ return {
                     {
                         "gitstatus",
                         sections = {
-                            { "conflicted", format = "{}!" },
-                            { "staged", format = "{}=" },
-                            { "untracked", format = "{}+" },
+                            {
+                                function(status)
+                                    if status.is_dirty or status.staged > 0 then
+                                        return "Δ"
+                                    else
+                                        return "∅"
+                                    end
+                                end,
+                            },
+                            { "conflicted", format = " {}!" },
+                            { "staged", format = " {}=" },
+                            { "untracked", format = " {}+" },
 
-                            { "modified", format = "{}*" },
-                            { "renamed", format = "{}~" },
-                            { "deleted", format = "{}-" },
+                            { "modified", format = " {}*" },
+                            { "renamed", format = " {}~" },
+                            { "deleted", format = " {}-" },
 
+                            {
+                                function(status)
+                                    if status.is_dirty or status.staged > 0 then
+                                        return "/"
+                                    else
+                                        return ""
+                                    end
+                                end,
+                            },
                             { "ahead", format = "{}↑" },
                             { "behind", format = "{}↓" },
-                            { "up_to_date_and_clean", format = "∅" },
                             { "up_to_date", format = "up-to-date" },
-
-
                         },
-                        sep = " ",
+                        sep = "",
                     },
                 },
                 lualine_c = {
