@@ -60,7 +60,7 @@ return {
                                     if status.is_dirty or status.staged > 0 then
                                         return "Δ"
                                     else
-                                        return "∅"
+                                        return "∅ "
                                     end
                                 end,
                             },
