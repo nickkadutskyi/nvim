@@ -60,7 +60,7 @@ return {
                                     if status.is_dirty or status.staged > 0 then
                                         return "Δ"
                                     else
-                                        return "∅ "
+                                        return "∅"
                                     end
                                 end,
                             },
@@ -77,11 +77,11 @@ return {
                                     if status.is_dirty or status.staged > 0 then
                                         return "/"
                                     else
-                                        return ""
+                                        return " "
                                     end
                                 end,
                             },
-                            { "ahead", format = "{}↑" },
+                            { "ahead", format = "{}↑ " },
                             { "behind", format = "{}↓" },
                             { "up_to_date", format = "up-to-date" },
                         },
