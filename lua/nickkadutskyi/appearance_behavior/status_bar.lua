@@ -55,11 +55,6 @@ return {
                     {
                         "gitstatus",
                         sections = {
-                            { "ahead", format = "{}↑" },
-                            { "behind", format = "{}↓" },
-                            { "up_to_date_and_clean", format = "󱃓" },
-                            { "up_to_date", format = "up-to-date" },
-
                             { "conflicted", format = "{}!" },
                             { "staged", format = "{}=" },
                             { "untracked", format = "{}+" },
@@ -67,6 +62,13 @@ return {
                             { "modified", format = "{}*" },
                             { "renamed", format = "{}~" },
                             { "deleted", format = "{}-" },
+
+                            { "ahead", format = "{}↑" },
+                            { "behind", format = "{}↓" },
+                            { "up_to_date_and_clean", format = "∅" },
+                            { "up_to_date", format = "up-to-date" },
+
+
                         },
                         sep = " ",
                     },
