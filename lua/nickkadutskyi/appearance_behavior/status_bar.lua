@@ -81,7 +81,7 @@ return {
                                     end
                                 end,
                             },
-                            { "ahead", format = "{}↑ " },
+                            { "ahead", format = "{}↑" },
                             { "behind", format = "{}↓" },
                             { "up_to_date", format = "up-to-date" },
                         },
