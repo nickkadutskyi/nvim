@@ -18,22 +18,13 @@ return {
             },
         },
     },
-    {
-        -- Formatting
-        "conform.nvim",
-        opts = {
-            formatters_by_ft = {
-                javascript = { "prettierd", "prettier" },
-            },
-        },
-    },
     { -- Code Style
         "conform.nvim",
         opts = function(_, opts)
             return vim.tbl_deep_extend("force", opts, {
                 formatters_by_ft = {
                     javascript = {
-                        "eslint_d",
+                        "prettierd",
                     },
                 },
             })
