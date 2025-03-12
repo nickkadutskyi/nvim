@@ -139,13 +139,25 @@ return {
                             },
                             {
                                 function(status)
-                                    return status.ahead .. "↑"
+                                    return status.ahead == 0 and "0↑" or false
                                 end,
                             },
                             {
                                 function(status)
-                                    return status.behind .. "↓"
+                                    return status.behind == 0 and "0↓" or false
                                 end,
+                            },
+                            {
+                                function(status)
+                                    return status.ahead > 0 and status.ahead .. "↑" or false
+                                end,
+                                hl = "CustomBold",
+                            },
+                            {
+                                function(status)
+                                    return status.behind > 0 and status.behind .. "↓" or false
+                                end,
+                                hl = "CustomBold",
                             },
                             -- { "ahead", format = "{}↑" },
                             -- { "behind", format = "{}↓" },
