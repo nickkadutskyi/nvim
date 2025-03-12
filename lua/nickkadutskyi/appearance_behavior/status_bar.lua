@@ -137,10 +137,20 @@ return {
                                     end
                                 end,
                             },
-                            { "ahead", format = "{}↑" },
-                            { "behind", format = "{}↓" },
+                            {
+                                function(status)
+                                    return status.ahead .. "↑"
+                                end,
+                            },
+                            {
+                                function(status)
+                                    return status.behind .. "↓"
+                                end,
+                            },
+                            -- { "ahead", format = "{}↑" },
+                            -- { "behind", format = "{}↓" },
                             -- { "up_to_date", format = "up-to-date" },
-                            { "up_to_date", format = "↑0↓0" },
+                            -- { "up_to_date", format = "↑0↓0" },
                         },
                         sep = "",
                     },
