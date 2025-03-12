@@ -327,6 +327,16 @@ return {
     {
         "abccsss/nvim-gitstatus",
         event = "VeryLazy",
-        config = true,
+        opts = {
+            --- Interval to automatically run `git fetch`, in milliseconds.
+            --- Set to `false` to disable auto fetch.
+            auto_fetch_interval = os.getenv("NO1P") == "1" and 30000 or false,
+
+            --- Timeout in milliseconds for `git status` to complete before it is killed.
+            git_status_timeout = 1000,
+
+            --- Whether to show debug messages.
+            debug = false,
+        },
     },
 }
