@@ -144,20 +144,20 @@ return {
                             },
                             {
                                 function(status)
+                                    return status.ahead > 0 and status.ahead .. "↑" or false
+                                end,
+                                hl = "General_Text_DefaultTextFg",
+                            },
+                            {
+                                function(status)
                                     return status.behind == 0 and "0↓" or false
                                 end,
                             },
                             {
                                 function(status)
-                                    return status.ahead > 0 and status.ahead .. "↑" or false
-                                end,
-                                hl = "CustomBold",
-                            },
-                            {
-                                function(status)
                                     return status.behind > 0 and status.behind .. "↓" or false
                                 end,
-                                hl = "CustomBold",
+                                hl = "General_Text_DefaultTextFg",
                             },
                             -- { "ahead", format = "{}↑" },
                             -- { "behind", format = "{}↓" },
