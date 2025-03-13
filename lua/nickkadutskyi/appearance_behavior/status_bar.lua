@@ -130,21 +130,12 @@ return {
 
                             {
                                 function(status)
-                                    if status.is_dirty or status.staged > 0 then
-                                        return "/"
-                                    else
-                                        return " "
-                                    end
+                                    return status.ahead == 0 and " 0↑" or false
                                 end,
                             },
                             {
                                 function(status)
-                                    return status.ahead == 0 and "0↑" or false
-                                end,
-                            },
-                            {
-                                function(status)
-                                    return status.ahead > 0 and status.ahead .. "↑" or false
+                                    return status.ahead > 0 and " " .. status.ahead .. "↑" or false
                                 end,
                                 hl = "General_Text_DefaultTextFg",
                             },
