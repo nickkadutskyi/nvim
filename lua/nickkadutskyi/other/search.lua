@@ -20,7 +20,7 @@ return {
             local fzf = require("fzf-lua")
             local actions = require("fzf-lua.actions")
             fzf.setup({
-                { "telescope", "hide" },
+                { "telescope" },
                 winopts = {
                     title_pos = "center",
                     height = 25, -- window height
