@@ -62,7 +62,6 @@ return {
                 fzf_colors = true,
                 fzf_opts = {
                     ["--layout"] = "reverse",
-                    ["--border"] = "top",
                 },
                 defaults = {
                     winopts = {

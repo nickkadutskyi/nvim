@@ -125,4 +125,33 @@ return {
             },
         },
     },
+    {
+        "folke/snacks.nvim",
+        priority = 1000,
+        lazy = false,
+        config = function()
+            local snacks = require("snacks")
+            ---@type snacks.Config
+            snacks.setup({
+                -- TODO: remove when styled in jb.nvim
+                explorer = {
+                    enabled = true,
+                    replace_netrw = false,
+                },
+                picker = {
+                    sources = {
+                        ---@type snacks.picker.explorer.Config|{}
+                        explorer = {
+                            auto_close = true,
+                        },
+                    },
+                },
+            })
+            vim.keymap.set("n", "<leader>ae", function()
+                snacks.explorer()
+            end, {
+                desc = "Project: [a]ctivate [e]xplorer () tool window.",
+            })
+        end,
+    },
 }

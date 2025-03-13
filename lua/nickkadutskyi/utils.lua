@@ -255,7 +255,7 @@ function M.create_tool_window(
         height = vim.o.lines - (vim.o.cmdheight + 3),
         row = 0,
         col = col,
-        zindex = 10,
+        zindex = 100,
         style = "minimal",
         border = border,
         title = title,
