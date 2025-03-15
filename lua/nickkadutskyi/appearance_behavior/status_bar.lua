@@ -7,7 +7,7 @@ local function count_modified_buffers()
     local total_buffers = 0
     for _, buffer in ipairs(buffersUnfiltered) do
         -- ensure only listed and loaded buffers are counted
-        if vim.fn.buflisted(buffer) == 1 and vim.api.nvim_buf_is_loaded(buffer) then
+        if vim.api.nvim_get_option_value("buflisted", { buf = buffer }) and vim.api.nvim_buf_is_loaded(buffer) then
             local is_modified = vim.api.nvim_get_option_value("modified", { buf = buffer })
             local line_count = vim.api.nvim_buf_line_count(buffer)
             local filename = vim.api.nvim_buf_get_name(buffer)
