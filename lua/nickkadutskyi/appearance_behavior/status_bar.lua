@@ -130,7 +130,7 @@ return {
 
                             {
                                 function(status)
-                                    return status.ahead == 0 and " 0↑" or false
+                                    return status.ahead == 0 and " ·↑" or false
                                 end,
                             },
                             {
@@ -141,7 +141,7 @@ return {
                             },
                             {
                                 function(status)
-                                    return status.behind == 0 and "0↓" or false
+                                    return status.behind == 0 and "·↓" or false
                                 end,
                             },
                             {
