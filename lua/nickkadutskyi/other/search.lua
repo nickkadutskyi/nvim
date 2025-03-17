@@ -84,7 +84,8 @@ return {
                     },
                     prompt = "  ",
                     -- formatter = "path.filename_first"
-                    formatter = "path.dirname_first",
+                    -- formatter = "path.dirname_first",
+                    formatter = { "path.filename_first", 2 },
                 },
                 buffers = {
                     winopts = { title = " Switcher ", title_pos = "center" },
@@ -93,7 +94,7 @@ return {
                 grep = {
                     -- Sets rg to use symlinked config file with proper colors (auto-updated on system theme change)
                     cmd = "RIPGREP_CONFIG_PATH='/Users/nick/.config/ripgrep/.ripgreprc' "
-                        .. "rg --column --line-number --no-heading --color=always --smart-case --max-columns=4096 -e",
+                        .. "rg --trim --column --line-number --no-heading --color=always --smart-case --max-columns=4096 -e",
                     winopts = {
                         title = " Find in Files ",
                         title_pos = "center",
@@ -103,7 +104,8 @@ return {
                     },
                     prompt = "  ",
                     previewer = "builtin",
-                    formatter = "path.dirname_first",
+                    -- formatter = "path.dirname_first",
+                    formatter = "path.filename_first",
                 },
                 previewers = {
                     builtin = {
