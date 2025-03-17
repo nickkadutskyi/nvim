@@ -92,9 +92,6 @@ return {
                     prompt = "  ",
                 },
                 grep = {
-                    -- Sets rg to use symlinked config file with proper colors (auto-updated on system theme change)
-                    cmd = "RIPGREP_CONFIG_PATH='/Users/nick/.config/ripgrep/.ripgreprc' "
-                        .. "rg --trim --column --line-number --no-heading --color=always --smart-case --max-columns=4096 -e",
                     winopts = {
                         title = " Find in Files ",
                         title_pos = "center",
@@ -106,6 +103,7 @@ return {
                     previewer = "builtin",
                     -- formatter = "path.dirname_first",
                     formatter = "path.filename_first",
+                    RIPGREP_CONFIG_PATH = vim.env.RIPGREP_CONFIG_PATH
                 },
                 previewers = {
                     builtin = {
