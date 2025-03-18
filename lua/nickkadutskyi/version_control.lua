@@ -7,13 +7,29 @@ return {
             })
         end,
     },
-    { -- Quality Tools (moved to LSP)
+    { -- Quality Tools
         "nvim-lint",
-        opts = {
-            linters_by_ft = {
-                gitcommit = { "gitlint" },
-            },
-        },
+        opts = function()
+            local gitlint = require("lint").linters.gitlint
+
+            gitlint.args = gitlint.args or {}
+
+            vim.list_extend(gitlint.args, {
+                -- "--staged",
+                "--contrib",
+                "CT1",
+                "-c",
+                "CT1.types=fix,feat,chore,docs,style,refactor,perf,test,revert,ci,build,wip",
+                "--ignore",
+                "T5,B6",
+            })
+
+            return {
+                linters_by_ft = {
+                    gitcommit = { "gitlint" },
+                },
+            }
+        end,
     },
     {
         -- Git integration

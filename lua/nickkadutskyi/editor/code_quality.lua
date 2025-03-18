@@ -3,6 +3,7 @@ return {
     { -- Code Quality
         "mfussenegger/nvim-lint",
         event = { "BufReadPre", "BufNewFile" },
+        dependencies = { "stevearc/conform.nvim" },
         opts = { linters_by_ft = {}, linters = {} },
         config = function(_, opts)
             local lint = require("lint")

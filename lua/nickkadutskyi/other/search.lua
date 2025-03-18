@@ -101,8 +101,8 @@ return {
                     },
                     prompt = "  ",
                     previewer = "builtin",
-                    -- formatter = "path.dirname_first",
-                    formatter = "path.filename_first",
+                    formatter = "path.dirname_first",
+                    -- formatter = "path.filename_first",
                     RIPGREP_CONFIG_PATH = vim.env.RIPGREP_CONFIG_PATH
                 },
                 previewers = {

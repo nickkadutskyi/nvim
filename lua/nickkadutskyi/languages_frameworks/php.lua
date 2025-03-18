@@ -81,7 +81,6 @@ return {
     { -- Quality Tools
         "nvim-lint",
         event = { "BufReadPre", "BufNewFile" },
-        dependencies = { "stevearc/conform.nvim" },
         opts = function(_, opts) -- Configure in opts to run all configs for all languages
             local function get_executable(executable)
                 return require("nickkadutskyi.utils").find_executable({
