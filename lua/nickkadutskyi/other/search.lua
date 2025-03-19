@@ -118,13 +118,14 @@ return {
 
             -- Go to file
             vim.keymap.set("n", "<leader>gf", function()
-                -- fzf.files({ resume = true })
-                fzf.files()
+                fzf.files({ resume = true })
+                -- fzf.files()
             end, { noremap = true, desc = "[g]o to [f]ile" })
 
             -- Find in path
             vim.keymap.set("n", "<leader>fp", function()
                 fzf.live_grep({ resume = true })
+                -- fzf.live_grep()
             end, { noremap = true, desc = "[f]ind in [p]ath" })
 
             -- Go to buffer (Similar to Switcher in Intellij)
