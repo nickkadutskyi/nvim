@@ -12,7 +12,14 @@ return {
         opts = {},
         dev = true,
         config = function()
-            require("jb").setup({ transparent = true })
+            require("jb").setup({
+                transparent = true,
+                snacks = {
+                    explorer = {
+                        enabled = true,
+                    },
+                },
+            })
             vim.cmd("colorscheme jb")
         end,
     },
