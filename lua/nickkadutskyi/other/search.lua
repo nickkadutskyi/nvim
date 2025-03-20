@@ -6,6 +6,10 @@ vim.opt.smartcase = true
 -- Incremental search
 vim.opt.incsearch = true
 
+local last_go_to_file_time = 0
+local last_find_in_path_time = 0
+local resume_within_seconds = 60
+
 -- Lazy.nvim modules
 return {
     {
@@ -118,15 +122,25 @@ return {
 
             -- Go to file
             vim.keymap.set("n", "<leader>gf", function()
-                fzf.files({ resume = true })
-                -- fzf.files()
-            end, { noremap = true, desc = "[g]o to [f]ile" })
+                local curr_time = os.time()
+                if (curr_time - last_go_to_file_time) < resume_within_seconds then
+                    fzf.files({ resume = true })
+                else
+                    fzf.files()
+                end
+                last_go_to_file_time = curr_time
+            end, { noremap = true, desc = "Search: [g]o to [f]ile" })
 
             -- Find in path
             vim.keymap.set("n", "<leader>fp", function()
-                fzf.live_grep({ resume = true })
-                -- fzf.live_grep()
-            end, { noremap = true, desc = "[f]ind in [p]ath" })
+                local curr_time = os.time()
+                if (curr_time - last_find_in_path_time) < resume_within_seconds then
+                    fzf.live_grep({ resume = true })
+                else
+                    fzf.live_grep()
+                end
+                last_find_in_path_time = curr_time
+            end, { noremap = true, desc = "Search: [f]ind in [p]ath" })
 
             -- Go to buffer (Similar to Switcher in Intellij)
             vim.keymap.set("n", "<leader>gb", fzf.buffers, { noremap = true, desc = "[g]o to [b]uffer" })
