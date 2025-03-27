@@ -43,13 +43,11 @@ local function count_modified_buffers()
     buffer_modified_count = unsaved + new_unsaved + new_buffers
 end
 return {
-    -- TODO Add git status to status bar like this one https://gittoolbox.lukasz-zielinski.com/docs/git-status-display/
     { -- Status bar controller
         "nvim-lualine/lualine.nvim",
         dependencies = {
             "nvim-tree/nvim-web-devicons",
             "akinsho/toggleterm.nvim",
-            "arkav/lualine-lsp-progress",
             -- "ofseed/copilot-status.nvim",
             "AndreM222/copilot-lualine",
         },
@@ -223,7 +221,6 @@ return {
                     },
                 },
                 lualine_x = {
-                    { "lsp_progress" },
                     { "copilot" },
                     { "diagnostics" },
                     {
