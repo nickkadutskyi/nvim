@@ -19,6 +19,12 @@ return {
         opts = { highlight = true, color_correction = "dynamic" },
     },
     {
+        ---@class vim.lsp.ClientConfigPartial : vim.lsp.ClientConfig
+        ---@field cmd? string[]|fun(dispatchers: vim.lsp.rpc.Dispatchers): vim.lsp.rpc.PublicClient
+        ---@field nix_pkg? string
+
+        ---@class lspconfig.ConfigPartial : vim.lsp.ClientConfigPartial
+
         -- LSP config
         "neovim/nvim-lspconfig",
         event = { "BufReadPre", "BufNewFile" },
@@ -29,6 +35,7 @@ return {
             "hrsh7th/cmp-nvim-lsp",
         },
         config = function(plugin, opts)
+            ---@type table<string,lspconfig.ConfigPartial>
             local servers = opts.servers or {}
 
             -- Capabilities to provide to lspconfig

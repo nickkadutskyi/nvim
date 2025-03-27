@@ -12,6 +12,7 @@ return {
     { -- Language Servers
         "nvim-lspconfig",
         opts = {
+            ---@type table<string,lspconfig.ConfigPartial>
             servers = {
                 ["intelephense"] = {
                     init_options = {
