@@ -100,7 +100,7 @@ return {
                         "phpmd",
                         "phpstan",
                         -- Switched to Language Server
-                        "psalm",
+                        -- "psalm",
                     },
                 },
                 linters = {

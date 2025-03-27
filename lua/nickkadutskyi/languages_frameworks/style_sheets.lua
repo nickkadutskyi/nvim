@@ -5,9 +5,9 @@ return {
         opts = {
             servers = {
                 stylelint_lsp = {},
-                somesass_ls = { mason = true },
+                -- somesass_ls = { mason = true },
                 cssls = {},
-                css_variables = { mason = true },
+                -- css_variables = { mason = true },
             },
         },
     },
