@@ -50,7 +50,7 @@ return {
         dependencies = {
             "nvim-tree/nvim-web-devicons",
             "akinsho/toggleterm.nvim",
-            -- "ofseed/copilot-status.nvim",
+            "arkav/lualine-lsp-progress",
             "AndreM222/copilot-lualine",
         },
         opts = {
@@ -223,6 +223,7 @@ return {
                     },
                 },
                 lualine_x = {
+                    { "lsp_progress" },
                     { "copilot" },
                     { "diagnostics" },
                     {
