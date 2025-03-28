@@ -18,12 +18,14 @@ return {
                     init_options = {
                         licenceKey = vim.fn.expand("/run/secrets/php/intelephense_license"),
                     },
-                    intelephense = {
-                        telemetry = {
-                            enabled = false,
-                        },
-                        files = {
-                            maxSize = 1000000,
+                    settings = {
+                        intelephense = {
+                            telemetry = {
+                                enabled = false,
+                            },
+                            files = {
+                                maxSize = 1000000,
+                            },
                         },
                     },
                 },
