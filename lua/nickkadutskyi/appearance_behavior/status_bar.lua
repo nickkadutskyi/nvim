@@ -59,6 +59,7 @@ return {
             "chrisgrieser/nvim-recorder",
         },
         config = function()
+            local utils = require("lualine.utils.utils")
             local opts = {
                 options = {
                     globalstatus = true,
@@ -230,7 +231,12 @@ return {
                     },
                     lualine_x = {
                         { require("recorder").recordingStatus },
-                        { "lsp_progress" },
+                        {
+                            "lsp_progress",
+                            fmt = function(str)
+                                return utils.stl_escape(str)
+                            end,
+                        },
                         { "copilot" },
                         { "diagnostics" },
                         {
