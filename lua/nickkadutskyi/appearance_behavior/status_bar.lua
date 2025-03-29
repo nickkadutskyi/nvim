@@ -234,6 +234,7 @@ return {
                         {
                             "lsp_progress",
                             fmt = function(str)
+                                -- Should fix "E539: Illegal character <,>" error
                                 return utils.stl_escape(str)
                             end,
                         },
