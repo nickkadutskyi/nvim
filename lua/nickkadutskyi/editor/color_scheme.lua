@@ -13,12 +13,16 @@ return {
         dev = true,
         config = function()
             require("jb").setup({
-                transparent = true,
+                disable_hl_args = {
+                    bold = false,
+                    italic = false,
+                },
                 snacks = {
                     explorer = {
                         enabled = true,
                     },
                 },
+                transparent = true,
             })
             vim.cmd("colorscheme jb")
         end,
