@@ -15,6 +15,7 @@ return {
             ---@type table<string,lspconfig.ConfigPartial>
             servers = {
                 ["intelephense"] = {
+                    enabled = false, -- due to high CPU usage
                     init_options = {
                         licenceKey = vim.fn.expand("/run/secrets/php/intelephense_license"),
                     },
