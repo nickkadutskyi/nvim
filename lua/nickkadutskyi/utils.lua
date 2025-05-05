@@ -354,4 +354,93 @@ function M.create_tool_window(
 
     return bufnr, winid, winnr
 end
+
+---@return nil|"pure"|"impure"|"unknown"
+function M.nix_shell_type()
+    local nix_shell = os.getenv("IN_NIX_SHELL")
+    if nix_shell ~= nil then
+        return nix_shell
+    else
+        local path = os.getenv("PATH") or ""
+        if path:find("/nix/store", 1, true) then
+            return "unknown"
+        end
+    end
+    return nil
+end
+
+---@param nix_pkg string
+---@param callback fun(cmd: table, output: table)
+---@param flake string?
+function M.cmd_via_nix(nix_pkg, command, callback, flake)
+    flake = flake or "nixpkgs"
+    local cmd = {}
+    vim.system({ "nix", "path-info", "--impure", "--json", flake .. "#" .. nix_pkg }, { text = true }, function(o)
+        if o.code == 0 then
+            cmd = { "nix", "shell", "--impure", flake .. "#" .. nix_pkg, "--command", command }
+            vim.schedule(function()
+                callback(cmd, o)
+            end)
+        else
+            vim.notify(
+                string.format("Did't find `%s` nix package due: %s", nix_pkg, o.stderr),
+                vim.log.levels.WARN,
+                { title = "Nix cmd" }
+            )
+            cmd = { command }
+            callback(cmd, o)
+        end
+    end)
+end
+
+---@param commands table<string, string|function|string[]>
+---@param mason_mapping ?table<string, string>
+---@return string[], table<string, string>, table<string, string>, table<string, string>
+function M.handle_commands(commands, mason_mapping)
+    mason_mapping = mason_mapping or {}
+    local nix_path = vim.fn.exepath("nix")
+    local has_msettings, msettings = pcall(require, "mason.settings")
+    local mason_dir = nil
+    if has_msettings then
+        mason_dir = msettings.current.install_root_dir
+    end
+
+    local via_mason = {}
+    local via_nix = {}
+    local existing = {}
+    local ignored = {}
+
+    for name, command in pairs(commands) do
+        command = type(command) == "function" and command() or command
+        command = type(command) == "table" and command[1] or command
+        assert(type(command) == "string" and command ~= "", "Command must be a non-empty string")
+
+        local cmd_path = vim.fn.exepath(command --[[@as string]])
+
+        if mason_dir ~= nil and mason_mapping[name] ~= nil and string.find(cmd_path, mason_dir) ~= nil then
+            via_mason[#via_mason + 1] = name
+        elseif #cmd_path ~= 0 then
+            existing[name] = command
+        elseif #nix_path ~= 0 and M.nix_shell_type() == nil then
+            via_nix[name] = command
+        else
+            ignored[name] = command
+        end
+    end
+
+    return via_mason, via_nix, existing, ignored
+end
+
+--- Set up all language servers via this function
+---@param name string
+---@param cfg ?vim.lsp.ConfigLocal
+function M.lsp_setup(name, cfg)
+    cfg = cfg or {}
+
+    -- Per language server config may turn off the server
+    if cfg.enabled ~= false then
+        vim.lsp.config(name, cfg)
+        vim.lsp.enable(name)
+    end
+end
 return M

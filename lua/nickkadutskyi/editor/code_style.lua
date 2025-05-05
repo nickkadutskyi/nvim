@@ -41,6 +41,7 @@ return {
 
             -- If Nix is available then ensure at least one formatter for each filetype
             local nix_path = vim.fn.exepath("nix")
+
             if #nix_path ~= 0 then
                 for _, formatters in pairs(conform.formatters_by_ft) do
                     local cmd_formatter = nil
@@ -49,6 +50,7 @@ return {
                     do
                         local formatter_info = conform.get_formatter_info(formatter_name)
                         local formatter_config = conform.get_formatter_config(formatter_name)
+
                         if formatter_config ~= nil then
                             formatter_config.options = formatter_config.options or {}
                             if

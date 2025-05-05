@@ -9,9 +9,13 @@ return {
             })
         end,
     },
-    { "nvim-lspconfig", opts = {
-        servers = {
-            ["jsonls"] = {},
+    {
+        "nvim-lspconfig",
+        opts = {
+            ---@type table<string,vim.lsp.ConfigLocal>
+            servers = {
+                ["jsonls"] = {},
+            },
         },
-    } },
+    },
 }

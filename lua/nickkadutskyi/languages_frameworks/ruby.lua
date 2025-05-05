@@ -14,6 +14,13 @@ return {
             formatters_by_ft = {
                 ruby = { "standardrb", lsp_format = "fallback" },
             },
+            formatters = {
+                standardrb = {
+                    options = {
+                        nix_pkg = "rubyPackages.standard",
+                    },
+                },
+            },
         },
     },
     { -- Quality Tools (moved to LSP)
@@ -27,11 +34,14 @@ return {
     { -- Language Servers
         "nvim-lspconfig",
         opts = {
+            ---@type table<string,vim.lsp.ConfigLocal>
             servers = {
                 rubocop = {}, -- as linter
                 ruby_lsp = {},
                 solargraph = {},
-                standardrb = {}, -- as linter
+                standardrb = {
+                    nix_pkg = "rubyPackages.standard",
+                }, -- as linter
             },
         },
     },

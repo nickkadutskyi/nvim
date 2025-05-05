@@ -4,6 +4,7 @@ return {
     { -- Language Servers
         "nvim-lspconfig",
         opts = {
+            ---@type table<string,vim.lsp.Config>
             servers = {
                 ["emmet_ls"] = {
                     filetypes = {

@@ -12,7 +12,7 @@ return {
     { -- Language Servers
         "nvim-lspconfig",
         opts = {
-            ---@type table<string,lspconfig.ConfigPartial>
+            ---@type table<string,vim.lsp.ConfigLocal>
             servers = {
                 ["intelephense"] = {
                     enabled = false, -- due to high CPU usage
@@ -32,6 +32,7 @@ return {
                 },
                 ["phpactor"] = {
                     enabled = true,
+                    nix_pkg = "phpactor",
                 },
                 ["psalm"] = {
                     enabled = false, -- nix package throws runtime PHP error, use as CLI tool

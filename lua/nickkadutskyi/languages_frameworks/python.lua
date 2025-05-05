@@ -19,9 +19,14 @@ return {
     { -- Language Servers
         "nvim-lspconfig",
         opts = {
+            ---@type table<string,vim.lsp.ConfigLocal>
             servers = {
-                pylsp = {},
-                pyright = {},
+                pylsp = {
+                    nix_pkg = "python313Packages.python-lsp-server", -- pylsp
+                },
+                pyright = {
+                    nix_pkg = "pyright", -- pyright-langserver
+                },
             },
         },
     },
