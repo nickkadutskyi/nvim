@@ -97,7 +97,7 @@ return {
                 callback = function(event)
                     local bufnr = event.buf
 
-                    local opts = { buffer = event.buf, desc = "LSP: " }
+                    local keymap_opts = { buffer = event.buf, desc = "LSP: " }
                     local fzf = require("fzf-lua")
 
                     vim.keymap.set("n", "gd", function()
@@ -169,8 +169,8 @@ return {
 
                     -- vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, opts)
                     -- vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
-                    vim.keymap.set({ "i", "n" }, "<C-h>", vim.lsp.buf.signature_help, opts)
-                    vim.keymap.set("n", "<leader>clf", vim.lsp.buf.format, opts)
+                    vim.keymap.set({ "i", "n" }, "<C-h>", vim.lsp.buf.signature_help, keymap_opts)
+                    vim.keymap.set("n", "<leader>clf", vim.lsp.buf.format, keymap_opts)
 
                     -- Attach to nvim-navic to show current code context—used in status line
                     local client = vim.lsp.get_client_by_id(event.data.client_id)
