@@ -1,3 +1,4 @@
+-- TODO: add set up process status into statusline
 ---@type LazySpec
 return {
     {
@@ -32,6 +33,8 @@ return {
             local ensure_installed_via_mason = {}
 
             for file_type, linter_names in pairs(linters_by_ft) do
+                lint.linters_by_ft[file_type] = {}
+
                 for _, name in ipairs(linter_names) do
                     -- Adds custom linter or merges with existing one
                     local custom_linter = custom_linters[name]
@@ -54,12 +57,13 @@ return {
                     local command = (lint.linters[name] or {}).cmd
                     if (custom_linter or {}).enabled ~= false and command then
                         local via_mason, via_nix, exists, _ = utils.handle_commands({ [name] = command }, lint_to_mason)
+
                         -- If exists or handled via Mason then add to linters_by_ft
                         if not vim.tbl_isempty(via_mason) or not vim.tbl_isempty(exists) then
                             vim.list_extend(ensure_installed_via_mason, via_mason)
-                            lint.linters_by_ft[file_type] = lint.linters_by_ft[file_type] or {}
                             vim.list_extend(lint.linters_by_ft[file_type], { name })
                         end
+
                         -- If handled via nix then find package, update cmd and args and add to linters_by_ft
                         if not vim.tbl_isempty(via_nix) then
                             local nix_pkg = (custom_linter or {}).nix_pkg or via_nix[name]
@@ -67,8 +71,12 @@ return {
                                 if o.code == 0 then
                                     lint.linters[name].cmd = table.remove(nix_cmd, 1)
                                     lint.linters[name].args = vim.list_extend(nix_cmd, lint.linters[name].args or {})
-                                    lint.linters_by_ft[file_type] = lint.linters_by_ft[file_type] or {}
                                     vim.list_extend(lint.linters_by_ft[file_type], { name })
+
+                                    -- Runs linter after it is configured if file type matches
+                                    if string.match(vim.api.nvim_buf_get_name(0), "%." .. file_type .. "$") ~= nil then
+                                        lint.try_lint({ name })
+                                    end
                                 end
                             end)
                         end
@@ -97,7 +105,7 @@ return {
                     lint.try_lint(linter_names)
                 end
             end
-            -- Run linters that require a file to be saved (no stdin)
+            -- Run linters that require a file to be saved and stdin
             vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPre", "BufNewFile" }, {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-lint-all", { clear = true }),
                 callback = utils.debounce(100, function()
@@ -105,7 +113,7 @@ return {
                 end),
             })
             -- Run linters that use stdin
-            vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave" }, {
+            vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-lint-stdin", { clear = true }),
                 callback = utils.debounce(100, function()
                     try_lint(true)

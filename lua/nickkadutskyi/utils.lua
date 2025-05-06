@@ -378,9 +378,6 @@ function M.cmd_via_nix(nix_pkg, command, callback, flake)
     vim.system({ "nix", "path-info", "--impure", "--json", flake .. "#" .. nix_pkg }, { text = true }, function(o)
         if o.code == 0 then
             cmd = { "nix", "shell", "--impure", flake .. "#" .. nix_pkg, "--command", command }
-            vim.schedule(function()
-                callback(cmd, o)
-            end)
         else
             vim.notify(
                 string.format("Did't find `%s` nix package due: %s", nix_pkg, o.stderr),
@@ -388,8 +385,10 @@ function M.cmd_via_nix(nix_pkg, command, callback, flake)
                 { title = "Nix cmd" }
             )
             cmd = { command }
-            callback(cmd, o)
         end
+        vim.schedule(function()
+            callback(cmd, o)
+        end)
     end)
 end
 
@@ -413,7 +412,10 @@ function M.handle_commands(commands, mason_mapping)
     for name, command in pairs(commands) do
         command = type(command) == "function" and command() or command
         command = type(command) == "table" and command[1] or command
-        assert(type(command) == "string" and command ~= "", "Command must be a non-empty string, but got: " .. vim.inspect(command))
+        assert(
+            type(command) == "string" and command ~= "",
+            "Command must be a non-empty string, but got: " .. vim.inspect(command)
+        )
 
         local cmd_path = vim.fn.exepath(command --[[@as string]])
 

@@ -87,7 +87,7 @@ return {
                             -- Helps to trigger FileType event to restart language server
                             for _, ext in ipairs(vim.lsp.config[name].filetypes) do
                                 if string.match(vim.api.nvim_buf_get_name(0), "%." .. ext .. "$") ~= nil then
-                                    vim.cmd("e")
+                                    vim.lsp.start(vim.lsp.config[name])
                                     break
                                 end
                             end
@@ -238,6 +238,7 @@ return {
 
             -- Diagnostics config
             vim.diagnostic.config({
+                update_in_insert = true,
                 virtual_text = false,
                 float = {
                     focusable = false,
