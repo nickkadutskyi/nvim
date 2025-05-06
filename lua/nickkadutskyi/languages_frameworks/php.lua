@@ -88,152 +88,155 @@ return {
     { -- Quality Tools
         "nvim-lint",
         event = { "BufReadPre", "BufNewFile" },
-        opts = function(_, opts) -- Configure in opts to run all configs for all languages
-            local function get_executable(executable)
-                return require("nickkadutskyi.utils").find_executable({
-                    "vendor/bin/" .. executable,
-                    "vendor/bin/" .. executable .. ".phar",
-                    ".devenv/profile/bin/" .. executable,
-                }, executable)
-            end
-
-            return vim.tbl_deep_extend("force", opts, {
-                linters_by_ft = {
-                    php = {
-                        "php",
-                        "phpcs",
-                        "phpmd",
-                        "phpstan",
-                        -- Switched to Language Server
-                        -- "psalm",
-                    },
+        opts = {
+            ---@type table<string, string[]>
+            linters_by_ft = {
+                php = {
+                    "php",
+                    "phpcs",
+                    "phpmd",
+                    "phpstan",
                 },
-                linters = {
-                    phpcs = { -- Code Sniffer
-                        cmd = get_executable("phpcs"),
-                        nix_pkg = "php83Packages.php-codesniffer",
-                        -- Sets col and end_col to whole row
-                        parser = function(output, bufnr)
-                            local severities = {
-                                ERROR = vim.diagnostic.severity.ERROR,
-                                WARNING = vim.diagnostic.severity.WARN,
-                            }
-                            local bin = "phpcs"
+            },
+            ---@type table<string, lint.LinterLocal>
+            linters = {
 
-                            if vim.trim(output) == "" or output == nil then
-                                return {}
-                            end
+                -- PHP Code Sniffer
+                phpcs = {
+                    cmd = function()
+                        return require("nickkadutskyi.utils").get_local_php_exe("phpcs")
+                    end,
+                    nix_pkg = "php83Packages.php-codesniffer",
+                    -- Sets col and end_col to whole row
+                    parser = function(output, bufnr)
+                        local severities = {
+                            ERROR = vim.diagnostic.severity.ERROR,
+                            WARNING = vim.diagnostic.severity.WARN,
+                        }
+                        local bin = "phpcs"
 
-                            if not vim.startswith(output, "{") then
-                                vim.notify(output)
-                                return {}
-                            end
+                        if vim.trim(output) == "" or output == nil then
+                            return {}
+                        end
 
-                            local decoded = vim.json.decode(output)
-                            local diagnostics = {}
-                            local messages = decoded["files"]["STDIN"]["messages"]
+                        if not vim.startswith(output, "{") then
+                            vim.notify(output)
+                            return {}
+                        end
 
-                            for _, msg in ipairs(messages or {}) do
-                                local lnum = type(msg.line) == "number" and (msg.line - 1) or 0
-                                local linecont = vim.api.nvim_buf_get_lines(bufnr, lnum, lnum + 1, false)[1] or ""
-                                -- highlight the whole line
-                                local col = linecont:match("()%S") or 0
-                                -- local col = msg.column
-                                local end_col = linecont:match(".*%S()") or 0
+                        local decoded = vim.json.decode(output)
+                        local diagnostics = {}
+                        local messages = decoded["files"]["STDIN"]["messages"]
+
+                        for _, msg in ipairs(messages or {}) do
+                            local lnum = type(msg.line) == "number" and (msg.line - 1) or 0
+                            local linecont = vim.api.nvim_buf_get_lines(bufnr, lnum, lnum + 1, false)[1] or ""
+                            -- highlight the whole line
+                            local col = linecont:match("()%S") or 0
+                            -- local col = msg.column
+                            local end_col = linecont:match(".*%S()") or 0
+                            table.insert(diagnostics, {
+                                lnum = msg.line - 1,
+                                end_lnum = msg.line - 1,
+                                col = col - 1,
+                                end_col = end_col - 1,
+                                message = msg.message,
+                                code = msg.source,
+                                source = bin,
+                                severity = assert(severities[msg.type], "missing mapping for severity " .. msg.type),
+                            })
+                        end
+
+                        return diagnostics
+                    end,
+                },
+
+                -- PHP Mess Detector
+                phpmd = {
+                    cmd = function()
+                        return require("nickkadutskyi.utils").get_local_php_exe("phpmd")
+                    end,
+                    nix_pkg = "php83Packages.phpmd",
+                },
+
+                -- PHPStan
+                phpstan = {
+                    cmd = function()
+                        return require("nickkadutskyi.utils").get_local_php_exe("phpstan")
+                    end,
+                    nix_pkg = "php83Packages.phpstan",
+                    -- Sets col and end_col to whole row
+                    parser = function(output, bufnr)
+                        if vim.trim(output) == "" or output == nil then
+                            return {}
+                        end
+
+                        local file = vim.json.decode(output).files[vim.api.nvim_buf_get_name(bufnr)]
+
+                        if file == nil then
+                            return {}
+                        end
+
+                        local diagnostics = {}
+
+                        for _, message in ipairs(file.messages or {}) do
+                            local lnum = type(message.line) == "number" and (message.line - 1) or 0
+                            local linecont = vim.api.nvim_buf_get_lines(bufnr, lnum, lnum + 1, false)[1] or ""
+                            local col = linecont:match("()%S") or 0
+                            local end_col = linecont:match(".*%S()") or 0
+                            table.insert(diagnostics, {
+                                lnum = lnum,
+                                col = col - 1,
+                                end_col = end_col - 1,
+                                code = message.identifier or "", -- only works for phpstan >= 1.11
+                                message = message.message,
+                                source = "phpstan",
+                                severity = vim.diagnostic.severity.ERROR,
+                            })
+                        end
+
+                        return diagnostics
+                    end,
+                },
+
+                -- Psalm
+                psalm = {
+                    cmd = function()
+                        return require("nickkadutskyi.utils").get_local_php_exe("psalm")
+                    end,
+                    nix_pkg = "php83Packages.psalm",
+                    -- Psalm exits with 2 when there are issues in file
+                    ignore_exitcode = true,
+                    -- Adds type, link and shortcote to diagnostics entries
+                    parser = function(output, bufnr)
+                        if output == nil then
+                            return {}
+                        end
+
+                        local filename = vim.api.nvim_buf_get_name(bufnr)
+
+                        local messages = vim.json.decode(output)
+                        local diagnostics = {}
+
+                        for _, message in ipairs(messages or {}) do
+                            if message.file_path == filename then
                                 table.insert(diagnostics, {
-                                    lnum = msg.line - 1,
-                                    end_lnum = msg.line - 1,
-                                    col = col - 1,
-                                    end_col = end_col - 1,
-                                    message = msg.message,
-                                    code = msg.source,
-                                    source = bin,
-                                    severity = assert(
-                                        severities[msg.type],
-                                        "missing mapping for severity " .. msg.type
-                                    ),
-                                })
-                            end
-
-                            return diagnostics
-                        end,
-                    },
-                    phpmd = { -- Mess Detector
-                        cmd = get_executable("phpmd"),
-                        nix_pkg = "php83Packages.phpmd",
-                    },
-                    phpstan = { -- PHPStan
-                        cmd = get_executable("phpstan"),
-                        nix_pkg = "php83Packages.phpstan",
-                        -- Sets col and end_col to whole row
-                        parser = function(output, bufnr)
-                            if vim.trim(output) == "" or output == nil then
-                                return {}
-                            end
-
-                            local file = vim.json.decode(output).files[vim.api.nvim_buf_get_name(bufnr)]
-
-                            if file == nil then
-                                return {}
-                            end
-
-                            local diagnostics = {}
-
-                            for _, message in ipairs(file.messages or {}) do
-                                local lnum = type(message.line) == "number" and (message.line - 1) or 0
-                                local linecont = vim.api.nvim_buf_get_lines(bufnr, lnum, lnum + 1, false)[1] or ""
-                                local col = linecont:match("()%S") or 0
-                                local end_col = linecont:match(".*%S()") or 0
-                                table.insert(diagnostics, {
-                                    lnum = lnum,
-                                    col = col - 1,
-                                    end_col = end_col - 1,
-                                    code = message.identifier or "", -- only works for phpstan >= 1.11
+                                    lnum = message.line_from - 1,
+                                    end_lnum = message.line_to - 1,
+                                    col = message.column_from - 1,
+                                    end_col = message.column_to - 1,
                                     message = message.message,
-                                    source = "phpstan",
-                                    severity = vim.diagnostic.severity.ERROR,
+                                    code = message.type .. " " .. message.link,
+                                    source = "psalm",
+                                    severity = message.severity,
                                 })
                             end
+                        end
 
-                            return diagnostics
-                        end,
-                    },
-                    psalm = { -- Psalm
-                        cmd = get_executable("psalm"),
-                        nix_pkg = "php83Packages.psalm",
-                        -- Psalm exits with 2 when there are issues in file
-                        ignore_exitcode = true,
-                        -- Adds type, link and shortcote to diagnostics entries
-                        parser = function(output, bufnr)
-                            if output == nil then
-                                return {}
-                            end
-
-                            local filename = vim.api.nvim_buf_get_name(bufnr)
-
-                            local messages = vim.json.decode(output)
-                            local diagnostics = {}
-
-                            for _, message in ipairs(messages or {}) do
-                                if message.file_path == filename then
-                                    table.insert(diagnostics, {
-                                        lnum = message.line_from - 1,
-                                        end_lnum = message.line_to - 1,
-                                        col = message.column_from - 1,
-                                        end_col = message.column_to - 1,
-                                        message = message.message,
-                                        code = message.type .. " " .. message.link,
-                                        source = "psalm",
-                                        severity = message.severity,
-                                    })
-                                end
-                            end
-
-                            return diagnostics
-                        end,
-                    },
+                        return diagnostics
+                    end,
                 },
-            })
-        end,
+            },
+        },
     },
 }

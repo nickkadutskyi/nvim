@@ -41,7 +41,7 @@ return {
             local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
             vim.lsp.config("*", { capabilities = has_cmp and cmp_nvim_lsp.default_capabilities() or {} })
 
-            -- get all the servers that are available through mason-lspconfig
+            -- Gets mason-lspconfig
             local has_mlsp, mlsp = pcall(require, "mason-lspconfig")
 
             -- Sort server commands by how to handle them
@@ -85,13 +85,18 @@ return {
                             servers[name].cmd = vim.list_extend(nix_cmd, cmd)
                             utils.lsp_setup(name, servers[name])
                             -- Helps to trigger FileType event to restart language server
-                            vim.cmd("e")
+                            for _, ext in ipairs(vim.lsp.config[name].filetypes) do
+                                if string.match(vim.api.nvim_buf_get_name(0), "%." .. ext .. "$") ~= nil then
+                                    vim.cmd("e")
+                                    break
+                                end
+                            end
                         end
                     end
                 end)
             end
 
-            -- Conifgures LspAttach (on_attach) event for all language servers
+            -- Configures LspAttach (on_attach) event for all language servers
             vim.api.nvim_create_autocmd("LspAttach", {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-lsp-attach", { clear = true }),
                 callback = function(event)

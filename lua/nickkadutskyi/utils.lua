@@ -413,7 +413,7 @@ function M.handle_commands(commands, mason_mapping)
     for name, command in pairs(commands) do
         command = type(command) == "function" and command() or command
         command = type(command) == "table" and command[1] or command
-        assert(type(command) == "string" and command ~= "", "Command must be a non-empty string")
+        assert(type(command) == "string" and command ~= "", "Command must be a non-empty string, but got: " .. vim.inspect(command))
 
         local cmd_path = vim.fn.exepath(command --[[@as string]])
 
@@ -442,5 +442,27 @@ function M.lsp_setup(name, cfg)
         vim.lsp.config(name, cfg)
         vim.lsp.enable(name)
     end
+end
+
+-- Debounce function to limit the rate at which a function can fire
+function M.debounce(ms, fn)
+    local timer = vim.uv.new_timer()
+    return function(...)
+        local argv = { ... }
+        if timer ~= nil then
+            timer:start(ms, 0, function()
+                timer:stop()
+                vim.schedule_wrap(fn)(unpack(argv))
+            end)
+        end
+    end
+end
+
+function M.get_local_php_exe(executable)
+    return M.find_executable({
+        "vendor/bin/" .. executable,
+        "vendor/bin/" .. executable .. ".phar",
+        ".devenv/profile/bin/" .. executable,
+    }, executable)
 end
 return M

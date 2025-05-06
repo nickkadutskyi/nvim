@@ -54,8 +54,10 @@ return {
             linters_by_ft = {
                 lua = { "luacheck" },
             },
+            ---@type table<string, lint.LinterLocal>
             linters = {
                 luacheck = {
+                    nix_pkg = "luajitPackages.luacheck",
                     prepend_args = {
                         "--globals",
                         "vim",

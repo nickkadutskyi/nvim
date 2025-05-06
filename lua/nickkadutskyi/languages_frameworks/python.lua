@@ -36,6 +36,10 @@ return {
             linters_by_ft = {
                 python = { "ruff", "flake8", "pylint" },
             },
+            ---@type table<string, lint.LinterLocal>
+            linters = {
+                flake8 = { nix_pkg = "python313Packages.flake8" },
+            },
         },
     },
 }

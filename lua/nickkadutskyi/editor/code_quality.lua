@@ -1,82 +1,89 @@
 ---@type LazySpec
 return {
-    { -- Code Quality
+    {
+        ---@class lint.LinterLocal : lint.Linter
+        ---@field name? string
+        ---@field cmd? string|fun():string
+        ---@field parser? lint.Parser|lint.parse
+        ---@field nix_pkg? string
+        ---@field enabled? boolean
+        ---@field prepend_args? string[]
+        ---@field append_args? string[]
+
+        -- Code Quality
         "mfussenegger/nvim-lint",
         event = { "BufReadPre", "BufNewFile" },
-        dependencies = { "stevearc/conform.nvim" },
+        dependencies = { "stevearc/conform.nvim", "mason-nvim-lint" },
         opts = { linters_by_ft = {}, linters = {} },
         config = function(_, opts)
+            local utils = require("nickkadutskyi.utils")
             local lint = require("lint")
-            -- Merges linters_by_ft and linters
-            for linter_name, linter_opts in pairs(opts.linters) do
-                if type(linter_opts) == "table" and type(lint.linters[linter_name]) == "table" then
-                    lint.linters[linter_name] = vim.tbl_deep_extend("force", lint.linters[linter_name], linter_opts)
-                    local prepend_args = linter_opts.prepend_args or {}
-                    local append_args = linter_opts.append_args or {}
-                    vim.list_extend(prepend_args, lint.linters[linter_name].args or {})
-                    vim.list_extend(prepend_args, append_args)
-                    lint.linters[linter_name].args = prepend_args
-                else
-                    lint.linters[linter_name] = linter_opts
-                end
-            end
+            ---@type table<string, lint.LinterLocal>
+            local custom_linters = opts.linters
+            ---@type table<string, string[]>
+            local linters_by_ft = opts.linters_by_ft
 
-            local nix_path = vim.fn.exepath("nix")
-            local install_via_nix = {}
-            -- Only use linters that present in the system or use `nix run`
+            -- Clear previous linters
             lint.linters_by_ft = {}
-            for ft, linters in pairs(opts.linters_by_ft) do
-                for _, linter_name in ipairs(linters) do
-                    local cmd = lint.linters[linter_name].cmd
-                    local binary = type(cmd) == "function" and cmd() or cmd
-                    if vim.fn.executable(binary) == 1 then
-                        lint.linters_by_ft[ft] = lint.linters_by_ft[ft] or {}
-                        table.insert(lint.linters_by_ft[ft], linter_name)
-                    else
-                        if #nix_path ~= 0 then
-                            lint.linters[linter_name].fts = lint.linters[linter_name].fts or {}
-                            lint.linters[linter_name].cmd = binary
-                            table.insert(lint.linters[linter_name].fts, ft)
-                            table.insert(install_via_nix, linter_name)
+
+            -- Gets mason-nvim-lint
+            local has_mlint, mlint = pcall(require, "mason-nvim-lint")
+            local lint_to_mason = has_mlint and require("mason-nvim-lint.mapping").nvimlint_to_package or {}
+            local ensure_installed_via_mason = {}
+
+            for file_type, linter_names in pairs(linters_by_ft) do
+                for _, name in ipairs(linter_names) do
+                    -- Adds custom linter or merges with existing one
+                    local custom_linter = custom_linters[name]
+                    if type(custom_linter) == "function" then
+                        lint.linters[name] = custom_linter
+                    elseif custom_linter ~= nil then
+                        local linter = lint.linters[name]
+                        if type(linter) == "function" then
+                            linter = linter()
+                        end
+                        lint.linters[name] = vim.tbl_deep_extend("force", linter or {}, custom_linter)
+                        local prepend_args = custom_linter.prepend_args or {}
+                        local append_args = custom_linter.append_args or {}
+                        vim.list_extend(prepend_args, lint.linters[name].args or {})
+                        vim.list_extend(prepend_args, append_args)
+                        lint.linters[name].args = prepend_args
+                    end
+
+                    -- Adds linter to linters_by_ft if binary exists
+                    local command = (lint.linters[name] or {}).cmd
+                    if (custom_linter or {}).enabled ~= false and command then
+                        local via_mason, via_nix, exists, _ = utils.handle_commands({ [name] = command }, lint_to_mason)
+                        -- If exists or handled via Mason then add to linters_by_ft
+                        if not vim.tbl_isempty(via_mason) or not vim.tbl_isempty(exists) then
+                            vim.list_extend(ensure_installed_via_mason, via_mason)
+                            lint.linters_by_ft[file_type] = lint.linters_by_ft[file_type] or {}
+                            vim.list_extend(lint.linters_by_ft[file_type], { name })
+                        end
+                        -- If handled via nix then find package, update cmd and args and add to linters_by_ft
+                        if not vim.tbl_isempty(via_nix) then
+                            local nix_pkg = (custom_linter or {}).nix_pkg or via_nix[name]
+                            utils.cmd_via_nix(nix_pkg, command, function(nix_cmd, o)
+                                if o.code == 0 then
+                                    lint.linters[name].cmd = table.remove(nix_cmd, 1)
+                                    lint.linters[name].args = vim.list_extend(nix_cmd, lint.linters[name].args or {})
+                                    lint.linters_by_ft[file_type] = lint.linters_by_ft[file_type] or {}
+                                    vim.list_extend(lint.linters_by_ft[file_type], { name })
+                                end
+                            end)
                         end
                     end
                 end
             end
 
-            -- Installs linters via Nix (`nir run nixpkgs#<pkg> --`)
-            for _, linter_name in ipairs(install_via_nix) do
-                local linter_opts = lint.linters[linter_name]
-                local nix_pkg = linter_opts.nix_pkg or linter_opts.cmd
-                -- Checks if Nix package is available
-                vim.system({ "nix", "path-info", "--json", "nixpkgs#" .. nix_pkg }, { text = true }, function(o)
-                    if o.code == 0 then
-                        vim.schedule(function()
-                            linter_opts.cmd = "nix"
-                            linter_opts.args = vim.list_extend({
-                                "run",
-                                "nixpkgs#" .. nix_pkg,
-                                "--",
-                            }, linter_opts.args or {})
-                            for _, ft in ipairs(linter_opts.fts or {}) do
-                                lint.linters_by_ft[ft] = lint.linters_by_ft[ft] or {}
-                                vim.list_extend(lint.linters_by_ft[ft], { linter_name })
-                            end
-                        end)
-                    end
-                end)
-            end
-
-            local function debounce(ms, fn)
-                local timer = vim.uv.new_timer()
-                return function(...)
-                    local argv = { ... }
-                    if timer ~= nil then
-                        timer:start(ms, 0, function()
-                            timer:stop()
-                            vim.schedule_wrap(fn)(unpack(argv))
-                        end)
-                    end
-                end
+            -- Installs linters via Mason
+            if has_mlint then
+                mlint.setup({
+                    quiet_mode = false,
+                    ignore_install = {},
+                    automatic_installation = false,
+                    ensure_installed = ensure_installed_via_mason,
+                })
             end
 
             local function try_lint(stdin)
@@ -92,15 +99,15 @@ return {
             end
             -- Run linters that require a file to be saved (no stdin)
             vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPre", "BufNewFile" }, {
-                group = vim.api.nvim_create_augroup("nickkadutskyi-lint-file", { clear = true }),
-                callback = debounce(100, function()
-                    try_lint(false)
+                group = vim.api.nvim_create_augroup("nickkadutskyi-lint-all", { clear = true }),
+                callback = utils.debounce(100, function()
+                    lint.try_lint()
                 end),
             })
             -- Run linters that use stdin
-            vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
+            vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave" }, {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-lint-stdin", { clear = true }),
-                callback = debounce(100, function()
+                callback = utils.debounce(100, function()
                     try_lint(true)
                 end),
             })
