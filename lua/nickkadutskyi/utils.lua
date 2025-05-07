@@ -459,7 +459,11 @@ function M.handle_commands(commands, mason_mapping)
             via_mason[#via_mason + 1] = name
         elseif #cmd_path ~= 0 then
             existing[name] = command
-        elseif #nix_path ~= 0 and M.nix_shell_type() == nil then
+        elseif
+            -- Handle via nix only if not in `nix shell` or `nix develop` environment
+            -- because those environments are supposed to provide all the tooling
+            #nix_path ~= 0 and M.nix_shell_type() == nil
+        then
             via_nix[name] = command
         else
             ignored[name] = command

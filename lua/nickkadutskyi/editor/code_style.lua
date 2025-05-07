@@ -30,7 +30,9 @@ return {
         "stevearc/conform.nvim",
         dependencies = {
             "mason.nvim",
+            -- Only used to get mapping between conform and mason
             "zapling/mason-conform.nvim",
+            -- Actually used to install formatters via mason
             "WhoIsSethDaniel/mason-tool-installer.nvim",
         },
         opts = {
@@ -50,22 +52,30 @@ return {
             local has_minstaller, minstaller = pcall(require, "mason-tool-installer")
             local ensure_installed_via_mason = {}
 
+            -- Conform.nvim merges `formatters_by_ft` and `formatters` for me
             conform.setup(opts)
 
+            -- Ensures binaries are present and reconfigure formatters if needed
             for _, formatter_names in pairs(conform.formatters_by_ft) do
-                -- Doesn't handle if it's a function
+                -- Doesn't handle if it's a function because it requires parameters provided by conform.nvim
                 if type(formatter_names) == "function" then
                     formatter_names = {}
                 end
+
                 for _, name in ipairs(formatter_names) do
                     local info = conform.get_formatter_info(name)
                     local config = conform.get_formatter_config(name)
+
+                    -- Only handle if formatter is not available
                     if config ~= nil and not info.available then
                         local command = config.command
+                        -- If command is a function it might require params provided by conform.nvim so run it safely
                         if type(command) == "function" then
                             local ok, cmd = pcall(command)
                             command = ok and cmd or ((config.options or {}).cmd or name)
                         end
+
+                        -- Ensure binary for the command
                         local via_mason, via_nix, _, _ = utils.handle_commands({ [name] = command }, mason_map)
                         if not vim.tbl_isempty(via_mason) then
                             vim.list_extend(ensure_installed_via_mason, { mason_map[name] })
