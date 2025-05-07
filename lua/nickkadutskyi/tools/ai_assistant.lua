@@ -2,7 +2,7 @@
 return {
     { -- AI Suggestions -- Keep this config to eaisly switch between implementations (copilot.vim or copilot.lua)
         "github/copilot.vim",
-        enabled = false,
+        enabled = false, -- using copilot.lua so that copilot-lualine works
         dependencies = { "folke/which-key.nvim" },
         init = function()
             require("nickkadutskyi.utils").add_cwd_to_copilot_workspace_folders()
