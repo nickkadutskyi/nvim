@@ -1,3 +1,4 @@
+---@type LazySpec
 return {
     { -- Color scheme enhancement
         "nvim-treesitter",
@@ -52,10 +53,13 @@ return {
         "nvim-lint",
         opts = {
             linters_by_ft = {
-                lua = { "luacheck" },
+                lua = { "luacheck", "selene" },
             },
             ---@type table<string, lint.LinterLocal>
             linters = {
+                selene = {
+                    nix_pkg = "selene",
+                },
                 luacheck = {
                     nix_pkg = "luajitPackages.luacheck",
                     prepend_args = {
