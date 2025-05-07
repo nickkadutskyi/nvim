@@ -7,6 +7,30 @@ return {
             "ibhagwan/fzf-lua",
         },
         config = function()
+            -- Rewrites function to avoid deprecation notices
+            -- TODO: remove this when upstream is fixed
+            require("project_nvim.project")["find_lsp_root"] = function()
+                local config = require("project_nvim.config")
+                -- Get lsp client for current buffer
+                -- Returns nil or string
+                local buf_ft = vim.api.nvim_get_option_value("filetype", { buf = 0 })
+                local clients = vim.lsp.get_clients()
+                if next(clients) == nil then
+                    return nil
+                end
+
+                for _, client in pairs(clients) do
+                    local filetypes = client.config.filetypes
+                    if filetypes and vim.tbl_contains(filetypes, buf_ft) then
+                        if not vim.tbl_contains(config.options.ignore_lsp, client.name) then
+                            return client.config.root_dir, client.name
+                        end
+                    end
+                end
+
+                return nil
+            end
+
             require("project_nvim").setup({
                 manual_mode = true,
                 detection_methods = { "pattern", "lsp" },

@@ -2,7 +2,7 @@
 return {
     { -- AI Suggestions -- Keep this config to eaisly switch between implementations (copilot.vim or copilot.lua)
         "github/copilot.vim",
-        enabled = true,
+        enabled = false,
         dependencies = { "folke/which-key.nvim" },
         init = function()
             require("nickkadutskyi.utils").add_cwd_to_copilot_workspace_folders()
@@ -31,7 +31,7 @@ return {
         "zbirenbaum/copilot.lua",
         dependencies = { "folke/which-key.nvim" },
         cmd = "Copilot",
-        enabled = false,
+        enabled = true,
         event = "InsertEnter",
         config = function()
             require("copilot").setup({
@@ -49,25 +49,26 @@ return {
                     },
                 },
                 filetypes = { ["copilot-chat"] = false },
+                copilot_model = "gpt-4o-copilot",
             })
 
-            if require("copilot.config").get("suggestion").enabled then
-                -- Keymap only if suggestion is enabled
-                local suggestion = require("copilot.suggestion")
-                vim.keymap.set("i", "<A-]>", suggestion.next, { desc = "AI: Next suggestion (copilot.lua)" })
-                vim.keymap.set("i", "<A-[>", suggestion.prev, { desc = "AI: Previous suggestion (copilot.lua)" })
-                vim.keymap.set("i", "<A-Tab>", suggestion.accept_word, {
-                    desc = "AI: Accept word suggestion (copilot.lua)",
-                })
-                vim.keymap.set("i", "<S-Tab>", suggestion.accept_line, {
-                    desc = "AI: Accept line suggestion (copilot.lua)",
-                })
-                -- Documents built-in keymap
-                require("which-key").add({
-                    { "<Tab>", desc = "AI: Accept suggestion (copilot.lua)", mode = "i" },
-                    { "<C-]>", desc = "AI: Dismiss suggestion (copilot.lua)", mode = "i" },
-                })
-            end
+            -- if require("copilot.config").get("suggestion").enabled then
+            -- Keymap only if suggestion is enabled
+            local suggestion = require("copilot.suggestion")
+            vim.keymap.set("i", "<A-]>", suggestion.next, { desc = "AI: Next suggestion (copilot.lua)" })
+            vim.keymap.set("i", "<A-[>", suggestion.prev, { desc = "AI: Previous suggestion (copilot.lua)" })
+            vim.keymap.set("i", "<A-Tab>", suggestion.accept_word, {
+                desc = "AI: Accept word suggestion (copilot.lua)",
+            })
+            vim.keymap.set("i", "<S-Tab>", suggestion.accept_line, {
+                desc = "AI: Accept line suggestion (copilot.lua)",
+            })
+            -- Documents built-in keymap
+            require("which-key").add({
+                { "<Tab>", desc = "AI: Accept suggestion (copilot.lua)", mode = "i" },
+                { "<C-]>", desc = "AI: Dismiss suggestion (copilot.lua)", mode = "i" },
+            })
+            -- end
         end,
     },
     { -- AI Suggestions from copilot.lua in cmp-nvim completion dialog source provider
