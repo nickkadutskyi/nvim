@@ -38,7 +38,7 @@ return {
                     nix_pkg = "phpactor",
                 },
                 ["psalm"] = {
-                    enabled = false, -- nix package throws runtime PHP error, use as CLI tool
+                    enabled = true,
                     nix_pkg = "php83Packages.psalm",
                     cmd = { "psalm", "--language-server", "--config=psalm.xml" },
                 },
