@@ -57,6 +57,8 @@ return {
                         -- stop_after_first = true,
                         -- runs jsbeautify via intelephense so it's useful to have .jsbeautifyrc
                         lsp_format = "first",
+                        async = true,
+                        timeout_ms = 2000,
                     },
                 },
                 formatters = {
@@ -70,6 +72,7 @@ return {
                         }, "php-cs-fixer"),
                         options = {
                             nix_pkg = "php83Packages.php-cs-fixer",
+                            cmd = "php-cs-fixer",
                         },
                     },
                     phpcbf = {
@@ -79,6 +82,7 @@ return {
                         }, "phpcbf"),
                         options = {
                             nix_pkg = "php83Packages.php-codesniffer",
+                            cmd = "phpcbf",
                         },
                     },
                 },

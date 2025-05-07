@@ -28,53 +28,65 @@ vim.opt.virtualedit = "onemore"
 return {
     { -- Code formatting configuration
         "stevearc/conform.nvim",
-        dependencies = { "mason.nvim" },
+        dependencies = {
+            "mason.nvim",
+            "zapling/mason-conform.nvim",
+            "WhoIsSethDaniel/mason-tool-installer.nvim",
+        },
         opts = {
             default_format_opts = {
                 lsp_format = "fallback",
                 stop_after_first = true,
             },
         },
+        ---@param opts? conform.setupOpts
         config = function(_, opts)
+            local utils = require("nickkadutskyi.utils")
             local conform = require("conform")
+
+            -- Gets mason-nvim-lint
+            local has_mcmap, mcmap = pcall(require, "mason-conform.mapping")
+            local mason_map = has_mcmap and mcmap.conform_to_package or {}
+            local has_minstaller, minstaller = pcall(require, "mason-tool-installer")
+            local ensure_installed_via_mason = {}
+
             conform.setup(opts)
 
-            -- If Nix is available then ensure at least one formatter for each filetype
-            local nix_path = vim.fn.exepath("nix")
-
-            if #nix_path ~= 0 then
-                for _, formatters in pairs(conform.formatters_by_ft) do
-                    local cmd_formatter = nil
-                    for ind, formatter_name in
-                        ipairs(formatters --[=[@as string[]]=])
-                    do
-                        local formatter_info = conform.get_formatter_info(formatter_name)
-                        local formatter_config = conform.get_formatter_config(formatter_name)
-
-                        if formatter_config ~= nil then
-                            formatter_config.options = formatter_config.options or {}
-                            if
-                                formatter_config
-                                and formatter_config.command
-                                and formatter_config.options.nix_pkg
-                                and cmd_formatter == nil
-                            then
-                                cmd_formatter = formatter_config
-                                cmd_formatter.options.name = formatter_name
-                            end
-                            if formatter_info.available then
-                                break
-                            elseif ind == #formatters and cmd_formatter then
-                                conform.formatters[cmd_formatter.options.name].command = "nix"
-                                conform.formatters[cmd_formatter.options.name].prepend_args = {
-                                    "run",
-                                    "nixpkgs#" .. cmd_formatter.options.nix_pkg,
-                                    "--",
-                                }
-                            end
+            for _, formatter_names in pairs(conform.formatters_by_ft) do
+                -- Doesn't handle if it's a function
+                if type(formatter_names) == "function" then
+                    formatter_names = {}
+                end
+                for _, name in ipairs(formatter_names) do
+                    local info = conform.get_formatter_info(name)
+                    local config = conform.get_formatter_config(name)
+                    if config ~= nil and not info.available then
+                        local command = config.command
+                        if type(command) == "function" then
+                            local ok, cmd = pcall(command)
+                            command = ok and cmd or ((config.options or {}).cmd or name)
+                        end
+                        local via_mason, via_nix, _, _ = utils.handle_commands({ [name] = command }, mason_map)
+                        if not vim.tbl_isempty(via_mason) then
+                            vim.list_extend(ensure_installed_via_mason, { mason_map[name] })
+                        elseif not vim.tbl_isempty(via_nix) then
+                            local nix_pkg = (config.options or {}).nix_pkg or via_nix[name]
+                            utils.cmd_via_nix(nix_pkg, command, function(nix_cmd, o)
+                                if o.code == 0 then
+                                    conform.formatters[name] = conform.formatters[name] or {}
+                                    conform.formatters[name].command = table.remove(nix_cmd, 1)
+                                    conform.formatters[name].prepend_args = nix_cmd
+                                end
+                            end)
                         end
                     end
                 end
+            end
+
+            if has_minstaller then
+                minstaller.setup({
+                    ensure_installed = ensure_installed_via_mason,
+                })
             end
 
             -- Keymap

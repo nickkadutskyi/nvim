@@ -19,6 +19,13 @@ return {
 
                 css = { "prettierd", "prettier" },
             },
+            formatters = {
+                prettier = {
+                    options = {
+                        nix_pkg = "nodePackages_latest.prettier",
+                    },
+                },
+            },
         },
     },
     { -- Quality Tools

@@ -378,6 +378,39 @@ function M.cmd_via_nix(nix_pkg, command, callback, flake)
     vim.system({ "nix", "path-info", "--impure", "--json", flake .. "#" .. nix_pkg }, { text = true }, function(o)
         if o.code == 0 then
             cmd = { "nix", "shell", "--impure", flake .. "#" .. nix_pkg, "--command", command }
+            local function get_attr(attr, has_attr_callback)
+                return vim.system(
+                    { "nix", "eval", "--raw", flake .. "#" .. nix_pkg .. "." .. attr },
+                    { text = true },
+                    function(o_has_attr)
+                        if o_has_attr.code == 0 then
+                            has_attr_callback(o_has_attr.stdout)
+                        else
+                            has_attr_callback(nil)
+                        end
+                    end
+                )
+            end
+            local attrs = {
+                "meta.mainProgram", --[["pname"]]
+            }
+            local attr_ind = 1
+            local function check_attr(val)
+                if val == command then
+                    cmd = { "nix", "run", "--impure", flake .. "#" .. nix_pkg, "--" }
+                    vim.schedule(function()
+                        callback(cmd, o)
+                    end)
+                elseif #attrs < attr_ind then
+                    attr_ind = attr_ind + 1
+                    get_attr(attrs[attr_ind], check_attr)
+                else
+                    vim.schedule(function()
+                        callback(cmd, o)
+                    end)
+                end
+            end
+            get_attr(attrs[attr_ind], check_attr)
         else
             vim.notify(
                 string.format("Did't find `%s` nix package due: %s", nix_pkg, o.stderr),
@@ -385,10 +418,13 @@ function M.cmd_via_nix(nix_pkg, command, callback, flake)
                 { title = "Nix cmd" }
             )
             cmd = { command }
+            vim.schedule(function()
+                callback(cmd, o)
+            end)
         end
-        vim.schedule(function()
-            callback(cmd, o)
-        end)
+        -- vim.schedule(function()
+        --     callback(cmd, o)
+        -- end)
     end)
 end
 
