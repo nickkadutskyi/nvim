@@ -15,7 +15,6 @@ return {
             ---@type table<string,vim.lsp.ConfigLocal>
             servers = {
                 ["intelephense"] = {
-                    enabled = false, -- due to high CPU usage
                     init_options = {
                         licenceKey = vim.fn.expand("/run/secrets/php/intelephense_license"),
                     },
@@ -25,7 +24,11 @@ return {
                                 enabled = false,
                             },
                             files = {
-                                maxSize = 1000000,
+                                exclude = {
+                                    -- These are causing high CPU usage
+                                    "**/.devenv/**",
+                                    "**/.direnv/**",
+                                },
                             },
                         },
                     },

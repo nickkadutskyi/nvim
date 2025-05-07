@@ -44,7 +44,7 @@ return {
         "conform.nvim",
         opts = {
             formatters_by_ft = {
-                lua = { "stylua" },
+                lua = { "stylua", timeout_ms = 2000 },
             },
         },
     },
