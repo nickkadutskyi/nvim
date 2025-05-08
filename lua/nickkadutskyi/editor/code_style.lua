@@ -35,10 +35,28 @@ return {
             -- Actually used to install formatters via mason
             "WhoIsSethDaniel/mason-tool-installer.nvim",
         },
+        ---@type conform.setupOpts
         opts = {
             default_format_opts = {
                 lsp_format = "fallback",
                 stop_after_first = true,
+            },
+            formatters = {
+                prettier = {
+                    options = {
+                        nix_pkg = "nodePackages_latest.prettier",
+                    },
+                    ---@param self conform.FormatterConfig
+                    ---@param ctx conform.Context
+                    prepend_args = function(self, ctx)
+                        local args = {}
+                        if ctx.filename:match("%.xml$") then
+                            -- Plugin for XML have to be installed
+                            vim.list_extend(args, { "--plugin=@prettier/plugin-xml" })
+                        end
+                        return args
+                    end,
+                },
             },
         },
         ---@param opts? conform.setupOpts

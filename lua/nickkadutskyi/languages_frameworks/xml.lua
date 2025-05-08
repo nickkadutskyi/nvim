@@ -1,10 +1,20 @@
 ---@type LazySpec
 return {
+    { -- Language Servers
+        "nvim-lspconfig",
+        opts = {
+
+            ---@type table<string,vim.lsp.ConfigLocal>
+            servers = {
+                ["lemminx"] = {},
+            },
+        },
+    },
     { -- Code Style
         "conform.nvim",
         opts = {
             formatters_by_ft = {
-                xml = { "xmlstarlet" },
+                xml = { "prettier", lsp_format = "prefer" },
             },
         },
     },

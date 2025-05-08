@@ -16,15 +16,7 @@ return {
         "stevearc/conform.nvim",
         opts = {
             formatters_by_ft = {
-
                 css = { "prettierd", "prettier" },
-            },
-            formatters = {
-                prettier = {
-                    options = {
-                        nix_pkg = "nodePackages_latest.prettier",
-                    },
-                },
             },
         },
     },
