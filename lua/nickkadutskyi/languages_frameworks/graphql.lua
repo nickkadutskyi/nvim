@@ -14,7 +14,7 @@ return {
         opts = {
             ---@type table<string,vim.lsp.ConfigLocal>
             servers = {
-                graphql = { mason = true },
+                -- graphql = { mason = true },
             },
         },
     },
