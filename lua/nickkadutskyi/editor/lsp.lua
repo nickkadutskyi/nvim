@@ -30,7 +30,7 @@ return {
         dependencies = {
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
-            "hrsh7th/cmp-nvim-lsp",
+            -- "hrsh7th/cmp-nvim-lsp",
         },
         config = function(plugin, opts)
             local utils = require("nickkadutskyi.utils")
@@ -38,8 +38,8 @@ return {
             local servers = opts.servers or {}
 
             -- Adds nvim-cmp capabilities for all language servers
-            local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-            vim.lsp.config("*", { capabilities = has_cmp and cmp_nvim_lsp.default_capabilities() or {} })
+            -- local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+            -- vim.lsp.config("*", { capabilities = has_cmp and cmp_nvim_lsp.default_capabilities() or {} })
 
             -- Gets mason-lspconfig
             local has_mlsp, mlsp = pcall(require, "mason-lspconfig")

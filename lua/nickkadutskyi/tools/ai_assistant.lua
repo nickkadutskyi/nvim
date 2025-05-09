@@ -71,10 +71,10 @@ return {
             -- end
         end,
     },
-    { -- AI Suggestions from copilot.lua in cmp-nvim completion dialog source provider
-        "zbirenbaum/copilot-cmp",
-        config = true,
-    },
+    -- { -- AI Suggestions from copilot.lua in cmp-nvim completion dialog source provider
+    --     "zbirenbaum/copilot-cmp",
+    --     config = true,
+    -- },
     {
         "yetone/avante.nvim",
         enabled = true,

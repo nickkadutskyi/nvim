@@ -29,7 +29,9 @@ return {
         opts = {
             ---@type table<string,vim.lsp.ConfigLocal>
             servers = {
-                rust_analyzer = {},
+                rust_analyzer = {
+                    nix_pkg = "rust-analyzer",
+                },
             },
         },
     },
