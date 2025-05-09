@@ -4,6 +4,9 @@ return {
         -- optional: provides snippets for the snippet source
         dependencies = {
             "rafamadriz/friendly-snippets",
+            "folke/lazydev.nvim",
+            "mikavilpas/blink-ripgrep.nvim",
+            "Kaiser-Yang/blink-cmp-avante",
         },
 
         -- use a release tag to download pre-built binaries
@@ -31,6 +34,7 @@ return {
                     window = { border = "rounded" },
                 },
                 menu = {
+                    scrollbar = false,
                     border = "rounded",
                     auto_show = true,
                     -- draw = {
@@ -45,7 +49,59 @@ return {
             -- Default list of enabled providers defined so that you can extend it
             -- elsewhere in your config, without redefining it, due to `opts_extend`
             sources = {
-                default = { "lsp", "path", "snippets", "buffer" },
+                default = { "avante", "lsp", "path", "snippets", "buffer", "ripgrep" },
+                per_filetype = {
+                    lua = { inherit_defaults = true, "lazydev" },
+                },
+                providers = {
+                    avante = {
+                        module = "blink-cmp-avante",
+                        name = "Avante",
+                        opts = {
+                            -- options for blink-cmp-avante
+                        },
+                    },
+                    lazydev = {
+                        name = "LazyDev",
+                        module = "lazydev.integrations.blink",
+                        score_offset = 100,
+                    },
+                    ripgrep = {
+                        module = "blink-ripgrep",
+                        name = "Ripgrep",
+                        ---@module "blink-ripgrep"
+                        ---@type blink-ripgrep.Options
+                        opts = {
+                            prefix_min_len = 3,
+                            context_size = 5,
+                            max_filesize = "1M",
+                            project_root_marker = ".git",
+                            project_root_fallback = true,
+                            search_casing = "--ignore-case",
+                            additional_rg_options = {},
+                            fallback_to_regex_highlighting = true,
+                            ignore_paths = {},
+                            additional_paths = {},
+                            toggles = {
+                                -- The keymap to toggle the plugin on and off from blink
+                                -- completion results. Example: "<leader>tg"
+                                on_off = nil,
+                            },
+                            future_features = {
+                                backend = {
+                                    -- The backend to use for searching. Defaults to "ripgrep".
+                                    -- Available options:
+                                    -- - "ripgrep", always use ripgrep
+                                    -- - "gitgrep", always use git grep
+                                    -- - "gitgrep-or-ripgrep", use git grep if possible, otherwise
+                                    --   ripgrep
+                                    use = "ripgrep",
+                                },
+                            },
+                            debug = false,
+                        },
+                    },
+                },
             },
             snippets = { preset = "default" },
 
@@ -65,36 +121,36 @@ return {
                 -- Adjusts spacing to ensure icons are aligned
                 nerd_font_variant = "mono",
                 kind_icons = {
-                    Text = "󰉿",
+                    Text = "",
                     Method = "󰰑",
-                    Function = "󰯺",
-                    Constructor = "󰒓",
+                    Function = "󰯼",
+                    Constructor = "󰰏",
 
-                    Field = "󰜢",
+                    Field = "󰯼",
                     Variable = "󰰬",
                     Property = "󰰚",
 
                     Class = "󰯳",
                     Interface = "󰰅",
                     Struct = "󰰡",
-                    Module = "󰅩",
+                    Module = "󱓼",
 
                     Unit = "󰪚",
-                    Value = "󰰚",
+                    Value = "󰰪",
                     Enum = "󰯹",
                     EnumMember = "󰯱",
 
-                    Keyword = "",
+                    Keyword = "",
                     Constant = "󰯱",
 
-                    Snippet = "󱄽",
-                    Color = "󰏘",
-                    File = "󰈔",
-                    Reference = "󰬲",
-                    Folder = "󰉋",
+                    Snippet = "󰴹",
+                    Color = "",
+                    File = "",
+                    Reference = "󰬳",
+                    Folder = "",
                     Event = "󱐋",
-                    Operator = "󰪚",
-                    TypeParameter = "󰬛",
+                    Operator = "󱖦",
+                    TypeParameter = "󰰦",
                 },
             },
         },
