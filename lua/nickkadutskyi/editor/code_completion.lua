@@ -37,19 +37,19 @@ return {
                     scrollbar = false,
                     border = "rounded",
                     auto_show = true,
-                    -- draw = {
-                    --     columns = {
-                    --         { "label", "label_description", gap = 1 },
-                    --         { "kind_icon", "kind" },
-                    --     },
-                    -- },
+                    draw = {
+                        columns = {
+                            { "kind_icon" },
+                            { "label", "label_description", gap = 1 },
+                        },
+                    },
                 },
             },
 
             -- Default list of enabled providers defined so that you can extend it
             -- elsewhere in your config, without redefining it, due to `opts_extend`
             sources = {
-                default = { "avante", "lsp", "path", "snippets", "buffer", "ripgrep" },
+                default = { "lsp", "path", "snippets", "buffer", "avante" },
                 per_filetype = {
                     lua = { inherit_defaults = true, "lazydev" },
                 },
@@ -66,6 +66,8 @@ return {
                         module = "lazydev.integrations.blink",
                         score_offset = 100,
                     },
+
+                    -- Disabled because slow in large projects
                     ripgrep = {
                         module = "blink-ripgrep",
                         name = "Ripgrep",
