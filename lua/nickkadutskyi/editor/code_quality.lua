@@ -113,7 +113,7 @@ return {
                 end),
             })
             -- Run linters that use stdin
-            vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
+            vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
                 group = vim.api.nvim_create_augroup("nickkadutskyi-lint-stdin", { clear = true }),
                 callback = utils.debounce(100, function()
                     try_lint(true)

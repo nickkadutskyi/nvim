@@ -31,7 +31,7 @@ return {
                 documentation = {
                     -- Shows documentation pop-up automatically when available
                     auto_show = true,
-                    window = { border = "rounded" },
+                    window = { border = "rounded", scrollbar = false },
                 },
                 menu = {
                     scrollbar = false,
@@ -54,6 +54,7 @@ return {
                     lua = { inherit_defaults = true, "lazydev" },
                 },
                 providers = {
+                    lsp = { fallbacks = {} },
                     avante = {
                         module = "blink-cmp-avante",
                         name = "Avante",
