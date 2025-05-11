@@ -129,7 +129,7 @@ return {
                     Function = "󰯼",
                     Constructor = "󰰏",
 
-                    Field = "󰯼",
+                    Field = "󰯺",
                     Variable = "󰰬",
                     Property = "󰰚",
 
