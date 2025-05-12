@@ -59,7 +59,22 @@ return {
                         module = "blink-cmp-avante",
                         name = "Avante",
                         opts = {
-                            -- options for blink-cmp-avante
+                            kind_icons = {
+                                Avante = "󰘳",
+                                AvanteCmd = "󰘳",
+                                AvanteMention = "",
+                            },
+                            command = {
+                                get_kind_name = function(_)
+                                    return "AvanteCmd"
+                                end,
+                            },
+                            mention = {
+                                get_kind_name = function(_)
+                                    return "AvanteMention"
+                                end,
+                            },
+                            avante = {},
                         },
                     },
                     lazydev = {
@@ -154,6 +169,10 @@ return {
                     Event = "󱐋",
                     Operator = "󱖦",
                     TypeParameter = "󰰦",
+
+                    -- From Sources
+                    --AvanteCmd = "",
+                    --AvanteMention = "",
                 },
             },
         },
