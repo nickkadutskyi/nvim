@@ -138,6 +138,9 @@ return {
                     enabled = true,
                     replace_netrw = false,
                 },
+                image = {
+                    enabled = true,
+                },
                 picker = {
                     sources = {
                         ---@type snacks.picker.explorer.Config|{}

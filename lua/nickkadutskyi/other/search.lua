@@ -71,7 +71,6 @@ return {
                 if toggle == true then
                     show_excluded = not show_excluded
                 end
-                vim.notify("fzf-lua: " .. (show_excluded and "Show" or "Hide") .. " excluded files")
                 fzf.files({
                     resume = resume ~= nil and resume or true,
                     fd_opts = cmd_opts[not show_excluded and "excluded" or "notexcluded"].files.fd,
@@ -147,7 +146,7 @@ return {
                     },
                     previewer = false,
                     cwd_prompt = false,
-                    prompt = "  ",
+                    prompt = "   ",
                     header = false,
                 },
                 files = {
@@ -157,14 +156,15 @@ return {
                         height = 25, -- window height
                         width = 85,
                         row = 0.35,
+            -- Allows to turn on/off preview window
+                        preview = { hidden = true },
                     },
-                    prompt = "  ",
-                    -- formatter = "path.filename_first"
-                    -- formatter = "path.dirname_first",
+                    prompt = "   ",
                     formatter = { "path.filename_first", 2 },
                     fd_opts = cmd_opts.excluded.files.fd,
                     rg_opts = cmd_opts.excluded.files.rg,
                     find_opts = cmd_opts.excluded.files.find,
+                    previewer = "builtin",
                     actions = {
                         ["ctrl-e"] = function()
                             files_toggle_excluded(true)
@@ -183,7 +183,7 @@ return {
                         width = 85,
                         row = 0.35,
                     },
-                    prompt = "  ",
+                    prompt = "   ",
                     previewer = "builtin",
                     formatter = "path.dirname_first",
                     -- formatter = "path.filename_first",
@@ -199,7 +199,7 @@ return {
                 previewers = {
                     builtin = {
                         extensions = {
-                            ["svg"] = { "viu", "-b" },
+                            ["svg"] = { "chafa", "{file}" },
                             ["png"] = { "chafa" },
                             ["jpg"] = { "viu", "-b" },
                         },
