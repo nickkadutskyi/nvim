@@ -132,6 +132,9 @@ return {
                     input = {
                         prefix = "> ",
                     },
+                    edit = {
+                        border = "rounded",
+                    },
                 },
             })
 
