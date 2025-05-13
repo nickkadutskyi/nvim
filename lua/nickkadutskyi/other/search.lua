@@ -58,14 +58,19 @@ return {
                             end)
                             -- actions.file_edit_or_qf(selected, opts)
                         end,
-                        ["ctrl-i"] = actions.toggle_ignore,
-                        ["ctrl-h"] = actions.toggle_hidden,
+                        -- toggle excluded
+                        ["ctrl-e"] = function(_, opts)
+                            -- vim.notify(vim.inspect(opts))
+                        end,
                         ["ctrl-f"] = actions.toggle_follow,
+                        ["ctrl-h"] = actions.toggle_hidden,
+                        ["ctrl-i"] = actions.toggle_ignore,
                     },
                 },
                 fzf_colors = true,
                 fzf_opts = {
                     ["--layout"] = "reverse",
+                    ["--separator"] = "‾",
                 },
                 defaults = {
                     winopts = {
