@@ -26,18 +26,18 @@ return {
             local defaults = require("fzf-lua.defaults").defaults
 
             ---@type boolean
-            local show_excluded = true
+            local show_excluded = false
             local cmd_opts = {
                 excluded = {
                     files = {
-                        fd = utils.concat_exclude_ptrn(defaults.files.fd_opts, "--exclude ", "FZFLUA_EXCLUDE"),
-                        rg = utils.concat_exclude_ptrn(defaults.files.rg_opts, "--glob ", "FZFLUA_EXCLUDE", "!", false),
-                        find = utils.concat_exclude_ptrn(defaults.files.rg_opts, "\\! -path", "FZFLUA_EXCLUDE"),
+                        fd = utils.concat_exclude_ptrn(defaults.files.fd_opts, "--exclude ", nil, "FZFLUA_EXCLUDE"),
+                        rg = utils.concat_exclude_ptrn(defaults.files.rg_opts, "--glob ", "!", "FZFLUA_EXCLUDE", false),
+                        find = utils.concat_exclude_ptrn(defaults.files.rg_opts, "\\! -path", nil, "FZFLUA_EXCLUDE"),
                         fzf_colors = true,
                     },
                     live_grep = {
-                        rg = utils.concat_exclude_ptrn(defaults.grep.rg_opts, "--glob ", "FZFLUA_EXCLUDE", "!", false),
-                        grep = utils.concat_exclude_ptrn(defaults.grep.grep_opts, "--exclude=", "FZFLUA_EXCLUDE"),
+                        rg = utils.concat_exclude_ptrn(defaults.grep.rg_opts, "--glob ", "!", "FZFLUA_EXCLUDE", false),
+                        grep = utils.concat_exclude_ptrn(defaults.grep.grep_opts, "--exclude=", nil, "FZFLUA_EXCLUDE"),
                         fzf_colors = true,
                     },
                 },
@@ -67,23 +67,28 @@ return {
                     },
                 },
             }
-            local function files_toggle_excluded(_, opts)
-                show_excluded = not show_excluded
+            local function files_toggle_excluded(toggle, resume)
+                if toggle == true then
+                    show_excluded = not show_excluded
+                end
+                vim.notify("fzf-lua: " .. (show_excluded and "Show" or "Hide") .. " excluded files")
                 fzf.files({
-                    resume = true,
-                    fd_opts = cmd_opts[show_excluded and "excluded" or "notexcluded"].files.fd,
-                    rg_opts = cmd_opts[show_excluded and "excluded" or "notexcluded"].files.rg,
-                    find_opts = cmd_opts[show_excluded and "excluded" or "notexcluded"].files.find,
-                    fzf_colors = cmd_opts[show_excluded and "excluded" or "notexcluded"].files.fzf_colors,
+                    resume = resume ~= nil and resume or true,
+                    fd_opts = cmd_opts[not show_excluded and "excluded" or "notexcluded"].files.fd,
+                    rg_opts = cmd_opts[not show_excluded and "excluded" or "notexcluded"].files.rg,
+                    find_opts = cmd_opts[not show_excluded and "excluded" or "notexcluded"].files.find,
+                    fzf_colors = cmd_opts[not show_excluded and "excluded" or "notexcluded"].files.fzf_colors,
                 })
             end
-            local function live_grep_toggle_excluded(_, opts)
-                show_excluded = not show_excluded
+            local function live_grep_toggle_excluded(toggle, resume)
+                if toggle == true then
+                    show_excluded = not show_excluded
+                end
                 fzf.live_grep({
-                    resume = true,
-                    rg_opts = cmd_opts[show_excluded and "excluded" or "notexcluded"].live_grep.rg,
-                    grep_opts = cmd_opts[show_excluded and "excluded" or "notexcluded"].live_grep.grep,
-                    fzf_colors = cmd_opts[show_excluded and "excluded" or "notexcluded"].live_grep.fzf_colors,
+                    resume = resume ~= nil and resume or true,
+                    rg_opts = cmd_opts[not show_excluded and "excluded" or "notexcluded"].live_grep.rg,
+                    grep_opts = cmd_opts[not show_excluded and "excluded" or "notexcluded"].live_grep.grep,
+                    fzf_colors = cmd_opts[not show_excluded and "excluded" or "notexcluded"].live_grep.fzf_colors,
                 })
             end
 
@@ -161,7 +166,9 @@ return {
                     rg_opts = cmd_opts.excluded.files.rg,
                     find_opts = cmd_opts.excluded.files.find,
                     actions = {
-                        ["ctrl-e"] = files_toggle_excluded,
+                        ["ctrl-e"] = function()
+                            files_toggle_excluded(true)
+                        end,
                     },
                 },
                 buffers = {
@@ -184,7 +191,9 @@ return {
                     rg_opts = cmd_opts.excluded.live_grep.rg,
                     grep_opts = cmd_opts.excluded.live_grep.grep,
                     actions = {
-                        ["ctrl-e"] = live_grep_toggle_excluded,
+                        ["ctrl-e"] = function()
+                            live_grep_toggle_excluded(true)
+                        end,
                     },
                 },
                 previewers = {

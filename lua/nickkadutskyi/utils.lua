@@ -513,10 +513,10 @@ end
 ---@param env_var string
 ---@param prepend_path? string
 ---@param after? boolean
-function M.concat_exclude_ptrn(opts, arg, env_var, prepend_path, after)
+function M.concat_exclude_ptrn(opts, arg, prepend_path, env_var, after)
     env_var = env_var or "FZFLUA_EXCLUDE"
     arg = arg or "--exclude"
-    after = after ~= false  -- Default to true if not explicitly set to false
+    after = after ~= false -- Default to true if not explicitly set to false
 
     local exclude_paths = {}
 
