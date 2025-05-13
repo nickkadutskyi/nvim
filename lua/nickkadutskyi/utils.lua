@@ -507,4 +507,38 @@ function M.get_local_php_exe(executable)
         ".devenv/profile/bin/" .. executable,
     }, executable)
 end
+
+---@param opts string
+---@param arg string
+---@param env_var string
+---@param prepend_path? string
+---@param after? boolean
+function M.concat_exclude_ptrn(opts, arg, env_var, prepend_path, after)
+    env_var = env_var or "FZFLUA_EXCLUDE"
+    arg = arg or "--exclude"
+    after = after ~= false  -- Default to true if not explicitly set to false
+
+    local exclude_paths = {}
+
+    -- Read environment variable
+    local exclude_env = os.getenv(env_var)
+    if exclude_env then
+        -- Split by comma
+        for pattern in exclude_env:gmatch("[^,]+") do
+            table.insert(exclude_paths, pattern)
+        end
+    end
+
+    local exclude_opts = ""
+    -- Append --exclude options for each path
+    for _, path in ipairs(exclude_paths) do
+        exclude_opts = exclude_opts .. " " .. arg .. vim.fn.shellescape((prepend_path or "") .. path)
+    end
+
+    if not after then
+        return exclude_opts .. " " .. opts
+    else
+        return opts .. exclude_opts
+    end
+end
 return M

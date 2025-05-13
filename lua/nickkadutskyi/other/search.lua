@@ -23,8 +23,73 @@ return {
         config = function(_, _)
             local fzf = require("fzf-lua")
             local actions = require("fzf-lua.actions")
+            local defaults = require("fzf-lua.defaults").defaults
+
+            ---@type boolean
+            local show_excluded = true
+            local cmd_opts = {
+                excluded = {
+                    files = {
+                        fd = utils.concat_exclude_ptrn(defaults.files.fd_opts, "--exclude ", "FZFLUA_EXCLUDE"),
+                        rg = utils.concat_exclude_ptrn(defaults.files.rg_opts, "--glob ", "FZFLUA_EXCLUDE", "!", false),
+                        find = utils.concat_exclude_ptrn(defaults.files.rg_opts, "\\! -path", "FZFLUA_EXCLUDE"),
+                        fzf_colors = true,
+                    },
+                    live_grep = {
+                        rg = utils.concat_exclude_ptrn(defaults.grep.rg_opts, "--glob ", "FZFLUA_EXCLUDE", "!", false),
+                        grep = utils.concat_exclude_ptrn(defaults.grep.grep_opts, "--exclude=", "FZFLUA_EXCLUDE"),
+                        fzf_colors = true,
+                    },
+                },
+                notexcluded = {
+                    files = {
+                        fd = defaults.files.fd_opts,
+                        rg = defaults.files.rg_opts,
+                        find = defaults.files.rg_opts,
+                        fzf_colors = {
+                            true,
+                            ["list-bg"] = { "bg", "WindowBackgroundShowExcluded" },
+                            ["bg"] = { "bg", "WindowBackgroundShowExcluded" },
+                            ["pointer"] = { "bg", "WindowBackgroundShowExcluded" },
+                            ["gutter"] = { "bg", "WindowBackgroundShowExcluded" },
+                        },
+                    },
+                    live_grep = {
+                        rg = defaults.grep.rg_opts,
+                        grep = defaults.grep.rg_opts,
+                        fzf_colors = {
+                            true,
+                            ["list-bg"] = { "bg", "WindowBackgroundShowExcluded" },
+                            ["bg"] = { "bg", "WindowBackgroundShowExcluded" },
+                            ["pointer"] = { "bg", "WindowBackgroundShowExcluded" },
+                            ["gutter"] = { "bg", "WindowBackgroundShowExcluded" },
+                        },
+                    },
+                },
+            }
+            local function files_toggle_excluded(_, opts)
+                show_excluded = not show_excluded
+                fzf.files({
+                    resume = true,
+                    fd_opts = cmd_opts[show_excluded and "excluded" or "notexcluded"].files.fd,
+                    rg_opts = cmd_opts[show_excluded and "excluded" or "notexcluded"].files.rg,
+                    find_opts = cmd_opts[show_excluded and "excluded" or "notexcluded"].files.find,
+                    fzf_colors = cmd_opts[show_excluded and "excluded" or "notexcluded"].files.fzf_colors,
+                })
+            end
+            local function live_grep_toggle_excluded(_, opts)
+                show_excluded = not show_excluded
+                fzf.live_grep({
+                    resume = true,
+                    rg_opts = cmd_opts[show_excluded and "excluded" or "notexcluded"].live_grep.rg,
+                    grep_opts = cmd_opts[show_excluded and "excluded" or "notexcluded"].live_grep.grep,
+                    fzf_colors = cmd_opts[show_excluded and "excluded" or "notexcluded"].live_grep.fzf_colors,
+                })
+            end
+
             fzf.setup({
                 { "telescope" },
+                debug = true,
                 winopts = {
                     title_pos = "center",
                     height = 25, -- window height
@@ -58,10 +123,6 @@ return {
                             end)
                             -- actions.file_edit_or_qf(selected, opts)
                         end,
-                        -- toggle excluded
-                        ["ctrl-e"] = function(_, opts)
-                            -- vim.notify(vim.inspect(opts))
-                        end,
                         ["ctrl-f"] = actions.toggle_follow,
                         ["ctrl-h"] = actions.toggle_hidden,
                         ["ctrl-i"] = actions.toggle_ignore,
@@ -82,6 +143,7 @@ return {
                     previewer = false,
                     cwd_prompt = false,
                     prompt = "  ",
+                    header = false,
                 },
                 files = {
                     winopts = {
@@ -95,6 +157,12 @@ return {
                     -- formatter = "path.filename_first"
                     -- formatter = "path.dirname_first",
                     formatter = { "path.filename_first", 2 },
+                    fd_opts = cmd_opts.excluded.files.fd,
+                    rg_opts = cmd_opts.excluded.files.rg,
+                    find_opts = cmd_opts.excluded.files.find,
+                    actions = {
+                        ["ctrl-e"] = files_toggle_excluded,
+                    },
                 },
                 buffers = {
                     winopts = { title = " Switcher ", title_pos = "center" },
@@ -113,6 +181,11 @@ return {
                     formatter = "path.dirname_first",
                     -- formatter = "path.filename_first",
                     RIPGREP_CONFIG_PATH = vim.env.RIPGREP_CONFIG_PATH,
+                    rg_opts = cmd_opts.excluded.live_grep.rg,
+                    grep_opts = cmd_opts.excluded.live_grep.grep,
+                    actions = {
+                        ["ctrl-e"] = live_grep_toggle_excluded,
+                    },
                 },
                 previewers = {
                     builtin = {
