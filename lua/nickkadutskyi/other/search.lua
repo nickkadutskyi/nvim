@@ -200,6 +200,15 @@ return {
                     ignore_current_line = true,
                     includeDeclaration = false,
                 },
+                lsp = {
+                    symbols = {
+                        symbol_icons = require("jb.icons").icons,
+                        symbol_hl = function(s)
+                            -- `JBIcon<Kind>` generated in jb.nvim colorscheme
+                            return "JBIcon" .. s:lower()
+                        end,
+                    },
+                },
                 previewers = {
                     builtin = {
                         extensions = {

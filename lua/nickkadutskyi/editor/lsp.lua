@@ -132,12 +132,15 @@ return {
 
                     vim.keymap.set("n", "<leader>D", function()
                         -- vim.lsp.buf.type_definition()
-                        fzf.lsp_type_definitions({ winopts = { title = " Choose Type Definition " } })
+                        fzf.lsp_typedefs({ async = true, winopts = { title = " Choose Type Definition " } })
                     end, { buffer = event.buf, desc = "LSP: Type [D]efinition" })
 
                     vim.keymap.set({ "n", "x" }, "<leader>ca", function()
                         -- vim.lsp.buf.code_action()
-                        fzf.lsp_code_actions({ winopts = { title = " Context Actions ", title_pos = "left" } })
+                        fzf.lsp_code_actions({
+                            async = true,
+                            winopts = { title = " Context Actions ", title_pos = "left" },
+                        })
                     end, { buffer = event.buf, desc = "LSP: [c]ontext [a]ctions" })
 
                     vim.keymap.set("n", "<leader>gc", function()
