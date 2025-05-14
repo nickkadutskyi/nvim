@@ -24,6 +24,7 @@ return {
                 auto_attach = true,
                 preference = {
                     "phpactor",
+                    "nixd"
                 },
             },
         },
