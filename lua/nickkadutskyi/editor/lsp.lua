@@ -155,7 +155,7 @@ return {
                     end, { noremap = true, desc = "LSP: [g]o to [a]ll [s]ymbols" })
 
                     vim.keymap.set("n", "K", function()
-                        vim.lsp.buf.hover()
+                        vim.lsp.buf.hover({ border = "rounded" })
                     end, { buffer = event.buf, desc = "LSP: [K]eeword lookup/quick documentation" })
 
                     -- LSP Renaming. <S-F6> on macOS is <F18>

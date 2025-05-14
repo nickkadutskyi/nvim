@@ -92,7 +92,6 @@ return {
             end
 
             fzf.setup({
-                { "telescope" },
                 debug = true,
                 winopts = {
                     title_pos = "center",
@@ -141,7 +140,7 @@ return {
                     winopts = {
                         title_pos = "center",
                         height = 25, -- window height
-                        width = 85,
+                        width = 95,
                         row = 0.35,
                     },
                     previewer = false,
@@ -152,15 +151,17 @@ return {
                 files = {
                     winopts = {
                         title = " Files ",
-                        title_pos = "center",
+                        title_pos = "left",
                         height = 25, -- window height
-                        width = 85,
+                        width = 95,
                         row = 0.35,
-            -- Allows to turn on/off preview window
+                        -- Allows to turn on/off preview window
                         preview = { hidden = true },
                     },
                     prompt = "   ",
-                    formatter = { "path.filename_first", 2 },
+                    -- formatter = { "path.filename_first", 2 },
+                    -- formatter = "path.filename_first",
+                    formatter = "path.dirname_first",
                     fd_opts = cmd_opts.excluded.files.fd,
                     rg_opts = cmd_opts.excluded.files.rg,
                     find_opts = cmd_opts.excluded.files.find,
@@ -172,13 +173,13 @@ return {
                     },
                 },
                 buffers = {
-                    winopts = { title = " Switcher ", title_pos = "center" },
+                    winopts = { title = " Switcher ", title_pos = "left" },
                     prompt = "  ",
                 },
                 grep = {
                     winopts = {
                         title = " Find in Files ",
-                        title_pos = "center",
+                        title_pos = "left",
                         height = 25, -- window height
                         width = 85,
                         row = 0.35,
