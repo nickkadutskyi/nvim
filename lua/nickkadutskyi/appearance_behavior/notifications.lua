@@ -21,6 +21,18 @@ return {
                 return require("notify")(message, level, opts)
             end
 
+            -- table from lsp severity to vim severity.
+            local severity = {
+                "error",
+                "warn",
+                "info",
+                "info", -- map both hint and info to info?
+            }
+            vim.lsp.handlers["window/showMessage"] = function(err, method, params)
+                local client = vim.lsp.get_client_by_id(params.client_id) or {}
+                vim.notify(method.message, severity[method.type], { title = "LSP: " .. (client.name or "Unknown") })
+            end
+
             -- Fixes overlap with statusline
             -- See https://github.com/rcarriga/nvim-notify/issues/189#issuecomment-2225599658
             local override = function(direction)
