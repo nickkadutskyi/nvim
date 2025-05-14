@@ -14,7 +14,7 @@ end
 -- vim.opt.textwidth = 120 -- max_line_length
 vim.opt.tabstop = 2 -- tab_width
 vim.opt.expandtab = true -- indent_style
-vim.opt.fileencoding = "utf-8" -- charset
+-- vim.opt.fileencoding = "utf-8" -- is set automatically
 vim.opt.softtabstop = 2 -- indent_size
 vim.opt.shiftwidth = 2 -- indent_size
 
