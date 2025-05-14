@@ -16,7 +16,28 @@ return {
         -- Uses LSP to show current code context—used in status line
         "SmiteshP/nvim-navic",
         dependencies = { "neovim/nvim-lspconfig" },
-        opts = { highlight = true, color_correction = "dynamic" },
+        ---@type Options
+        opts = {
+            highlight = true,
+            color_correction = "dynamic",
+            lsp = {
+                auto_attach = true,
+                preference = {
+                    "phpactor",
+                },
+            },
+        },
+        ---@param opts Options
+        config = function(_, opts)
+            local navic = require("nvim-navic")
+
+            -- Sets icons from jb.nvim
+            opts.icons = vim.tbl_map(function(icon)
+                return icon .. " "
+            end, require("jb.icons").icons)
+
+            navic.setup(opts)
+        end,
     },
     {
         ---@class vim.lsp.ConfigLocal : vim.lsp.Config
@@ -187,14 +208,6 @@ return {
 
                     -- Attach to nvim-navic to show current code context—used in status line
                     local client = vim.lsp.get_client_by_id(event.data.client_id)
-                    if
-                        client ~= nil
-                        and client.server_capabilities.documentSymbolProvider
-                        and client.name ~= "phpactor"
-                        and client.name ~= "psalm"
-                    then
-                        require("nvim-navic").attach(client, bufnr)
-                    end
 
                     -- The following two autocommands are used to highlight references of the
                     -- word under your cursor when your cursor rests there for a little while.
