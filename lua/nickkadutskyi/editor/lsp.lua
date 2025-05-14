@@ -24,9 +24,17 @@ return {
                 auto_attach = true,
                 preference = {
                     "phpactor",
-                    "nixd"
+                    "nixd",
                 },
             },
+            format_text = function(text)
+                -- This is a workaround for the fact that `nixd` returns
+                -- `{anonymous}` as the name of Array kind
+                if text == "{anonymous}" then
+                    return "{a}"
+                end
+                return text
+            end,
         },
         ---@param opts Options
         config = function(_, opts)
