@@ -143,7 +143,6 @@ return {
                         width = 95,
                         row = 0.35,
                     },
-                    previewer = false,
                     cwd_prompt = false,
                     prompt = "   ",
                     header = false,
@@ -196,6 +195,10 @@ return {
                             live_grep_toggle_excluded(true)
                         end,
                     },
+                },
+                lsp_references = {
+                    ignore_current_line = true,
+                    includeDeclaration = false,
                 },
                 previewers = {
                     builtin = {

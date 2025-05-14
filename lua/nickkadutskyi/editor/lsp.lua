@@ -107,22 +107,27 @@ return {
 
                     vim.keymap.set("n", "gd", function()
                         -- vim.lsp.buf.definition()
-                        fzf.lsp_definitions({ winopts = { title = " Choose Definition " } })
+                        fzf.lsp_definitions({ async = true, winopts = { title = " Choose Definition " } })
                     end, { buffer = event.buf, desc = "LSP: [g]o to [d]efinition" })
 
                     vim.keymap.set("n", "gD", function()
                         -- vim.lsp.buf.declaration()
-                        fzf.lsp_declarations({ winopts = { titne = " Choose Declaration " } })
+                        fzf.lsp_declarations({ async = true, winopts = { titne = " Choose Declaration " } })
                     end, { buffer = event.buf, desc = "LSP: [g]o to [D]eclaration" })
 
                     vim.keymap.set("n", "gr", function()
                         -- vim.lsp.buf.references()
-                        fzf.lsp_references({ winopts = { title = " Usages " } })
+                        fzf.lsp_references({
+                            async = true,
+                            winopts = { title = " Usages " },
+                            ignore_current_line = true,
+                            includeDeclaration = false,
+                        })
                     end, { buffer = event.buf, desc = "LSP: [g]o to [r]eferences" })
 
                     vim.keymap.set("n", "gi", function()
                         -- vim.lsp.buf.implementation()
-                        fzf.lsp_implementations({ winopts = { title = " Choose Implementation " } })
+                        fzf.lsp_implementations({ async = true, winopts = { title = " Choose Implementation " } })
                     end, { buffer = event.buf, desc = "LSP: [g]o to [i]mplementations" })
 
                     vim.keymap.set("n", "<leader>D", function()
