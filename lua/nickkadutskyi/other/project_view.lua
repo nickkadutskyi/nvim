@@ -129,27 +129,28 @@ return {
         "folke/snacks.nvim",
         priority = 1000,
         lazy = false,
-        config = function()
-            local snacks = require("snacks")
-            ---@type snacks.Config
-            snacks.setup({
-                -- TODO: remove when styled in jb.nvim
-                explorer = {
-                    enabled = true,
-                    replace_netrw = false,
-                },
-                image = {
-                    enabled = true,
-                },
-                picker = {
-                    sources = {
-                        ---@type snacks.picker.explorer.Config|{}
-                        explorer = {
-                            auto_close = true,
-                        },
+        opts = {
+            -- TODO: remove when styled in jb.nvim
+            explorer = {
+                enabled = true,
+                replace_netrw = false,
+            },
+            image = {
+                enabled = true,
+            },
+            picker = {
+                sources = {
+                    ---@type snacks.picker.explorer.Config|{}
+                    explorer = {
+                        auto_close = true,
                     },
                 },
-            })
+            },
+        },
+        config = function(_, opts)
+            local snacks = require("snacks")
+            ---@type snacks.Config
+            snacks.setup(opts)
             vim.keymap.set("n", "<leader>ae", function()
                 snacks.explorer()
             end, {

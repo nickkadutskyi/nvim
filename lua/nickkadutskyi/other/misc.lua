@@ -40,7 +40,20 @@ vim.api.nvim_create_autocmd("BufRead", {
     end,
 })
 
+---@type LazySpec
 return {
+    {
+        "folke/snacks.nvim",
+        ---@type snacks.Config
+        opts = {
+            ---@class snacks.bigfile.Config
+            ---@field enabled? boolean
+            bigfile = {
+                enabled = true,
+                notify = true, -- show notification when big file detected
+            },
+        },
+    },
     {
         -- Image Previewer
         "3rd/image.nvim",

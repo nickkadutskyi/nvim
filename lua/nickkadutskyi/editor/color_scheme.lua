@@ -3,6 +3,7 @@ vim.opt.synmaxcol = 500
 -- RGB colors
 vim.opt.termguicolors = true
 
+---@type LazySpec
 return {
     {
         -- My new color scheme inspired by IntelliJ
@@ -87,6 +88,7 @@ return {
     {
         -- Disables treesitter and lsp if the file matches some pattern (for minified or large files)
         "LunarVim/bigfile.nvim",
+        enabled = false,
         lazy = false,
         event = { "FileReadPre", "BufReadPre", "User FileOpened" },
         opts = {
