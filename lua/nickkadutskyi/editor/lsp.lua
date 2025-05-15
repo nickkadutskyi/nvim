@@ -1,19 +1,10 @@
 -- TODO add ability to jump to a file path in PHP files provided as __DIR__."/path/to/file"
 return {
-    {
-        -- Rename with incremental search
+    { -- Rename with incremental search
         "smjonas/inc-rename.nvim",
-        opts = {
-            input_buffer_type = "dressing",
-        },
+        opts = {},
     },
-    {
-        -- For installing langauge servers, formatters, linters, DAPs
-        "williamboman/mason.nvim",
-        opts = { ui = { border = "rounded" } },
-    },
-    {
-        -- Uses LSP to show current code context—used in status line
+    { -- Uses LSP to show current code context—used in status line
         "SmiteshP/nvim-navic",
         dependencies = { "neovim/nvim-lspconfig" },
         ---@type Options

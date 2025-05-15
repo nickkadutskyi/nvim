@@ -42,28 +42,25 @@ vim.api.nvim_create_autocmd("BufRead", {
 
 ---@type LazySpec
 return {
-    {
+    { -- For installing language servers, formatters, linters, DAPs
+        "williamboman/mason.nvim",
+        opts = { ui = { border = "rounded" } },
+    },
+    { -- Snacks.nvim version of bigfile
         "folke/snacks.nvim",
         ---@type snacks.Config
         opts = {
             ---@class snacks.bigfile.Config
-            ---@field enabled? boolean
-            bigfile = {
-                enabled = true,
-                notify = true, -- show notification when big file detected
-            },
+            bigfile = { enabled = true },
         },
     },
-    {
-        -- Image Previewer
+    { -- Image Previewer for previewing images in fzf-lua
         "3rd/image.nvim",
-        build = false, -- so that it doesn't build the rock https://github.com/3rd/image.nvim/issues/91#issuecomment-2453430239
-        opts = {
-            processor = "magick_cli",
-        },
+        -- so that it doesn't build the rock https://github.com/3rd/image.nvim/issues/91#issuecomment-2453430239
+        build = false,
+        opts = { processor = "magick_cli" },
     },
-    {
-        -- Hides secrets in files
+    { -- Hides secrets in files to work in public places
         "laytan/cloak.nvim",
         config = function()
             require("cloak").setup({
