@@ -15,14 +15,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
             return has_inc_rename and ":IncRename " .. vim.fn.expand("<cword>") or vim.lsp.buf.rename()
         end
         local rename_opts = function(desc)
-            return { expr = has_inc_rename, buffer = event.buf, desc = desc }
+            return { expr = has_inc_rename, buffer = event.buf, desc = "LSP: " .. desc }
         end
         -- Mimics IntelliJ's refactor > rename
-        vim.keymap.set("n", "<S-F6>", rename, rename_opts("LSP: [S-F6] Rename..."))
+        vim.keymap.set("n", "<S-F6>", rename, rename_opts("[S-F6] Rename..."))
         -- <S-F6> on macOS is <F18>
-        vim.keymap.set("n", "<F18>", rename, rename_opts("LSP: [F18] Rename..."))
+        vim.keymap.set("n", "<F18>", rename, rename_opts("[F18] Rename..."))
         -- Overrides the default LSP rename keymap
-        vim.keymap.set("n", "grn", rename, rename_opts("LSP: [G]o to [R]efactor Re[n]ame"))
+        vim.keymap.set("n", "grn", rename, rename_opts("[G]o to [R]efactor Re[n]ame"))
     end,
 })
 
