@@ -1,8 +1,41 @@
 -- TODO add ability to jump to a file path in PHP files provided as __DIR__."/path/to/file"
+
+-- Set by `smjonas/inc-rename.nvim` plugin on `init`
+local has_inc_rename = false
+
+-- Configures LspAttach (on_attach) event for all language servers to set up keymaps
+vim.api.nvim_create_autocmd("LspAttach", {
+    group = vim.api.nvim_create_augroup("kdtsk-lsp-attach-keymap", { clear = true }),
+    callback = function(event)
+        local keymap_opts = { buffer = event.buf, desc = "LSP: " }
+        local fzf = require("fzf-lua")
+
+        -- Refactor > Rename variable under the cursor
+        local rename = function()
+            return has_inc_rename and ":IncRename " .. vim.fn.expand("<cword>") or vim.lsp.buf.rename()
+        end
+        local rename_opts = function(desc)
+            return { expr = has_inc_rename, buffer = event.buf, desc = desc }
+        end
+        -- Mimics IntelliJ's refactor > rename
+        vim.keymap.set("n", "<S-F6>", rename, rename_opts("LSP: [S-F6] Rename..."))
+        -- <S-F6> on macOS is <F18>
+        vim.keymap.set("n", "<F18>", rename, rename_opts("LSP: [F18] Rename..."))
+        -- Overrides the default LSP rename keymap
+        vim.keymap.set("n", "grn", rename, rename_opts("LSP: [G]o to [R]efactor Re[n]ame"))
+    end,
+})
+
+---@type LazySpec
 return {
     { -- Rename with incremental search
         "smjonas/inc-rename.nvim",
+        ---@type inc_rename.UserConfig
         opts = {},
+        init = function()
+            -- Sets to switch to IncRename command in keymap
+            has_inc_rename = true
+        end,
     },
     { -- Uses LSP to show current code context—used in status line
         "SmiteshP/nvim-navic",
@@ -14,8 +47,8 @@ return {
             lsp = {
                 auto_attach = true,
                 preference = {
-                    "phpactor",
-                    "nixd",
+                    "phpactor", -- TODO: find a way to switch to intelephense
+                    "nixd", -- Works better than nil_ls
                 },
             },
             format_text = function(text)
@@ -186,20 +219,6 @@ return {
                     vim.keymap.set("n", "K", function()
                         vim.lsp.buf.hover({ border = "rounded" })
                     end, { buffer = event.buf, desc = "LSP: [K]eeword lookup/quick documentation" })
-
-                    -- LSP Renaming. <S-F6> on macOS is <F18>
-                    vim.keymap.set("n", "<S-F6>", function()
-                        -- vim.lsp.buf.rename()
-                        return ":IncRename " .. vim.fn.expand("<cword>")
-                    end, { expr = true, buffer = event.buf, desc = "LSP: [S-F6/F18] Rename" })
-                    vim.keymap.set("n", "<F18>", function()
-                        -- vim.lsp.buf.rename()
-                        return ":IncRename " .. vim.fn.expand("<cword>")
-                    end, { expr = true, buffer = event.buf, desc = "LSP: [F18/S-F6] Rename" })
-                    vim.keymap.set("n", "<leader>rn", function()
-                        -- vim.lsp.buf.rename()
-                        return ":IncRename " .. vim.fn.expand("<cword>")
-                    end, { expr = true, buffer = event.buf, desc = "LSP: [r]e[n]ame" })
 
                     -- vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, opts)
                     -- vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
