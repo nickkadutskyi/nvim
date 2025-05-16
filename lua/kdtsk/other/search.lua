@@ -99,11 +99,12 @@ return {
                     width = 85,
                     row = 0.35,
                     preview = {
+                        title_pos = "left",
                         scrollbar = false,
                         layout = "vertical",
                         vertical = "down:60%",
                     },
-                    border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+                    border = require("jb.borders").borders.dialog.default,
                 },
                 actions = {
                     -- Pickers inheriting these actions:
@@ -149,13 +150,17 @@ return {
                 },
                 files = {
                     winopts = {
-                        title = " Files ",
+                        title = "Files",
                         title_pos = "left",
                         height = 25, -- window height
                         width = 95,
                         row = 0.35,
                         -- Allows to turn on/off preview window
-                        preview = { hidden = true },
+                        preview = {
+                            hidden = true,
+                            border = require("jb.borders").borders.dialog.split_bottom,
+                        },
+                        border = require("jb.borders").borders.dialog.default,
                     },
                     prompt = "   ",
                     -- formatter = { "path.filename_first", 2 },
@@ -172,16 +177,27 @@ return {
                     },
                 },
                 buffers = {
-                    winopts = { title = " Switcher ", title_pos = "left" },
+                    winopts = {
+                        title = "Switcher",
+                        title_pos = "left",
+                        preview = {
+                            hidden = true,
+                            border = require("jb.borders").borders.dialog.split_bottom,
+                        },
+                    },
                     prompt = "  ",
                 },
                 grep = {
                     winopts = {
-                        title = " Find in Files ",
+                        title = "Find in Files",
                         title_pos = "left",
                         height = 25, -- window height
                         width = 85,
                         row = 0.35,
+                        border = require("jb.borders").borders.dialog.split_top,
+                        preview = {
+                            border = require("jb.borders").borders.dialog.split_bottom,
+                        },
                     },
                     prompt = "   ",
                     previewer = "builtin",
@@ -212,6 +228,23 @@ return {
                             ["png"] = { "chafa" },
                             ["jpg"] = { "viu", "-b" },
                         },
+                        title_fnamemodify = function(s)
+                            -- Get absolute path of parent directory
+                            local absParentPath = vim.fn.fnamemodify(s, ":h")
+                            -- Convert absolute path to path relative to cwd
+                            local relParentPath = vim.fn.fnamemodify(absParentPath, ":~:.")
+
+                            local path = require("fzf-lua.path")
+                            local name = path.tail(s)
+
+                            -- Handle case when file is outside of cwd
+                            if relParentPath:find("^%./") then
+                                relParentPath = relParentPath:sub(3) -- Remove leading ./
+                            end
+
+                            -- Return filename with relative parent path
+                            return name .. " - " .. relParentPath
+                        end,
                     },
                 },
             })

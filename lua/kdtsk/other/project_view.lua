@@ -1,6 +1,3 @@
--- TODO Add custom syntax regex to highlight files ignored by git
--- TODO Contribute to https://github.com/prichrd/netrw.nvim to get Git support
--- TODO keep the window open when marking directory as a target with `mt` in netrw to preserve state
 -- TODO make it open a wind in a current buffer instead of the most right one
 
 local utils = require("kdtsk.utils")
