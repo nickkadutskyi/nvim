@@ -5,7 +5,7 @@ return {
         enabled = false, -- using copilot.lua so that copilot-lualine works
         dependencies = { "folke/which-key.nvim" },
         init = function()
-            require("nickkadutskyi.utils").add_cwd_to_copilot_workspace_folders()
+            require("kdtsk.utils").add_cwd_to_copilot_workspace_folders()
             vim.g.copilot_filetypes = { ["copilot-chat"] = false }
             vim.g.copilot_settings = { selectedCompletionModel = "gpt-4o-copilot" }
             vim.g.copilot_integration_id = "vscode-chat"

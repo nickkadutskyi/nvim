@@ -28,7 +28,7 @@ return {
             -- lint.linters_by_ft["scss"] = { "stylelint" }
             -- Run Style Sheets linters that use stdin
             -- vim.api.nvim_create_autocmd({ "BufEnter", "InsertLeave", "BufWritePost" }, {
-            --     group = vim.api.nvim_create_augroup("nickkadutskyi-style-lint-stdin", { clear = true }),
+            --     group = vim.api.nvim_create_augroup("kdtsk-style-lint-stdin", { clear = true }),
             --     pattern = { "*.css", "*.scss" },
             --     callback = function(e)
             --         lint.try_lint({ "stylelint" })

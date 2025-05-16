@@ -83,7 +83,7 @@ return {
     { -- Visual guides
         "lukas-reineke/virt-column.nvim",
         opts = {
-            -- Highlight groups from nickkadutskyi/jb.nvim
+            -- Highlight groups from kdtsk/jb.nvim
             highlight = {
                 "General_Editor_Guides_VisualGuides",
                 "General_Editor_Guides_VisualGuides",

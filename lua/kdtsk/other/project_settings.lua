@@ -1,4 +1,4 @@
-local utils = require("nickkadutskyi.utils")
+local utils = require("kdtsk.utils")
 
 return {
     {

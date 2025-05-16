@@ -35,7 +35,7 @@ return {
         enabled = true,
         opts = {
             -- merged from:
-            -- nickkadutskyi.languages_frameworks
+            -- kdtsk.languages_frameworks
             ensure_installed = {
                 "c",
                 "comment",

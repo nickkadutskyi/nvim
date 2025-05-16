@@ -9,7 +9,7 @@ vim.opt.inccommand = "split"
 -- Highlights when yanking text
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight when yanking text",
-    group = vim.api.nvim_create_augroup("nickkadutskyi-highlight-yank", { clear = true }),
+    group = vim.api.nvim_create_augroup("kdtsk-highlight-yank", { clear = true }),
     callback = function()
         vim.highlight.on_yank()
     end,
@@ -18,7 +18,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- Help window mappings
 -- Close help with q or escape
 vim.api.nvim_create_autocmd("FileType", {
-    group = vim.api.nvim_create_augroup("nickkadutskyi-help-mappings", { clear = true }),
+    group = vim.api.nvim_create_augroup("kdtsk-help-mappings", { clear = true }),
     pattern = "help",
     callback = function()
         -- Buffer-local mappings for help windows
@@ -29,7 +29,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- Enfores readonly for files in vendor and node_modules
 vim.api.nvim_create_autocmd("BufRead", {
-    group = vim.api.nvim_create_augroup("nickkadutskyi-readonly-dirs", { clear = true }),
+    group = vim.api.nvim_create_augroup("kdtsk-readonly-dirs", { clear = true }),
     pattern = {
         "*/vendor/*",
         "*/node_modules/*",

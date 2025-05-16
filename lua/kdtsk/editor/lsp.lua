@@ -23,7 +23,7 @@ local function resume_fzf_with_opts(show_excluded, opts)
     opts.__call_fn(options)
 end
 
-local exclude_patterns = require("nickkadutskyi.utils").parse_exclude_env("FZFLUA_EXCLUDE")
+local exclude_patterns = require("kdtsk.utils").parse_exclude_env("FZFLUA_EXCLUDE")
 -- Cache the length to avoid recalculating in each iteration
 local patterns_len = #exclude_patterns
 local function is_excluded(item)
@@ -218,7 +218,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
         -- word under your cursor when your cursor rests there for a little while.
         -- When you move your cursor, the highlights will be cleared (the second autocommand).
         if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
-            local hi_augroup = vim.api.nvim_create_augroup("nickkadutskyi-lsp-highlight", { clear = false })
+            local hi_augroup = vim.api.nvim_create_augroup("kdtsk-lsp-highlight", { clear = false })
             vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
                 buffer = event.buf,
                 group = hi_augroup,
@@ -232,11 +232,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
             })
 
             vim.api.nvim_create_autocmd("LspDetach", {
-                group = vim.api.nvim_create_augroup("nickkadutskyi-lsp-detach", { clear = true }),
+                group = vim.api.nvim_create_augroup("kdtsk-lsp-detach", { clear = true }),
                 callback = function(event2)
                     vim.lsp.buf.clear_references()
                     vim.api.nvim_clear_autocmds({
-                        group = "nickkadutskyi-lsp-highlight",
+                        group = "kdtsk-lsp-highlight",
                         buffer = event2.buf,
                     })
                 end,
@@ -359,7 +359,7 @@ return {
             -- "hrsh7th/cmp-nvim-lsp",
         },
         config = function(plugin, opts)
-            local utils = require("nickkadutskyi.utils")
+            local utils = require("kdtsk.utils")
             ---@type table<string, vim.lsp.ConfigLocal>
             local servers = opts.servers or {}
 

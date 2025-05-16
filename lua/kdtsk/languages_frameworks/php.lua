@@ -111,7 +111,7 @@ return {
                 -- PHP Code Sniffer
                 phpcs = {
                     cmd = function()
-                        return require("nickkadutskyi.utils").get_local_php_exe("phpcs")
+                        return require("kdtsk.utils").get_local_php_exe("phpcs")
                     end,
                     nix_pkg = "php83Packages.php-codesniffer",
                     -- Sets col and end_col to whole row
@@ -161,7 +161,7 @@ return {
                 -- PHP Mess Detector
                 phpmd = {
                     cmd = function()
-                        return require("nickkadutskyi.utils").get_local_php_exe("phpmd")
+                        return require("kdtsk.utils").get_local_php_exe("phpmd")
                     end,
                     nix_pkg = "php83Packages.phpmd",
                 },
@@ -169,7 +169,7 @@ return {
                 -- PHPStan
                 phpstan = {
                     cmd = function()
-                        return require("nickkadutskyi.utils").get_local_php_exe("phpstan")
+                        return require("kdtsk.utils").get_local_php_exe("phpstan")
                     end,
                     nix_pkg = "php83Packages.phpstan",
                     -- Sets col and end_col to whole row
@@ -209,7 +209,7 @@ return {
                 -- Psalm
                 psalm = {
                     cmd = function()
-                        return require("nickkadutskyi.utils").get_local_php_exe("psalm")
+                        return require("kdtsk.utils").get_local_php_exe("psalm")
                     end,
                     nix_pkg = "php83Packages.psalm",
                     -- Psalm exits with 2 when there are issues in file

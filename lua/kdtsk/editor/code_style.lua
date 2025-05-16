@@ -61,7 +61,7 @@ return {
         },
         ---@param opts? conform.setupOpts
         config = function(_, opts)
-            local utils = require("nickkadutskyi.utils")
+            local utils = require("kdtsk.utils")
             local conform = require("conform")
 
             -- Gets mason-nvim-lint

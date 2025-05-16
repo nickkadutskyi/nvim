@@ -93,22 +93,22 @@ return {
             -- Autocmds
             ---Updates file status hl when hunks are changed
             vim.api.nvim_create_autocmd({ "User" }, {
-                group = vim.api.nvim_create_augroup("nickkadutskyi-neogit-status-gitsigns", { clear = true }),
+                group = vim.api.nvim_create_augroup("kdtsk-neogit-status-gitsigns", { clear = true }),
                 pattern = { "GitSignsChanged" },
                 callback = function(e)
-                    require("nickkadutskyi.utils").set_git_status_hl(e.buf)
+                    require("kdtsk.utils").set_git_status_hl(e.buf)
                 end,
             })
             ---Updates file status hl when buffer is entered or saved
             vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "FocusGained" }, {
-                group = vim.api.nvim_create_augroup("nickkadutskyi-neogit-status", { clear = true }),
+                group = vim.api.nvim_create_augroup("kdtsk-neogit-status", { clear = true }),
                 callback = function(e)
-                    require("nickkadutskyi.utils").set_git_status_hl(e.buf)
+                    require("kdtsk.utils").set_git_status_hl(e.buf)
                 end,
             })
             ---Sets Normal background for Neogit editors
             vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
-                group = vim.api.nvim_create_augroup("nickkadutskyi-neogit-popup-editor", { clear = true }),
+                group = vim.api.nvim_create_augroup("kdtsk-neogit-popup-editor", { clear = true }),
                 ---Defined in Neogit
                 ---https://github.com/NeogitOrg/neogit/blob/master/lua/neogit/client.lua#L101
                 pattern = {
@@ -128,7 +128,7 @@ return {
             })
             ---Neogit Popup adjustments
             vim.api.nvim_create_autocmd({ "BufWinEnter" }, {
-                group = vim.api.nvim_create_augroup("nickkadutskyi-neogit-popup", { clear = true }),
+                group = vim.api.nvim_create_augroup("kdtsk-neogit-popup", { clear = true }),
                 pattern = { "Neogit*" },
                 callback = function(e)
                     -- Is delayed to get set after Neogit sets its own colors

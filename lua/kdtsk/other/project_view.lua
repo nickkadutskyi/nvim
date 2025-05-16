@@ -3,7 +3,7 @@
 -- TODO keep the window open when marking directory as a target with `mt` in netrw to preserve state
 -- TODO make it open a wind in a current buffer instead of the most right one
 
-local utils = require("nickkadutskyi.utils")
+local utils = require("kdtsk.utils")
 
 -- Netrw
 vim.g.netrw_keepdir = 1 -- To avoid changing cwd when navigating in netrw
@@ -84,7 +84,7 @@ vim.keymap.set({ "n", "i" }, "<A-1>", toggle_vim_explorer_float, {
     desc = "Project: [a]ctivate [p]roject tool window.",
 })
 
-local group_start = vim.api.nvim_create_augroup("nickkadutskyi-netrw-start", { clear = true })
+local group_start = vim.api.nvim_create_augroup("kdtsk-netrw-start", { clear = true })
 vim.api.nvim_create_autocmd("VimEnter", {
     group = group_start,
     callback = function(e)

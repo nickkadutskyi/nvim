@@ -1,4 +1,4 @@
-local defaults = require("nickkadutskyi.config").default
+local defaults = require("kdtsk.config").default
 
 local M = {}
 
@@ -8,7 +8,7 @@ local M = {}
 ---@param cwd? string
 ---@return string
 ---@example
---- local cmd = require("nickkadutskyi.util").find_executable({ "node_modules/.bin/prettier" }, "prettier")
+--- local cmd = require("kdtsk.util").find_executable({ "node_modules/.bin/prettier" }, "prettier")
 function M.find_executable(paths, default, cwd)
     cwd = cwd or vim.fn.getcwd()
     for _, path in ipairs(paths) do
@@ -290,7 +290,7 @@ function M.create_tool_window(
             close_tool_window()
         end
     end
-    local group = vim.api.nvim_create_augroup("nickkadutskyi-tool-window-" .. winid, { clear = true })
+    local group = vim.api.nvim_create_augroup("kdtsk-tool-window-" .. winid, { clear = true })
     vim.api.nvim_create_autocmd({ "WinLeave" }, {
         group = group,
         nested = true,

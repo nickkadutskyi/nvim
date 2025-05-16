@@ -35,19 +35,19 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
     spec = {
         -- Customizes IDE (non-editor-specific parts) appearance and behavior
-        { import = "nickkadutskyi.appearance_behavior" },
+        { import = "kdtsk.appearance_behavior" },
         -- Provides generic (non-plugin-specific) Keymap
-        { import = "nickkadutskyi.keymap" },
+        { import = "kdtsk.keymap" },
         -- Configures all editor specific parts (completion, code style and quality, color scheme, etc.)
-        { import = "nickkadutskyi.editor" },
+        { import = "kdtsk.editor" },
         -- Everything related to version control systems (e.g. Git)
-        { import = "nickkadutskyi.version_control" },
+        { import = "kdtsk.version_control" },
         -- Provides language-specific settings (Lazy modules provide `opts` but configured in other areas)
-        { import = "nickkadutskyi.languages_frameworks" },
+        { import = "kdtsk.languages_frameworks" },
         -- Other tools (terminal, task runner, AI assistant, etc.)
-        { import = "nickkadutskyi.tools" },
+        { import = "kdtsk.tools" },
         -- Uncategorized
-        { import = "nickkadutskyi.other" },
+        { import = "kdtsk.other" },
     },
     change_detection = { enable = true, notify = false },
     install = { colorscheme = { "jb" } },

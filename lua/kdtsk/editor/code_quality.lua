@@ -17,7 +17,7 @@ return {
         dependencies = { "stevearc/conform.nvim", "mason-nvim-lint" },
         opts = { linters_by_ft = {}, linters = {} },
         config = function(_, opts)
-            local utils = require("nickkadutskyi.utils")
+            local utils = require("kdtsk.utils")
             local lint = require("lint")
             ---@type table<string, lint.LinterLocal>
             local custom_linters = opts.linters
@@ -107,14 +107,14 @@ return {
             end
             -- Run linters that require a file to be saved and stdin
             vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPre", "BufNewFile" }, {
-                group = vim.api.nvim_create_augroup("nickkadutskyi-lint-all", { clear = true }),
+                group = vim.api.nvim_create_augroup("kdtsk-lint-all", { clear = true }),
                 callback = utils.debounce(100, function()
                     lint.try_lint()
                 end),
             })
             -- Run linters that use stdin
             vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
-                group = vim.api.nvim_create_augroup("nickkadutskyi-lint-stdin", { clear = true }),
+                group = vim.api.nvim_create_augroup("kdtsk-lint-stdin", { clear = true }),
                 callback = utils.debounce(100, function()
                     try_lint(true)
                 end),

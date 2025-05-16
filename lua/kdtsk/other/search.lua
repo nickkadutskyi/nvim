@@ -1,4 +1,4 @@
-local utils = require("nickkadutskyi.utils")
+local utils = require("kdtsk.utils")
 -- Search text in file
 -- Case-insensitive searching UNLESS \C or capital in search
 vim.opt.ignorecase = true
