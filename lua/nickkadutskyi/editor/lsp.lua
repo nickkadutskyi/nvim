@@ -126,7 +126,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
         end, { buffer = event.buf, desc = "LSP: [g]o to [r]efactor > Type [D]efinitions" })
 
         -- Find a Class by name
-        vim.keymap.set("n", "<leader>o", function()
+        local function find_class()
             if has_fzf then
                 local show_excluded = false
                 fzf.lsp_live_workspace_symbols({
@@ -154,10 +154,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
                     { title = "Find a Class Keymap" }
                 )
             end
-        end, { noremap = true, desc = "LSP: Find a Class by name" })
+        end
+        vim.keymap.set("n", "<leader>o", find_class, { desc = "LSP: Find a Class by name" })
+        vim.keymap.set("n", "<leader>gc", find_class, { desc = "LSP: [g]o to [c]lass" })
 
         -- LSP Document Symbols or Find a Symbol in the current file
-        vim.keymap.set("n", "<localleader><A-o>", function()
+        local function symbol_in_current()
             if has_fzf then
                 local file_name = vim.fn.expand("%:t")
                 fzf.lsp_document_symbols({
@@ -167,10 +169,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
             else
                 vim.lsp.buf.document_symbol()
             end
-        end, { noremap = true, desc = "LSP: Find a Symbol in current file" })
+        end
+        vim.keymap.set("n", "<localleader><A-o>", symbol_in_current, { desc = "LSP: Find a Symbol in current file" })
+        vim.keymap.set("n", "<localleader>gs", symbol_in_current, { desc = "LSP: [g]o to [s]ymbol" })
+        vim.keymap.set("n", "gO", symbol_in_current, { desc = "LSP: [g]o to [s]ymbol" })
 
         -- LSP Symbols or Find a Symbol
-        vim.keymap.set("n", "<leader><A-o>", function()
+        local function symbol_in_workspace()
             if has_fzf then
                 local show_excluded = false
                 fzf.lsp_live_workspace_symbols({
@@ -188,9 +193,24 @@ vim.api.nvim_create_autocmd("LspAttach", {
                     },
                 })
             else
-                vim.lsp.buf.document_symbol()
+                vim.lsp.buf.workspace_symbol()
             end
-        end, { noremap = true, desc = "LSP: Find a Symbol in current file" })
+        end
+        vim.keymap.set("n", "<leader><A-o>", symbol_in_workspace, { desc = "LSP: Find a Symbol in current file" })
+        vim.keymap.set("n", "<leader>gs", symbol_in_workspace, { desc = "LSP: [g]o to [s]ymbol" })
+
+        -- LSP Hover or Quick Documentation
+        vim.keymap.set("n", "K", function()
+            vim.lsp.buf.hover({ border = "rounded" })
+        end, { buffer = event.buf, desc = "LSP: [K]eeword lookup/quick documentation" })
+
+        -- LSP Signature Help or Parameter Info
+        vim.keymap.set({ "i", "n" }, "<C-s>", function()
+            vim.lsp.buf.signature_help({ border = "rounded" })
+        end, {
+            desc = "LSP: [C-h]elp signature",
+        })
+        vim.keymap.set("n", "<leader>clf", vim.lsp.buf.format, keymap_opts)
     end,
 })
 
@@ -326,27 +346,6 @@ return {
 
                     local keymap_opts = { buffer = event.buf, desc = "LSP: " }
                     local fzf = require("fzf-lua")
-
-                    vim.keymap.set("n", "<leader>gs", function()
-                        fzf.lsp_live_workspace_symbols({
-                            winopts = { title = " Symbols ", title_pos = "left" },
-                        })
-                    end, { desc = "LSP: [g]o to [s]ymbol" })
-
-                    vim.keymap.set("n", "<leader>gas", function()
-                        fzf.lsp_live_workspace_symbols({
-                            winopts = { title = " All Symbols ", title_pos = "left" },
-                        })
-                    end, { noremap = true, desc = "LSP: [g]o to [a]ll [s]ymbols" })
-
-                    vim.keymap.set("n", "K", function()
-                        vim.lsp.buf.hover({ border = "rounded" })
-                    end, { buffer = event.buf, desc = "LSP: [K]eeword lookup/quick documentation" })
-
-                    -- vim.keymap.set("n", "<leader>vws", vim.lsp.buf.workspace_symbol, opts)
-                    -- vim.keymap.set("n", "<leader>vrn", vim.lsp.buf.rename, opts)
-                    vim.keymap.set({ "i", "n" }, "<C-h>", vim.lsp.buf.signature_help, keymap_opts)
-                    vim.keymap.set("n", "<leader>clf", vim.lsp.buf.format, keymap_opts)
 
                     -- Attach to nvim-navic to show current code context—used in status line
                     local client = vim.lsp.get_client_by_id(event.data.client_id)
