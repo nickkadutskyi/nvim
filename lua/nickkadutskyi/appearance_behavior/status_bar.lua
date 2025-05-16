@@ -53,7 +53,6 @@ return {
         "nvim-lualine/lualine.nvim",
         dependencies = {
             "nvim-tree/nvim-web-devicons",
-            "akinsho/toggleterm.nvim",
             "arkav/lualine-lsp-progress",
             "AndreM222/copilot-lualine",
             "chrisgrieser/nvim-recorder",
@@ -167,13 +166,6 @@ return {
                                 local parentPath = vim.fn.fnamemodify(filePath, ":h")
                                 local fileName = vim.fs.basename(filePath)
 
-                                if string.match(name, "term://.*toggleterm#.*") then
-                                    local terms = require("toggleterm.terminal").get_all()
-                                    local term = require("toggleterm.terminal").get(tonumber(vim.b.toggle_number))
-                                    local termid = term and term.id or ""
-                                    local termname = term and termid .. ": " .. (term:_display_name()) or ""
-                                    return "term " .. termname .. " (" .. #terms .. ") " .. (rest or "")
-                                end
                                 if string.match(name, "term://.*") then
                                     local path_parts = vim.fn.split(vim.fn.expand("%"), ":")
                                     local last = path_parts[#path_parts]
@@ -230,16 +222,6 @@ return {
                         },
                         { "copilot" },
                         { "diagnostics" },
-                        {
-                            "overseer",
-                            label = "", -- Prefix for task counts
-                            colored = true, -- Color the task icons and counts
-                            unique = false, -- Unique-ify non-running task count by name
-                            name = nil, -- List of task names to search for
-                            name_not = false, -- When true, invert the name search
-                            status = nil, -- List of task statuses to display
-                            status_not = false, -- When true, invert the status search
-                        },
                     },
                     lualine_y = {
                         { require("recorder").displaySlots },
