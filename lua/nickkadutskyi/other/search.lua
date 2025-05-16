@@ -196,10 +196,6 @@ return {
                         end,
                     },
                 },
-                lsp_references = {
-                    ignore_current_line = true,
-                    includeDeclaration = false,
-                },
                 lsp = {
                     symbols = {
                         symbol_icons = require("jb.icons").icons,

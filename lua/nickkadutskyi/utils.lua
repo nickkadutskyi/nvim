@@ -508,16 +508,9 @@ function M.get_local_php_exe(executable)
     }, executable)
 end
 
----@param opts string
----@param arg string
 ---@param env_var string
----@param prepend_path? string
----@param after? boolean
-function M.concat_exclude_ptrn(opts, arg, prepend_path, env_var, after)
-    env_var = env_var or "FZFLUA_EXCLUDE"
-    arg = arg or "--exclude"
-    after = after ~= false -- Default to true if not explicitly set to false
-
+---@return string[] exclude_paths
+function M.parse_exclude_env(env_var)
     local exclude_paths = {}
 
     -- Read environment variable
@@ -528,6 +521,21 @@ function M.concat_exclude_ptrn(opts, arg, prepend_path, env_var, after)
             table.insert(exclude_paths, pattern)
         end
     end
+
+    return exclude_paths
+end
+
+---@param opts string
+---@param arg string
+---@param env_var string
+---@param prepend_path? string
+---@param after? boolean
+function M.concat_exclude_ptrn(opts, arg, prepend_path, env_var, after)
+    env_var = env_var or "FZFLUA_EXCLUDE"
+    arg = arg or "--exclude"
+    after = after ~= false -- Default to true if not explicitly set to false
+
+    local exclude_paths = M.parse_exclude_env(env_var)
 
     local exclude_opts = ""
     -- Append --exclude options for each path
@@ -541,4 +549,5 @@ function M.concat_exclude_ptrn(opts, arg, prepend_path, env_var, after)
         return opts .. exclude_opts
     end
 end
+
 return M

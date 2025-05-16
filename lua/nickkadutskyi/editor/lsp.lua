@@ -2,15 +2,29 @@
 
 -- Set by `smjonas/inc-rename.nvim` plugin on `init`
 local has_inc_rename = false
+-- Gets exclude patterns from environment variable `FZFLUA_EXCLUDE`
+local exclude_patterns = require("nickkadutskyi.utils").parse_exclude_env("FZFLUA_EXCLUDE")
+-- Cache the length to avoid recalculating in each iteration
+local patterns_len = #exclude_patterns
+local fzf_colors_switch = {
+    [true] = {
+        true,
+        ["list-bg"] = { "bg", "WindowBackgroundShowExcluded" },
+        ["bg"] = { "bg", "WindowBackgroundShowExcluded" },
+        ["pointer"] = { "bg", "WindowBackgroundShowExcluded" },
+        ["gutter"] = { "bg", "WindowBackgroundShowExcluded" },
+    },
+    [false] = true,
+}
 
 -- Configures LspAttach (on_attach) event for all language servers to set up keymaps
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("kdtsk-lsp-attach-keymap", { clear = true }),
     callback = function(event)
         local keymap_opts = { buffer = event.buf, desc = "LSP: " }
-        local fzf = require("fzf-lua")
+        local has_fzf, fzf = pcall(require, "fzf-lua")
 
-        -- Refactor > Rename variable under the cursor
+        -- LSP Rename or Refactor > Rename variable under the cursor
         local rename = function()
             return has_inc_rename and ":IncRename " .. vim.fn.expand("<cword>") or vim.lsp.buf.rename()
         end
@@ -22,7 +36,132 @@ vim.api.nvim_create_autocmd("LspAttach", {
         -- <S-F6> on macOS is <F18>
         vim.keymap.set("n", "<F18>", rename, rename_opts("[F18] Refactor > Rename..."))
         -- Overrides the default LSP rename keymap
-        vim.keymap.set("n", "grn", rename, rename_opts("[G]o to [R]efactor > Re[n]ame..."))
+        vim.keymap.set("n", "grn", rename, rename_opts("[g]o to [r]efactor > Re[n]ame..."))
+
+        -- LSP Code Action or Context Actions
+        vim.keymap.set({ "n", "x" }, "gra", function()
+            if has_fzf then
+                -- Adds preview of a diff
+                fzf.lsp_code_actions({
+                    async = true,
+                    winopts = { title = " Context Actions ", title_pos = "left" },
+                })
+            else
+                vim.lsp.buf.code_action()
+            end
+        end, { buffer = event.buf, desc = "LSP: [g]o to [r]efactor > Context [a]ctions" })
+
+        -- LSP References or Usage
+        local function usages()
+            if has_fzf then
+                fzf.lsp_references({
+                    async = true,
+                    winopts = { title = " Usages " },
+                    ignore_current_line = true,
+                    includeDeclaration = false,
+                })
+            else
+                vim.lsp.buf.references({ includeDeclaration = false })
+            end
+        end
+        vim.keymap.set("n", "gru", usages, { buffer = event.buf, desc = "LSP: [g]o to [r]efactor > [u]sages" })
+        -- Overrides the default LSP references keymap
+        vim.keymap.set("n", "grr", usages, { buffer = event.buf, desc = "LSP: [g]o to [r]efactor > [u]sages" })
+
+        -- LSP Implementation
+        vim.keymap.set("n", "gri", function()
+            if has_fzf then
+                fzf.lsp_implementations({ async = true, winopts = { title = " Choose Implementation " } })
+            else
+                vim.lsp.buf.implementation()
+            end
+        end, { buffer = event.buf, desc = "LSP: [g]o to [r]efactor > [i]mplementations" })
+
+        -- LSP Definition
+        vim.keymap.set("n", "grd", function()
+            if has_fzf then
+                fzf.lsp_definitions({ async = true, winopts = { title = " Choose Definition " } })
+            else
+                vim.lsp.buf.definition()
+            end
+        end, { buffer = event.buf, desc = "LSP: [g]o to [r]efactor > [d]efinitions" })
+
+        -- LSP Declaration
+        vim.keymap.set("n", "grD", function()
+            if has_fzf then
+                fzf.lsp_declarations({ async = true, winopts = { titne = " Choose Declaration " } })
+            else
+                vim.lsp.buf.declaration()
+            end
+        end, { buffer = event.buf, desc = "LSP: [g]o to [r]efactor > [D]eclarations" })
+
+        -- LSP Type Definition
+        vim.keymap.set("n", "grt", function()
+            if has_fzf then
+                fzf.lsp_typedefs({ async = true, winopts = { title = " Choose Type Definition " } })
+            else
+                vim.lsp.buf.type_definition()
+            end
+        end, { buffer = event.buf, desc = "LSP: [g]o to [r]efactor > Type [D]efinitions" })
+
+        -- Find a Class by name
+        vim.keymap.set("n", "<leader>o", function()
+            if has_fzf then
+                -- Cache the length to avoid recalculating in each iteration
+                local show_excluded = false
+                fzf.lsp_live_workspace_symbols({
+                    regex_filter = function(item, _)
+                        -- Early return if not a Class to avoid unnecessary processing
+                        if not item.kind:match("Class") then
+                            return false
+                        end
+
+                        -- Only check excluded patterns if exclusion is enabled and filename exists
+                        if not show_excluded and item.filename then
+                            for i = 1, patterns_len do
+                                if item.filename:match(exclude_patterns[i]) then
+                                    return false
+                                end
+                            end
+                        end
+
+                        return true
+                    end,
+                    winopts = { title = " Classes ", title_pos = "left" },
+                    cwd_only = true,
+                    actions = {
+                        -- Shows/Hides Excluded Classes
+                        ["ctrl-e"] = function(_, opts)
+                            show_excluded = not show_excluded
+                            local o = vim.tbl_deep_extend(
+                                "keep",
+                                { resume = true, fzf_colors = fzf_colors_switch[show_excluded] },
+                                opts.__call_opts
+                            )
+                            opts.__call_fn(o)
+                        end,
+                    },
+                })
+            else
+                vim.notify(
+                    "FZF and similar tools are not present so can't find a class",
+                    vim.log.levels.WARN,
+                    { title = "Find a Class Keymap" }
+                )
+            end
+        end, { noremap = true, desc = "LSP: [g]o to [c]lass" })
+
+        -- LSP Document Symbols or Find a Symbol in the current file
+        vim.keymap.set("n", "<localleader><A-o>", function()
+            if has_fzf then
+                local file_name = vim.fn.expand("%:t")
+                fzf.lsp_document_symbols({
+                    winopts = { title = " Symbols in " .. file_name .. " ", title_pos = "left" },
+                })
+            else
+                vim.lsp.buf.document_symbol()
+            end
+        end, { noremap = true, desc = "LSP: [g]o to [c]lass" })
     end,
 })
 
@@ -158,51 +297,6 @@ return {
 
                     local keymap_opts = { buffer = event.buf, desc = "LSP: " }
                     local fzf = require("fzf-lua")
-
-                    vim.keymap.set("n", "gd", function()
-                        -- vim.lsp.buf.definition()
-                        fzf.lsp_definitions({ async = true, winopts = { title = " Choose Definition " } })
-                    end, { buffer = event.buf, desc = "LSP: [g]o to [d]efinition" })
-
-                    vim.keymap.set("n", "gD", function()
-                        -- vim.lsp.buf.declaration()
-                        fzf.lsp_declarations({ async = true, winopts = { titne = " Choose Declaration " } })
-                    end, { buffer = event.buf, desc = "LSP: [g]o to [D]eclaration" })
-
-                    vim.keymap.set("n", "gr", function()
-                        -- vim.lsp.buf.references()
-                        fzf.lsp_references({
-                            async = true,
-                            winopts = { title = " Usages " },
-                            ignore_current_line = true,
-                            includeDeclaration = false,
-                        })
-                    end, { buffer = event.buf, desc = "LSP: [g]o to [r]eferences" })
-
-                    vim.keymap.set("n", "gi", function()
-                        -- vim.lsp.buf.implementation()
-                        fzf.lsp_implementations({ async = true, winopts = { title = " Choose Implementation " } })
-                    end, { buffer = event.buf, desc = "LSP: [g]o to [i]mplementations" })
-
-                    vim.keymap.set("n", "<leader>D", function()
-                        -- vim.lsp.buf.type_definition()
-                        fzf.lsp_typedefs({ async = true, winopts = { title = " Choose Type Definition " } })
-                    end, { buffer = event.buf, desc = "LSP: Type [D]efinition" })
-
-                    vim.keymap.set({ "n", "x" }, "<leader>ca", function()
-                        -- vim.lsp.buf.code_action()
-                        fzf.lsp_code_actions({
-                            async = true,
-                            winopts = { title = " Context Actions ", title_pos = "left" },
-                        })
-                    end, { buffer = event.buf, desc = "LSP: [c]ontext [a]ctions" })
-
-                    vim.keymap.set("n", "<leader>gc", function()
-                        fzf.lsp_live_workspace_symbols({
-                            regex_filter = "Class.*",
-                            winopts = { title = " Classes ", title_pos = "left" },
-                        })
-                    end, { noremap = true, desc = "LSP: [g]o to [c]lass" })
 
                     vim.keymap.set("n", "<leader>gs", function()
                         fzf.lsp_live_workspace_symbols({
