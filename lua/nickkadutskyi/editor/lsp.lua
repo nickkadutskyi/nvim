@@ -149,7 +149,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
                     { title = "Find a Class Keymap" }
                 )
             end
-        end, { noremap = true, desc = "LSP: [g]o to [c]lass" })
+        end, { noremap = true, desc = "LSP: Find a Class by name" })
 
         -- LSP Document Symbols or Find a Symbol in the current file
         vim.keymap.set("n", "<localleader><A-o>", function()
@@ -161,7 +161,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
             else
                 vim.lsp.buf.document_symbol()
             end
-        end, { noremap = true, desc = "LSP: [g]o to [c]lass" })
+        end, { noremap = true, desc = "LSP: Find a Symbol in current file" })
     end,
 })
 
