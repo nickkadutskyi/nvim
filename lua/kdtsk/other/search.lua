@@ -103,6 +103,7 @@ return {
                         scrollbar = false,
                         layout = "vertical",
                         vertical = "down:60%",
+                        border = require("jb.borders").borders.dialog.split_bottom,
                     },
                     border = require("jb.borders").borders.dialog.default,
                 },
@@ -150,7 +151,7 @@ return {
                 },
                 files = {
                     winopts = {
-                        title = "Files",
+                        title = " Files ",
                         title_pos = "left",
                         height = 25, -- window height
                         width = 95,
@@ -178,7 +179,7 @@ return {
                 },
                 buffers = {
                     winopts = {
-                        title = "Switcher",
+                        title = " Switcher ",
                         title_pos = "left",
                         preview = {
                             hidden = true,
@@ -189,7 +190,7 @@ return {
                 },
                 grep = {
                     winopts = {
-                        title = "Find in Files",
+                        title = " Find in Files ",
                         title_pos = "left",
                         height = 25, -- window height
                         width = 85,
