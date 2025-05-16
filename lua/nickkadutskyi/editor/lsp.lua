@@ -42,7 +42,7 @@ end
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("kdtsk-lsp-attach-keymap", { clear = true }),
     callback = function(event)
-        local keymap_opts = { buffer = event.buf, desc = "LSP: " }
+        local client = vim.lsp.get_client_by_id(event.data.client_id)
         local has_fzf, fzf = pcall(require, "fzf-lua")
 
         -- LSP Rename or Refactor > Rename variable under the cursor
@@ -155,11 +155,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
                 )
             end
         end
-        vim.keymap.set("n", "<leader>o", find_class, { desc = "LSP: Find a Class by name" })
-        vim.keymap.set("n", "<leader>gc", find_class, { desc = "LSP: [g]o to [c]lass" })
+        vim.keymap.set("n", "<leader>o", find_class, { buffer = event.buf, desc = "LSP: Find Class by name" })
+        vim.keymap.set("n", "<leader>gc", find_class, { buffer = event.buf, desc = "LSP: [g]o to [c]lass" })
 
         -- LSP Document Symbols or Find a Symbol in the current file
-        local function symbol_in_current()
+        local function sym_in_doc()
             if has_fzf then
                 local file_name = vim.fn.expand("%:t")
                 fzf.lsp_document_symbols({
@@ -170,9 +170,9 @@ vim.api.nvim_create_autocmd("LspAttach", {
                 vim.lsp.buf.document_symbol()
             end
         end
-        vim.keymap.set("n", "<localleader><A-o>", symbol_in_current, { desc = "LSP: Find a Symbol in current file" })
-        vim.keymap.set("n", "<localleader>gs", symbol_in_current, { desc = "LSP: [g]o to [s]ymbol" })
-        vim.keymap.set("n", "gO", symbol_in_current, { desc = "LSP: [g]o to [s]ymbol" })
+        vim.keymap.set("n", "<localleader><A-o>", sym_in_doc, { buffer = event.buf, desc = "LSP: Find Symbol in doc" })
+        vim.keymap.set("n", "<localleader>gs", sym_in_doc, { buffer = event.buf, desc = "LSP: [g]o to [s]ymbol" })
+        vim.keymap.set("n", "gO", sym_in_doc, { buffer = event.buf, desc = "LSP: [g]o to [s]ymbol" })
 
         -- LSP Symbols or Find a Symbol
         local function symbol_in_workspace()
@@ -196,8 +196,13 @@ vim.api.nvim_create_autocmd("LspAttach", {
                 vim.lsp.buf.workspace_symbol()
             end
         end
-        vim.keymap.set("n", "<leader><A-o>", symbol_in_workspace, { desc = "LSP: Find a Symbol in current file" })
-        vim.keymap.set("n", "<leader>gs", symbol_in_workspace, { desc = "LSP: [g]o to [s]ymbol" })
+        vim.keymap.set(
+            "n",
+            "<leader><A-o>",
+            symbol_in_workspace,
+            { buffer = event.buf, desc = "LSP: Find a Symbol in current file" }
+        )
+        vim.keymap.set("n", "<leader>gs", symbol_in_workspace, { buffer = event.buf, desc = "LSP: [g]o to [s]ymbol" })
 
         -- LSP Hover or Quick Documentation
         vim.keymap.set("n", "K", function()
@@ -207,11 +212,90 @@ vim.api.nvim_create_autocmd("LspAttach", {
         -- LSP Signature Help or Parameter Info
         vim.keymap.set({ "i", "n" }, "<C-s>", function()
             vim.lsp.buf.signature_help({ border = "rounded" })
-        end, {
-            desc = "LSP: [C-h]elp signature",
-        })
-        vim.keymap.set("n", "<leader>clf", vim.lsp.buf.format, keymap_opts)
+        end, { desc = "LSP: [C-h]elp signature" })
+
+        -- The following two autocommands are used to highlight references of the
+        -- word under your cursor when your cursor rests there for a little while.
+        -- When you move your cursor, the highlights will be cleared (the second autocommand).
+        if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
+            local hi_augroup = vim.api.nvim_create_augroup("nickkadutskyi-lsp-highlight", { clear = false })
+            vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+                buffer = event.buf,
+                group = hi_augroup,
+                callback = vim.lsp.buf.document_highlight,
+            })
+
+            vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+                buffer = event.buf,
+                group = hi_augroup,
+                callback = vim.lsp.buf.clear_references,
+            })
+
+            vim.api.nvim_create_autocmd("LspDetach", {
+                group = vim.api.nvim_create_augroup("nickkadutskyi-lsp-detach", { clear = true }),
+                callback = function(event2)
+                    vim.lsp.buf.clear_references()
+                    vim.api.nvim_clear_autocmds({
+                        group = "nickkadutskyi-lsp-highlight",
+                        buffer = event2.buf,
+                    })
+                end,
+            })
+        end
+
+        -- The following code creates a keymap to toggle inlay hints in your
+        -- code, if the language server you are using supports them
+        if
+            client
+            and (
+                client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint)
+                or client.server_capabilities.inlayHintProvider
+            )
+        then
+            vim.keymap.set("n", "<localleader>th", function()
+                local new_state = not vim.lsp.inlay_hint.is_enabled({
+                    bufnr = event.buf,
+                })
+                vim.lsp.inlay_hint.enable(new_state)
+            end, { buffer = event.buf, desc = "LSP: [t]oggle inlay [h]ints" })
+        end
     end,
+})
+
+-- Diagnostics config
+vim.diagnostic.config({
+    update_in_insert = true,
+    virtual_text = false,
+    float = {
+        focusable = false,
+        style = "minimal",
+        border = "rounded",
+        source = true,
+        header = "",
+        prefix = "",
+    },
+    -- turns off diagnostics signs in gutter
+    signs = false,
+})
+
+-- Jump to the next/previous diagnostic
+vim.keymap.set("n", "]d", function()
+    vim.diagnostic.jump({ count = 1 })
+end, { desc = "LSP: [n]ext [d]iagnostic" })
+vim.keymap.set("n", "[d", function()
+    vim.diagnostic.jump({ count = -1 })
+end, { desc = "LSP: [p]rev [d]iagnostic" })
+
+-- Show diagnostic in floating window
+vim.keymap.set("n", "<leader>sd", vim.diagnostic.open_float, {
+    noremap = true,
+    desc = "LSP: [s]how [d]iagnostic float",
+})
+
+-- Show diagnostic in quickfix list
+vim.keymap.set("n", "<leader>sq", vim.diagnostic.setloclist, {
+    noremap = true,
+    desc = "LSP: [s]how diagostic [q]uickfix list",
 })
 
 ---@type LazySpec
@@ -337,98 +421,6 @@ return {
                     end
                 end)
             end
-
-            -- Configures LspAttach (on_attach) event for all language servers
-            vim.api.nvim_create_autocmd("LspAttach", {
-                group = vim.api.nvim_create_augroup("nickkadutskyi-lsp-attach", { clear = true }),
-                callback = function(event)
-                    local bufnr = event.buf
-
-                    local keymap_opts = { buffer = event.buf, desc = "LSP: " }
-                    local fzf = require("fzf-lua")
-
-                    -- Attach to nvim-navic to show current code context—used in status line
-                    local client = vim.lsp.get_client_by_id(event.data.client_id)
-
-                    -- The following two autocommands are used to highlight references of the
-                    -- word under your cursor when your cursor rests there for a little while.
-                    -- When you move your cursor, the highlights will be cleared (the second autocommand).
-                    if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
-                        local hi_augroup = vim.api.nvim_create_augroup("nickkadutskyi-lsp-highlight", { clear = false })
-                        vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-                            buffer = event.buf,
-                            group = hi_augroup,
-                            callback = vim.lsp.buf.document_highlight,
-                        })
-
-                        vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-                            buffer = event.buf,
-                            group = hi_augroup,
-                            callback = vim.lsp.buf.clear_references,
-                        })
-
-                        vim.api.nvim_create_autocmd("LspDetach", {
-                            group = vim.api.nvim_create_augroup("nickkadutskyi-lsp-detach", { clear = true }),
-                            callback = function(event2)
-                                vim.lsp.buf.clear_references()
-                                vim.api.nvim_clear_autocmds({
-                                    group = "nickkadutskyi-lsp-highlight",
-                                    buffer = event2.buf,
-                                })
-                            end,
-                        })
-                    end
-
-                    -- The following code creates a keymap to toggle inlay hints in your
-                    -- code, if the language server you are using supports them
-                    if
-                        client
-                        and (
-                            client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint)
-                            or client.server_capabilities.inlayHintProvider
-                        )
-                    then
-                        vim.keymap.set("n", "<leader>th", function()
-                            local new_state = not vim.lsp.inlay_hint.is_enabled({
-                                bufnr = event.buf,
-                            })
-                            vim.lsp.inlay_hint.enable(new_state)
-                        end, { buffer = event.buf, desc = "[t]oggle inlay [h]ints (LSP)" })
-                    end
-                end,
-            })
-
-            -- Diagnostics config
-            vim.diagnostic.config({
-                update_in_insert = true,
-                virtual_text = false,
-                float = {
-                    focusable = false,
-                    style = "minimal",
-                    border = "rounded",
-                    source = true,
-                    header = "",
-                    prefix = "",
-                },
-                -- turns off diagnostics signs in gutter
-                signs = false,
-            })
-            vim.keymap.set("n", "]d", vim.diagnostic.goto_next, {
-                noremap = true,
-                desc = "[n]ext [d]iagnostic (LSP)",
-            })
-            vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, {
-                noremap = true,
-                desc = "[p]rev [d]iagnostic (LSP)",
-            })
-            vim.keymap.set("n", "<leader>sd", vim.diagnostic.open_float, {
-                noremap = true,
-                desc = "[s]how [d]iagnostic float (LSP)",
-            })
-            vim.keymap.set("n", "<leader>sq", vim.diagnostic.setloclist, {
-                noremap = true,
-                desc = "[s]how diagostic [q]uickfix list (LSP)",
-            })
         end,
     },
     {
