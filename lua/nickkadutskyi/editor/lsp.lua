@@ -3,9 +3,6 @@
 -- Set by `smjonas/inc-rename.nvim` plugin on `init`
 local has_inc_rename = false
 -- Gets exclude patterns from environment variable `FZFLUA_EXCLUDE`
-local exclude_patterns = require("nickkadutskyi.utils").parse_exclude_env("FZFLUA_EXCLUDE")
--- Cache the length to avoid recalculating in each iteration
-local patterns_len = #exclude_patterns
 local fzf_colors_switch = {
     [true] = {
         true,
@@ -17,6 +14,30 @@ local fzf_colors_switch = {
     [false] = true,
 }
 
+-- Helper function to resume FZF operation with updated options
+local function resume_fzf_with_opts(show_excluded, opts)
+    local options = vim.tbl_deep_extend("keep", {
+        resume = true,
+        fzf_colors = fzf_colors_switch[show_excluded],
+    }, opts.__call_opts)
+    opts.__call_fn(options)
+end
+
+local exclude_patterns = require("nickkadutskyi.utils").parse_exclude_env("FZFLUA_EXCLUDE")
+-- Cache the length to avoid recalculating in each iteration
+local patterns_len = #exclude_patterns
+local function is_excluded(item)
+    -- Only check excluded patterns if exclusion is enabled and filename exists
+    if item.filename then
+        for i = 1, patterns_len do
+            if item.filename:match(exclude_patterns[i]) then
+                return true
+            end
+        end
+    end
+
+    return false
+end
 -- Configures LspAttach (on_attach) event for all language servers to set up keymaps
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("kdtsk-lsp-attach-keymap", { clear = true }),
@@ -107,25 +128,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
         -- Find a Class by name
         vim.keymap.set("n", "<leader>o", function()
             if has_fzf then
-                -- Cache the length to avoid recalculating in each iteration
                 local show_excluded = false
                 fzf.lsp_live_workspace_symbols({
                     regex_filter = function(item, _)
-                        -- Early return if not a Class to avoid unnecessary processing
                         if not item.kind:match("Class") then
                             return false
                         end
 
-                        -- Only check excluded patterns if exclusion is enabled and filename exists
-                        if not show_excluded and item.filename then
-                            for i = 1, patterns_len do
-                                if item.filename:match(exclude_patterns[i]) then
-                                    return false
-                                end
-                            end
-                        end
-
-                        return true
+                        return show_excluded and true or not is_excluded(item)
                     end,
                     winopts = { title = " Classes ", title_pos = "left" },
                     cwd_only = true,
@@ -133,12 +143,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
                         -- Shows/Hides Excluded Classes
                         ["ctrl-e"] = function(_, opts)
                             show_excluded = not show_excluded
-                            local o = vim.tbl_deep_extend(
-                                "keep",
-                                { resume = true, fzf_colors = fzf_colors_switch[show_excluded] },
-                                opts.__call_opts
-                            )
-                            opts.__call_fn(o)
+                            resume_fzf_with_opts(show_excluded, opts)
                         end,
                     },
                 })
@@ -156,7 +161,31 @@ vim.api.nvim_create_autocmd("LspAttach", {
             if has_fzf then
                 local file_name = vim.fn.expand("%:t")
                 fzf.lsp_document_symbols({
+                    cwd_only = true,
                     winopts = { title = " Symbols in " .. file_name .. " ", title_pos = "left" },
+                })
+            else
+                vim.lsp.buf.document_symbol()
+            end
+        end, { noremap = true, desc = "LSP: Find a Symbol in current file" })
+
+        -- LSP Symbols or Find a Symbol
+        vim.keymap.set("n", "<leader><A-o>", function()
+            if has_fzf then
+                local show_excluded = false
+                fzf.lsp_live_workspace_symbols({
+                    regex_filter = function(item, _)
+                        return show_excluded and true or not is_excluded(item)
+                    end,
+                    cwd_only = true,
+                    winopts = { title = " Symbols ", title_pos = "left" },
+                    actions = {
+                        -- Shows/Hides Excluded Symbols
+                        ["ctrl-e"] = function(_, opts)
+                            show_excluded = not show_excluded
+                            resume_fzf_with_opts(show_excluded, opts)
+                        end,
+                    },
                 })
             else
                 vim.lsp.buf.document_symbol()
