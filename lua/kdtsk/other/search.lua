@@ -92,7 +92,6 @@ return {
             end
 
             fzf.setup({
-                debug = true,
                 winopts = {
                     title_pos = "center",
                     height = 25, -- window height
