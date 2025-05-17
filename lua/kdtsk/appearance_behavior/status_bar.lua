@@ -35,7 +35,7 @@ return {
                 },
                 sections = {
                     lualine_a = {
-                        { -- Project abbreviation
+                        { -- Project abbreviation to identify the project without full name
                             function()
                                 local projectName = vim.fs.basename(vim.fn.getcwd())
                                 local firstChars = {}
@@ -56,7 +56,7 @@ return {
                         {
                             "gitstatus",
                             sections = {
-                                {
+                                { -- Shows a red icon if there are unsaved buffers
                                     function(_)
                                         local current_time = vim.loop.now()
                                         if current_time - last_check_time > 500 then
@@ -71,7 +71,7 @@ return {
                                     end,
                                     hl = "#f7768e",
                                 },
-                                {
+                                { -- Shows a delta icon if there are uncommitted changes
                                     function(status)
                                         if buffer_modified_count > 0 then
                                             return false
@@ -83,24 +83,13 @@ return {
                                         end
                                     end,
                                 },
-                                {
-                                    function(status)
-                                        return status.ahead > 0 and " " .. status.ahead .. "↑" or false
-                                    end,
-                                    hl = "General_Text_DefaultTextFg",
-                                },
-                                {
-                                    function(status)
-                                        return status.behind > 0 and status.behind .. "↓" or false
-                                    end,
-                                    hl = "General_Text_DefaultTextFg",
-                                },
+                                { "ahead", format = " {}↑", hl = "General_Text_DefaultTextFg" },
+                                { "behind", format = " {}↓", hl = "General_Text_DefaultTextFg" },
                             },
                             sep = "",
                         },
                     },
                     lualine_c = {
-                        -- "diff",
                         {
                             "filetype",
                             padding = { left = 1, right = 0 },
