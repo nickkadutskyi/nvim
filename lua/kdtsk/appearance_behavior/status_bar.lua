@@ -37,17 +37,50 @@ return {
                     lualine_a = {
                         { -- Project abbreviation to identify the project without full name
                             function()
-                                local projectName = vim.fs.basename(vim.fn.getcwd())
-                                local firstChars = {}
-                                for str in string.gmatch(projectName, "([^-_,%s.]+)") do
-                                    table.insert(firstChars, string.upper(string.sub(str, 1, 1)))
+                                -- Cache the project abbreviation
+                                if not _G._project_abbrev_cache then
+                                    _G._project_abbrev_cache = {}
                                 end
-                                return (firstChars[1] or "")
-                                    .. (
-                                        #firstChars > 1 and firstChars[#firstChars]
-                                        or string.upper(string.sub(projectName, 2, 2))
-                                        or ""
-                                    )
+
+                                local cwd = vim.fn.getcwd()
+                                if _G._project_abbrev_cache[cwd] then
+                                    return _G._project_abbrev_cache[cwd]
+                                end
+
+                                local projectName = vim.fs.basename(cwd)
+                                if projectName == "" then
+                                    return "ø" -- Handle empty project name
+                                end
+
+                                -- Generate abbreviation
+                                local result
+                                local parts = {}
+                                for part in string.gmatch(projectName, "([^-_,%s.]+)") do
+                                    table.insert(parts, part)
+                                end
+
+                                if #parts == 0 then
+                                    -- Only special characters in project name
+                                    result = string.upper(string.sub(projectName, 1, 1))
+                                elseif #parts == 1 then
+                                    -- Single word project name, use first two characters
+                                    local word = parts[1]
+                                    if #word == 1 then
+                                        result = string.upper(word)
+                                    else
+                                        result = string.upper(string.sub(word, 1, 1))
+                                            .. string.upper(string.sub(word, 2, 2))
+                                    end
+                                else
+                                    -- Multi-word project name
+                                    -- Get first letter of first and last words
+                                    result = string.upper(string.sub(parts[1], 1, 1))
+                                        .. string.upper(string.sub(parts[#parts], 1, 1))
+                                end
+
+                                -- Cache and return
+                                _G._project_abbrev_cache[cwd] = result
+                                return result
                             end,
                         },
                     },
@@ -145,26 +178,12 @@ return {
                         },
                         {
                             "navic",
-                            -- Component specific options
-
-                            -- Can be nil, "static" or "dynamic". This option
-                            -- is useful only when you have highlights enabled.
-                            -- Many colorschemes don't define same backgroud for
-                            -- nvim-navic as their lualine statusline backgroud.
-                            -- Setting it to "static" will perform an adjustment
-                            -- once when the component is being setup. This should
-                            -- be enough when the lualine section isn't changing
-                            -- colors based on the mode.
-                            -- Setting it to "dynamic" will keep updating the
-                            -- highlights according to the current modes colors
-                            -- for the current section.
                             color_correction = nil,
-
                             navic_opts = {
                                 click = true,
                                 separator = " › ",
                                 highlight = true,
-                            }, -- lua table with same format as setup's option. All options except "lsp" options take effect when set here.
+                            },
                         },
                     },
                     lualine_x = {
@@ -187,7 +206,6 @@ return {
                     lualine_y = {
                         { require("recorder").displaySlots },
                         "searchcount",
-                        -- "progress",
                         "location",
                     },
                     lualine_z = {
