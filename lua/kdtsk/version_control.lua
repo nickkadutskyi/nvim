@@ -92,7 +92,12 @@ return {
 
             -- Autocmds based on Neogit events
             vim.api.nvim_create_autocmd("User", {
-                pattern = "NeogitStatusRefreshed",
+                pattern = {
+                    "NeogitStatusRefreshed",
+                    "NeogitCommitComplete",
+                    "NeogitPushComplete",
+                    "NeogitPullComplete",
+                },
                 callback = function()
                     require("nvim-gitstatus").update_git_status()
                 end,
