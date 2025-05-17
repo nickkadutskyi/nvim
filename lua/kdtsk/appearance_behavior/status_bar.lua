@@ -118,22 +118,22 @@ return {
                                 -- { "renamed", format = " {}~" },
                                 -- { "deleted", format = " {}-" },
 
-                                {
-                                    function(status)
-                                        return status.ahead == 0 and " ·↑" or false
-                                    end,
-                                },
+                                -- {
+                                --     function(status)
+                                --         return status.ahead == 0 and " ·↑" or false
+                                --     end,
+                                -- },
                                 {
                                     function(status)
                                         return status.ahead > 0 and " " .. status.ahead .. "↑" or false
                                     end,
                                     hl = "General_Text_DefaultTextFg",
                                 },
-                                {
-                                    function(status)
-                                        return status.behind == 0 and "·↓" or false
-                                    end,
-                                },
+                                -- {
+                                --     function(status)
+                                --         return status.behind == 0 and "·↓" or false
+                                --     end,
+                                -- },
                                 {
                                     function(status)
                                         return status.behind > 0 and status.behind .. "↓" or false
@@ -226,7 +226,7 @@ return {
                     lualine_y = {
                         { require("recorder").displaySlots },
                         "searchcount",
-                        "progress",
+                        -- "progress",
                         "location",
                     },
                     lualine_z = {
