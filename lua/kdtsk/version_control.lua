@@ -90,6 +90,14 @@ return {
                 },
             })
 
+            -- Autocmds based on Neogit events
+            vim.api.nvim_create_autocmd("User", {
+                pattern = "NeogitStatusRefreshed",
+                callback = function()
+                    require("nvim-gitstatus").update_git_status()
+                end,
+            })
+
             -- Autocmds
             ---Updates file status hl when hunks are changed
             vim.api.nvim_create_autocmd({ "User" }, {
@@ -343,6 +351,7 @@ return {
     {
         "abccsss/nvim-gitstatus",
         event = "VeryLazy",
+        ---@type GitStatusOptions
         opts = {
             --- Interval to automatically run `git fetch`, in milliseconds.
             --- Set to `false` to disable auto fetch.

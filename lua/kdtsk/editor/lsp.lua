@@ -432,6 +432,7 @@ return {
                 { path = "${3rd}/luv/library", words = { "vim%.uv" } },
                 { path = "lazy.nvim", words = { "Lazy" } },
                 { path = "inc-rename.nvim", words = { "inc_rename" } },
+                { path = "nvim-gitstatus", words = { "GitStatus" } },
             },
         },
     },
