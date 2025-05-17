@@ -101,6 +101,7 @@ return {
                 },
                 callback = function()
                     require("nvim-gitstatus").update_git_status()
+                    require("lualine").refresh()
                 end,
             })
 
