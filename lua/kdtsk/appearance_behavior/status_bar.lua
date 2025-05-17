@@ -1,49 +1,14 @@
 local buffer_modified_count = 0
-local function count_modified_buffers()
-    local buffersUnfiltered = vim.api.nvim_list_bufs()
-    local unsaved = 0
-    local new_unsaved = 0
-    local new_buffers = 0
-    local total_buffers = 0
-    for _, buffer in ipairs(buffersUnfiltered) do
-        -- ensure only listed and loaded buffers are counted
-        if vim.api.nvim_get_option_value("buflisted", { buf = buffer }) and vim.api.nvim_buf_is_loaded(buffer) then
-            local is_modified = vim.api.nvim_get_option_value("modified", { buf = buffer })
-            local line_count = vim.api.nvim_buf_line_count(buffer)
-            local filename = vim.api.nvim_buf_get_name(buffer)
-            local filetype = vim.api.nvim_get_option_value("filetype", { buf = buffer })
-            local cwd = vim.fn.getcwd()
-            local filename_resolved = vim.fn.resolve(filename)
-            local is_modifiable = vim.api.nvim_get_option_value("modifiable", { buf = buffer })
-            -- Skip special buffers and the initial empty unmodified buffer
-            if
-                filetype ~= "qf"
-                and filetype ~= "help"
-                and filetype ~= "NvimTree"
-                and filetype ~= "fzf"
-                and filetype ~= "netrw"
-                and is_modifiable
-                and not (filename_resolved == cwd and not is_modified and line_count <= 1)
-            then
-                total_buffers = total_buffers + 1
-                if is_modified then
-                    if filename == "" then
-                        -- Unnamed buffer that's been modified
-                        new_unsaved = new_unsaved + 1
-                        buffer_modified_count = unsaved + new_unsaved + new_buffers
-                    else
-                        -- Existing file with unsaved changes
-                        unsaved = unsaved + 1
-                    end
-                elseif filename ~= "" and not vim.loop.fs_stat(filename) then
-                    -- Buffer has a name but file doesn't exist on disk yet
-                    new_buffers = new_buffers + 1
-                end
-            end
-        end
-    end
-    buffer_modified_count = unsaved + new_unsaved + new_buffers
-end
+local last_check_time = 0
+
+-- Setup autocmds to update buffer_modified_count when relevant events occur
+vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufModifiedSet", "FileChangedShellPost" }, {
+    callback = function()
+        -- Reset the timer to force an update on the next status line refresh
+        last_check_time = 0
+    end,
+})
+
 return {
     { -- Provides better keymap for macro recording
         "chrisgrieser/nvim-recorder",
@@ -93,7 +58,13 @@ return {
                             sections = {
                                 {
                                     function(_)
-                                        count_modified_buffers()
+                                        local current_time = vim.loop.now()
+                                        if current_time - last_check_time > 500 then
+                                            local count, _ = require("kdtsk.utils").count_modified_buffers()
+                                            buffer_modified_count = count
+                                        end
+                                        last_check_time = current_time
+
                                         if buffer_modified_count > 0 then
                                             return "󰽃"
                                         end

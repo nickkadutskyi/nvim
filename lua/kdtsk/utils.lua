@@ -251,8 +251,7 @@ function M.create_tool_window(
     local bufnrs = { [bufnr] = true }
     vim.api.nvim_set_option_value(
         "winhl",
-        "FloatTitle:ToolWindowFloatTitle,"
-            .. "FloatFooter:ToolWindowFloatFooter",
+        "FloatTitle:ToolWindowFloatTitle," .. "FloatFooter:ToolWindowFloatFooter",
         { win = winid }
     )
     local close_tool_window = function()
@@ -529,6 +528,82 @@ function M.concat_exclude_ptrn(opts, arg, prepend_path, env_var, after)
     else
         return opts .. exclude_opts
     end
+end
+
+---Checks if buffer modifiable, listed and not a special buffer
+---@param buffer number
+function M.should_track_buffer(buffer)
+    local excluded_filetypes = { qf = true, help = true, NvimTree = true, fzf = true, netrw = true }
+    -- Skip non-listed or non-loaded buffers
+    if not vim.api.nvim_get_option_value("buflisted", { buf = buffer }) or not vim.api.nvim_buf_is_loaded(buffer) then
+        return false
+    end
+
+    -- Skip non-modifiable buffers
+    if not vim.api.nvim_get_option_value("modifiable", { buf = buffer }) then
+        return false
+    end
+
+    -- Skip excluded filetypes
+    local filetype = vim.api.nvim_get_option_value("filetype", { buf = buffer })
+    if excluded_filetypes[filetype] then
+        return false
+    end
+
+    return true
+end
+
+-- Update buffer_states and count modified buffers
+ function M.count_modified_buffers()
+    local unsaved = 0
+    local new_unsaved = 0
+    local new_buffers = 0
+    local total_buffers = 0
+    local cwd = vim.fn.getcwd()
+    local buffers = vim.api.nvim_list_bufs()
+    local new_buffer_states = {}
+
+    for _, buffer in ipairs(buffers) do
+        if M.should_track_buffer(buffer) then
+            local is_modified = vim.api.nvim_get_option_value("modified", { buf = buffer })
+            local filename = vim.api.nvim_buf_get_name(buffer)
+
+            -- Only compute these values if we actually need them
+            local is_empty_initial_buffer = false
+            if not is_modified and filename ~= "" then
+                local filename_resolved = vim.fn.resolve(filename)
+                local line_count = vim.api.nvim_buf_line_count(buffer)
+                is_empty_initial_buffer = (filename_resolved == cwd and line_count <= 1)
+            end
+
+            if not is_empty_initial_buffer then
+                total_buffers = total_buffers + 1
+
+                if is_modified then
+                    if filename == "" then
+                        -- Unnamed buffer that's been modified
+                        new_unsaved = new_unsaved + 1
+                    else
+                        -- Existing file with unsaved changes
+                        unsaved = unsaved + 1
+                    end
+                elseif filename ~= "" and not vim.loop.fs_stat(filename) then
+                    -- Buffer has a name but file doesn't exist on disk yet
+                    new_buffers = new_buffers + 1
+                end
+
+                -- Cache the state
+                new_buffer_states[buffer] = {
+                    modified = is_modified,
+                    filename = filename,
+                }
+            end
+        end
+    end
+
+    local buffer_states = new_buffer_states
+    local buffer_modified_count = unsaved + new_unsaved + new_buffers
+    return buffer_modified_count, buffer_states
 end
 
 return M
