@@ -92,6 +92,7 @@ return {
 
             -- Autocmds based on Neogit events
             vim.api.nvim_create_autocmd("User", {
+                group = vim.api.nvim_create_augroup("kdtsk-neogit-gitstatus", { clear = true }),
                 pattern = {
                     "NeogitStatusRefreshed",
                     "NeogitCommitComplete",
