@@ -102,26 +102,42 @@ return {
                             path = 1, -- Show relative path
                             symbols = { newfile = "[new]", unnamed = "[no name]" },
                             fmt = function(name, _)
-                                local filePath, rest = name:match("(.+)%s*(%[*.*%]*)")
-                                local parentPath = vim.fn.fnamemodify(filePath, ":h")
-                                local fileName = vim.fs.basename(filePath)
-
-                                if string.match(name, "term://.*") then
+                                -- Early return for terminal buffers
+                                if name:find("^term://") then
                                     local path_parts = vim.fn.split(vim.fn.expand("%"), ":")
                                     local last = path_parts[#path_parts]
                                     if type(last) == "string" and last ~= "" then
-                                        return last and "term " .. last
+                                        return "term " .. last
                                     end
+                                    return "terminal"
                                 end
 
+                                -- Split the name into path and status indicators (like [+], [RO], etc.)
+                                local filePath, rest = name:match("(.+)%s*(%[*.*%]*)")
+                                if not filePath then
+                                    return name -- Handle edge cases where matching fails
+                                end
+
+                                -- Calculate the threshold for shortening based on screen width
                                 local shorten_after = math.floor(vim.o.columns / 238 * 70)
-                                if string.len(filePath) > shorten_after then
-                                    local rightPart = vim.fs.basename(parentPath) .. "/" .. fileName
-                                    local leftPart = string.sub(filePath, 1, shorten_after - string.len(rightPart))
-                                    return leftPart .. "../" .. rightPart .. " " .. (rest or "")
-                                else
+
+                                -- Only do expensive operations if shortening is needed
+                                if #filePath <= shorten_after then
                                     return filePath .. " " .. (rest or "")
                                 end
+
+                                -- Caching the fileName to avoid repeated calls
+                                local fileName = vim.fs.basename(filePath)
+                                local parentPath = vim.fn.fnamemodify(filePath, ":h")
+                                local parentName = vim.fs.basename(parentPath)
+
+                                -- Create the shortened path
+                                local rightPart = parentName .. "/" .. fileName
+                                local leftPartLen = shorten_after - #rightPart - 3 -- account for "../"
+                                leftPartLen = math.max(0, leftPartLen) -- ensure non-negative
+
+                                local leftPart = filePath:sub(1, leftPartLen)
+                                return leftPart .. "../" .. rightPart .. " " .. (rest or "")
                             end,
                             color = function(_)
                                 return vim.b.custom_git_status_hl or "Custom_TabSel"
