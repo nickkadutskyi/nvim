@@ -45,9 +45,11 @@ local function count_modified_buffers()
     buffer_modified_count = unsaved + new_unsaved + new_buffers
 end
 return {
-    {
+    { -- Provides better keymap for macro recording
         "chrisgrieser/nvim-recorder",
-        opts = {}, -- required even with default settings, since it calls `setup()`
+        ---@type configObj
+        ---@diagnostic disable-next-line: missing-fields
+        opts = { lessNotifications = true, clear = true, dynamicSlots = "rotate" },
     },
     { -- Status bar controller
         "nvim-lualine/lualine.nvim",
@@ -90,7 +92,7 @@ return {
                             "gitstatus",
                             sections = {
                                 {
-                                    function(_status)
+                                    function(_)
                                         count_modified_buffers()
                                         if buffer_modified_count > 0 then
                                             return "󰽃"
@@ -110,40 +112,18 @@ return {
                                         end
                                     end,
                                 },
-                                -- Disabled due not using this
-                                -- { "conflicted", format = " {}!" },
-                                -- { "staged", format = " {}=" },
-                                -- { "untracked", format = " {}+" },
-                                -- { "modified", format = " {}*" },
-                                -- { "renamed", format = " {}~" },
-                                -- { "deleted", format = " {}-" },
-
-                                -- {
-                                --     function(status)
-                                --         return status.ahead == 0 and " ·↑" or false
-                                --     end,
-                                -- },
                                 {
                                     function(status)
                                         return status.ahead > 0 and " " .. status.ahead .. "↑" or false
                                     end,
                                     hl = "General_Text_DefaultTextFg",
                                 },
-                                -- {
-                                --     function(status)
-                                --         return status.behind == 0 and "·↓" or false
-                                --     end,
-                                -- },
                                 {
                                     function(status)
                                         return status.behind > 0 and status.behind .. "↓" or false
                                     end,
                                     hl = "General_Text_DefaultTextFg",
                                 },
-                                -- { "ahead", format = "{}↑" },
-                                -- { "behind", format = "{}↓" },
-                                -- { "up_to_date", format = "up-to-date" },
-                                -- { "up_to_date", format = "↑0↓0" },
                             },
                             sep = "",
                         },
@@ -212,7 +192,6 @@ return {
                         },
                     },
                     lualine_x = {
-                        { require("recorder").recordingStatus },
                         {
                             "lsp_progress",
                             fmt = function(str)
@@ -220,8 +199,14 @@ return {
                                 return utils.stl_escape(str)
                             end,
                         },
-                        { "copilot" },
+                        { -- Macro recording status
+                            function()
+                                local reg = vim.fn.reg_recording()
+                                return reg ~= "" and " [" .. reg .. "]" or ""
+                            end,
+                        },
                         { "diagnostics" },
+                        { "copilot" },
                     },
                     lualine_y = {
                         { require("recorder").displaySlots },
