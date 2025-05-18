@@ -6,7 +6,7 @@
 vim.opt.cmdheight = 0
 ----- File name and path in Window header
 vim.opt.title = true
-vim.opt.titlestring = [[%{v:lua.TitleString()}]]
+vim.opt.titlestring = [[%{v:lua.Utils.ui.titlestring()}]]
 
 --- Natural Language
 vim.opt.spell = true

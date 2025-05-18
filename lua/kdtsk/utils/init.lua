@@ -1,3 +1,14 @@
+---@class kdtsk.utils
+---@field ui kdtsk.utils.ui
+local M = {}
+
+setmetatable(M, {
+    __index = function(t, k)
+        t[k] = require("kdtsk.utils." .. k)
+        return t[k]
+    end,
+})
+
 local defaults = {
     copilot_allowed_paths = {
         "~/Developer",
@@ -10,7 +21,18 @@ local defaults = {
     },
 }
 
-local M = {}
+---@param fn fun()
+---@param group? string|integer
+function M.on_later(fn, group)
+    -- If not using Lazy.nvim probably VimEnter will work
+    vim.api.nvim_create_autocmd("User", {
+        group = group,
+        pattern = "VeryLazy",
+        callback = function()
+            fn()
+        end,
+    })
+end
 
 ---Search parent directories for a relative path to a command
 ---@param paths string[]

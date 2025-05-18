@@ -36,21 +36,16 @@ if not later_autocmds then
     require("kdtsk.config.autocmds")
 end
 
--- If not using Lazy.nvim probably VimEnter will work
-vim.api.nvim_create_autocmd("User", {
-    group = vim.api.nvim_create_augroup("kdtsk-lazyvim", { clear = true }),
-    pattern = "VeryLazy",
-    callback = function()
-        -- Loads modules after all plugins are loaded
-        if later_autocmds then
-            require("kdtsk.config.autocmds")
-        end
-        -- Provides generic (non-plugin-specific) Keymap
-        require("kdtsk.config.keymap")
+Utils.on_later(function()
+    -- Loads modules after all plugins are loaded
+    if later_autocmds then
+        require("kdtsk.config.autocmds")
+    end
+    -- Provides generic (non-plugin-specific) Keymap
+    require("kdtsk.config.keymap")
 
-        -- TODO move root detection here
-    end,
-})
+    -- TODO do root detection here
+end, vim.api.nvim_create_augroup("kdtsk-lazyvim", { clear = true }))
 
 -- Loads Settings modules via Lazy.nvim
 require("lazy").setup({

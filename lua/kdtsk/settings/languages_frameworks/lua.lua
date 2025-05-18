@@ -62,12 +62,6 @@ return {
                 },
                 luacheck = {
                     nix_pkg = "luajitPackages.luacheck",
-                    prepend_args = {
-                        "--globals",
-                        "vim",
-                        "lvim",
-                        "reload",
-                    },
                 },
             },
         },
