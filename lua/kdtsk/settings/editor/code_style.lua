@@ -28,6 +28,7 @@ vim.opt.virtualedit = "onemore"
 return {
     { -- Code formatting configuration
         "stevearc/conform.nvim",
+        event = "VeryLazy",
         dependencies = {
             "mason.nvim",
             -- Only used to get mapping between conform and mason

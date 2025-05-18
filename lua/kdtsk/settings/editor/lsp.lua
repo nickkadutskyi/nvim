@@ -311,7 +311,7 @@ return {
     },
     { -- Uses LSP to show current code context—used in status line
         "SmiteshP/nvim-navic",
-        dependencies = { "neovim/nvim-lspconfig" },
+        event = "VeryLazy",
         ---@type Options
         opts = {
             highlight = true,
@@ -362,10 +362,6 @@ return {
             local utils = require("kdtsk.utils")
             ---@type table<string, vim.lsp.ConfigLocal>
             local servers = opts.servers or {}
-
-            -- Adds nvim-cmp capabilities for all language servers
-            -- local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-            -- vim.lsp.config("*", { capabilities = has_cmp and cmp_nvim_lsp.default_capabilities() or {} })
 
             -- Gets mason-lspconfig
             local has_mlsp, mlsp = pcall(require, "mason-lspconfig")
@@ -443,6 +439,8 @@ return {
         dependencies = {
             "nvim-treesitter/nvim-treesitter",
         },
+        -- Due to not using it
+        enabled = false,
         opts = {},
         config = function()
             local otter = require("otter")

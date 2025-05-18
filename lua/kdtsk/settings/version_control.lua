@@ -34,6 +34,7 @@ return {
     {
         -- Git integration
         "NeogitOrg/neogit",
+        event = "VeryLazy",
         -- TODO Contribute a fix for `vim.opt.cmdheight = 0` case where Neogit Popup doesnt' reach the bottom
         dependencies = {
             "nvim-lua/plenary.nvim", -- required
@@ -355,7 +356,7 @@ return {
             end,
         },
     },
-    {
+    { -- TODO: Consider to rewrite this plugin to adjust event when it is updating status
         "abccsss/nvim-gitstatus",
         event = "VeryLazy",
         ---@type GitStatusOptions

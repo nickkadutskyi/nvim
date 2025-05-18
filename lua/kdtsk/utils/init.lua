@@ -11,18 +11,6 @@ setmetatable(M, {
     end,
 })
 
-local defaults = {
-    copilot_allowed_paths = {
-        "~/Developer",
-        "~/.config/nvim",
-        "~/.config/nixos-config/",
-        "~/.config/nixos-config-private/",
-    },
-    copilot_not_allowed_paths = {
-        "~/Library/Mobidle Documents",
-    },
-}
-
 ---@param fn fun()
 ---@param group? string|integer
 function M.on_later(fn, group)
@@ -190,20 +178,6 @@ function M.add_to_global_list(item, table_name)
         error("Variable is not a table. " .. table_name .. " is a " .. type(vim.g[table_name]))
     end
     return vim.g[table_name]
-end
-
----Copilot (github/copilot.vim) configuration
-function M.add_cwd_to_copilot_workspace_folders()
-    local cwd = vim.fn.getcwd()
-    if M.is_path_in_paths(cwd, defaults.copilot_allowed_paths) then
-        M.add_to_global_list(cwd, "copilot_workspace_folders")
-    elseif not M.is_path_in_paths(cwd, defaults.copilot_not_allowed_paths) then
-        vim.notify(
-            "Current directory (" .. cwd .. ") is not in the allowed paths for Copilot",
-            vim.log.levels.WARN,
-            { title = "Utils.Copilot" }
-        )
-    end
 end
 
 ---@param bufnr number

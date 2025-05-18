@@ -44,6 +44,7 @@ vim.api.nvim_create_autocmd("BufRead", {
 return {
     { -- For installing language servers, formatters, linters, DAPs
         "williamboman/mason.nvim",
+        event = "VeryLazy",
         opts = { ui = { border = "rounded" } },
     },
     { -- Snacks.nvim version of bigfile
@@ -56,6 +57,7 @@ return {
     },
     { -- Image Previewer for previewing images in fzf-lua
         "3rd/image.nvim",
+        event = "VeryLazy",
         -- so that it doesn't build the rock https://github.com/3rd/image.nvim/issues/91#issuecomment-2453430239
         build = false,
         opts = { processor = "magick_cli" },
