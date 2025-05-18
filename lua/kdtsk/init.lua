@@ -68,4 +68,11 @@ require("lazy").setup({
     install = { colorscheme = { "jb" } },
     ui = { border = "rounded", title = " Plugins ", size = { width = 0.6 } },
     dev = { path = "~/Developer/PERS/0027", patterns = { "nickkadutskyi" }, fallback = true },
+    -- profiling = {
+    --     -- Enables extra stats on the debug tab related to the loader cache.
+    --     -- Additionally gathers stats about all package.loaders
+    --     loader = true,
+    --     -- Track each new require in the Lazy profiling tab
+    --     require = true,
+    -- },
 })
