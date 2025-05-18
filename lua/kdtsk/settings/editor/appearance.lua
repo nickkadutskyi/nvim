@@ -1,28 +1,3 @@
--- Sign column always visible
-vim.opt.signcolumn = "yes"
--- Show line nubmers
-vim.opt.number = true
--- Show line nubmers relative to the cursor position
-vim.opt.relativenumber = true
--- Sets how neovim will display certain whitespace characters in the editor.
-vim.opt.list = true
-vim.opt.listchars = {
-    tab = "» ",
-    space = "‧",
-    trail = "‧",
-    extends = "⟩",
-    nbsp = "␣",
-}
--- Enables cursor line highlight groups
-vim.opt.cursorline = true
--- Minimal number of screen lines to keep above and below the cursor.
-vim.opt.scrolloff = 3
--- Adds visual guides
--- vim.opt.colorcolumn = "80,100,120" -- defined in plugin
-
--- Removes chars from empty lines
-vim.opt.fillchars = { eob = " " }
-
 ---Tabs to show only file name without labels and path
 function _G.custom_tabline()
     local tabline = ""

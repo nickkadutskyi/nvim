@@ -1,4 +1,4 @@
---- Appearance and Behavior
+--- Appearance & Behavior
 
 --- - Appearance
 --- -- UI Options
@@ -24,12 +24,10 @@ vim.o.swapfile = true
 vim.o.updatetime = 250
 vim.o.backup = false
 
-
 --- Keymap
 -- leader needs to be set before loading any plugin or module
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
-
 
 --- Editor
 
@@ -43,6 +41,32 @@ vim.opt.guicursor = {
     "a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor",
     "sm:block-blinkwait175-blinkoff150-blinkon175",
 }
+
+--- - Appearance
+-- Sign column always visible
+vim.o.signcolumn = "yes"
+-- Show line numbers
+vim.o.number = true
+-- Show line numbers relative to the cursor position
+vim.o.relativenumber = true
+-- Sets how Neovim will display certain whitespace characters in the editor.
+vim.o.list = true
+vim.opt.listchars = {
+    tab = "» ",
+    space = "‧",
+    trail = "‧",
+    extends = "⟩",
+    nbsp = "␣",
+}
+-- Enables cursor line highlight groups
+vim.o.cursorline = true
+-- Minimal number of screen lines to keep above and below the cursor.
+vim.o.scrolloff = 3
+-- Adds visual guides
+-- vim.opt.colorcolumn = "80,100,120" -- defined via plugin
+-- Removes chars from empty lines
+vim.opt.fillchars = { eob = " " }
+
 --- - Font
 vim.g.nerd_font_is_present = true
 
