@@ -35,7 +35,7 @@ return {
                 },
                 sections = {
                     lualine_a = {
-                        { require("kdtsk.utils").project_abbreviation },
+                        { Utils.lualine.project_abbreviation },
                     },
                     lualine_b = {
                         "branch",
@@ -57,18 +57,7 @@ return {
                                     end,
                                     hl = "#f7768e",
                                 },
-                                { -- Shows a delta icon if there are uncommitted changes
-                                    function(status)
-                                        if buffer_modified_count > 0 then
-                                            return false
-                                        end
-                                        if status.is_dirty or status.staged > 0 then
-                                            return "Δ"
-                                        else
-                                            return "∅"
-                                        end
-                                    end,
-                                },
+                                { Utils.lualine.gitstatus_delat },
                                 { "ahead", format = " {}↑", hl = "General_Text_DefaultTextFg" },
                                 { "behind", format = " {}↓", hl = "General_Text_DefaultTextFg" },
                             },

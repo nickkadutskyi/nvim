@@ -1,6 +1,7 @@
+---TODO: move to snacks.nvim and style snacks.nvim notify
+---@type LazySpec
 return {
-    {
-        -- Notifications
+    { -- Notifications
         "rcarriga/nvim-notify",
         opts = {
             minimum_width = 50,
