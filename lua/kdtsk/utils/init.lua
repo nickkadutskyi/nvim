@@ -1,5 +1,6 @@
 ---@class kdtsk.utils
 ---@field ui kdtsk.utils.ui
+---@field theme kdtsk.utils.theme
 local M = {}
 
 setmetatable(M, {

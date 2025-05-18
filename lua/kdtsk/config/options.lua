@@ -1,28 +1,30 @@
--- Appearance and behavior
+--- Appearance and Behavior
 
---- Appearance
----- UI Options
------ Removes cmd line to allow more space
+--- - Appearance
+--- -- UI Options
+-- Mouse reporting
+vim.opt.mouse = "a"
+-- Removes cmd line to allow more space
 vim.opt.cmdheight = 0
------ File name and path in Window header
+-- File name and path in Window header
 vim.opt.title = true
 vim.opt.titlestring = [[%{v:lua.Utils.ui.titlestring()}]]
 
---- Natural Language
+--- - Natural Language
 vim.opt.spell = true
 vim.opt.spelllang = { "en_us", "en", "ru", "uk" }
 vim.opt.spellfile = os.getenv("HOME") .. "/.config/nvim_spell/en.utf-8.add"
 
--- Keymap
+--- Keymap
 -- leader needs to be set before loading any plugin or module
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
 
--- Editor
+--- Editor
 
---- General
------ Sets caret blinking pattern
+--- - General
+-- Sets caret blinking pattern
 vim.opt.guicursor = {
     "n-v-c:block-Cursor/lCursor-blinkon1",
     "i-ci-ve:ver25-Cursor/lCursor-blinkon1",
@@ -31,11 +33,11 @@ vim.opt.guicursor = {
     "a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor",
     "sm:block-blinkwait175-blinkoff150-blinkon175",
 }
---- Font
+--- - Font
 vim.g.nerd_font_is_present = true
 
--- Version control
+--- Version control
 
--- Languages and frameworks
+--- Languages and frameworks
 
--- Tools
+--- Tools
