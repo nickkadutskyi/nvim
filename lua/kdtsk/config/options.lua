@@ -15,6 +15,16 @@ vim.opt.spell = true
 vim.opt.spelllang = { "en_us", "en", "ru", "uk" }
 vim.opt.spellfile = os.getenv("HOME") .. "/.config/nvim_spell/en.utf-8.add"
 
+--- - Local History
+local vim_dir = os.getenv("HOME") .. "/.vim"
+vim.o.undodir = vim_dir .. "/undo"
+vim.o.directory = vim_dir .. "/swap"
+vim.o.undofile = true
+vim.o.swapfile = true
+vim.o.updatetime = 250
+vim.o.backup = false
+
+
 --- Keymap
 -- leader needs to be set before loading any plugin or module
 vim.g.mapleader = " "
