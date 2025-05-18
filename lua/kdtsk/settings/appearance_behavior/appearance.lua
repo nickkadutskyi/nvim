@@ -1,19 +1,4 @@
 -- UI Options
--- Cursor
--- vgcuim.opt.guicursor = "aaa::blinkon100"
-vim.opt.guicursor = {
-    "n-v-c:block-Cursor/lCursor-blinkon1",
-    "i-ci-ve:ver25-Cursor/lCursor-blinkon1",
-    "r-cr:hor20",
-    "o:hor50",
-    "a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor",
-    "sm:block-blinkwait175-blinkoff150-blinkon175",
-}
--- Removes cmd line to allow more space
-vim.opt.cmdheight = 0
--- File name and path in Window header
-vim.opt.title = true
-vim.opt.titlestring = [[%{v:lua.TitleString()}]]
 -- Ensures relative file path if there are multiple files with same name in project
 function _G.TitleString()
     local devpath = vim.fn.fnamemodify("~/Developer", ":p")

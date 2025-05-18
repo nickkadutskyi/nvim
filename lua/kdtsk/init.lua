@@ -1,8 +1,7 @@
--- leader needs to be set before loading any plugin or module
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
+_G.Utils = require("kdtsk.utils")
 
-vim.g.nerd_font_is_present = true
+-- Loads all the options
+require("kdtsk.config.options")
 
 -- If opened a dir then set it as the cwd and if opened a file then set the
 -- file's parent dir as the cwd to narrow down the scope for fzf
@@ -31,23 +30,43 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Loads config modules via Lazy.nvim
+-- If not opening a file or a directory then load autocmds later
+local later_autocmds = vim.fn.argc(-1) == 0
+if not later_autocmds then
+    require("kdtsk.config.autocmds")
+end
+
+-- If not using Lazy.nvim probably VimEnter will work
+vim.api.nvim_create_autocmd("User", {
+    group = vim.api.nvim_create_augroup("kdtsk-lazyvim", { clear = true }),
+    pattern = "VeryLazy",
+    callback = function()
+        -- Loads modules after all plugins are loaded
+        if later_autocmds then
+            require("kdtsk.config.autocmds")
+        end
+        -- Provides generic (non-plugin-specific) Keymap
+        require("kdtsk.config.keymap")
+
+        -- TODO move root detection here
+    end,
+})
+
+-- Loads Settings modules via Lazy.nvim
 require("lazy").setup({
     spec = {
         -- Customizes IDE (non-editor-specific parts) appearance and behavior
-        { import = "kdtsk.appearance_behavior" },
-        -- Provides generic (non-plugin-specific) Keymap
-        { import = "kdtsk.keymap" },
+        { import = "kdtsk.settings.appearance_behavior" },
         -- Configures all editor specific parts (completion, code style and quality, color scheme, etc.)
-        { import = "kdtsk.editor" },
+        { import = "kdtsk.settings.editor" },
         -- Everything related to version control systems (e.g. Git)
-        { import = "kdtsk.version_control" },
+        { import = "kdtsk.settings.version_control" },
         -- Provides language-specific settings (Lazy modules provide `opts` but configured in other areas)
-        { import = "kdtsk.languages_frameworks" },
+        { import = "kdtsk.settings.languages_frameworks" },
         -- Other tools (terminal, task runner, AI assistant, etc.)
-        { import = "kdtsk.tools" },
+        { import = "kdtsk.settings.tools" },
         -- Uncategorized
-        { import = "kdtsk.other" },
+        { import = "kdtsk.settings.other" },
     },
     change_detection = { enable = true, notify = false },
     install = { colorscheme = { "jb" } },

@@ -1,4 +1,14 @@
-local defaults = require("kdtsk.config").default
+local defaults = {
+    copilot_allowed_paths = {
+        "~/Developer",
+        "~/.config/nvim",
+        "~/.config/nixos-config/",
+        "~/.config/nixos-config-private/",
+    },
+    copilot_not_allowed_paths = {
+        "~/Library/Mobidle Documents",
+    },
+}
 
 local M = {}
 
