@@ -1,3 +1,9 @@
+-- This file is automatically loaded by kdtsk.init
+
+local function augroup(name)
+    return vim.api.nvim_create_augroup("kdtsk-" .. name, { clear = true })
+end
+
 --- Appearance and Behavior
 
 --- - Appearance
@@ -5,7 +11,7 @@
 -- Sets Tmux window name to the current buffer name when in tmux session
 if os.getenv("TMUX") then
     vim.api.nvim_create_autocmd("BufEnter", {
-        group = vim.api.nvim_create_augroup("kdtsk-tmux-window-name", { clear = true }),
+        group = augroup("tmux-window-name"),
         callback = function()
             -- FIXME: cache titlestring somewhere to avoid re-evaluating it
             -- TODO: should I make async system call?
@@ -17,7 +23,7 @@ end
 
 -- Disable spell checking in terminal buffers
 vim.api.nvim_create_autocmd({ "TermOpen" }, {
-    group = vim.api.nvim_create_augroup("kdtsk-term-spell-check", { clear = true }),
+    group = augroup("term-spell-check"),
     callback = function()
         vim.opt_local.spell = false
     end,
@@ -29,7 +35,7 @@ vim.api.nvim_create_autocmd({ "TermOpen" }, {
 --- - Macro
 -- Tracks macro recording status and stores it in a global variable for use in statusline
 vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {
-    group = vim.api.nvim_create_augroup("kdtsk-editor-macro-recording", { clear = true }),
+    group = augroup("editor-macro-recording"),
     callback = function(e)
         if e.event == "RecordingEnter" then
             local register = vim.fn.reg_recording()
@@ -41,3 +47,16 @@ vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {
 })
 
 --- Plugin
+
+--- Misc
+-- Auto create dir when saving a file, in case some intermediate directory does not exist
+vim.api.nvim_create_autocmd({ "BufWritePre" }, {
+    group = augroup("auto-create-dir"),
+    callback = function(event)
+        if event.match:match("^%w%w+:[\\/][\\/]") then
+            return
+        end
+        local file = vim.uv.fs_realpath(event.match) or event.match
+        vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
+    end,
+})
