@@ -31,6 +31,9 @@ vim.g.maplocalleader = "\\"
 
 --- Editor
 
+
+--- Plugins
+
 --- - General
 -- Sets caret blinking pattern
 vim.opt.guicursor = {

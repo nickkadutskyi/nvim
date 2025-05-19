@@ -7,19 +7,11 @@ vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufModifiedSet", "Fil
 })
 
 return {
-    { -- Provides better keymap for macro recording
-        "chrisgrieser/nvim-recorder",
-        event = "VeryLazy",
-        ---@type configObj
-        ---@diagnostic disable-next-line: missing-fields
-        opts = { lessNotifications = true, clear = true, dynamicSlots = "rotate" },
-    },
     { -- Status bar controller
         "nvim-lualine/lualine.nvim",
         dependencies = {
             "nvim-tree/nvim-web-devicons",
             "arkav/lualine-lsp-progress",
-            "chrisgrieser/nvim-recorder",
         },
         config = function()
             _G._buffer_modified_count = 0
@@ -132,7 +124,6 @@ return {
                         { "diagnostics" },
                     },
                     lualine_y = {
-                        { require("recorder").displaySlots },
                         "searchcount",
                         "location",
                     },
