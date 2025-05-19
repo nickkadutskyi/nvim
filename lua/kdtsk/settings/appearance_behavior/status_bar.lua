@@ -7,7 +7,22 @@ vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufModifiedSet", "Fil
 })
 
 return {
-    { -- Status bar controller
+    { -- Status bar controller in the top right corner
+        -- TODO: Consider adding number of misspelled words
+        "b0o/incline.nvim",
+        config = function()
+            require("incline").setup({
+                render = function(props)
+                    return {
+                        { Utils.incline.component_diagnostics(props) },
+                    }
+                end,
+            })
+        end,
+        -- Optional: Lazy load Incline
+        event = "VeryLazy",
+    },
+    { -- Status bar controller in status line
         "nvim-lualine/lualine.nvim",
         dependencies = {
             "nvim-tree/nvim-web-devicons",
@@ -18,7 +33,6 @@ return {
             _G._buffer_modified_last_check_time = 0
 
             local utils = require("lualine.utils.utils")
-            ---@type user_config
             local opts = {
                 options = {
                     globalstatus = true,
@@ -117,7 +131,6 @@ return {
                             end,
                         },
                         { Utils.lualine.component_macro_recording },
-                        { "diagnostics" },
                     },
                     lualine_y = {
                         "searchcount",
