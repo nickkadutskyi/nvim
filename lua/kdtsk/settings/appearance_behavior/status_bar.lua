@@ -1,11 +1,8 @@
-local buffer_modified_count = 0
-local last_check_time = 0
-
 -- Setup autocmds to update buffer_modified_count when relevant events occur
 vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufModifiedSet", "FileChangedShellPost" }, {
     callback = function()
         -- Reset the timer to force an update on the next status line refresh
-        last_check_time = 0
+        _G._buffer_modified_last_check_time = 0
     end,
 })
 
@@ -25,6 +22,9 @@ return {
             "chrisgrieser/nvim-recorder",
         },
         config = function()
+            _G._buffer_modified_count = 0
+            _G._buffer_modified_last_check_time = 0
+
             local utils = require("lualine.utils.utils")
             local opts = {
                 options = {
@@ -42,24 +42,11 @@ return {
                         {
                             "gitstatus",
                             sections = {
-                                { -- Shows a red icon if there are unsaved buffers
-                                    function(_)
-                                        local current_time = vim.loop.now()
-                                        if current_time - last_check_time > 500 then
-                                            local count, _ = require("kdtsk.utils").count_modified_buffers()
-                                            buffer_modified_count = count
-                                        end
-                                        last_check_time = current_time
-
-                                        if buffer_modified_count > 0 then
-                                            return "󰽃"
-                                        end
-                                    end,
-                                    hl = "#f7768e",
-                                },
-                                { Utils.lualine.gitstatus_delat },
-                                { "ahead", format = " {}↑", hl = "General_Text_DefaultTextFg" },
-                                { "behind", format = " {}↓", hl = "General_Text_DefaultTextFg" },
+                                { Utils.lualine.gitstat_subsec_has_unsaved_buffers, hl = "StatusBarHasUnsavedBuffers" },
+                                { Utils.lualine.gitstat_subsec_is_clean, hl = "GitToolBoxColorsIconsClean" },
+                                { Utils.lualine.gitstat_subsec_is_dirty, hl = "GitToolBoxColorsIconsDirty" },
+                                { "ahead", format = " {}↑", hl = "GitToolBoxColorsIconsClean" },
+                                { "behind", format = " {}↓", hl = "GitToolBoxColorsIconsClean" },
                             },
                             sep = "",
                         },
