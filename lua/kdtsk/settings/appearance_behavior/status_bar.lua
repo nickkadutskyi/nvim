@@ -59,59 +59,44 @@ return {
                         },
                     },
                     lualine_c = {
-                        {
-                            "filetype",
-                            padding = { left = 1, right = 0 },
-                            icon_only = true,
-                        },
+                        -- TODO add current module name here
                         {
                             "filename",
-                            file_status = true,
-                            newfile_status = true,
-                            path = 1, -- Show relative path
-                            symbols = { newfile = "[new]", unnamed = "[no name]" },
+                            path = 1,
+                            file_status = false,
+                            newfile_status = false,
                             fmt = function(name, _)
-                                -- Early return for terminal buffers
+                                local parent_path = vim.fn.fnamemodify(name, ":h")
+
+                                -- If terminal buffer, get the last part of the path
                                 if name:find("^term://") then
                                     local path_parts = vim.fn.split(vim.fn.expand("%"), ":")
                                     local last = path_parts[#path_parts]
                                     if type(last) == "string" and last ~= "" then
-                                        return "term " .. last
+                                        parent_path = vim.fn.fnamemodify(last, ":h")
+                                    else
+                                        parent_path = "terminal"
                                     end
-                                    return "terminal"
                                 end
 
-                                -- Split the name into path and status indicators (like [+], [RO], etc.)
-                                local filePath, rest = name:match("(.+)%s*(%[*.*%]*)")
-                                if not filePath then
-                                    return name -- Handle edge cases where matching fails
-                                end
-
-                                -- Calculate the threshold for shortening based on screen width
-                                local shorten_after = math.floor(vim.o.columns / 238 * 70)
-
-                                -- Only do expensive operations if shortening is needed
-                                if #filePath <= shorten_after then
-                                    return filePath .. " " .. (rest or "")
-                                end
-
-                                -- Caching the fileName to avoid repeated calls
-                                local fileName = vim.fs.basename(filePath)
-                                local parentPath = vim.fn.fnamemodify(filePath, ":h")
-                                local parentName = vim.fs.basename(parentPath)
-
-                                -- Create the shortened path
-                                local rightPart = parentName .. "/" .. fileName
-                                local leftPartLen = shorten_after - #rightPart - 3 -- account for "../"
-                                leftPartLen = math.max(0, leftPartLen) -- ensure non-negative
-
-                                local leftPart = filePath:sub(1, leftPartLen)
-                                return leftPart .. "../" .. rightPart .. " " .. (rest or "")
+                                local parent_path_sep = parent_path:gsub("%/", " › ")
+                                return parent_path_sep .. " › "
                             end,
+                            padding = { left = 0, right = 0 },
+                        },
+                        { "filetype", padding = { left = 0, right = 0 }, icon_only = true },
+                        {
+                            "filename",
+                            path = 0,
+                            padding = { left = 0, right = 1 },
+                            file_status = true,
+                            newfile_status = true,
+                            symbols = { newfile = "[new]", unnamed = "[no name]" },
                             color = function(_)
                                 return vim.b.custom_git_status_hl or "Custom_TabSel"
                             end,
                         },
+                        -- TODO: add separator between navic and filename when navic provides any context
                         {
                             "navic",
                             color_correction = nil,
