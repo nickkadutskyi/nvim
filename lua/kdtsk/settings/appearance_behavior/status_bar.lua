@@ -85,7 +85,15 @@ return {
                             padding = { left = 0, right = 1 },
                             separator = "›",
                         },
-                        { "filetype", padding = { left = 1, right = 0 }, icon_only = true },
+                        {
+                            "filetype",
+                            padding = { left = 1, right = 0 },
+                            icon_only = true,
+                            fmt = function(filetype, _)
+                                -- forces to use the default filetype icon
+                                return filetype ~= "" and filetype or " "
+                            end,
+                        },
                         { -- Provides file name
                             "filename",
                             path = 0,
