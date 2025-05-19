@@ -53,6 +53,8 @@ return {
         opts = {
             ---@class snacks.bigfile.Config
             bigfile = { enabled = true },
+            -- Moves git status to the right side of the row numbers like in IntelliJ
+            statuscolumn = { enabled = true },
         },
     },
     { -- Image Previewer for previewing images in fzf-lua
