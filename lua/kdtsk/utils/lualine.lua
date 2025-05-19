@@ -1,6 +1,12 @@
 ---@class kdtsk.utils.lualine
 local M = {}
 
+---Macro recording status
+---@return string
+function M.component_macro_recording()
+    return _G._editor_macro_recording and " " .. _G._editor_macro_recording or ""
+end
+
 ---Gets the project abbreviation based on the current working directory
 function M.project_abbreviation()
     -- Cache the project abbreviation

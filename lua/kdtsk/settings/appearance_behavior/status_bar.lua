@@ -115,12 +115,7 @@ return {
                                 return utils.stl_escape(str)
                             end,
                         },
-                        { -- Macro recording status
-                            function()
-                                local reg = vim.fn.reg_recording()
-                                return reg ~= "" and " [" .. reg .. "]" or ""
-                            end,
-                        },
+                        { Utils.lualine.component_macro_recording },
                         { "diagnostics" },
                     },
                     lualine_y = {
