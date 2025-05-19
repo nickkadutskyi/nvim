@@ -71,6 +71,7 @@ function M.gitstat_subsec_is_dirty(status)
     end
 end
 
+--- Show empty icon if there are no changes
 function M.gitstat_subsec_is_clean(status)
     if _G._buffer_modified_count and _G._buffer_modified_count > 0 then
         return nil
