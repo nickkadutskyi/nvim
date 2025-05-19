@@ -18,6 +18,7 @@ return {
             _G._buffer_modified_last_check_time = 0
 
             local utils = require("lualine.utils.utils")
+            ---@type user_config
             local opts = {
                 options = {
                     globalstatus = true,
@@ -30,7 +31,7 @@ return {
                         { Utils.lualine.project_abbreviation },
                     },
                     lualine_b = {
-                        "branch",
+                        { "branch", padding = { left = 1, right = 0 } },
                         {
                             "gitstatus",
                             sections = {
