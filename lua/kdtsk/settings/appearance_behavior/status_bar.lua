@@ -60,7 +60,7 @@ return {
                     },
                     lualine_c = {
                         -- TODO add current module name here
-                        {
+                        { -- Provides parent path relative to the cwd
                             "filename",
                             path = 1,
                             file_status = false,
@@ -80,12 +80,13 @@ return {
                                 end
 
                                 local parent_path_sep = parent_path:gsub("%/", " › ")
-                                return parent_path_sep .. " › "
+                                return parent_path_sep
                             end,
-                            padding = { left = 0, right = 0 },
+                            padding = { left = 0, right = 1 },
+                            separator = "›",
                         },
-                        { "filetype", padding = { left = 0, right = 0 }, icon_only = true },
-                        {
+                        { "filetype", padding = { left = 1, right = 0 }, icon_only = true },
+                        { -- Provides file name
                             "filename",
                             path = 0,
                             padding = { left = 0, right = 1 },
@@ -95,8 +96,8 @@ return {
                             color = function(_)
                                 return vim.b.custom_git_status_hl or "Custom_TabSel"
                             end,
+                            separator = "›",
                         },
-                        -- TODO: add separator between navic and filename when navic provides any context
                         {
                             "navic",
                             color_correction = nil,

@@ -29,6 +29,12 @@ return {
                 -- same as `override` but for overrides by extension
                 -- (requires `strict` to be true)
                 override_by_extension = {
+                    ["php"] = {
+                        icon = "",
+                        color = "#3E7BE9",
+                        cterm_color = "33",
+                        name = "Php",
+                    },
                     ["log"] = {
                         icon = "",
                         color = "#81e043",
