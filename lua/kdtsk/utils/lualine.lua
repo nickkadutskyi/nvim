@@ -85,7 +85,7 @@ end
 function M.gitstat_subsec_has_unsaved_buffers()
     local current_time = vim.loop.now()
     if current_time - _G._buffer_modified_last_check_time > 500 then
-        local count, _ = require("kdtsk.utils").count_modified_buffers()
+        local count, _ = Utils.count_modified_buffers()
         _G._buffer_modified_count = count
     end
     _G._buffer_modified_last_check_time = current_time
