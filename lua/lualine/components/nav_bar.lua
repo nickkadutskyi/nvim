@@ -1,3 +1,4 @@
+-- 󱓼 [cwd name|root name if file is outside of cwd] [path] [filetype] [filename]
 -- Show module name (project directory or current cwd basename)
 -- if no file is open or if current file is in cwd
 
