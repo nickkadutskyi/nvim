@@ -339,7 +339,7 @@ return {
             -- Sets icons from jb.nvim
             opts.icons = vim.tbl_map(function(icon)
                 return icon .. " "
-            end, require("jb.icons").icons)
+            end, require("jb.icons").kind)
 
             navic.setup(opts)
         end,

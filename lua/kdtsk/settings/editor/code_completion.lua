@@ -140,7 +140,7 @@ return {
         -- Tells Lazy.nvim to merge this path as a list
         opts_extend = { "sources.default" },
         config = function(_, opts)
-            opts.appearance.kind_icons = require("jb.icons").icons
+            opts.appearance.kind_icons = require("jb.icons").kind
             require("blink.cmp").setup(opts)
         end,
     },
