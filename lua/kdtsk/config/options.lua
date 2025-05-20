@@ -32,6 +32,17 @@ vim.g.maplocalleader = "\\"
 vim.o.timeoutlen = 300
 
 --- Editor
+--- - Config
+-- Soft wrap
+vim.opt.wrap = false
+-- Soft wrap at line break - disabled for now
+vim.opt.linebreak = false
+-- Better indentation for wrapped lines
+if vim.fn.has("linebreak") == 1 then
+    vim.opt.breakindent = true
+    vim.opt.showbreak = "↳ "
+    vim.opt.breakindentopt = { shift = 0, min = 20, sbr = true }
+end
 
 
 --- Plugins
