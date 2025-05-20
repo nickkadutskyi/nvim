@@ -278,7 +278,9 @@ function M.create_tool_window(
     local bufnrs = { [bufnr] = true }
     vim.api.nvim_set_option_value(
         "winhl",
-        "FloatTitle:ToolWindowFloatTitle," .. "FloatFooter:ToolWindowFloatFooter",
+        "FloatTitle:ToolWindowFloatTitle,"
+            .. "FloatFooter:ToolWindowFloatFooter,"
+            .. "NormalFloat:ToolWindowFloatNormal",
         { win = winid }
     )
     local close_tool_window = function()
