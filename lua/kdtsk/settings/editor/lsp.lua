@@ -262,21 +262,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end,
 })
 
--- Diagnostics config
-vim.diagnostic.config({
-    update_in_insert = true,
-    virtual_text = false,
-    float = {
-        focusable = false,
-        style = "minimal",
-        border = "rounded",
-        source = true,
-        header = "",
-        prefix = "",
-    },
-    -- turns off diagnostics signs in gutter
-    signs = false,
-})
 
 -- Jump to the next/previous diagnostic
 vim.keymap.set("n", "]d", function()

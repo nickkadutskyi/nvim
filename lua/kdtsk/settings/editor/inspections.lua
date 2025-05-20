@@ -1,3 +1,28 @@
+-- Diagnostics config
+vim.diagnostic.config({
+    update_in_insert = true,
+    virtual_text = false,
+    -- [icon] [source]: [message] [code]
+    float = {
+        -- focusable = false,
+        border = "rounded",
+        -- Shows source of inspection in the front
+        scope = "cursor",
+        source = true,
+        header = "",
+        prefix = function(diagnostic)
+            local icon = require("jb.icons").diagnostic[diagnostic.severity]
+            local severity_name = vim.diagnostic.severity[diagnostic.severity]
+            return " " .. icon .. " ", "DiagnosticSign" .. severity_name
+        end,
+        suffix = function(diagnostic)
+            return " [" .. diagnostic.code .. "]", "Comment"
+        end,
+    },
+    -- turns off diagnostics signs in gutter
+    signs = false,
+})
+
 return {
     "folke/trouble.nvim",
     opts = {
