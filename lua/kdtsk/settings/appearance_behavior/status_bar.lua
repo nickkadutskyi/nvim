@@ -45,15 +45,16 @@ return {
                         { Utils.lualine.project_abbreviation },
                     },
                     lualine_b = {
-                        { "branch", padding = { left = 1, right = 0 } },
+                        { "branch", icon = "󰘬", padding = { left = 1, right = 0 } },
                         {
                             "gitstatus",
+                            padding = { left = 0, right = 1 },
                             sections = {
+                                { "behind", format = " 󰁂", hl = "VCSIconsUnpulled" },
+                                { "ahead", format = " 󰁜", hl = "VCSIconsUnmerged" },
                                 { Utils.lualine.gitstat_subsec_has_unsaved_buffers, hl = "StatusBarHasUnsavedBuffers" },
                                 { Utils.lualine.gitstat_subsec_is_clean, hl = "GitToolBoxColorsIconsClean" },
                                 { Utils.lualine.gitstat_subsec_is_dirty, hl = "GitToolBoxColorsIconsDirty" },
-                                { "ahead", format = "󰁜", hl = "VCSIconsUnmerged" },
-                                { "behind", format = "󰁂", hl = "VCSIconsUnpulled" },
                             },
                             sep = "",
                         },
