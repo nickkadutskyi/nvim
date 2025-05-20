@@ -1,15 +1,3 @@
----Config
--- Soft wrap
-vim.opt.wrap = false
--- Soft wrap at line break - disabled for now
-vim.opt.linebreak = false
--- Better indentation for wrapped lines
-if vim.fn.has("linebreak") == 1 then
-    vim.opt.breakindent = true
-    vim.opt.showbreak = "↳ "
-    vim.opt.breakindentopt = { shift = 0, min = 20, sbr = true }
-end
-
 -- Handled via .editorconfig
 -- vim.opt.textwidth = 120 -- max_line_length
 vim.opt.tabstop = 2 -- tab_width
