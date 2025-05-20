@@ -48,7 +48,7 @@ return {
                         { "branch", icon = "󰘬", padding = { left = 1, right = 0 } },
                         {
                             "gitstatus",
-                            padding = { left = 0, right = 1 },
+                            padding = { left = 0, right = 2 },
                             sections = {
                                 { "behind", format = " 󰦸", hl = "VCSIconsUnpulled" },
                                 { "ahead", format = " 󰧆 ", hl = "VCSIconsUnmerged" },
