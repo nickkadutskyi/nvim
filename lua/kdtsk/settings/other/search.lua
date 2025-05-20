@@ -217,7 +217,7 @@ return {
                 },
                 lsp = {
                     symbols = {
-                        symbol_icons = require("jb.icons").kind,
+                        symbol_icons = Utils.icons.kind,
                         symbol_hl = function(s)
                             -- `JBIcon<Kind>` generated in jb.nvim colorscheme
                             return "JBIcon" .. s:lower()

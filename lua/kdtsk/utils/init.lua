@@ -3,11 +3,29 @@
 ---@field theme kdtsk.utils.theme
 ---@field lualine kdtsk.utils.lualine
 ---@field incline kdtsk.utils.incline
+---@field icons kdtsk.utils.icons|jb.icons relies on jb.icons or blink.cmp
 local M = {}
 
 setmetatable(M, {
     __index = function(t, k)
-        t[k] = require("kdtsk.utils." .. k)
+        -- Tries to load `jb.icons` or icons from `blink.cmp`
+        if k == "icons" then
+            local has_jb_icons, jb_icons = pcall(require, "jb.icons")
+            if has_jb_icons then
+                t[k] = jb_icons
+            else
+                local has_blink, blink = pcall(require, "blik.cmp.config.appearance")
+                if has_blink and blink.default.kind_icons then
+                    t[k] = require("kdtsk.utils.icons")
+                    t[k].kind = blink.default.kind_icons
+                else
+                    t[k] = require("kdtsk.utils.icons")
+                end
+            end
+        else
+            t[k] = require("kdtsk.utils." .. k)
+        end
+
         return t[k]
     end,
 })

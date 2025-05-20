@@ -4,19 +4,24 @@ vim.diagnostic.config({
     virtual_text = false,
     -- [icon] [source]: [message] [code]
     float = {
-        -- focusable = false,
+        focusable = true,
+        -- NOTE: currently couldn't find any good border pattern
+        -- It looks fine in light but not in dark
         border = "rounded",
-        -- Shows source of inspection in the front
         scope = "cursor",
+        -- Shows source of inspection in the front
         source = true,
         header = "",
+        -- Adds inspection icons to indicate severity
         prefix = function(diagnostic)
-            local icon = require("jb.icons").diagnostic[diagnostic.severity]
+            local icon = Utils.icons.diagnostic[diagnostic.severity]
             local severity_name = vim.diagnostic.severity[diagnostic.severity]
             return " " .. icon .. " ", "DiagnosticSign" .. severity_name
         end,
+        -- Adds error code in comment style in the end
         suffix = function(diagnostic)
-            return " [" .. diagnostic.code .. "]", "Comment"
+            local code = diagnostic.code
+            return code and " [" .. code .. "]" or "", "Comment"
         end,
     },
     -- turns off diagnostics signs in gutter

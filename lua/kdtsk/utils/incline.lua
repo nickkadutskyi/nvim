@@ -3,7 +3,7 @@ local M = {}
 
 -- default symbols for diagnostics component
 M.symbols = {
-    icons = require("jb.icons").diagnostic,
+    icons = Utils.icons.diagnostic,
     no_icons = { [1] = "E:", [2] = "W:", [3] = "We:", [4] = "C:" },
 }
 

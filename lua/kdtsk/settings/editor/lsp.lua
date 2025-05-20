@@ -324,7 +324,7 @@ return {
             -- Sets icons from jb.nvim
             opts.icons = vim.tbl_map(function(icon)
                 return icon .. " "
-            end, require("jb.icons").kind)
+            end, Utils.icons.kind)
 
             navic.setup(opts)
         end,
@@ -415,6 +415,7 @@ return {
                 { path = "inc-rename.nvim", words = { "inc_rename" } },
                 { path = "nvim-gitstatus", words = { "GitStatus" } },
                 { path = "auto-dark-mode.nvim", words = { "AutoDarkMode" } },
+                { path = "jb.icons", words = { "jb.icons" } },
             },
         },
     },
