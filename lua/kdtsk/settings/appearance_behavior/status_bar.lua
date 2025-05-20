@@ -59,7 +59,7 @@ return {
                         },
                     },
                     lualine_c = {
-                        { "nav_bar" },
+                        -- { "nav_bar" },
                         -- TODO add current module name here
                         { -- Provides parent path relative to the cwd
                             "filename",
