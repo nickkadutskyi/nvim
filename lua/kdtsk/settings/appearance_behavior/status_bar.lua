@@ -49,7 +49,7 @@ return {
                         { "branch", icon = "󰘬", padding = { left = 1, right = 0 } },
                         {
                             "gitstatus",
-                            padding = { left = 0, right = 2 },
+                            padding = { left = 0, right = 1 },
                             sections = {
                                 { "behind", format = " 󰦸", hl = "VCSIconsUnpulled" },
                                 { "ahead", format = " 󰧆 ", hl = "VCSIconsUnmerged" },
@@ -85,7 +85,7 @@ return {
                                 local parent_path_sep = parent_path:gsub("%/", " › ")
                                 return parent_path_sep
                             end,
-                            padding = { left = 0, right = 1 },
+                            padding = { left = 1, right = 1 },
                             separator = "›",
                         },
                         {
