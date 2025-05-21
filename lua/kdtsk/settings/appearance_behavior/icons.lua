@@ -36,7 +36,8 @@ return {
                         name = "Js",
                     },
                     ["php"] = {
-                        icon = " ",
+                        -- icon = " ",
+                        icon = "󰌟",
                         color = "#3E7BE9",
                         cterm_color = "33",
                         name = "Php",
