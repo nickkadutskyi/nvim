@@ -108,6 +108,7 @@ return {
             ---@type table<string, lint.LinterLocal>
             linters = {
 
+                -- TODO: implement this https://docs.wpvip.com/php_codesniffer/phpcs-report/
                 -- PHP Code Sniffer
                 phpcs = {
                     cmd = function()
