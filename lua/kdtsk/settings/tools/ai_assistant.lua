@@ -40,6 +40,13 @@ return {
             },
             filetypes = { ["copilot-chat"] = false },
             copilot_model = "gpt-4o-copilot",
+            server_opts_overrides = {
+                settings = {
+                    telemetry = {
+                        telemetryLevel = "off",
+                    },
+                },
+            },
         },
         config = function(_, opts)
             require("copilot").setup(opts)

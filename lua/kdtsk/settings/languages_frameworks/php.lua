@@ -57,7 +57,7 @@ return {
                         -- if phpcbf is used as both linter and formatter there is no need for php-cs-fixer
                         -- so it's safe to have this options since only one of them will be used
                         -- but need to install them locally for a project only
-                        -- stop_after_first = true,
+                        stop_after_first = true,
                         -- runs jsbeautify via intelephense so it's useful to have .jsbeautifyrc
                         lsp_format = "first",
                         async = true,

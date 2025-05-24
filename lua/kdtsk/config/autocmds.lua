@@ -46,7 +46,21 @@ vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {
     end,
 })
 
---- Plugin
+--- Plugins
+--- VCS
+--- Build, Execution, Deployment
+
+--- Languages & Frameworks
+--- - Misc
+-- Starts LSP logs rotation
+Utils.on_later(function()
+    Utils.lsp.rotate_lsp_logs()
+    -- Set up a timer to rotate logs every hour
+    vim.fn.timer_start(3600000, Utils.lsp.rotate_lsp_logs, { ["repeat"] = -1 })
+end, vim.api.nvim_create_augroup("kdtsk-lsp-logs", { clear = true }))
+
+--- Backup & Sync
+--- Advanced Settings
 
 --- Misc
 -- Auto create dir when saving a file, in case some intermediate directory does not exist
