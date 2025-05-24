@@ -5,7 +5,7 @@ return {
         opts = function(_, opts)
             vim.list_extend(opts.ensure_installed, {
                 "go",
-                -- "gotml",
+                "gotmpl",
             })
         end,
     },
@@ -14,7 +14,7 @@ return {
         opts = {
             ---@type table<string,vim.lsp.ConfigLocal>
             servers = {
-                ["gopls"] = {},
+                ["gopls"] = { enabled = false },
             },
         },
     },
