@@ -61,7 +61,7 @@ return {
                         },
                     },
                     lualine_c = {
-                        -- { "nav_bar" },
+                        { "nav_bar" },
                         -- TODO add current module name here
                         { -- Provides parent path relative to the cwd
                             "filename",
@@ -85,7 +85,7 @@ return {
                                 local parent_path_sep = parent_path:gsub("%/", " › ")
                                 return parent_path_sep
                             end,
-                            padding = { left = 1, right = 1 },
+                            padding = { left = 0, right = 1 },
                             separator = "›",
                         },
                         {
