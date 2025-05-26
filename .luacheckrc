@@ -1,2 +1,2 @@
 globals = { "vim" }
-read_globals = { "Utils", "lvim", "reload" }
+read_globals = { "Utils", "lvim", "reload", "Snacks" }

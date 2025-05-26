@@ -24,76 +24,159 @@ vim.diagnostic.config({
             return code and " [" .. code .. "]" or "", "Comment"
         end,
     },
-    -- turns off diagnostics signs in gutter
-    signs = false,
+    signs = {
+        -- Disables in gutter but Problem tool window will still show them
+        severity = {},
+        text = Utils.icons.diagnostic,
+    },
 })
 
 return {
-    "folke/trouble.nvim",
-    opts = {
-        auto_close = true,
-        warn_no_results = true,
-        open_no_results = false,
-        modes = {
-            document_diagnostics = {
-                mode = "diagnostics",
-                filter = { buf = 0 },
-                focus = true,
+    {
+        "folke/snacks.nvim",
+        keys = {
+            {
+                "<leader>ss",
+                function()
+                    Snacks.picker.lsp_symbols({
+                        layout = { preset = "sidebar", preview = false },
+                    })
+                end,
+                desc = "LSP Symbols",
             },
-            workspace_diagnostics = {
-                mode = "diagnostics",
-                filter = {},
-                focus = true,
-            },
-            symbols = {
-                title = "{hl:Title}Structure{hl} {count}",
-                desc = "Structure",
-                focus = true,
-                win = {
-                    size = 50,
-                    position = "left",
+        },
+        ---@class snacks.picker.Config
+        opts = {
+            picker = {
+                sources = {
+                    lsp_symbols = {
+                        filter = {
+                            default = {
+                                "Class",
+                                "Constructor",
+                                "Enum",
+                                "Field",
+                                "Function",
+                                "Interface",
+                                "Method",
+                                "Module",
+                                "Namespace",
+                                "Package",
+                                "Property",
+                                "Struct",
+                                "Trait",
+                                "String",
+                                "Number",
+                            },
+                        },
+                    },
                 },
             },
         },
-        icons = {
-            kinds = Utils.icons.kind,
-        },
     },
-    config = function(_, opts)
-        local trouble = require("trouble")
-        trouble.setup(opts)
+    {
+        "folke/trouble.nvim",
+        ---@class trouble.Config
+        opts = {
+            auto_close = true,
+            warn_no_results = true,
+            open_no_results = false,
+            max_items = 5000,
+            signs = {},
+            modes = {
+                document_diagnostics = {
+                    mode = "diagnostics",
+                    filter = { buf = 0 },
+                    focus = true,
+                },
+                workspace_diagnostics = {
+                    mode = "diagnostics",
+                    filter = {},
+                    focus = true,
+                },
+                symbols = {
+                    multiline = false,
+                    title = "{hl:Title}Structure{hl} {count}",
+                    desc = "Structure",
+                    focus = true,
+                    win = {
+                        size = 50,
+                        position = "left",
+                    },
+                    filter = {
+                        -- remove Package since luals uses it for control flow structures
+                        ["not"] = { ft = "lua", kind = "Package" },
+                        any = {
+                            -- all symbol kinds for help / markdown files
+                            ft = { "help", "markdown" },
+                            -- default set of symbol kinds
+                            kind = {
+                                "Class",
+                                "Constructor",
+                                "Enum",
+                                "Field",
+                                "Function",
+                                "Interface",
+                                "Method",
+                                "Module",
+                                "Namespace",
+                                "Package",
+                                "Property",
+                                "Struct",
+                                "Trait",
+                                "String",
+                                "Number",
+                            },
+                        },
+                    },
+                },
+            },
+            icons = {
+                kinds = Utils.icons.kind,
+            },
+        },
+        config = function(_, opts)
+            local trouble = require("trouble")
+            trouble.setup(opts)
 
-        ---@type fun(mode?: string|table)
-        local toggle_problems = function(mode)
-            mode = mode or "diagnostics"
-            local curr_buf_name = vim.api.nvim_buf_get_name(0)
+            ---@type fun(mode?: string|table)
+            local toggle_problems = function(mode)
+                mode = mode or "diagnostics"
+                local curr_buf_name = vim.api.nvim_buf_get_name(0)
 
-            if curr_buf_name ~= "" and (not trouble.is_open() or trouble.is_open(mode)) then
-                trouble.open(mode)
-            elseif trouble.is_open() and not trouble.is_open(mode) then
-                trouble.close()
-                trouble.open(mode)
-            else
-                trouble.close()
+                if curr_buf_name ~= "" and (not trouble.is_open() or trouble.is_open(mode)) then
+                    trouble.open(mode)
+                -- vim.schedule(function()
+                --     require("trouble.view.render"):fold_level({ level = 2 })
+                -- end)
+                elseif trouble.is_open() and not trouble.is_open(mode) then
+                    trouble.close()
+                    trouble.open(mode)
+                -- vim.schedule(function()
+                --     require("trouble.view.render"):fold_level({ level = 2 })
+                -- end)
+                else
+                    trouble.close()
+                end
             end
-        end
 
-        vim.keymap.set("n", "<localleader>tp", function()
-            toggle_problems("document_diagnostics")
-        end, { desc = "Problems: [t]oggle [p]roblem tool window" })
-        vim.keymap.set("n", "<leader>tp", function()
-            toggle_problems("workspace_diagnostics")
-        end, { desc = "Problems: [t]oggle [p]roblem tool window" })
+            vim.keymap.set("n", "<localleader>tp", function()
+                toggle_problems("document_diagnostics")
+            end, { desc = "Problems: [t]oggle [p]roblem tool window" })
+            vim.keymap.set("n", "<leader>tp", function()
+                toggle_problems("workspace_diagnostics")
+            end, { desc = "Problems: [t]oggle [p]roblem tool window" })
 
-        vim.keymap.set("n", "<localleader>as", function()
-            toggle_problems("symbols")
-        end, { desc = "Structure: [a]ctivate [s]tructure" })
+            vim.keymap.set("n", "<localleader>as", function()
+                toggle_problems("symbols")
+            end, { desc = "Structure: [a]ctivate [s]tructure" })
 
-        vim.keymap.set("n", "]p", function()
-            trouble._action("next")("document_diagnostics")
-        end, { desc = "Problems: Next problem" })
-        vim.keymap.set("n", "[p", function()
-            trouble._action("prev")("document_diagnostics")
-        end, { desc = "Problems: Previous problem" })
-    end,
+            vim.keymap.set("n", "]p", function()
+                trouble._action("next")("document_diagnostics")
+            end, { desc = "Problems: Next problem" })
+            vim.keymap.set("n", "[p", function()
+                trouble._action("prev")("document_diagnostics")
+            end, { desc = "Problems: Previous problem" })
+        end,
+    },
 }

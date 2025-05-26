@@ -446,6 +446,7 @@ return {
                 { path = "nvim-gitstatus", words = { "GitStatus" } },
                 { path = "auto-dark-mode.nvim", words = { "AutoDarkMode" } },
                 { path = "jb.icons", words = { "jb.icons" } },
+                { path = "snacks.nvim", words = { "Snacks" } },
             },
         },
     },

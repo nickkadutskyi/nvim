@@ -136,6 +136,7 @@ return {
             image = {
                 enabled = true,
             },
+            ---@class snacks.picker.Config
             picker = {
                 sources = {
                     ---@type snacks.picker.explorer.Config|{}
@@ -143,6 +144,7 @@ return {
                         auto_close = true,
                     },
                 },
+                icons = { kinds = Utils.icons.kind },
             },
         },
         config = function(_, opts)
