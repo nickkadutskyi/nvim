@@ -45,6 +45,18 @@ return {
                 filter = {},
                 focus = true,
             },
+            symbols = {
+                title = "{hl:Title}Structure{hl} {count}",
+                desc = "Structure",
+                focus = true,
+                win = {
+                    size = 50,
+                    position = "left",
+                },
+            },
+        },
+        icons = {
+            kinds = Utils.icons.kind,
         },
     },
     config = function(_, opts)
@@ -72,6 +84,11 @@ return {
         vim.keymap.set("n", "<leader>tp", function()
             toggle_problems("workspace_diagnostics")
         end, { desc = "Problems: [t]oggle [p]roblem tool window" })
+
+        vim.keymap.set("n", "<localleader>as", function()
+            toggle_problems("symbols")
+        end, { desc = "Structure: [a]ctivate [s]tructure" })
+
         vim.keymap.set("n", "]p", function()
             trouble._action("next")("document_diagnostics")
         end, { desc = "Problems: Next problem" })
