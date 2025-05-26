@@ -45,7 +45,7 @@ return {
                 after = "",
 
                 -- pattern or table of patterns, used for highlighting (vim regex)
-                pattern = { [[.*<(KEYWORDS)\s*:]], [[.*<(KEYWORDS)\s*]] },
+                pattern = { [[.*<(KEYWORDS)\s*:]] },
             },
             -- list of named colors where we try to extract the guifg from the
             -- list of highlight groups or use the hex color if hl not found as a fallback
@@ -67,11 +67,18 @@ return {
                 },
                 -- regex that will be used to match keywords.
                 -- don't replace the (KEYWORDS) placeholder
-                -- pattern = [[\b(KEYWORDS):]], -- ripgrep regex
+                pattern = [[\b(KEYWORDS):]], -- ripgrep regex
                 -- Matches both with and without the colon
-                pattern = [[\b(KEYWORDS)(:|\b)]], -- ripgrep regex
+                -- pattern = [[\b(KEYWORDS)(:|\b)]], -- ripgrep regex
                 -- pattern = [[\b(KEYWORDS)\b]], -- match without the extra colon. You'll likely get false positives
             },
         },
+        config = function(_, opts)
+            require("todo-comments").setup(opts)
+
+            -- Keymap for navigating todo comments
+            vim.keymap.set("n", "]t", require("todo-comments").jump_next, { desc = "TODO: Next todo comment" })
+            vim.keymap.set("n", "[t", require("todo-comments").jump_prev, { desc = "TODO: Previous todo comment" })
+        end,
     },
 }

@@ -69,6 +69,8 @@ return {
                     },
                     -- Edit
                     { "<localleader>e", group = "[e]dit", mode = { "v", "n" } },
+                    -- Toggle
+                    { "<localleader>t", group = "[t]oggle" },
                 },
                 -- Next
                 { "]", group = "[n]ext" },

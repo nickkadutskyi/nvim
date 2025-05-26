@@ -50,6 +50,7 @@ return {
     config = function(_, opts)
         local trouble = require("trouble")
         trouble.setup(opts)
+
         ---@type fun(mode?: string|table)
         local toggle_problems = function(mode)
             mode = mode or "diagnostics"
@@ -64,19 +65,18 @@ return {
                 trouble.close()
             end
         end
-        vim.keymap.set("n", "<leader>tt", function()
+
+        vim.keymap.set("n", "<localleader>tp", function()
             toggle_problems("document_diagnostics")
-        end, { noremap = true })
-        vim.keymap.set("n", "<leader>tT", function()
+        end, { desc = "Problems: [t]oggle [p]roblem tool window" })
+        vim.keymap.set("n", "<leader>tp", function()
             toggle_problems("workspace_diagnostics")
-        end, { noremap = true })
-        vim.keymap.set("n", "]t", function()
+        end, { desc = "Problems: [t]oggle [p]roblem tool window" })
+        vim.keymap.set("n", "]p", function()
             trouble._action("next")("document_diagnostics")
-            -- trouble.next({ skip_groups = true, jump = true, mode = "diagnostics" })
-        end, { noremap = true })
-        vim.keymap.set("n", "[t", function()
+        end, { desc = "Problems: Next problem" })
+        vim.keymap.set("n", "[p", function()
             trouble._action("prev")("document_diagnostics")
-            -- trouble.prev({ skip_groups = true, jump = true, mode = "diagnostics" })
-        end, { noremap = true })
+        end, { desc = "Problems: Previous problem" })
     end,
 }

@@ -1,4 +1,4 @@
--- TODO add ability to jump to a file path in PHP files provided as __DIR__."/path/to/file"
+-- TODO: add ability to jump to a file path in PHP files provided as __DIR__."/path/to/file"
 
 -- Set by `smjonas/inc-rename.nvim` plugin on `init`
 local has_inc_rename = false
