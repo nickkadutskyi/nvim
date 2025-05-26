@@ -218,6 +218,33 @@ vim.api.nvim_create_autocmd("LspAttach", {
         -- word under your cursor when your cursor rests there for a little while.
         -- When you move your cursor, the highlights will be cleared (the second autocommand).
         if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
+            local default_handler = vim.lsp.handlers["textDocument/documentHighlight"]
+
+            -- Looks for line numbers of the highlighted references and stores them in a global variable
+            -- For scrollbar marks to show up
+            client.handlers["textDocument/documentHighlight"] = function(err, result, ctx, config)
+                if result and #result > 0 then
+                    local lines_set = {}
+                    for _, highlight in ipairs(result) do
+                        local range = highlight.range
+                        local start_line = range.start.line + 1 -- Convert to 1-based
+                        local end_line = range["end"].line + 1
+                        for line = start_line, end_line do
+                            -- lines_set[line] = true
+                            table.insert(lines_set, { line = line, type = "IdentifierUnderCaret", level = 0 })
+                        end
+                    end
+                    -- local lines = vim.tbl_keys(lines_set)
+                    -- table.sort(lines)
+                    vim.g.highlighted_lines = lines_set
+                else
+                    vim.g.highlighted_lines = {}
+                end
+                require("scrollbar.handlers").show()
+                require("scrollbar").throttled_render()
+                default_handler(err, result, ctx, config)
+            end
+
             local hi_augroup = vim.api.nvim_create_augroup("kdtsk-lsp-highlight", { clear = false })
             vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
                 buffer = event.buf,
@@ -228,12 +255,16 @@ vim.api.nvim_create_autocmd("LspAttach", {
             vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
                 buffer = event.buf,
                 group = hi_augroup,
-                callback = vim.lsp.buf.clear_references,
+                callback = function()
+                    vim.lsp.buf.clear_references()
+                    vim.g.highlighted_lines = {}
+                end,
             })
 
             vim.api.nvim_create_autocmd("LspDetach", {
                 group = vim.api.nvim_create_augroup("kdtsk-lsp-detach", { clear = true }),
                 callback = function(event2)
+                    vim.g.highlighted_lines = {}
                     vim.lsp.buf.clear_references()
                     vim.api.nvim_clear_autocmds({
                         group = "kdtsk-lsp-highlight",
@@ -261,7 +292,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
         end
     end,
 })
-
 
 -- Jump to the next/previous diagnostic
 vim.keymap.set("n", "]d", function()

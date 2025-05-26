@@ -101,7 +101,34 @@ return {
                 GitChange = {
                     text = "│",
                 },
+                IdentifierUnderCaret = {
+                    text = { "-", "=" },
+                    priority = 1,
+                    gui = nil,
+                    color = nil,
+                    cterm = nil,
+                    color_nr = nil, -- cterm
+                    highlight = "IdentifierUnderCaret",
+                },
+                Todo = {
+                    text = { "-", "=" },
+                    priority = 1,
+                    gui = nil,
+                    color = nil,
+                    cterm = nil,
+                    color_nr = nil, -- cterm
+                    highlight = "Todo",
+                },
             },
         },
+        config = function(_, opts)
+            require("scrollbar").setup(opts)
+            require("scrollbar.handlers").register("under_caret", function(bufnr)
+                return vim.g.highlighted_lines or {}
+            end)
+            require("scrollbar.handlers").register("todo", function(bufnr)
+                return (vim.g.todos_in_files or {})[vim.api.nvim_buf_get_name(bufnr)] or {}
+            end)
+        end,
     },
 }

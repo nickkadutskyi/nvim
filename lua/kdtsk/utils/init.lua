@@ -5,6 +5,7 @@
 ---@field incline kdtsk.utils.incline
 ---@field icons kdtsk.utils.icons|jb.icons relies on jb.icons or blink.cmp
 ---@field lsp kdtsk.utils.lsp
+---@field todo kdtsk.utils.todo
 local M = {}
 
 setmetatable(M, {

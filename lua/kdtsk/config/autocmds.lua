@@ -1,7 +1,7 @@
 -- This file is automatically loaded by kdtsk.init
 
-local function augroup(name)
-    return vim.api.nvim_create_augroup("kdtsk-" .. name, { clear = true })
+local function augroup(name, opts)
+    return vim.api.nvim_create_augroup("kdtsk-" .. name, opts or { clear = true })
 end
 
 --- Appearance and Behavior
@@ -74,3 +74,14 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
         vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
     end,
 })
+-- Populates `vim.g.todos_in_files` with lines of TODO comments
+-- to use to highlight scrollbar marks
+Utils.on_later(function()
+    Utils.todo.add_todos_to_global()
+    vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+        group = augroup("check-todos"),
+        callback = function(event)
+            Utils.todo.add_todos_to_global()
+        end,
+    })
+end, vim.api.nvim_create_augroup("kdtsk-todo-start", { clear = true }))
