@@ -62,7 +62,6 @@ return {
                     },
                     lualine_c = {
                         { "nav_bar" },
-                        -- TODO add current module name here
                         {
                             "filetype",
                             padding = { left = 0, right = 0 },
@@ -75,14 +74,14 @@ return {
                         { -- Provides file name
                             "filename",
                             path = 0,
-                            padding = { left = 0, right = 1 },
+                            padding = { left = 0, right = 0 },
                             file_status = true,
                             newfile_status = true,
                             symbols = { newfile = "[new]", unnamed = "[no name]" },
                             color = function(_)
                                 return vim.b.custom_git_status_hl or "Custom_TabSel"
                             end,
-                            separator = "›",
+                            separator = " ›",
                         },
                         {
                             "navic",
