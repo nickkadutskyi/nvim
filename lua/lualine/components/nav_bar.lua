@@ -27,6 +27,7 @@ local _cache = {
     cwd = nil,
     in_cwd = {},
     project_name = nil,
+    is_normal_buffer = {},
 }
 
 local _nav_state = {
@@ -35,6 +36,111 @@ local _nav_state = {
 }
 
 -- Helpers
+
+---@return boolean
+local function is_normal_buffer_uncached()
+    local buftype = vim.bo.buftype
+    local filetype = vim.bo.filetype
+
+    -- Check if buffer has a special buftype (terminal, quickfix, help, etc.)
+    if buftype ~= "" then
+        return false
+    end
+
+    -- Check for special filetypes that indicate non-normal buffers
+    local special_filetypes = {
+        "netrw",
+        "NvimTree",
+        "neo-tree",
+        "help",
+        "qf",
+        "quickfix",
+        "terminal",
+        "checkhealth",
+        "man",
+        "TelescopePrompt",
+        "lazy",
+        "mason",
+        "lspinfo",
+        "null-ls-info",
+        "startify",
+        "dashboard",
+        "alpha",
+        "trouble",
+        "fugitive",
+        "gitcommit",
+        "DiffviewFiles",
+        "packer",
+        "minifiles",
+        "oil",
+        "undotree",
+        "vista",
+        "tagbar",
+        "aerial",
+        "Outline",
+        "dap-repl",
+        "dapui_watches",
+        "dapui_stacks",
+        "dapui_breakpoints",
+        "dapui_scopes",
+        "dapui_console",
+        "notify",
+        "noice",
+        "nui",
+    }
+
+    for _, ft in ipairs(special_filetypes) do
+        if filetype == ft then
+            return false
+        end
+    end
+
+    -- Check if buffer is modifiable (some special buffers are not modifiable)
+    if not vim.bo.modifiable then
+        return false
+    end
+
+    -- Check if buffer name suggests it's a special buffer
+    local bufname = vim.fn.bufname()
+    if bufname == "" then
+        -- Empty buffer name could be a new file, which is normal
+        return true
+    end
+
+    -- Check for special buffer name patterns
+    local special_patterns = {
+        "^term://", -- terminal buffers
+        "^fugitive://", -- fugitive buffers
+        "^diffview://", -- diffview buffers
+        "^gitsigns://", -- gitsigns buffers
+        "^dap%-", -- DAP buffers
+        "^%[.*%]$", -- buffers with names like [No Name], [Scratch], etc.
+    }
+
+    for _, pattern in ipairs(special_patterns) do
+        if bufname:match(pattern) then
+            return false
+        end
+    end
+
+    return true
+end
+
+---@return boolean
+local function is_normal_buffer()
+    local bufnr = vim.api.nvim_get_current_buf()
+
+    -- Check if we have a cached result for this buffer
+    if _cache.is_normal_buffer[bufnr] ~= nil then
+        return _cache.is_normal_buffer[bufnr]
+    end
+
+    -- Calculate and cache the result
+    local result = is_normal_buffer_uncached()
+    _cache.is_normal_buffer[bufnr] = result
+
+    return result
+end
 
 ---@return string
 local function get_cwd()
@@ -79,10 +185,10 @@ end
 
 ---@class NavBarOptions
 local function build_nav_components(config)
-    local path = vim.fn.expand("%:p")
-    if path == "" then
+    if not is_normal_buffer() then
         return _nav_state.components or {}
     end
+    local path = vim.fn.expand("%:p")
     local components = {}
 
     -- Adds module
@@ -95,7 +201,6 @@ local function build_nav_components(config)
         icon = module_icon,
         text = get_module_name(path),
     })
-
 
     -- TODO: Add path component
     -- TODO: Add filename component with filetype icon
@@ -123,7 +228,7 @@ function M:update_status()
     local result_parts = {}
     for i, component in ipairs(components) do
         -- Process icon
-        local icon = component.icon[1]
+        local icon = component.icon and component.icon[1] or nil
         local icon_hl = component.icon.hl or config.icon.hl or nil
         if icon and icon_hl then
             icon = "%#" .. icon_hl .. "#" .. icon .. "%*"
@@ -135,7 +240,7 @@ function M:update_status()
         if text_hl then
             text = "%#" .. text_hl .. "#" .. text .. "%*"
         end
-        local part = icon .. text
+        local part = (icon or "") .. text
 
         table.insert(result_parts, part)
     end
@@ -148,12 +253,21 @@ end
 
 -- Autocmds
 
+-- CWD change detection
 vim.api.nvim_create_autocmd({ "DirChanged" }, {
     group = vim.api.nvim_create_augroup("nav_bar-dir-changed", { clear = true }),
     callback = function(event)
         -- clears cached cwd when directory changes
         _cache.cwd = nil
         _cache.in_cwd = {}
+    end,
+})
+-- Buffer normality result invalidation
+vim.api.nvim_create_autocmd({ "BufModifiedSet", "FileType" }, {
+    group = vim.api.nvim_create_augroup("nav_bar-buffer-changed", { clear = true }),
+    callback = function(event)
+        local bufnr = event.buf or vim.api.nvim_get_current_buf()
+        _cache.is_normal_buffer[bufnr] = nil
     end,
 })
 
