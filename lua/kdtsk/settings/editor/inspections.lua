@@ -92,7 +92,7 @@ return {
             modes = {
                 document_diagnostics = {
                     title = "{hl:TroubleTitle}Problems{hl} "
-                        .. "{hl:TroubleTabSelected}File{hl}"
+                        .. "{hl:TroubleTabSelected} File{hl}"
                         .. "{hl:TroubleTabSelectedCount}{count}{hl} "
                         .. "Project Errors",
                     mode = "diagnostics",
@@ -101,8 +101,8 @@ return {
                 },
                 workspace_diagnostics = {
                     title = "{hl:TroubleTitle}Problems{hl} "
-                        .. "File "
-                        .. "{hl:TroubleTabSelected}Project Errors{hl}"
+                        .. " File "
+                        .. "{hl:TroubleTabSelected} Project Errors{hl}"
                         .. "{hl:TroubleTabSelectedCount}{count}{hl}",
                     mode = "diagnostics",
                     filter = {},
