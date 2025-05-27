@@ -5,7 +5,6 @@ local function augroup(name, opts)
 end
 
 --- Appearance and Behavior
-
 --- - Appearance
 --- -- UI Options
 -- Sets Tmux window name to the current buffer name when in tmux session
@@ -30,6 +29,41 @@ vim.api.nvim_create_autocmd({ "TermOpen" }, {
 })
 
 --- Keymap
+-- Close certain windows with q or escape
+vim.api.nvim_create_autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("kdtsk-help-mappings", { clear = true }),
+    pattern = {
+        "PlenaryTestPopup",
+        "checkhealth",
+        "dbout",
+        "gitsigns-blame",
+        "grug-far",
+        "help",
+        "lspinfo",
+        "neotest-output",
+        "neotest-output-panel",
+        "neotest-summary",
+        "notify",
+        "qf",
+        "spectre_panel",
+        "startuptime",
+        "tsplayground",
+    },
+    callback = function(event)
+        vim.bo[event.buf].buflisted = false
+        vim.schedule(function()
+            local opts = { buffer = event.buf, silent = true, desc = "Buffer: [q/Esc] Close" }
+            vim.keymap.set("n", "q", function()
+                vim.cmd("close")
+                pcall(vim.api.nvim_buf_delete, event.buf, { force = true })
+            end, opts)
+            vim.keymap.set("n", "<Esc>", function()
+                vim.cmd("close")
+                pcall(vim.api.nvim_buf_delete, event.buf, { force = true })
+            end, opts)
+        end)
+    end,
+})
 
 --- Editor
 --- - Macro
@@ -72,11 +106,33 @@ Utils.on_later(function()
     -- Set up a timer to rotate logs every hour
     vim.fn.timer_start(3600000, Utils.lsp.rotate_lsp_logs, { ["repeat"] = -1 })
 end, vim.api.nvim_create_augroup("kdtsk-lsp-logs", { clear = true }))
+-- Wrap and check for spell in text filetypes
+vim.api.nvim_create_autocmd("FileType", {
+    group = augroup("wrap-spell"),
+    pattern = { "text", "plaintex", "typst", "gitcommit", "markdown" },
+    callback = function()
+        vim.opt_local.wrap = true
+        vim.opt_local.spell = true
+    end,
+})
 
 --- Backup & Sync
---- - Advanced Settings
 
---- - Misc
+--- Advanced Settings
+-- Enforces readonly for files in vendor and node_modules
+vim.api.nvim_create_autocmd("BufRead", {
+    group = augroup("readonly-dirs"),
+    pattern = {
+        "*/vendor/*",
+        "*/node_modules/*",
+    },
+    callback = function()
+        vim.opt_local.readonly = true
+        vim.opt_local.modifiable = false
+    end,
+})
+
+--- Other Settings
 -- Auto create dir when saving a file, in case some intermediate directory does not exist
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
     group = augroup("auto-create-dir"),
@@ -99,3 +155,19 @@ Utils.on_later(function()
         end,
     })
 end, vim.api.nvim_create_augroup("kdtsk-todo-start", { clear = true }))
+-- Highlights when yanking text
+vim.api.nvim_create_autocmd("TextYankPost", {
+    group = augroup("highlight-yank"),
+    callback = function()
+        (vim.hl or vim.highlight).on_yank()
+    end,
+})
+-- Check if we need to reload the file when it changed
+vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
+    group = augroup("checktime"),
+    callback = function()
+        if vim.o.buftype ~= "nofile" then
+            vim.cmd("checktime")
+        end
+    end,
+})

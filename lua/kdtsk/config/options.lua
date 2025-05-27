@@ -9,6 +9,13 @@ vim.opt.cmdheight = 0
 -- File name and path in Window header
 vim.opt.title = true
 vim.opt.titlestring = [[%{v:lua.Utils.ui.titlestring()}]]
+-- Splits open in the right and bottom
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+-- Adds characters possible to be used in filenames
+vim.opt.isfname:append("@-@")
+-- Preview substitutions live, as you type!
+vim.opt.inccommand = "split"
 
 --- - Natural Language
 vim.opt.spell = true
@@ -91,3 +98,9 @@ vim.g.nerd_font_is_present = true
 --- Languages and frameworks
 
 --- Tools
+
+--- Backup & Sync
+
+--- Advanced Settings
+
+--- Other Settings
