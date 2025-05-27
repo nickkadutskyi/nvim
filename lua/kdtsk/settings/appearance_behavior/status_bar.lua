@@ -63,34 +63,9 @@ return {
                     lualine_c = {
                         { "nav_bar" },
                         -- TODO add current module name here
-                        { -- Provides parent path relative to the cwd
-                            "filename",
-                            path = 1,
-                            file_status = false,
-                            newfile_status = false,
-                            fmt = function(name, _)
-                                local parent_path = vim.fn.fnamemodify(name, ":h")
-
-                                -- If terminal buffer, get the last part of the path
-                                if name:find("^term://") then
-                                    local path_parts = vim.fn.split(vim.fn.expand("%"), ":")
-                                    local last = path_parts[#path_parts]
-                                    if type(last) == "string" and last ~= "" then
-                                        parent_path = vim.fn.fnamemodify(last, ":h")
-                                    else
-                                        parent_path = "terminal"
-                                    end
-                                end
-
-                                local parent_path_sep = parent_path:gsub("%/", " › ")
-                                return parent_path_sep
-                            end,
-                            padding = { left = 0, right = 1 },
-                            separator = "›",
-                        },
                         {
                             "filetype",
-                            padding = { left = 1, right = 0 },
+                            padding = { left = 0, right = 0 },
                             icon_only = true,
                             fmt = function(filetype, _)
                                 -- forces to use the default filetype icon

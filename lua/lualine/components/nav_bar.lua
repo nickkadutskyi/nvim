@@ -192,6 +192,9 @@ local function find_project_root(path)
         ".root",
         "composer.json",
         ".editorconfig",
+        ".idea",
+        ".vscode",
+        ".svn",
     }
 
     local current_dir = vim.fn.fnamemodify(path, ":h")
@@ -267,6 +270,59 @@ local function get_module_name(path)
     return result
 end
 
+---@param path string
+---@return string[]
+local function get_path_components(path)
+    if not path or path == "" then
+        return {}
+    end
+
+    local components = {}
+
+    if is_in_cwd(path) then
+        -- File is in cwd, get relative path from cwd
+        local relative_path = vim.fn.fnamemodify(path, ":.")
+
+        -- Remove the filename, keep only directory components
+        local dir_path = vim.fn.fnamemodify(relative_path, ":h")
+
+        if dir_path ~= "." then
+            components = vim.split(dir_path, "/")
+        end
+    else
+        -- File is outside cwd, get path relative to its module root
+        local module_name = get_module_name(path)
+        local project_root = find_lsp_root(path) or find_project_root(path)
+
+        if project_root then
+            -- Get path relative to project root
+            local relative_path = path:sub(#project_root + 2) -- +2 to skip the trailing "/"
+            local dir_path = vim.fn.fnamemodify(relative_path, ":h")
+
+            if dir_path ~= "." then
+                components = vim.split(dir_path, "/")
+            end
+        else
+            -- Fallback: get all directory components after module
+            local dir_path = vim.fn.fnamemodify(path, ":h")
+
+            if module_name == "/" then
+                -- Absolute path, remove leading "/" and get all components except filename
+                local parts = vim.split(dir_path:sub(2), "/") -- Remove leading "/"
+                components = parts
+            else
+                -- Relative path, get components after the first directory (module)
+                local parts = vim.split(dir_path, "/")
+                for i = 2, #parts do
+                    table.insert(components, parts[i])
+                end
+            end
+        end
+    end
+
+    return components
+end
+
 ---@class NavBarOptions
 local function build_nav_components(config)
     if not is_normal_buffer() then
@@ -286,7 +342,14 @@ local function build_nav_components(config)
         text = get_module_name(path),
     })
 
-    -- TODO: Add path components
+    -- Add path components (directory hierarchy)
+    local path_components = get_path_components(path)
+    for _, dir_name in ipairs(path_components) do
+        table.insert(components, {
+            text = dir_name,
+        })
+    end
+
     -- TODO: Add filename component with filetype icon
     -- TODO: Add navic component if available
 
@@ -313,7 +376,7 @@ function M:update_status()
     for i, component in ipairs(components) do
         -- Process icon
         local icon = component.icon and component.icon[1] or nil
-        local icon_hl = component.icon.hl or config.icon.hl or nil
+        local icon_hl = component.icon and component.icon.hl or nil
         if icon and icon_hl then
             icon = "%#" .. icon_hl .. "#" .. icon .. "%*"
         end
