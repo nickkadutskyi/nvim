@@ -67,6 +67,12 @@ return {
                                 "Trait",
                                 "String",
                                 "Number",
+                                "Null",
+                                "Variable",
+                                "Boolean",
+                                "Object",
+                                "Array",
+                                "Keyword",
                             },
                         },
                     },
@@ -85,18 +91,26 @@ return {
             signs = {},
             modes = {
                 document_diagnostics = {
+                    title = "{hl:TroubleTitle}Problems{hl} "
+                        .. "{hl:TroubleTabSelected}File{hl}"
+                        .. "{hl:TroubleTabSelectedCount}{count}{hl} "
+                        .. "Project Errors",
                     mode = "diagnostics",
                     filter = { buf = 0 },
                     focus = true,
                 },
                 workspace_diagnostics = {
+                    title = "{hl:TroubleTitle}Problems{hl} "
+                        .. "File "
+                        .. "{hl:TroubleTabSelected}Project Errors{hl}"
+                        .. "{hl:TroubleTabSelectedCount}{count}{hl}",
                     mode = "diagnostics",
                     filter = {},
                     focus = true,
                 },
                 symbols = {
                     multiline = false,
-                    title = "{hl:Title}Structure{hl} {count}",
+                    title = "{hl:TroubleTitle}Structure{hl} {count}",
                     desc = "Structure",
                     focus = true,
                     win = {
