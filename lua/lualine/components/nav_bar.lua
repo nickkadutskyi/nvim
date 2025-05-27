@@ -80,6 +80,9 @@ end
 ---@class NavBarOptions
 local function build_nav_components(config)
     local path = vim.fn.expand("%:p")
+    if path == "" then
+        return _nav_state.components or {}
+    end
     local components = {}
 
     -- Adds module
@@ -99,7 +102,7 @@ local function build_nav_components(config)
     -- TODO: Add navic component if available
 
     -- Store components in the navigation state
-    _nav_state.components = {}
+    _nav_state.components = components
     _nav_state.current_index = #components
 
     return components
