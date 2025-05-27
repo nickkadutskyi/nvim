@@ -28,6 +28,7 @@ local _cache = {
     in_cwd = {},
     project_name = nil,
     is_normal_buffer = {},
+    module_name = {},
 }
 
 local _nav_state = {
@@ -234,26 +235,36 @@ end
 ---@param path string
 ---@return string
 local function get_module_name(path)
+    -- Check cache first
+    if _cache.module_name[path] ~= nil then
+        return _cache.module_name[path]
+    end
+
+    local result
     if is_in_cwd(path) then
-        return get_project_name()
+        result = get_project_name()
     else
         -- Try to find project root using various methods
         local project_root = find_lsp_root(path) or find_project_root(path)
 
         if project_root then
-            return vim.fn.fnamemodify(project_root, ":t")
+            result = vim.fn.fnamemodify(project_root, ":t")
         else
             -- Fallback: use deepest directory based on path type
             if vim.fn.fnamemodify(path, ":p") == path then
                 -- Absolute path - use root "/"
-                return "/"
+                result = "/"
             else
                 -- Relative path - use first directory component
                 local parts = vim.split(path, "/")
-                return parts[1] or vim.fn.fnamemodify(path, ":t")
+                result = parts[1] or vim.fn.fnamemodify(path, ":t")
             end
         end
     end
+
+    -- Cache the result
+    _cache.module_name[path] = result
+    return result
 end
 
 ---@class NavBarOptions
@@ -333,6 +344,8 @@ vim.api.nvim_create_autocmd({ "DirChanged" }, {
         -- clears cached cwd when directory changes
         _cache.cwd = nil
         _cache.in_cwd = {}
+        _cache.project_name = nil
+        _cache.module_name = {}
     end,
 })
 -- Buffer normality result invalidation
