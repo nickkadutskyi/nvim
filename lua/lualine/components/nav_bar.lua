@@ -29,6 +29,7 @@ local _cache = {
     project_name = nil,
     is_normal_buffer = {},
     module_name = {},
+    module_root = {}
 }
 
 local _nav_state = {
@@ -195,6 +196,7 @@ local function find_project_root(path)
         ".idea",
         ".vscode",
         ".svn",
+        "filetype.lua"
     }
 
     local current_dir = vim.fn.fnamemodify(path, ":h")
@@ -236,38 +238,43 @@ local function find_lsp_root(path)
 end
 
 ---@param path string
----@return string
-local function get_module_name(path)
+---@return string, string|nil
+local function get_module(path)
     -- Check cache first
     if _cache.module_name[path] ~= nil then
-        return _cache.module_name[path]
+        return _cache.module_name[path], _cache.module_root[path]
     end
 
-    local result
+    local module_name, module_root
     if is_in_cwd(path) then
-        result = get_project_name()
+        module_name = get_project_name()
+        module_root = get_cwd()
     else
         -- Try to find project root using various methods
         local project_root = find_lsp_root(path) or find_project_root(path)
 
         if project_root then
-            result = vim.fn.fnamemodify(project_root, ":t")
+            module_name = vim.fn.fnamemodify(project_root, ":t")
+            module_root = project_root
         else
             -- Fallback: use deepest directory based on path type
             if vim.fn.fnamemodify(path, ":p") == path then
                 -- Absolute path - use root "/"
-                result = "/"
+                module_name = "/"
+                module_root = nil
             else
                 -- Relative path - use first directory component
                 local parts = vim.split(path, "/")
-                result = parts[1] or vim.fn.fnamemodify(path, ":t")
+                module_name = parts[1] or vim.fn.fnamemodify(path, ":t")
+                module_root = nil
             end
         end
     end
 
     -- Cache the result
-    _cache.module_name[path] = result
-    return result
+    _cache.module_name[path] = module_name
+    _cache.module_root[path] = module_root
+    return module_name, module_root
 end
 
 ---@param path string
@@ -291,8 +298,7 @@ local function get_path_components(path)
         end
     else
         -- File is outside cwd, get path relative to its module root
-        local module_name = get_module_name(path)
-        local project_root = find_lsp_root(path) or find_project_root(path)
+        local module_name, project_root = get_module(path)
 
         if project_root then
             -- Get path relative to project root
@@ -339,7 +345,7 @@ local function build_nav_components(config)
     end
     table.insert(components, {
         icon = module_icon,
-        text = get_module_name(path),
+        text = get_module(path),
     })
 
     -- Add path components (directory hierarchy)
@@ -409,6 +415,7 @@ vim.api.nvim_create_autocmd({ "DirChanged" }, {
         _cache.in_cwd = {}
         _cache.project_name = nil
         _cache.module_name = {}
+        _cache.module_root = {}
     end,
 })
 -- Buffer normality result invalidation
