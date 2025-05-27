@@ -33,54 +33,6 @@ vim.diagnostic.config({
 
 return {
     {
-        "folke/snacks.nvim",
-        keys = {
-            {
-                "<leader>ss",
-                function()
-                    Snacks.picker.lsp_symbols({
-                        layout = { preset = "sidebar", preview = false },
-                    })
-                end,
-                desc = "LSP Symbols",
-            },
-        },
-        ---@class snacks.picker.Config
-        opts = {
-            picker = {
-                sources = {
-                    lsp_symbols = {
-                        filter = {
-                            default = {
-                                "Class",
-                                "Constructor",
-                                "Enum",
-                                "Field",
-                                "Function",
-                                "Interface",
-                                "Method",
-                                "Module",
-                                "Namespace",
-                                "Package",
-                                "Property",
-                                "Struct",
-                                "Trait",
-                                "String",
-                                "Number",
-                                "Null",
-                                "Variable",
-                                "Boolean",
-                                "Object",
-                                "Array",
-                                "Keyword",
-                            },
-                        },
-                    },
-                },
-            },
-        },
-    },
-    {
         "folke/trouble.nvim",
         ---@class trouble.Config
         opts = {
@@ -98,6 +50,11 @@ return {
                     mode = "diagnostics",
                     filter = { buf = 0 },
                     focus = true,
+                    win = {
+                        wo = {
+                            winhighlight = "Normal:TroubleNormal,NormalNC:TroubleNormalNC,EndOfBuffer:TroubleNormal,CursorLine:NetrwCursorLine",
+                        },
+                    },
                 },
                 workspace_diagnostics = {
                     title = "{hl:TroubleTitle}Problems{hl} "
@@ -107,6 +64,11 @@ return {
                     mode = "diagnostics",
                     filter = {},
                     focus = true,
+                    win = {
+                        wo = {
+                            winhighlight = "Normal:TroubleNormal,NormalNC:TroubleNormalNC,EndOfBuffer:TroubleNormal,CursorLine:NetrwCursorLine",
+                        },
+                    },
                 },
                 symbols = {
                     multiline = false,
@@ -116,6 +78,9 @@ return {
                     win = {
                         size = 50,
                         position = "left",
+                        wo = {
+                            winhighlight = "Normal:TroubleNormal,NormalNC:TroubleNormalNC,EndOfBuffer:TroubleNormal,CursorLine:NetrwCursorLine",
+                        },
                     },
                     filter = {
                         -- remove Package since luals uses it for control flow structures
@@ -140,6 +105,10 @@ return {
                                 "Trait",
                                 "String",
                                 "Number",
+                                "Null",
+                                "Variable",
+                                "Object",
+                                "Array",
                             },
                         },
                     },
