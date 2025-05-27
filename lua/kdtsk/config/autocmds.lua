@@ -51,6 +51,20 @@ vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {
 --- Build, Execution, Deployment
 
 --- Languages & Frameworks
+
+--- - Code Quality
+-- Turns off diagnostics and spell checking for files outside of project root
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+    group = augroup("turn-off-diagnostics-outside-projects"),
+    callback = function(e)
+        local root = vim.fn.getcwd()
+        if not root or not vim.startswith(e.file, root) then
+            vim.diagnostic.enable(false, { bufnr = 0 })
+            vim.opt_local.spell = false
+        end
+    end,
+})
+
 --- - Misc
 -- Starts LSP logs rotation
 Utils.on_later(function()
@@ -60,9 +74,9 @@ Utils.on_later(function()
 end, vim.api.nvim_create_augroup("kdtsk-lsp-logs", { clear = true }))
 
 --- Backup & Sync
---- Advanced Settings
+--- - Advanced Settings
 
---- Misc
+--- - Misc
 -- Auto create dir when saving a file, in case some intermediate directory does not exist
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
     group = augroup("auto-create-dir"),
