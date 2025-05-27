@@ -181,6 +181,7 @@ local function find_project_root(path)
     -- TODO: find other project root markers
     local root_markers = {
         ".git",
+        ".github",
         "package.json",
         "Cargo.toml",
         "pyproject.toml",
