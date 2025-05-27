@@ -29,7 +29,8 @@ local _cache = {
     project_name = nil,
     is_normal_buffer = {},
     module_name = {},
-    module_root = {}
+    module_root = {},
+    path_components = {}
 }
 
 local _nav_state = {
@@ -284,6 +285,11 @@ local function get_path_components(path)
         return {}
     end
 
+    -- Check cache first
+    if _cache.path_components[path] ~= nil then
+        return _cache.path_components[path]
+    end
+
     local components = {}
 
     if is_in_cwd(path) then
@@ -326,6 +332,8 @@ local function get_path_components(path)
         end
     end
 
+    -- Cache the result
+    _cache.path_components[path] = components
     return components
 end
 
