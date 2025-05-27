@@ -2,53 +2,63 @@
 return {
     { -- Gutter or statusline icons, requires a Nerd Font.
         "nvim-tree/nvim-web-devicons",
-        config = function()
-            require("nvim-web-devicons").setup({
-                override = { -- your personal icons can go here (to override)
-                    zsh = {
-                        icon = "",
-                        color = "#428850",
-                        cterm_color = "65",
-                        name = "Zsh",
-                    },
+        dependencies = {
+            "nickkadutskyi/jb.nvim",
+        },
+        opts = {
+            default = false,
+            strict = true,
+            color_icons = true,
+            override = { -- your personal icons can go here (to override)
+                zsh = {
+                    icon = "",
+                    color = "#428850",
+                    cterm_color = "65",
+                    name = "Zsh",
                 },
-                -- globally enable default icons (default to false)
-                default = true,
-                -- globally enable "strict" selection of icons
-                -- (default to false)
-                strict = true,
-                -- same as `override` but for overrides by filename
-                -- (requires `strict` to be true)
-                override_by_filename = {
-                    [".gitignore"] = {
-                        icon = "",
-                        color = "#f1502f",
-                        name = "Gitignore",
-                    },
-                },
-                -- same as `override` but for overrides by extension
-                -- (requires `strict` to be true)
-                override_by_extension = {
-                    ["js"] = {
-                        icon = "",
-                        color = "#CBCB41",
-                        cterm_color = "185",
-                        name = "Js",
-                    },
-                    ["php"] = {
-                        -- icon = " ",
-                        icon = "󰌟",
-                        color = "#3E7BE9",
-                        cterm_color = "33",
-                        name = "Php",
-                    },
-                    ["log"] = {
-                        icon = "",
-                        color = "#81e043",
-                        name = "Log",
-                    },
-                },
+            },
+        },
+        config = function(_, opts)
+            opts.override_by_filename = Utils.icons.files.by_filename
+            opts.override_by_extension = Utils.icons.files.by_extension
+            local light_variants = {}
+            local dark_variants = {}
+            for _, icons in pairs(Utils.icons.files) do
+                ---@type table<string, jb.Icon>
+                for identifier, icon in pairs(icons) do
+                    light_variants[identifier] = {
+                        icon = icon.icon,
+                        color = icon.light and icon.light.color or icon.color or nil,
+                        cterm_color = icon.light and icon.light.cterm_color or icon.cterm_color or nil,
+                        name = icon.name,
+                    }
+                    dark_variants[identifier] = {
+                        icon = icon.icon,
+                        color = icon.dark and icon.dark.color or icon.color or nil,
+                        cterm_color = icon.dark and icon.dark.cterm_color or icon.cterm_color or nil,
+                        name = icon.name,
+                    }
+                end
+            end
+            local devicons = require("nvim-web-devicons")
+            local function apply_theme_icons()
+                local icons = vim.o.background == "light" and light_variants or dark_variants
+
+                if icons then
+                    devicons.set_icon(icons)
+                end
+            end
+
+            vim.api.nvim_create_autocmd("OptionSet", {
+                group = vim.api.nvim_create_augroup("kdtsk-sync-icons-with-bg", { clear = true }),
+                pattern = "background",
+                callback = function()
+                    vim.defer_fn(apply_theme_icons, 10)
+                end,
             })
+
+            devicons.setup(opts)
+            apply_theme_icons()
         end,
     },
 }
