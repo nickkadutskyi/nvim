@@ -30,7 +30,7 @@ local _cache = {
     is_normal_buffer = {},
     module_name = {},
     module_root = {},
-    path_components = {}
+    path_components = {},
 }
 
 local _nav_state = {
@@ -198,7 +198,7 @@ local function find_project_root(path)
         ".idea",
         ".vscode",
         ".svn",
-        "filetype.lua"
+        "filetype.lua",
     }
 
     local current_dir = vim.fn.fnamemodify(path, ":h")
@@ -344,6 +344,20 @@ local function build_nav_components(config)
         return _nav_state.components or {}
     end
     local path = vim.fn.expand("%:p")
+
+    -- Handle empty path (no file open)
+    if path == "" then
+        local components = {}
+        -- Just show the current working directory as module
+        table.insert(components, {
+            icon = config.icon,
+            text = get_project_name(),
+        })
+        _nav_state.components = components
+        _nav_state.current_index = #components
+        return components
+    end
+
     local components = {}
 
     -- Adds module

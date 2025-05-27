@@ -14,10 +14,15 @@ vim.api.nvim_create_user_command("ExploreFind", function()
     local filename = vim.fn.fnamemodify(current_file, ":t")
     local directory = vim.fn.fnamemodify(current_file, ":h")
 
-    vim.fn.setreg("/", filename) -- Set search register
-    vim.cmd("Explore " .. directory)
-    vim.cmd("normal n") -- Go to next search match
-    vim.cmd("noh")
+    -- If no file is open or filename is empty, just open explorer without searching
+    if filename == "" or current_file == "" then
+        vim.cmd("Explore " .. (directory ~= "" and directory or "."))
+    else
+        vim.fn.setreg("/", filename) -- Set search register
+        vim.cmd("Explore " .. directory)
+        vim.cmd("normal n") -- Go to next search match
+        vim.cmd("noh")
+    end
     vim.g.current_file = nil
 end, {})
 
@@ -46,7 +51,8 @@ local function toggle_vim_explorer_float()
             true,
             function(winid)
                 vim.g.current_file = vim.fn.expand("%:p")
-                if vim.fn.isdirectory(vim.g.current_file) == 1 then
+                local filename = vim.fn.fnamemodify(vim.g.current_file, ":t")
+                if vim.fn.isdirectory(vim.g.current_file) == 1 or filename == "" then
                     vim.fn.win_execute(winid, "Explore")
                 else
                     vim.fn.win_execute(winid, "ExploreFind")
