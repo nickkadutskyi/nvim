@@ -96,9 +96,9 @@ local function is_normal_buffer_uncached()
     end
 
     -- Check if buffer is modifiable (some special buffers are not modifiable)
-    if not vim.bo.modifiable then
-        return false
-    end
+    -- if not vim.bo.modifiable then
+    --     return false
+    -- end
 
     -- Check if buffer name suggests it's a special buffer
     local bufname = vim.fn.bufname()
@@ -173,13 +173,86 @@ local function is_in_cwd(path)
 end
 
 ---@param path string
+---@return string|nil
+local function find_project_root(path)
+    -- TODO: find other project root markers
+    local root_markers = {
+        ".git",
+        "package.json",
+        "Cargo.toml",
+        "pyproject.toml",
+        "setup.py",
+        "go.mod",
+        "pom.xml",
+        "build.gradle",
+        "Makefile",
+        "CMakeLists.txt",
+        ".projectile",
+        ".root",
+        "composer.json",
+        ".editorconfig",
+    }
+
+    local current_dir = vim.fn.fnamemodify(path, ":h")
+
+    while current_dir ~= "/" and current_dir ~= "" do
+        for _, marker in ipairs(root_markers) do
+            if
+                vim.fn.filereadable(current_dir .. "/" .. marker) == 1
+                or vim.fn.isdirectory(current_dir .. "/" .. marker) == 1
+            then
+                return current_dir
+            end
+        end
+        current_dir = vim.fn.fnamemodify(current_dir, ":h")
+    end
+
+    return nil
+end
+
+---@param path string
+---@return string|nil, string|nil
+local function find_lsp_root(path)
+    -- Get lsp client for current buffer
+    -- Returns nil or string
+    local buf_ft = vim.api.nvim_get_option_value("filetype", { buf = 0 })
+    local clients = vim.lsp.get_clients({ bufnr = 0 })
+    if next(clients) == nil then
+        return nil
+    end
+
+    for _, client in pairs(clients) do
+        local filetypes = client.filetypes or client.config.filetypes
+        if filetypes and vim.tbl_contains(filetypes, buf_ft) then
+            return client.config.root_dir, client.name
+        end
+    end
+
+    return nil, nil
+end
+
+---@param path string
 ---@return string
 local function get_module_name(path)
     if is_in_cwd(path) then
         return get_project_name()
     else
-        -- TODO: Implement logic to get module name for files outside of cwd
-        return "-"
+        -- Try to find project root using various methods
+        local project_root = find_lsp_root(path) or find_project_root(path)
+
+        if project_root then
+            return vim.fn.fnamemodify(project_root, ":t")
+        else
+            -- Fallback: use deepest directory based on path type
+            if vim.fn.fnamemodify(path, ":p") == path then
+                -- Absolute path - use root "/"
+                return "/"
+            else
+                -- Relative path - use first directory component
+                local parts = vim.split(path, "/")
+                return parts[1] or vim.fn.fnamemodify(path, ":t")
+            end
+        end
     end
 end
 
@@ -202,7 +275,7 @@ local function build_nav_components(config)
         text = get_module_name(path),
     })
 
-    -- TODO: Add path component
+    -- TODO: Add path components
     -- TODO: Add filename component with filetype icon
     -- TODO: Add navic component if available
 
