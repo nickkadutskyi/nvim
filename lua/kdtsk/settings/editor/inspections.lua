@@ -1,35 +1,37 @@
--- Diagnostics config
-vim.diagnostic.config({
-    update_in_insert = true,
-    virtual_text = false,
-    -- [icon] [source]: [message] [code]
-    float = {
-        focusable = true,
-        -- NOTE: currently couldn't find any good border pattern
-        -- It looks fine in light but not in dark
-        border = "rounded",
-        scope = "cursor",
-        -- Shows source of inspection in the front
-        source = true,
-        header = "",
-        -- Adds inspection icons to indicate severity
-        prefix = function(diagnostic)
-            local icon = Utils.icons.diagnostic[diagnostic.severity]
-            local severity_name = vim.diagnostic.severity[diagnostic.severity]
-            return " " .. icon .. " ", "DiagnosticSign" .. severity_name
-        end,
-        -- Adds error code in comment style in the end
-        suffix = function(diagnostic)
-            local code = diagnostic.code
-            return code and " [" .. code .. "]" or "", "Comment"
-        end,
-    },
-    signs = {
-        -- Disables in gutter but Problem tool window will still show them
-        severity = {},
-        text = Utils.icons.diagnostic,
-    },
-})
+Utils.on_later(function()
+    -- Diagnostics config
+    vim.diagnostic.config({
+        update_in_insert = true,
+        virtual_text = false,
+        -- [icon] [source]: [message] [code]
+        float = {
+            focusable = true,
+            -- NOTE: currently couldn't find any good border pattern
+            -- It looks fine in light but not in dark
+            border = "rounded",
+            scope = "cursor",
+            -- Shows source of inspection in the front
+            source = true,
+            header = "",
+            -- Adds inspection icons to indicate severity
+            prefix = function(diagnostic)
+                local icon = Utils.icons.diagnostic[diagnostic.severity]
+                local severity_name = vim.diagnostic.severity[diagnostic.severity]
+                return " " .. icon .. " ", "DiagnosticSign" .. severity_name
+            end,
+            -- Adds error code in comment style in the end
+            suffix = function(diagnostic)
+                local code = diagnostic.code
+                return code and " [" .. code .. "]" or "", "Comment"
+            end,
+        },
+        signs = {
+            -- Disables in gutter but Problem tool window will still show them
+            severity = {},
+            text = Utils.icons.diagnostic,
+        },
+    })
+end)
 
 return {
     {
@@ -114,12 +116,12 @@ return {
                     },
                 },
             },
-            icons = {
-                kinds = Utils.icons.kind,
-            },
         },
         config = function(_, opts)
             local trouble = require("trouble")
+
+            -- Do it here for performance reasons because Utils runs setmetatable for icons
+            opts.icons = { kind = Utils.icons.kind }
             trouble.setup(opts)
 
             ---@type fun(mode?: string|table)

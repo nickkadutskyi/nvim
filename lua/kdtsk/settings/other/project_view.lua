@@ -150,11 +150,13 @@ return {
                         auto_close = true,
                     },
                 },
-                icons = { kinds = Utils.icons.kind },
             },
         },
         config = function(_, opts)
             local snacks = require("snacks")
+
+            -- Moved here for performance reasons
+            opts.picker.icons = { kinds = Utils.icons.kind }
             ---@type snacks.Config
             snacks.setup(opts)
             vim.keymap.set("n", "<leader>ae", function()

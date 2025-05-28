@@ -1,5 +1,4 @@
-local utils = require("kdtsk.utils")
-
+---@type LazySpec
 return {
     {
         "ahmedkhalf/project.nvim",

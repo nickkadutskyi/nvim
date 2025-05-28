@@ -1,18 +1,19 @@
 return {
     {
         "rcarriga/nvim-dap-ui",
+        event = "VeryLazy",
         enabled = false,
-        dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
+        -- dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
     },
     {
         "jay-babu/mason-nvim-dap.nvim",
         event = "VeryLazy",
         -- Due not using it for now
         enabled = false,
-        dependencies = {
-            "mfussenegger/nvim-dap",
-            "williamboman/mason.nvim",
-        },
+        -- dependencies = {
+        --     "mfussenegger/nvim-dap",
+        --     "williamboman/mason.nvim",
+        -- },
         config = function()
             -- require("mason-nvim-dap").setup({
             --     ensure_installed = {
