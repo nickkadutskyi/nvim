@@ -12,7 +12,7 @@ function M.add_todos_to_global()
             })
         end
         vim.g.todos_in_files = todos_lines
-    end)
+    end, { disable_not_found_warnings = true })
 end
 
 return M
