@@ -167,7 +167,7 @@ return {
                                         {
                                             win = "input",
                                             height = 1,
-                                            border = "rounded",
+                                            border = { "", " ", "", "", "", "", "", "" }, -- only top border for title
                                             title = "{title} {live} {flags}",
                                             title_pos = "left",
                                         },
