@@ -160,7 +160,17 @@ return {
                                     col = 0,
                                     row = 0,
                                     position = "float",
-                                    border = "none",
+                                    -- border = "none",
+                                    border = {
+                                        "",
+                                        "",
+                                        { "▕", "ToolWindowFloatBorder" },
+                                        { "▕", "ToolWindowFloatBorder" },
+                                        { "▕", "ToolWindowFloatBorder" },
+                                        { " ", "ToolWindowFloatBorder" },
+                                        { " ", "ToolWindowFloatBorder" },
+                                        ""
+                                    },
                                     box = "vertical",
                                     {
                                         box = "vertical",

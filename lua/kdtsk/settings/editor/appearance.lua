@@ -54,6 +54,7 @@ end
 
 vim.opt.tabline = "%!v:lua.custom_tabline()"
 
+---@type LazySpec
 return {
     { -- Visual guides
         "lukas-reineke/virt-column.nvim",
@@ -94,6 +95,7 @@ return {
                 search = true, -- Requires hlslens
                 cursor = false,
             },
+            excluded_filetypes = { "snacks_picker_list" },
             marks = {
                 GitAdd = {
                     text = "│",
