@@ -79,28 +79,28 @@ local function toggle_vim_explorer_float()
     end
 end
 
-vim.keymap.set("n", "<leader>ap", toggle_vim_explorer_float, {
-    desc = "Project: [a]ctivate [p]roject tool window.",
-})
--- FIXME: This doesn't work
-vim.keymap.set({ "n", "i" }, "<A-1>", toggle_vim_explorer_float, {
-    desc = "Project: [a]ctivate [p]roject tool window.",
-})
+-- vim.keymap.set("n", "<leader>ap", toggle_vim_explorer_float, {
+--     desc = "Project: [a]ctivate [p]roject tool window.",
+-- })
+-- -- FIXME: This doesn't work
+-- vim.keymap.set({ "n", "i" }, "<A-1>", toggle_vim_explorer_float, {
+--     desc = "Project: [a]ctivate [p]roject tool window.",
+-- })
 
 local group_start = vim.api.nvim_create_augroup("kdtsk-netrw-start", { clear = true })
-vim.api.nvim_create_autocmd("VimEnter", {
-    group = group_start,
-    callback = function(e)
-        -- Clears Neovim's built-in group that triggers Netrw on directories
-        vim.api.nvim_clear_autocmds({ group = "FileExplorer" })
-        -- Opens Netrw on directories only on startup
-        if vim.fn.isdirectory(vim.fn.expand("%:p")) == 1 then
-            vim.schedule(function()
-                toggle_vim_explorer_float()
-            end)
-        end
-    end,
-})
+-- vim.api.nvim_create_autocmd("VimEnter", {
+--     group = group_start,
+--     callback = function(e)
+--         -- Clears Neovim's built-in group that triggers Netrw on directories
+--         vim.api.nvim_clear_autocmds({ group = "FileExplorer" })
+--         -- Opens Netrw on directories only on startup
+--         if vim.fn.isdirectory(vim.fn.expand("%:p")) == 1 then
+--             vim.schedule(function()
+--                 toggle_vim_explorer_float()
+--             end)
+--         end
+--     end,
+-- })
 
 -- Global command to close Project view in other keybindings
 vim.api.nvim_create_user_command("CloseProjectView", close_project_view, {})
@@ -134,10 +134,9 @@ return {
         priority = 1000,
         lazy = false,
         opts = {
-            -- TODO: remove when styled in jb.nvim
             explorer = {
                 enabled = true,
-                replace_netrw = false,
+                replace_netrw = true,
             },
             image = {
                 enabled = true,
@@ -148,6 +147,38 @@ return {
                     ---@type snacks.picker.explorer.Config|{}
                     explorer = {
                         auto_close = true,
+                        title = "Project",
+                        layouts = {
+                            sidebar_float = {
+                                preview = "main",
+                                layout = {
+                                    backdrop = false,
+                                    width = 40,
+                                    min_width = 40,
+                                    height = 0,
+                                    col = 0,
+                                    row = 0,
+                                    position = "float",
+                                    border = "none",
+                                    box = "vertical",
+                                    {
+                                        box = "vertical",
+                                        {
+                                            win = "input",
+                                            height = 1,
+                                            border = "rounded",
+                                            title = "{title} {live} {flags}",
+                                            title_pos = "left",
+                                        },
+                                        { win = "list", border = "none" },
+                                        { win = "preview", title = "{preview}", height = 0.4, border = "top" },
+                                    },
+                                },
+                            },
+                        },
+                        layout = {
+                            preset = "sidebar_float",
+                        },
                     },
                 },
             },
@@ -159,10 +190,16 @@ return {
             opts.picker.icons = { kinds = Utils.icons.kind }
             ---@type snacks.Config
             snacks.setup(opts)
-            vim.keymap.set("n", "<leader>ae", function()
-                snacks.explorer()
+            vim.keymap.set("n", "<leader>ap", function()
+                if Snacks.picker.get({ source = "explorer" })[1] == nil then
+                    Snacks.picker.explorer()
+                elseif Snacks.picker.get({ source = "explorer" })[1]:is_focused() == true then
+                    Snacks.picker.explorer()
+                elseif Snacks.picker.get({ source = "explorer" })[1]:is_focused() == false then
+                    Snacks.picker.get({ source = "explorer" })[1]:focus()
+                end
             end, {
-                desc = "Project: [a]ctivate [e]xplorer () tool window.",
+                desc = "Project: [a]ctivate [p]roject tool window.",
             })
         end,
     },
