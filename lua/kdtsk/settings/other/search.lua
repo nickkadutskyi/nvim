@@ -111,25 +111,22 @@ return {
                     --   files, git_files, git_status, grep, lsp, oldfiles, quickfix, loclist,
                     --   tags, btags, args, buffers, tabs, lines, blines
                     files = {
-                        -- ["enter"] = actions.file_switch_or_edit,
-                        ["enter"] = function(selected, opts)
-                            -- Switch to a normal buffer if current buffer is not a normal buffer
-                            local curr_bufnr = vim.api.nvim_get_current_buf()
-                            local curr_winid = vim.api.nvim_get_current_win()
-                            local bufnr, winid = utils.get_win_with_normal_buffer(curr_bufnr)
-                            if bufnr == curr_bufnr then
-                                vim.api.nvim_set_current_win(curr_winid)
-                            elseif winid ~= nil then
-                                vim.api.nvim_set_current_win(winid)
-                            end
-                            vim.schedule(function()
-                                actions.file_edit_or_qf(selected, opts)
-                            end)
-                            -- actions.file_edit_or_qf(selected, opts)
-                        end,
-                        ["ctrl-f"] = actions.toggle_follow,
-                        ["ctrl-h"] = actions.toggle_hidden,
-                        ["ctrl-i"] = actions.toggle_ignore,
+                        true,
+                        -- ["enter"] = function(selected, opts)
+                        --     -- Switch to a normal buffer if current buffer is not a normal buffer
+                        --     local curr_bufnr = vim.api.nvim_get_current_buf()
+                        --     local curr_winid = vim.api.nvim_get_current_win()
+                        --     local bufnr, winid = utils.get_win_with_normal_buffer(curr_bufnr)
+                        --     if bufnr == curr_bufnr then
+                        --         vim.api.nvim_set_current_win(curr_winid)
+                        --     elseif winid ~= nil then
+                        --         vim.api.nvim_set_current_win(winid)
+                        --     end
+                        --     vim.schedule(function()
+                        --         actions.file_edit_or_qf(selected, opts)
+                        --     end)
+                        --     -- actions.file_edit_or_qf(selected, opts)
+                        -- end,
                     },
                 },
                 fzf_colors = true,

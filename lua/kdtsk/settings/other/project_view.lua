@@ -148,6 +148,7 @@ return {
                     explorer = {
                         auto_close = true,
                         title = "Project",
+                        hidden = true,
                         layouts = {
                             sidebar_float = {
                                 preview = "main",
