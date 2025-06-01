@@ -130,7 +130,7 @@ return {
         },
     },
     {
-        "folke/snacks.nvim",
+        "nickkadutskyi/snacks.nvim",
         priority = 1000,
         lazy = false,
         opts = {
@@ -149,17 +149,27 @@ return {
                         auto_close = true,
                         title = "Project",
                         hidden = true,
+                        formatters = {
+                            file = {
+                                filename_first = false, -- display filename before the file path
+                                truncate = 40, -- truncate the file path to (roughly) this length
+                                filename_only = false, -- only show the filename
+                                icon_width = 4, -- width of the icon (in characters)
+                                icon_align_opts = { align = "right" },
+                                git_status_hl = true, -- use the git status highlight group for the filename
+                            },
+                        },
                         icons = {
                             files = {
                                 enabled = true, -- show file icons
-                                dir = "󰉖 ",
-                                dir_open = "󰷏 ",
-                                file = " ",
+                                dir = "  ",
+                                dir_open = "  ",
+                                file = "",
                             },
                             tree = {
-                                vertical = "│ ",
-                                middle = "│ ",
-                                last = "│ ",
+                                vertical = "│",
+                                middle = "│",
+                                last = "│",
                             },
                         },
                         layouts = {
@@ -211,7 +221,6 @@ return {
             local snacks = require("snacks")
 
             -- Moved here for performance reasons
-            opts.picker.icons = { kinds = Utils.icons.kind }
             ---@type snacks.Config
             snacks.setup(opts)
             vim.keymap.set("n", "<leader>ap", function()
