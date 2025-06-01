@@ -48,6 +48,8 @@ return {
                 disable_context_highlighting = false,
                 kind = "split",
                 process_spinner = false,
+                -- The time after which an output console is shown for slow running commands
+                console_timeout = 3000,
                 integrations = {
                     fzf_lua = true,
                     diffview = true,
