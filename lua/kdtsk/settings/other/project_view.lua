@@ -146,7 +146,7 @@ return {
                 sources = {
                     ---@type snacks.picker.explorer.Config|{}
                     explorer = {
-                        -- auto_close = true,
+                        auto_close = true,
                         title = "Project",
                         hidden = true,
                         layouts = {
@@ -169,7 +169,7 @@ return {
                                         { "▕", "ToolWindowFloatBorder" },
                                         { " ", "ToolWindowFloatBorder" },
                                         { " ", "ToolWindowFloatBorder" },
-                                        ""
+                                        "",
                                     },
                                     box = "vertical",
                                     {
@@ -203,9 +203,9 @@ return {
             snacks.setup(opts)
             vim.keymap.set("n", "<leader>ap", function()
                 if Snacks.picker.get({ source = "explorer" })[1] == nil then
-                    Snacks.picker.explorer()
+                    Snacks.picker.explorer({ auto_close = true })
                 elseif Snacks.picker.get({ source = "explorer" })[1]:is_focused() == true then
-                    Snacks.picker.explorer()
+                    Snacks.picker.explorer({ auto_close = true })
                 elseif Snacks.picker.get({ source = "explorer" })[1]:is_focused() == false then
                     Snacks.picker.get({ source = "explorer" })[1]:focus()
                 end
