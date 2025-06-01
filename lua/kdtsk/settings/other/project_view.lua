@@ -79,9 +79,9 @@ local function toggle_vim_explorer_float()
     end
 end
 
--- vim.keymap.set("n", "<leader>ap", toggle_vim_explorer_float, {
---     desc = "Project: [a]ctivate [p]roject tool window.",
--- })
+vim.keymap.set("n", "<leader>ae", toggle_vim_explorer_float, {
+    desc = "Project: [a]ctivate [p]roject tool window.",
+})
 -- -- FIXME: This doesn't work
 -- vim.keymap.set({ "n", "i" }, "<A-1>", toggle_vim_explorer_float, {
 --     desc = "Project: [a]ctivate [p]roject tool window.",
@@ -146,7 +146,7 @@ return {
                 sources = {
                     ---@type snacks.picker.explorer.Config|{}
                     explorer = {
-                        auto_close = true,
+                        -- auto_close = true,
                         title = "Project",
                         hidden = true,
                         layouts = {

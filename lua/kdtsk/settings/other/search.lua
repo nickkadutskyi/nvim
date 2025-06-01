@@ -97,6 +97,7 @@ return {
                     height = 25, -- window height
                     width = 85,
                     row = 0.35,
+                    zindex = 100,
                     preview = {
                         title_pos = "left",
                         scrollbar = false,
