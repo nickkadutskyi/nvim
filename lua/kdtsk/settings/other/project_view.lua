@@ -82,10 +82,6 @@ end
 vim.keymap.set("n", "<leader>ae", toggle_vim_explorer_float, {
     desc = "Project: [a]ctivate [p]roject tool window.",
 })
--- -- FIXME: This doesn't work
--- vim.keymap.set({ "n", "i" }, "<A-1>", toggle_vim_explorer_float, {
---     desc = "Project: [a]ctivate [p]roject tool window.",
--- })
 
 local group_start = vim.api.nvim_create_augroup("kdtsk-netrw-start", { clear = true })
 -- vim.api.nvim_create_autocmd("VimEnter", {
@@ -149,6 +145,7 @@ return {
                         auto_close = true,
                         title = "Project",
                         hidden = true,
+                        ignored = true,
                         formatters = {
                             file = {
                                 filename_first = false, -- display filename before the file path
