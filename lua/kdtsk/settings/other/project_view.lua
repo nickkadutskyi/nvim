@@ -149,6 +149,19 @@ return {
                         auto_close = true,
                         title = "Project",
                         hidden = true,
+                        icons = {
+                            files = {
+                                enabled = true, -- show file icons
+                                dir = "󰉖 ",
+                                dir_open = "󰷏 ",
+                                file = " ",
+                            },
+                            tree = {
+                                vertical = "│ ",
+                                middle = "│ ",
+                                last = "│ ",
+                            },
+                        },
                         layouts = {
                             sidebar_float = {
                                 preview = "main",
