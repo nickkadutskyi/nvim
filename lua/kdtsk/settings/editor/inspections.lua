@@ -43,6 +43,11 @@ return {
             open_no_results = false,
             max_items = 5000,
             signs = {},
+            win = {
+                wo = {
+                    winhighlight = "Normal:TroubleNormal,NormalNC:TroubleNormalNC,EndOfBuffer:TroubleNormal,CursorLine:NetrwCursorLine,FloatBorder:ToolWindowFloatBorder",
+                },
+            },
             modes = {
                 document_diagnostics = {
                     title = "{hl:TroubleTitle}Problems{hl} "
@@ -53,9 +58,11 @@ return {
                     filter = { buf = 0 },
                     focus = true,
                     win = {
-                        wo = {
-                            winhighlight = "Normal:TroubleNormal,NormalNC:TroubleNormalNC,EndOfBuffer:TroubleNormal,CursorLine:NetrwCursorLine",
-                        },
+                        type = "float",
+                        relative = "editor",
+                        position = { 0.99, 0 },
+                        size = { width = 1, height = 15 },
+                        border = { "‾", "‾", "‾", "", "", "", "", "" },
                     },
                 },
                 workspace_diagnostics = {
@@ -67,9 +74,11 @@ return {
                     filter = {},
                     focus = true,
                     win = {
-                        wo = {
-                            winhighlight = "Normal:TroubleNormal,NormalNC:TroubleNormalNC,EndOfBuffer:TroubleNormal,CursorLine:NetrwCursorLine",
-                        },
+                        type = "float",
+                        relative = "editor",
+                        position = { 0.99, 0 },
+                        size = { width = 1, height = 15 },
+                        border = { "‾", "‾", "‾", "", "", "", "", "" },
                     },
                 },
                 symbols = {
@@ -78,11 +87,12 @@ return {
                     desc = "Structure",
                     focus = true,
                     win = {
+                        -- type = "float",
+                        -- size = { width = 50, height = 0.99 },
+                        -- position = { 0, 0 },
+                        -- border = { "", "", "", "▕", "", "", "", "" },
                         size = 50,
                         position = "left",
-                        wo = {
-                            winhighlight = "Normal:TroubleNormal,NormalNC:TroubleNormalNC,EndOfBuffer:TroubleNormal,CursorLine:NetrwCursorLine",
-                        },
                     },
                     filter = {
                         -- remove Package since luals uses it for control flow structures
