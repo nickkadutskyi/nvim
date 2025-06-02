@@ -48,7 +48,7 @@ vim.api.nvim_create_autocmd("FileType", {
         "spectre_panel",
         "startuptime",
         "tsplayground",
-        "lazy"
+        "lazy",
     },
     callback = function(event)
         vim.bo[event.buf].buflisted = false
@@ -93,7 +93,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
     group = augroup("turn-off-diagnostics-outside-projects"),
     callback = function(e)
         local root = vim.fn.getcwd()
-        if not root or not vim.startswith(e.file, root) then
+        if not root or e.file and e.file ~= "" and not vim.startswith(e.file, root) then
             vim.diagnostic.enable(false, { bufnr = 0 })
             vim.opt_local.spell = false
         end
