@@ -60,7 +60,7 @@ return {
                     win = {
                         type = "float",
                         relative = "editor",
-                        position = { 0.99, 0 },
+                        position = { 0.95, 0 },
                         size = { width = 1, height = 15 },
                         border = { "‾", "‾", "‾", "", "", "", "", "" },
                     },
@@ -76,7 +76,7 @@ return {
                     win = {
                         type = "float",
                         relative = "editor",
-                        position = { 0.99, 0 },
+                        position = { 0.95, 0 },
                         size = { width = 1, height = 15 },
                         border = { "‾", "‾", "‾", "", "", "", "", "" },
                     },
