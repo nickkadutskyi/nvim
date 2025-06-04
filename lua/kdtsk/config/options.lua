@@ -43,11 +43,13 @@ vim.o.timeoutlen = 300
 --- -- Code Folding
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-vim.opt.foldcolumn = "0"
+-- vim.opt.foldcolumn = "0"
+vim.opt.foldcolumn = "1"
 vim.opt.foldtext = ""
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 1
 vim.opt.foldnestmax = 4
+vim.opt.foldenable = true
 --- - Config
 -- Soft wrap
 vim.opt.wrap = false
