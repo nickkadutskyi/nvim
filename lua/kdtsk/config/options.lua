@@ -39,6 +39,15 @@ vim.g.maplocalleader = "\\"
 vim.o.timeoutlen = 300
 
 --- Editor
+--- - General
+--- -- Code Folding
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldcolumn = "0"
+vim.opt.foldtext = ""
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 1
+vim.opt.foldnestmax = 4
 --- - Config
 -- Soft wrap
 vim.opt.wrap = false
