@@ -276,7 +276,7 @@ end
 
 function M.ufo_virt_text_handler_enhanced(virtText, lnum, endLnum, width, truncate, ctx)
     local newVirtText = {}
-    local filling = " ⋯"
+    local filling = "..."
     local suffix = ""
     local sufWidth = vim.fn.strdisplaywidth(suffix)
     local targetWidth = width - sufWidth
@@ -315,8 +315,7 @@ function M.ufo_virt_text_handler_enhanced(virtText, lnum, endLnum, width, trunca
     local showEndLine = should_show_end_line(firstLineText, endLineText, foldKind)
 
     if showEndLine then
-        filling = " ⋯ "
-        table.insert(newVirtText, { filling, "Folded" })
+        table.insert(newVirtText, { filling, "UfoFoldedEllipsis" })
 
         -- Add the last line content
         for i, chunk in ipairs(endVirtText) do
@@ -336,7 +335,7 @@ function M.ufo_virt_text_handler_enhanced(virtText, lnum, endLnum, width, trunca
             curWidth = curWidth + chunkWidth
         end
     else
-        table.insert(newVirtText, { filling, "Folded" })
+        table.insert(newVirtText, { filling, "UfoFoldedEllipsis" })
     end
 
     return newVirtText
