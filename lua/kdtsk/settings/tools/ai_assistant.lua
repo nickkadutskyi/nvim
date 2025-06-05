@@ -78,11 +78,7 @@ return {
             "nvim-lua/plenary.nvim",
         },
         opts = {
-            provider = "copilot",
-            copilot = {
-                -- model = "claude-3.7-sonnet",
-                model = "claude-sonnet-4",
-            },
+            provider = "copilot/claude-sonnet-4",
             providers = {
                 ["copilot/o3-mini"] = {
                     __inherited_from = "copilot",
@@ -94,7 +90,7 @@ return {
                 },
                 ["copilot/claude-sonnet-4"] = {
                     __inherited_from = "copilot",
-                    model = "claude-3.5-sonnet",
+                    model = "claude-sonnet-4",
                 },
             },
             mappings = {
