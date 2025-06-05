@@ -6,6 +6,7 @@
 ---@field icons kdtsk.utils.icons|jb.icons relies on jb.icons or blink.cmp
 ---@field lsp kdtsk.utils.lsp
 ---@field todo kdtsk.utils.todo
+---@field fold kdtsk.utils.fold
 local M = {}
 
 setmetatable(M, {

@@ -83,12 +83,16 @@ return {
                 -- model = "claude-3.7-sonnet",
                 model = "claude-sonnet-4",
             },
-            vendors = {
+            providers = {
                 ["copilot/o3-mini"] = {
                     __inherited_from = "copilot",
                     model = "o3-mini",
                 },
                 ["copilot/claude-3.5-sonnet"] = {
+                    __inherited_from = "copilot",
+                    model = "claude-3.5-sonnet",
+                },
+                ["copilot/claude-sonnet-4"] = {
                     __inherited_from = "copilot",
                     model = "claude-3.5-sonnet",
                 },
