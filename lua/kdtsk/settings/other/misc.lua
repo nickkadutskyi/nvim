@@ -34,7 +34,7 @@ return {
             require("cloak").setup({
                 patterns = {
                     {
-                        file_pattern = { ".env*", "*credentials*", "*.php*" },
+                        file_pattern = { ".env*", "*credentials*" },
                         cloak_pattern = (function()
                             local patterns = {}
                             for _, param in ipairs({
