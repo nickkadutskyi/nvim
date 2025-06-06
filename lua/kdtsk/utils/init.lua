@@ -7,6 +7,7 @@
 ---@field lsp kdtsk.utils.lsp
 ---@field todo kdtsk.utils.todo
 ---@field fold kdtsk.utils.fold
+---@field linter_phpmd kdtsk.utils.linter_phpmd
 local M = {}
 
 setmetatable(M, {

@@ -103,6 +103,7 @@ return {
                     "phpcs",
                     "phpmd",
                     "phpstan",
+                    "psalm",
                 },
             },
             ---@type table<string, lint.LinterLocal>
@@ -124,6 +125,54 @@ return {
                         return require("kdtsk.utils").get_local_php_exe("phpmd")
                     end,
                     nix_pkg = "php83Packages.phpmd",
+                    -- Adds this only to strip deprecations from output
+                    parser = function(output, _)
+                        local bin = "phpmd"
+                        local severities = {}
+                        severities[1] = vim.diagnostic.severity.ERROR
+                        severities[2] = vim.diagnostic.severity.WARN
+                        severities[3] = vim.diagnostic.severity.INFO
+                        severities[4] = vim.diagnostic.severity.HINT
+                        severities[5] = vim.diagnostic.severity.HINT
+
+                        if vim.trim(output) == "" or output == nil then
+                            return {}
+                        end
+
+                        local ok
+                        ok, output = Utils.linter_phpmd.strip_deprecations(output)
+
+                        if not vim.startswith(output, "{") or not ok then
+                            vim.notify(output)
+                            return {}
+                        end
+
+                        local decoded = vim.json.decode(output)
+                        local diagnostics = {}
+                        local messages = {}
+
+                        if decoded["files"] and decoded["files"][1] and decoded["files"][1]["violations"] then
+                            messages = decoded["files"][1]["violations"]
+                        end
+
+                        for _, msg in ipairs(messages or {}) do
+                            table.insert(diagnostics, {
+                                lnum = msg.beginLine - 1,
+                                end_lnum = msg.endLine - 1,
+                                col = 0,
+                                end_col = 0,
+                                message = msg.description,
+                                code = msg.rule,
+                                source = bin,
+                                severity = assert(
+                                    severities[msg.priority],
+                                    "missing mapping for severity " .. msg.priority
+                                ),
+                            })
+                        end
+
+                        return diagnostics
+                    end,
                 },
 
                 -- PHPStan
