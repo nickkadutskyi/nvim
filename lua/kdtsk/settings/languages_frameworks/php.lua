@@ -118,6 +118,41 @@ return {
                     end,
                     nix_pkg = "php83Packages.php-codesniffer",
                     -- Sets col and end_col to whole row
+                    parser = function(output, bufnr)
+                        local severities = {
+                            ERROR = vim.diagnostic.severity.ERROR,
+                            WARNING = vim.diagnostic.severity.WARN,
+                        }
+
+                        local bin = "phpcs"
+                        if vim.trim(output) == "" or output == nil then
+                            return {}
+                        end
+
+                        local diagnostics = {}
+                        local decoded = vim.json.decode(output)
+                        for _, result in pairs(decoded.files) do
+                            for _, msg in ipairs(result.messages or {}) do
+                            local lnum = type(msg.line) == "number" and (msg.line - 1) or 0
+                            local linecont = vim.api.nvim_buf_get_lines(bufnr, lnum, lnum + 1, false)[1] or ""
+                            local col = linecont:match("()%S") or 1
+                            local end_col = linecont:match(".*%S()") or 1
+                                table.insert(diagnostics, {
+                                    lnum = lnum,
+                                    col = col - 1,
+                                    end_col = end_col,
+                                    message = msg.message,
+                                    code = msg.source,
+                                    source = bin,
+                                    severity = assert(
+                                        severities[msg.type],
+                                        "missing mapping for severity " .. msg.type
+                                    ),
+                                })
+                            end
+                        end
+                        return diagnostics
+                    end,
                 },
 
                 -- PHP Mess Detector
