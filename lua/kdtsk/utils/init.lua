@@ -567,6 +567,7 @@ function M.get_local_php_exe(executable)
         "vendor/bin/" .. executable,
         "vendor/bin/" .. executable .. ".phar",
         ".devenv/profile/bin/" .. executable,
+        "./" .. executable .. ".phar",
     }, executable)
 end
 
