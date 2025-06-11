@@ -104,7 +104,7 @@ return {
                     "phpcs",
                     "phpmd",
                     "phpstan",
-                    "psalm",
+                    -- "psalm",
                 },
             },
             ---@type table<string, lint.LinterLocal>
