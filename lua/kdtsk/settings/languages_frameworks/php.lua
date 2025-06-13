@@ -11,40 +11,51 @@ return {
     },
     { -- Language Servers
         "nvim-lspconfig",
-        opts = {
-            ---@type table<string,vim.lsp.ConfigLocal>
-            servers = {
-                ["intelephense"] = {
-                    init_options = {
-                        licenceKey = vim.fn.expand("/run/secrets/php/intelephense_license"),
-                    },
-                    settings = {
-                        intelephense = {
-                            telemetry = {
-                                enabled = false,
-                            },
-                            files = {
-                                exclude = {
-                                    -- These are causing high CPU usage
-                                    "**/.devenv/**",
-                                    "**/.direnv/**",
+        opts = function(_, opts)
+            return vim.tbl_deep_extend("force", opts, {
+                ---@type table<string,vim.lsp.ConfigLocal>
+                servers = {
+                    ["intelephense"] = {
+                        nix_pkg = "intelephense",
+                        bin = Utils.php.find_executable("intelephense"),
+                        init_options = {
+                            licenceKey = vim.fn.expand("/run/secrets/php/intelephense_license"),
+                        },
+                        settings = {
+                            intelephense = {
+                                telemetry = {
+                                    enabled = false,
+                                },
+                                files = {
+                                    exclude = {
+                                        -- These are causing high CPU usage
+                                        "**/.devenv/**",
+                                        "**/.direnv/**",
+                                    },
                                 },
                             },
                         },
                     },
+                    ["phan"] = {
+                        enabled = true,
+                        nix_pkg = "php84Packages.phan",
+                        bin = Utils.php.find_executable("phan"),
+                    },
+                    -- Requires proper project root files (composer.json, .git, .phpactor.json, .phpactor.yml)
+                    -- Use it if executable is provided and if there is proper root
+                    ["phpactor"] = {
+                        enabled = true,
+                        nix_pkg = "phpactor",
+                        bin = Utils.php.find_executable("phpactor"),
+                    },
+                    ["psalm"] = {
+                        enabled = true, -- root_dir already checks for psalm.xml or psalm.xml.dist
+                        nix_pkg = "php84Packages.psalm",
+                        bin = Utils.php.find_executable("psalm"),
+                    },
                 },
-                ["phan"] = {},
-                ["phpactor"] = {
-                    enabled = true,
-                    nix_pkg = "phpactor",
-                },
-                ["psalm"] = {
-                    enabled = true,
-                    nix_pkg = "php83Packages.psalm",
-                    cmd = { "psalm", "--language-server", "--config=psalm.xml" },
-                },
-            },
-        },
+            })
+        end,
     },
     { -- Code Style
         "conform.nvim",
@@ -114,9 +125,9 @@ return {
                 -- PHP Code Sniffer
                 phpcs = {
                     cmd = function()
-                        return require("kdtsk.utils").get_local_php_exe("phpcs")
+                        return Utils.php.find_executable("phpcs") or "phpcs"
                     end,
-                    nix_pkg = "php83Packages.php-codesniffer",
+                    nix_pkg = "php84Packages.php-codesniffer",
                     -- Sets col and end_col to whole row
                     parser = function(output, bufnr)
                         local severities = {
@@ -133,10 +144,10 @@ return {
                         local decoded = vim.json.decode(output)
                         for _, result in pairs(decoded.files) do
                             for _, msg in ipairs(result.messages or {}) do
-                            local lnum = type(msg.line) == "number" and (msg.line - 1) or 0
-                            local linecont = vim.api.nvim_buf_get_lines(bufnr, lnum, lnum + 1, false)[1] or ""
-                            local col = linecont:match("()%S") or 1
-                            local end_col = linecont:match(".*%S()") or 1
+                                local lnum = type(msg.line) == "number" and (msg.line - 1) or 0
+                                local linecont = vim.api.nvim_buf_get_lines(bufnr, lnum, lnum + 1, false)[1] or ""
+                                local col = linecont:match("()%S") or 1
+                                local end_col = linecont:match(".*%S()") or 1
                                 table.insert(diagnostics, {
                                     lnum = lnum,
                                     col = col - 1,
@@ -158,7 +169,7 @@ return {
                 -- PHP Mess Detector
                 phpmd = {
                     cmd = function()
-                        return require("kdtsk.utils").get_local_php_exe("phpmd")
+                        return Utils.php.find_executable("phpmd") or "phpmd"
                     end,
                     nix_pkg = "php83Packages.phpmd",
                     -- Adds this only to strip deprecations from output
@@ -214,9 +225,9 @@ return {
                 -- PHPStan
                 phpstan = {
                     cmd = function()
-                        return require("kdtsk.utils").get_local_php_exe("phpstan")
+                        return Utils.php.find_executable("phpstan") or "phpstan"
                     end,
-                    nix_pkg = "php83Packages.phpstan",
+                    nix_pkg = "php84Packages.phpstan",
                     -- Sets col and end_col to whole row
                     parser = function(output, bufnr)
                         if vim.trim(output) == "" or output == nil then
@@ -254,7 +265,7 @@ return {
                 -- Psalm
                 psalm = {
                     cmd = function()
-                        return require("kdtsk.utils").get_local_php_exe("psalm")
+                        return Utils.php.find_executable("psalm") or "psalm"
                     end,
                     nix_pkg = "php83Packages.psalm",
                     -- Psalm exits with 2 when there are issues in file

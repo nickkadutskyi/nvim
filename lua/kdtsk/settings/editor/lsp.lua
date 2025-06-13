@@ -364,6 +364,7 @@ return {
         ---@class vim.lsp.ConfigLocal : vim.lsp.Config
         ---@field nix_pkg? string
         ---@field enabled? boolean
+        ---@field bin? string|nil
 
         -- LSP config
         "neovim/nvim-lspconfig",
@@ -387,6 +388,9 @@ return {
             for name, cfg in pairs(servers) do
                 local command = cfg.cmd or (vim.lsp.config[name] and vim.lsp.config[name].cmd or nil)
                 if cfg.enabled ~= false and command and type(command) ~= "function" then
+                    if cfg.bin then
+                        command[1] = cfg.bin
+                    end
                     commands[name] = command
                 end
             end
@@ -395,7 +399,7 @@ return {
 
             -- Sets up existing servers
             for name, _ in pairs(existing) do
-                utils.lsp_setup(name, servers[name])
+                Utils.lsp.setup(name, servers[name])
             end
 
             -- Installs servers via Mason and sets up via handlers
@@ -405,7 +409,7 @@ return {
                     ensure_installed = via_mason,
                     handlers = {
                         function(name)
-                            utils.lsp_setup(name, servers[name])
+                            Utils.lsp.setup(name, servers[name])
                         end,
                     },
                 })
@@ -414,21 +418,22 @@ return {
             -- Check if Nix package exists, install via Nix and set up
             for name, command in pairs(via_nix) do
                 local nix_pkg = servers[name].nix_pkg or command
-                utils.cmd_via_nix(nix_pkg, command, function(nix_cmd, o)
+                Utils.nix.get_cmd_via_nix(nix_pkg, command, function(nix_cmd, o)
                     if o.code == 0 then
                         local cmd = servers[name].cmd or vim.lsp.config[name].cmd
                         assert(type(cmd) ~= "function", "`cmd` should not be a function")
+
                         if cmd and not vim.tbl_isempty(cmd) then
+                            -- Prepend nix-based cmd to the existing cmd
                             table.remove(cmd, 1)
                             servers[name].cmd = vim.list_extend(nix_cmd, cmd)
-                            utils.lsp_setup(name, servers[name])
-                            -- Helps to trigger FileType event to restart language server
-                            for _, ext in ipairs(vim.lsp.config[name].filetypes) do
-                                if string.match(vim.api.nvim_buf_get_name(0), "%." .. ext .. "$") ~= nil then
-                                    vim.lsp.start(vim.lsp.config[name])
-                                    break
-                                end
-                            end
+
+                            -- Finally set up the server
+                            Utils.lsp.setup(name, servers[name])
+
+                            -- Create and start the server since it was not started yet
+                            -- on FileType event
+                            Utils.lsp.create_clients_and_start_servers(vim.lsp.config[name])
                         end
                     end
                 end)

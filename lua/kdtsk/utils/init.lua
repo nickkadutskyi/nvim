@@ -8,6 +8,9 @@
 ---@field todo kdtsk.utils.todo
 ---@field fold kdtsk.utils.fold
 ---@field linter_phpmd kdtsk.utils.linter_phpmd
+---@field php kdtsk.utils.php
+---@field tools kdtsk.utils.tools
+---@field nix kdtsk.utils.nix
 local M = {}
 
 setmetatable(M, {
@@ -437,56 +440,38 @@ end
 function M.cmd_via_nix(nix_pkg, command, callback, flake)
     flake = flake or "nixpkgs"
     local cmd = {}
-    vim.system({ "nix", "path-info", "--impure", "--json", flake .. "#" .. nix_pkg }, { text = true }, function(o)
+    vim.system({
+        "nix",
+        "eval",
+        "--json",
+        flake .. "#" .. nix_pkg,
+        "--apply",
+        'drv: { pname = if builtins.hasAttr "pname" drv then drv.pname else (if builtins.hasAttr "name" drv then drv.name else "unknown"); meta = if builtins.hasAttr "meta" drv then drv.meta else {}; }',
+    }, { text = true }, function(o)
         if o.code == 0 then
             cmd = { "nix", "shell", "--impure", flake .. "#" .. nix_pkg, "--command", command }
-            local function get_attr(attr, has_attr_callback)
-                return vim.system(
-                    { "nix", "eval", "--raw", flake .. "#" .. nix_pkg .. "." .. attr },
-                    { text = true },
-                    function(o_has_attr)
-                        if o_has_attr.code == 0 then
-                            has_attr_callback(o_has_attr.stdout)
-                        else
-                            has_attr_callback(nil)
-                        end
+            vim.schedule(function()
+                local ok, pkg = pcall(vim.fn.json_decode, o.stdout)
+                if ok then
+                    if pkg.meta.mainProgram == command then
+                        cmd = { "nix", "run", "--impure", flake .. "#" .. nix_pkg, "--" }
                     end
-                )
-            end
-            local attrs = {
-                "meta.mainProgram", --[["pname"]]
-            }
-            local attr_ind = 1
-            local function check_attr(val)
-                if val == command then
-                    cmd = { "nix", "run", "--impure", flake .. "#" .. nix_pkg, "--" }
-                    vim.schedule(function()
-                        callback(cmd, o)
-                    end)
-                elseif #attrs < attr_ind then
-                    attr_ind = attr_ind + 1
-                    get_attr(attrs[attr_ind], check_attr)
                 else
-                    vim.schedule(function()
-                        callback(cmd, o)
-                    end)
+                    vim.notify("Failed to decode package info: " .. nix_pkg, vim.log.levels.WARN, {
+                        title = "Utils.init.cmd_via_nix",
+                    })
                 end
-            end
-            get_attr(attrs[attr_ind], check_attr)
+                callback(cmd, o)
+            end)
         else
-            vim.notify(
-                string.format("Did't find `%s` nix package due: %s", nix_pkg, o.stderr),
-                vim.log.levels.WARN,
-                { title = "Nix cmd" }
-            )
+            vim.notify("Did't find " .. nix_pkg .. " package due: " .. o.stderr, vim.log.levels.WARN, {
+                title = "Utils.init.cmd_via_nix",
+            })
             cmd = { command }
             vim.schedule(function()
                 callback(cmd, o)
             end)
         end
-        -- vim.schedule(function()
-        --     callback(cmd, o)
-        -- end)
     end)
 end
 
@@ -535,19 +520,6 @@ function M.handle_commands(commands, mason_mapping)
     return via_mason, via_nix, existing, ignored
 end
 
---- Set up all language servers via this function
----@param name string
----@param cfg ?vim.lsp.ConfigLocal
-function M.lsp_setup(name, cfg)
-    cfg = cfg or {}
-
-    -- Per language server config may turn off the server
-    if cfg.enabled ~= false then
-        vim.lsp.config(name, cfg)
-        vim.lsp.enable(name)
-    end
-end
-
 -- Debounce function to limit the rate at which a function can fire
 function M.debounce(ms, fn)
     local timer = vim.uv.new_timer()
@@ -560,15 +532,6 @@ function M.debounce(ms, fn)
             end)
         end
     end
-end
-
-function M.get_local_php_exe(executable)
-    return M.find_executable({
-        "vendor/bin/" .. executable,
-        "vendor/bin/" .. executable .. ".phar",
-        ".devenv/profile/bin/" .. executable,
-        "./" .. executable .. ".phar",
-    }, executable)
 end
 
 ---@param env_var string
@@ -615,22 +578,34 @@ end
 
 ---Checks if buffer modifiable, listed and not a special buffer
 ---@param buffer number
-function M.should_track_buffer(buffer)
-    local excluded_filetypes = { qf = true, help = true, NvimTree = true, fzf = true, netrw = true }
+---@param excluded_filetypes? table<string, boolean>
+---@param include_filetypes? table<string, boolean>
+function M.should_track_buffer(buffer, excluded_filetypes, include_filetypes)
+    excluded_filetypes = excluded_filetypes or { qf = true, help = true, NvimTree = true, fzf = true, netrw = true }
+    include_filetypes = include_filetypes or {}
+
     -- Skip non-listed or non-loaded buffers
     if not vim.api.nvim_get_option_value("buflisted", { buf = buffer }) or not vim.api.nvim_buf_is_loaded(buffer) then
-        return false
+        return false, "not listed"
     end
 
     -- Skip non-modifiable buffers
     if not vim.api.nvim_get_option_value("modifiable", { buf = buffer }) then
-        return false
+        return false, "not modifiable"
     end
 
-    -- Skip excluded filetypes
+    -- Check if included or skip excluded filetypes
     local filetype = vim.api.nvim_get_option_value("filetype", { buf = buffer })
     if excluded_filetypes[filetype] then
-        return false
+        return false, "excluded filetype: " .. filetype
+    end
+
+    if not vim.tbl_isempty(include_filetypes) then
+        -- If include_filetypes is not empty, check if the filetype is in it
+        if not include_filetypes[filetype] then
+            return false,
+                "not in include_filetypes: " .. filetype .. " (available: " .. vim.inspect(include_filetypes) .. ")"
+        end
     end
 
     return true
@@ -687,6 +662,15 @@ function M.count_modified_buffers()
     local buffer_states = new_buffer_states
     local buffer_modified_count = unsaved + new_unsaved + new_buffers
     return buffer_modified_count, buffer_states
+end
+
+---@param arr string[]
+function M.array_to_list(arr)
+    local result = {}
+    for _, str in ipairs(arr) do
+        result[str] = true
+    end
+    return result
 end
 
 return M
