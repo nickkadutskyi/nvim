@@ -76,6 +76,9 @@ end
 local function is_simple_bracket(firstText, endText)
     local brackets = {
         { open = "{%s*$", close = "^%s*}%s*$" },
+        { open = "{%s*$", close = "^%s*},%s*$" },
+        { open = "{%s*$", close = "^%s*}%)%s*$" },
+        { open = "{%s*$", close = "^%s*}.*%)%s*$" },
         { open = "%[%s*$", close = "^%s*]%s*$" },
         { open = "%(%s*$", close = "^%s*%)%s*$" },
     }
@@ -91,8 +94,19 @@ end
 -- Lua language patterns
 local function is_lua_construct(firstText, endText)
     -- Function definitions
-    if firstText:match("function%s*[^%(]*%(.*%)%s*$") and endText:match("^%s*end%s*$") then
-        return true
+    local function_patterns_start = {
+        "function%s*[^%(]*%(.*%)%s*$", -- function name with parameters
+        "function%(.*%)%s*$", -- anonymous function
+    }
+    local function_patterns_end = {
+        "^%s*end[,%)]*%s*$", -- end of function
+    }
+    for _, start_pattern in ipairs(function_patterns_start) do
+        for _, end_pattern in ipairs(function_patterns_end) do
+            if firstText:match(start_pattern) and endText:match(end_pattern) then
+                return true
+            end
+        end
     end
 
     -- Control structures with 'then' or 'do'
@@ -120,9 +134,17 @@ end
 -- Python language patterns
 local function is_python_construct(firstText, endText)
     local python_patterns = {
-        "def%s+", "class%s+", "if%s+.*:$", "elif%s+.*:$", "else%s*:$",
-        "for%s+.*:$", "while%s+.*:$", "with%s+.*:$", "try%s*:$",
-        "except%s*.*:$", "finally%s*:$"
+        "def%s+",
+        "class%s+",
+        "if%s+.*:$",
+        "elif%s+.*:$",
+        "else%s*:$",
+        "for%s+.*:$",
+        "while%s+.*:$",
+        "with%s+.*:$",
+        "try%s*:$",
+        "except%s*.*:$",
+        "finally%s*:$",
     }
 
     for _, pattern in ipairs(python_patterns) do
@@ -136,8 +158,15 @@ end
 -- Ruby language patterns
 local function is_ruby_construct(firstText, endText)
     local ruby_patterns = {
-        "def%s+", "class%s+", "module%s+", "if%s+", "unless%s+",
-        "case%s+", "begin%s*$", "while%s+", "until%s+"
+        "def%s+",
+        "class%s+",
+        "module%s+",
+        "if%s+",
+        "unless%s+",
+        "case%s+",
+        "begin%s*$",
+        "while%s+",
+        "until%s+",
     }
 
     for _, pattern in ipairs(ruby_patterns) do
@@ -155,14 +184,14 @@ local function is_shell_construct(firstText, endText)
         "for%s+.*do%s*$",
         "while%s+.*do%s*$",
         "case%s+.*in%s*$",
-        "function%s+.*%(%)%s*{?%s*$"
+        "function%s+.*%(%)%s*{?%s*$",
     }
 
     local shell_end_patterns = {
         "^%s*fi%s*.*$",
         "^%s*done%s*.*$",
         "^%s*esac%s*.*$",
-        "^%s*}%s*$"
+        "^%s*}%s*$",
     }
 
     for _, start_pattern in ipairs(shell_start_patterns) do
@@ -188,7 +217,7 @@ local function is_js_ts_construct(firstText, endText)
         "switch%s*%(.*%)%s*{%s*$",
         "try%s*{%s*$",
         "catch%s*%(.*%)%s*{%s*$",
-        "finally%s*{%s*$"
+        "finally%s*{%s*$",
     }
 
     for _, pattern in ipairs(js_patterns) do
@@ -202,9 +231,9 @@ end
 -- Exclusion patterns (constructs that should NOT show end line)
 local function should_exclude(firstText)
     local exclusion_patterns = {
-        "^%s*import%s",  -- Import statements
-        "^%s*export%s",  -- Export statements
-        "^%s*//"         -- Single line comments
+        "^%s*import%s", -- Import statements
+        "^%s*export%s", -- Export statements
+        "^%s*//", -- Single line comments
     }
 
     for _, pattern in ipairs(exclusion_patterns) do
