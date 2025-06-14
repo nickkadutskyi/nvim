@@ -76,7 +76,7 @@ end
 ---Check if a file or path exists in the current working directory
 ---@param paths string|string[] The file or directory path(s) to check
 ---@param cwd? string Optional current working directory (defaults to vim.fn.getcwd())
----@return boolean exists True if any of the file/path exists, false otherwise
+---@return boolean, string|nil - True if any of the file/path exists, false otherwise
 function M.file_exists(paths, cwd)
     cwd = cwd or vim.fn.getcwd()
 
@@ -92,11 +92,11 @@ function M.file_exists(paths, cwd)
         -- Check if it's a file or directory
         local stat = vim.loop.fs_stat(full_path)
         if stat ~= nil then
-            return true
+            return true, full_path
         end
     end
 
-    return false
+    return false, nil
 end
 
 

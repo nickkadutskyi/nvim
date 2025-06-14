@@ -102,11 +102,37 @@ function M.setup(name, cfg)
         cfg.cmd[1] = cfg.bin
     end
 
-    -- Always configure but only enable if not disabled
-    vim.lsp.config(name, cfg)
     if cfg.enabled ~= false then
+        if cfg.local_config then
+            cfg.settings = M.merge_with_local_config(cfg.settings, cfg.local_config, name)
+        end
+        vim.lsp.config(name, cfg)
         vim.lsp.enable(name)
     end
+end
+
+---@param default table Default configuration table
+---@param relative_path string Path to the local configuration file
+---@param name string Name of the configuration (for error messages)
+function M.merge_with_local_config(default, relative_path, name)
+    local has_local_config, config_path = Utils.tools.file_exists(relative_path)
+    if has_local_config and config_path then
+        local file = io.open(config_path, "r")
+        if not file then
+            error("Could not open config at " .. config_path)
+        end
+        local content = file:read("*a")
+        file:close()
+        local ok, local_config = pcall(vim.fn.json_decode, content)
+        if ok and type(local_config) == "table" then
+            return vim.tbl_deep_extend("force", default, local_config)
+        else
+            vim.notify("Invalid format in " .. config_path .. ", expected a JSON object", vim.log.levels.ERROR)
+            return default
+        end
+    end
+
+    return default
 end
 
 return M

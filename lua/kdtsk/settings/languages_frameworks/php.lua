@@ -16,6 +16,14 @@ return {
                 ---@type table<string,vim.lsp.ConfigLocal>
                 servers = {
                     ["intelephense"] = {
+                        -- `root_dir` already checks for composer.json and .git
+                        -- To enable it create .intelephense.json with empty JSON
+                        -- This is not standard, but it is used to enable the server
+                        -- and provide project specific configuration
+                        enabled = Utils.tools.file_exists({
+                            ".intelephense.json",
+                        }),
+                        local_config = ".intelephense.json",
                         nix_pkg = "intelephense",
                         bin = Utils.php.find_executable("intelephense"),
                         init_options = {
@@ -32,24 +40,33 @@ return {
                                         "**/.devenv/**",
                                         "**/.direnv/**",
                                     },
+                                    maxSize = 10000000,
                                 },
                             },
                         },
                     },
                     ["phan"] = {
-                        enabled = true,
+                        -- `root_dir` already checks for composer.json and .git
+                        -- To enable it create .phan/config.php with contents
+                        enabled = Utils.tools.file_exists(".phan/config.php"),
                         nix_pkg = "php84Packages.phan",
                         bin = Utils.php.find_executable("phan"),
                     },
-                    -- Requires proper project root files (composer.json, .git, .phpactor.json, .phpactor.yml)
-                    -- Use it if executable is provided and if there is proper root
                     ["phpactor"] = {
-                        enabled = true,
+                        -- Requires proper project root files (composer.json, .git, .phpactor.json, .phpactor.yml)
+                        -- Use it if executable is provided and if there is proper root
+                        -- To enable it create either .phpactor.json or .phpactor.yml with contents
+                        enabled = Utils.tools.file_exists({
+                            ".phpactor.json",
+                            ".phpactor.yml",
+                        }),
                         nix_pkg = "phpactor",
                         bin = Utils.php.find_executable("phpactor"),
                     },
                     ["psalm"] = {
-                        enabled = true, -- root_dir already checks for psalm.xml or psalm.xml.dist
+                        -- `root_dir` already checks for psalm.xml or psalm.xml.dist
+                        -- To enable it create either of these files and configure it
+                        enabled = true,
                         nix_pkg = "php84Packages.psalm",
                         bin = Utils.php.find_executable("psalm"),
                     },

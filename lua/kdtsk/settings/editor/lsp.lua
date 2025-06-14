@@ -365,6 +365,7 @@ return {
         ---@field nix_pkg? string
         ---@field enabled? boolean
         ---@field bin? string|nil
+        ---@field local_config? string
 
         -- LSP config
         "neovim/nvim-lspconfig",
