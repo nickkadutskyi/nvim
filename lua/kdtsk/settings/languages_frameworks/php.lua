@@ -103,7 +103,7 @@ return {
                             ".devenv/profile/bin/php-cs-fixer",
                         }, "php-cs-fixer"),
                         options = {
-                            nix_pkg = "php83Packages.php-cs-fixer",
+                            nix_pkg = "php84Packages.php-cs-fixer",
                             cmd = "php-cs-fixer",
                         },
                     },
@@ -113,7 +113,7 @@ return {
                             ".devenv/profile/bin/phpcbf",
                         }, "phpcbf"),
                         options = {
-                            nix_pkg = "php83Packages.php-codesniffer",
+                            nix_pkg = "php84Packages.php-codesniffer",
                             cmd = "phpcbf",
                         },
                     },
@@ -188,7 +188,7 @@ return {
                     cmd = function()
                         return Utils.php.find_executable("phpmd") or "phpmd"
                     end,
-                    nix_pkg = "php83Packages.phpmd",
+                    nix_pkg = "php84Packages.phpmd",
                     -- Adds this only to strip deprecations from output
                     parser = function(output, _)
                         local bin = "phpmd"
@@ -284,7 +284,7 @@ return {
                     cmd = function()
                         return Utils.php.find_executable("psalm") or "psalm"
                     end,
-                    nix_pkg = "php83Packages.psalm",
+                    nix_pkg = "php84Packages.psalm",
                     -- Psalm exits with 2 when there are issues in file
                     ignore_exitcode = true,
                     -- Adds type, link and shortcote to diagnostics entries
