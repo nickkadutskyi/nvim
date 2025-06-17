@@ -124,6 +124,8 @@ return {
     { -- Quality Tools
         "nvim-lint",
         event = { "BufReadPre", "BufNewFile" },
+        -- TODO: implement on/off logic based on presence of config files or
+        --       other things
         opts = {
             ---@type table<string, string[]>
             linters_by_ft = {
@@ -188,6 +190,11 @@ return {
                     cmd = function()
                         return Utils.php.find_executable("phpmd") or "phpmd"
                     end,
+                    args = {
+                        "-",
+                        "json",
+                        "./phpmd.xml",
+                    },
                     nix_pkg = "php84Packages.phpmd",
                     -- Adds this only to strip deprecations from output
                     parser = function(output, _)

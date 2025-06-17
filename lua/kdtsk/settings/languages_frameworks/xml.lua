@@ -6,7 +6,15 @@ return {
 
             ---@type table<string,vim.lsp.ConfigLocal>
             servers = {
-                ["lemminx"] = {},
+                ["lemminx"] = {
+                    settings = {
+                        xml = {
+                            server = {
+                                workDir = "~/.cache/lemminx",
+                            },
+                        },
+                    },
+                },
             },
         },
     },
