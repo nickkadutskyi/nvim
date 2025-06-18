@@ -248,7 +248,8 @@ end
 -- FOLD DETECTION LOGIC
 -- =============================================================================
 
-local function should_show_end_line(firstText, endText, foldKind)
+---@return boolean, boolean|nil
+local function should_show_end_line(firstText, secondText, endText, foldKind)
     -- Check exclusions first
     if should_exclude(firstText) then
         return false
@@ -273,6 +274,10 @@ local function should_show_end_line(firstText, endText, foldKind)
 
     if is_simple_bracket(firstText, endText) then
         return true
+    end
+
+    if is_simple_bracket(firstText .. secondText, endText) then
+        return true, true
     end
 
     if is_lua_construct(firstText, endText) then
@@ -332,6 +337,20 @@ function M.ufo_virt_text_handler_enhanced(virtText, lnum, endLnum, width, trunca
 
     -- Extract text for analysis
     local firstLineText = ctx.text or ""
+
+    local secondLineText = ""
+    local secondLineHlGroup = "UfoFoldedEllipsis"
+    if lnum + 1 <= endLnum then
+        local secondVirtText = ctx.get_fold_virt_text(lnum + 1)
+        for _, chunk in ipairs(secondVirtText) do
+            secondLineText = secondLineText .. chunk[1]
+            if chunk[2] then
+                secondLineHlGroup = chunk[2]
+            end
+        end
+        secondLineText = secondLineText:gsub("^%s+", ""):gsub("%s+$", "")
+    end
+
     local endVirtText = ctx.get_fold_virt_text(endLnum)
     local endLineText = ""
     for _, chunk in ipairs(endVirtText) do
@@ -341,9 +360,12 @@ function M.ufo_virt_text_handler_enhanced(virtText, lnum, endLnum, width, trunca
 
     -- Determine if we should show the end line
     local foldKind = ctx.get_fold_kind and ctx.get_fold_kind() or ""
-    local showEndLine = should_show_end_line(firstLineText, endLineText, foldKind)
+    local showEndLine, usedSecondLine = should_show_end_line(firstLineText, secondLineText, endLineText, foldKind)
 
     if showEndLine then
+        if usedSecondLine then
+            table.insert(newVirtText, { secondLineText, secondLineHlGroup })
+        end
         table.insert(newVirtText, { filling, "UfoFoldedEllipsis" })
 
         -- Add the last line content
