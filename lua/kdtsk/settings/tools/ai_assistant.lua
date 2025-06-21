@@ -22,7 +22,7 @@ return {
         config = function()
             -- Keymap
             vim.keymap.set("i", "<A-]>", "<Plug>(copilot-next)", { desc = "AI: Next suggestion" })
-            vim.keymap.set("i", "<A-[>", "<Pclug>(copilot-previous)", { desc = "AI: Previous suggestion" })
+            vim.keymap.set("i", "<A-[>", "<Plug>(copilot-previous)", { desc = "AI: Previous suggestion" })
             vim.keymap.set("i", "<A-Tab>", "<Plug>(copilot-accept-word)", {
                 desc = "AI: Accept word suggestion (copilot.vim)",
             })
