@@ -3,14 +3,11 @@ return {
     { -- AI Suggestions
         "github/copilot.vim",
         dependencies = { "folke/which-key.nvim" },
-        cmd = "Copilot",
-        event = "InsertEnter",
-        lazy = true,
         cond = function()
             return Utils.is_path_in_paths(vim.fn.getcwd(), {
                 "~/Developer",
-                "~/config/nvim",
-                "~/config/nixos-config",
+                "~/.config/nvim",
+                "~/.config/nixos-config",
             })
         end,
         init = function()

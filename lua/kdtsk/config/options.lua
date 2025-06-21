@@ -16,6 +16,8 @@ vim.opt.splitright = true
 vim.opt.isfname:append("@-@")
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = "split"
+-- Scrolling
+vim.opt.termsync = false
 
 --- - Natural Language
 vim.opt.spell = true

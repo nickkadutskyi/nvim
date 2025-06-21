@@ -1,5 +1,8 @@
 ---@type LazySpec
 return {
+    {
+        "nvim-treesitter/nvim-treesitter-textobjects",
+    },
     { -- Similar to Sticky Lines in Intellij
         "nvim-treesitter/nvim-treesitter-context",
         enabled = true,
