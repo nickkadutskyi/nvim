@@ -1,6 +1,6 @@
 ---@type LazySpec
 return {
-    {
+    { -- TODO: get rid of this plugin and replicate its functionality
         "ahmedkhalf/project.nvim",
         dependencies = {
             "ibhagwan/fzf-lua",
