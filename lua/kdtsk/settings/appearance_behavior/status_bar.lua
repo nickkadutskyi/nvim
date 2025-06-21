@@ -8,7 +8,7 @@ vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufModifiedSet", "Fil
 })
 
 return {
-    { -- Status bar controller in the top right corner
+    { -- Status bar controller in the top right corner
         -- TODO: Consider adding number of misspelled words
         "b0o/incline.nvim",
         config = function()
