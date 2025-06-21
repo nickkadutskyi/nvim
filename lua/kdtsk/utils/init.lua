@@ -1,6 +1,5 @@
 ---@class kdtsk.utils
 ---@field ui kdtsk.utils.ui
----@field theme kdtsk.utils.theme
 ---@field lualine kdtsk.utils.lualine
 ---@field incline kdtsk.utils.incline
 ---@field icons kdtsk.utils.icons|jb.icons relies on jb.icons or blink.cmp
