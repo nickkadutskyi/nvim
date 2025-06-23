@@ -81,14 +81,14 @@ return {
             return vim.tbl_deep_extend("force", opts, {
                 formatters_by_ft = {
                     php = {
-                        "phpcbf",
+                        -- "phpcbf",
                         "php_cs_fixer",
                         -- if phpcbf is used as both linter and formatter there is no need for php-cs-fixer
                         -- so it's safe to have this options since only one of them will be used
                         -- but need to install them locally for a project only
                         -- stop_after_first = true,
                         -- runs jsbeautify via intelephense so it's useful to have .jsbeautifyrc
-                        lsp_format = "first",
+                        -- lsp_format = "first",
                         async = true,
                         timeout_ms = 2000,
                     },
