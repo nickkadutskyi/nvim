@@ -1,13 +1,19 @@
 return {
-    { -- Color Scheme
+    {
+        -- Color Scheme
         "nvim-treesitter",
         opts = function(_, opts)
             vim.list_extend(opts.ensure_installed, {
                 "gitignore",
+                "gitcommit",
+                "git_config",
+                "git_rebase",
+                "diff",
             })
         end,
     },
-    { -- Quality Tools
+    {
+        -- Quality Tools
         "nvim-lint",
         opts = function()
             local gitlint = require("lint").linters.gitlint
