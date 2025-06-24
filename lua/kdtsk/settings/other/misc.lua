@@ -1,10 +1,5 @@
 ---@type LazySpec
 return {
-    { -- For installing language servers, formatters, linters, DAPs
-        "williamboman/mason.nvim",
-        event = "VeryLazy",
-        opts = { ui = { border = "rounded" } },
-    },
     { -- Snacks.nvim version of bigfile
         "folke/snacks.nvim",
         ---@type snacks.Config

@@ -371,18 +371,10 @@ return {
         "neovim/nvim-lspconfig",
         event = { "BufReadPre", "BufNewFile" },
         cmd = { "LspInfo", "LspInstall", "LspUninstall" },
-        dependencies = {
-            "williamboman/mason.nvim",
-            "williamboman/mason-lspconfig.nvim",
-            -- "hrsh7th/cmp-nvim-lsp",
-        },
-        config = function(plugin, opts)
+        config = function(_, opts)
             local utils = require("kdtsk.utils")
             ---@type table<string, vim.lsp.ConfigLocal>
             local servers = opts.servers or {}
-
-            -- Gets mason-lspconfig
-            local has_mlsp, mlsp = pcall(require, "mason-lspconfig")
 
             -- Sort server commands by how to handle them
             local commands = {}
@@ -395,25 +387,11 @@ return {
                     commands[name] = command
                 end
             end
-            local lsp_to_mason = has_mlsp and mlsp.get_mappings().lspconfig_to_mason or {}
-            local via_mason, via_nix, existing, _ = utils.handle_commands(commands, lsp_to_mason)
+            local via_nix, existing, _ = utils.handle_commands(commands)
 
             -- Sets up existing servers
             for name, _ in pairs(existing) do
                 Utils.lsp.setup(name, servers[name])
-            end
-
-            -- Installs servers via Mason and sets up via handlers
-            if has_mlsp then
-                mlsp.setup({
-                    automatic_installation = false,
-                    ensure_installed = via_mason,
-                    handlers = {
-                        function(name)
-                            Utils.lsp.setup(name, servers[name])
-                        end,
-                    },
-                })
             end
 
             -- Check if Nix package exists, install via Nix and set up

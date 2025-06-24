@@ -475,18 +475,10 @@ function M.cmd_via_nix(nix_pkg, command, callback, flake)
 end
 
 ---@param commands table<string, string|function|string[]>
----@param mason_mapping ?table<string, string>
----@return string[], table<string, string>, table<string, string>, table<string, string>
-function M.handle_commands(commands, mason_mapping)
-    mason_mapping = mason_mapping or {}
+---@return table<string, string>, table<string, string>, table<string, string>
+function M.handle_commands(commands)
     local nix_path = vim.fn.exepath("nix")
-    local has_msettings, msettings = pcall(require, "mason.settings")
-    local mason_dir = nil
-    if has_msettings then
-        mason_dir = msettings.current.install_root_dir
-    end
 
-    local via_mason = {}
     local via_nix = {}
     local existing = {}
     local ignored = {}
@@ -501,9 +493,7 @@ function M.handle_commands(commands, mason_mapping)
 
         local cmd_path = vim.fn.exepath(command --[[@as string]])
 
-        if mason_dir ~= nil and mason_mapping[name] ~= nil and string.find(cmd_path, mason_dir) ~= nil then
-            via_mason[#via_mason + 1] = name
-        elseif #cmd_path ~= 0 then
+        if #cmd_path ~= 0 then
             existing[name] = command
         elseif
             -- Handle via nix only if not in `nix shell` or `nix develop` environment
@@ -516,7 +506,7 @@ function M.handle_commands(commands, mason_mapping)
         end
     end
 
-    return via_mason, via_nix, existing, ignored
+    return via_nix, existing, ignored
 end
 
 -- Debounce function to limit the rate at which a function can fire

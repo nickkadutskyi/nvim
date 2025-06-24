@@ -17,13 +17,6 @@ return {
     { -- Code formatting configuration
         "stevearc/conform.nvim",
         event = "VeryLazy",
-        dependencies = {
-            "mason.nvim",
-            -- Only used to get mapping between conform and mason
-            "zapling/mason-conform.nvim",
-            -- Actually used to install formatters via mason
-            "WhoIsSethDaniel/mason-tool-installer.nvim",
-        },
         ---@type conform.setupOpts
         opts = {
             format_on_save = {
@@ -58,12 +51,6 @@ return {
             local utils = require("kdtsk.utils")
             local conform = require("conform")
 
-            -- Gets mason-nvim-lint
-            local has_mcmap, mcmap = pcall(require, "mason-conform.mapping")
-            local mason_map = has_mcmap and mcmap.conform_to_package or {}
-            local has_minstaller, minstaller = pcall(require, "mason-tool-installer")
-            local ensure_installed_via_mason = {}
-
             -- Conform.nvim merges `formatters_by_ft` and `formatters` for me
             conform.setup(opts)
 
@@ -88,10 +75,8 @@ return {
                         end
 
                         -- Ensure binary for the command
-                        local via_mason, via_nix, _, _ = utils.handle_commands({ [name] = command }, mason_map)
-                        if not vim.tbl_isempty(via_mason) then
-                            vim.list_extend(ensure_installed_via_mason, { mason_map[name] })
-                        elseif not vim.tbl_isempty(via_nix) then
+                        local via_nix, _, _ = utils.handle_commands({ [name] = command })
+                        if not vim.tbl_isempty(via_nix) then
                             local nix_pkg = (config.options or {}).nix_pkg or via_nix[name]
                             utils.cmd_via_nix(nix_pkg, command, function(nix_cmd, o)
                                 if o.code == 0 then
@@ -103,12 +88,6 @@ return {
                         end
                     end
                 end
-            end
-
-            if has_minstaller then
-                minstaller.setup({
-                    ensure_installed = ensure_installed_via_mason,
-                })
             end
 
             -- Keymap

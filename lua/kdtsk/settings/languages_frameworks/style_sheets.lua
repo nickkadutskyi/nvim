@@ -6,9 +6,7 @@ return {
             ---@type table<string,vim.lsp.ConfigLocal>
             servers = {
                 stylelint_lsp = {},
-                -- somesass_ls = { mason = true },
                 cssls = {},
-                -- css_variables = { mason = true },
             },
         },
     },

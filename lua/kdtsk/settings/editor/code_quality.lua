@@ -14,7 +14,7 @@ return {
         -- Code Quality
         "mfussenegger/nvim-lint",
         event = { "BufReadPre", "BufNewFile" },
-        dependencies = { "stevearc/conform.nvim", "mason-nvim-lint" },
+        dependencies = { "stevearc/conform.nvim" },
         opts = { linters_by_ft = {}, linters = {} },
         config = function(_, opts)
             local utils = require("kdtsk.utils")
@@ -26,11 +26,6 @@ return {
 
             -- Clear previous linters
             lint.linters_by_ft = {}
-
-            -- Gets mason-nvim-lint
-            local has_mlint, mlint = pcall(require, "mason-nvim-lint")
-            local lint_to_mason = has_mlint and require("mason-nvim-lint.mapping").nvimlint_to_package or {}
-            local ensure_installed_via_mason = {}
 
             for file_type, linter_names in pairs(linters_by_ft) do
                 lint.linters_by_ft[file_type] = {}
@@ -56,11 +51,10 @@ return {
                     -- Adds linter to linters_by_ft if binary exists
                     local command = (lint.linters[name] or {}).cmd
                     if (custom_linter or {}).enabled ~= false and command then
-                        local via_mason, via_nix, exists, _ = utils.handle_commands({ [name] = command }, lint_to_mason)
+                        local via_nix, exists, _ = utils.handle_commands({ [name] = command })
 
-                        -- If exists or handled via Mason then add to linters_by_ft
-                        if not vim.tbl_isempty(via_mason) or not vim.tbl_isempty(exists) then
-                            vim.list_extend(ensure_installed_via_mason, via_mason)
+                        -- If exists then add to linters_by_ft
+                        if not vim.tbl_isempty(exists) then
                             vim.list_extend(lint.linters_by_ft[file_type], { name })
                         end
 
@@ -82,16 +76,6 @@ return {
                         end
                     end
                 end
-            end
-
-            -- Installs linters via Mason
-            if has_mlint then
-                mlint.setup({
-                    quiet_mode = false,
-                    ignore_install = {},
-                    automatic_installation = false,
-                    ensure_installed = ensure_installed_via_mason,
-                })
             end
 
             local function try_lint(stdin)
