@@ -19,8 +19,11 @@ return {
             },
         },
         config = function(_, opts)
+            -- Load icons from jb.nvim
             opts.override_by_filename = Utils.icons.files.by_filename
             opts.override_by_extension = Utils.icons.files.by_extension
+
+            -- Extracts light and dark variants of icons from jb.nvim
             local light_variants = {}
             local dark_variants = {}
             for _, icons in pairs(Utils.icons.files) do
@@ -40,15 +43,17 @@ return {
                     }
                 end
             end
-            local devicons = require("nvim-web-devicons")
-            local function apply_theme_icons()
-                local icons = vim.o.background == "light" and light_variants or dark_variants
 
-                if icons then
-                    devicons.set_icon(icons)
-                end
+            local devicons = require("nvim-web-devicons")
+            -- Run this function to apply icons based on the current background
+            local function apply_theme_icons()
+                devicons.set_icon(vim.o.background == "light" and light_variants or dark_variants)
             end
 
+            devicons.setup(opts)
+            apply_theme_icons()
+
+            -- Set icons every time the background option changes
             vim.api.nvim_create_autocmd("OptionSet", {
                 group = vim.api.nvim_create_augroup("kdtsk-sync-icons-with-bg", { clear = true }),
                 pattern = "background",
@@ -56,9 +61,6 @@ return {
                     vim.defer_fn(apply_theme_icons, 10)
                 end,
             })
-
-            devicons.setup(opts)
-            apply_theme_icons()
         end,
     },
 }
