@@ -74,7 +74,7 @@ return {
         "lukas-reineke/indent-blankline.nvim",
         main = "ibl",
         opts = {
-            indent = { char = "▏", tab_char = "▏"},
+            indent = { char = "▏", tab_char = "▏" },
             -- disables underline
             scope = { char = "▏", show_start = false, show_end = false },
         },

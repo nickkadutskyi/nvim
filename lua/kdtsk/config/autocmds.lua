@@ -101,12 +101,6 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 })
 
 --- - Misc
--- Starts LSP logs rotation
-Utils.on_later(function()
-    Utils.lsp.rotate_lsp_logs()
-    -- Set up a timer to rotate logs every hour
-    vim.fn.timer_start(3600000, Utils.lsp.rotate_lsp_logs, { ["repeat"] = -1 })
-end, vim.api.nvim_create_augroup("kdtsk-lsp-logs", { clear = true }))
 -- Wrap and check for spell in text filetypes
 vim.api.nvim_create_autocmd("FileType", {
     group = augroup("wrap-spell"),
@@ -147,15 +141,29 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 })
 -- Populates `vim.g.todos_in_files` with lines of TODO comments
 -- to use to highlight scrollbar marks
-Utils.on_later(function()
-    Utils.todo.add_todos_to_global()
-    vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-        group = augroup("check-todos"),
-        callback = function(event)
+-- Activate Todo Comments integration only in allowed dirs
+local group_check_todos = augroup("check-todos")
+local allowed_check_todos = nil
+vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost" }, {
+    group = group_check_todos,
+    callback = function(_)
+        if allowed_check_todos == nil then
+            allowed_check_todos = Utils.is_path_in_paths(vim.fn.getcwd(), {
+                "~/Developer",
+                "~/.config/nvim",
+                "~/.config/nixos-config",
+            })
+        end
+        if allowed_check_todos then
             Utils.todo.add_todos_to_global()
-        end,
-    })
-end, vim.api.nvim_create_augroup("kdtsk-todo-start", { clear = true }))
+        else
+            vim.api.nvim_clear_autocmds({
+                group = group_check_todos,
+                pattern = "*",
+            })
+        end
+    end,
+})
 -- Highlights when yanking text
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = augroup("highlight-yank"),

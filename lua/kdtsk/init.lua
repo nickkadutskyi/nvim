@@ -44,7 +44,11 @@ Utils.on_later(function()
     -- Provides generic (non-plugin-specific) Keymap
     require("kdtsk.config.keymap")
 
-    -- TODO do root detection here
+    -- TODO do root detection here or maybe before this autocmd?
+
+    -- Starts LSP logs rotation
+    Utils.lsp.rotate_lsp_logs()
+    vim.fn.timer_start(3600000, Utils.lsp.rotate_lsp_logs, { ["repeat"] = -1 })
 end, vim.api.nvim_create_augroup("kdtsk-lazyvim", { clear = true }))
 
 -- Loads Settings modules via Lazy.nvim
