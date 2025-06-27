@@ -1,4 +1,5 @@
 return {
+    { "avm99963/vim-jjdescription" },
     {
         -- Color Scheme
         "nvim-treesitter",
@@ -39,6 +40,24 @@ return {
     },
     {
         "sindrets/diffview.nvim",
+        config = function()
+            local function toggle_diffview(cmd)
+                if next(require("diffview.lib").views) == nil then
+                    vim.cmd(cmd)
+                else
+                    vim.cmd("DiffviewClose")
+                end
+            end
+            vim.keymap.set("n", "<localleader>avl", function()
+                toggle_diffview("DiffviewFileHistory %")
+            end, { noremap = true, desc = "VCS: [a]ctivate [v]sc log for current [f]ile" })
+            vim.keymap.set("n", "<leader>avl", function()
+                toggle_diffview("DiffviewFileHistory")
+            end, { noremap = true, desc = "VCS: [a]ctivate [v]sc [l]og" })
+            vim.keymap.set("n", "<leader>avs", function()
+                toggle_diffview("DiffviewOpen")
+            end, { noremap = true, desc = "VCS: [a]ctivate [v]sc [s]tatus" })
+        end,
     },
     {
         -- TODO change position of hunk float so it appears under the row and to the left
