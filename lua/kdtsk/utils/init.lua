@@ -36,6 +36,33 @@ setmetatable(M, {
     end,
 })
 
+---@type table<function>
+local run_when_settings_loaded_functions = {}
+---@param fn function
+function M.run_when_settings_loaded(fn)
+    if vim.g.settings_loaded then
+        fn(vim.g.settings)
+    else
+        assert(type(fn) == "function", "run_when_settings_loaded expects a function, but got: " .. type(fn))
+        table.insert(run_when_settings_loaded_functions, fn)
+    end
+end
+vim.api.nvim_create_autocmd("User", {
+    group = vim.api.nvim_create_augroup("kdtsk-settings-loaded", { clear = false }),
+    pattern = "SettingsLoaded",
+    callback = function()
+        vim.g.settings_loaded = true
+        for _, fn in ipairs(run_when_settings_loaded_functions) do
+            if type(fn) == "function" then
+                fn(vim.g.settings)
+            else
+                vim.notify("Expecting function but, got: " .. type(fn), vim.log.levels.WARN, { title = "kdtsk.utils" })
+            end
+        end
+    end,
+    once = true,
+})
+
 --- This extends a deeply nested list with a key in a table
 --- that is a dot-separated string.
 --- The nested list will be created if it does not exist.
