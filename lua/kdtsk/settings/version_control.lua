@@ -41,6 +41,14 @@ return {
     {
         "sindrets/diffview.nvim",
         config = function()
+            require("diffview").setup({
+                enhanced_diff_hl = true,
+                show_help_hints = false,
+                icons = { -- Only applies when use_icons is true.
+                    folder_closed = "",
+                    folder_open = "",
+                },
+            })
             local function toggle_diffview(cmd)
                 if next(require("diffview.lib").views) == nil then
                     vim.cmd(cmd)

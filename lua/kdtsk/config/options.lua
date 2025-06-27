@@ -108,7 +108,7 @@ vim.o.scrolloff = 3
 -- Adds visual guides
 -- vim.opt.colorcolumn = "80,100,120" -- defined via plugin
 -- Removes chars from empty lines
-vim.opt.fillchars = { eob = " " }
+vim.opt.fillchars = { eob = " ", diff = "━" }
 
 --- - Font
 vim.g.nerd_font_is_present = true
