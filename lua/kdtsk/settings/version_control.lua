@@ -38,6 +38,9 @@ return {
         end,
     },
     {
+        "sindrets/diffview.nvim",
+    },
+    {
         -- TODO change position of hunk float so it appears under the row and to the left
         -- TODO find out if I can use regular colors for hunk preview
         -- TODO style this plugin in jb.nvim color scheme
