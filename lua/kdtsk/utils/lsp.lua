@@ -103,8 +103,9 @@ function M.setup(name, cfg)
     end
 
     if cfg.enabled ~= false then
-        if cfg.local_config then
-            cfg.settings = M.merge_with_local_config(cfg.settings, cfg.local_config, name)
+        local project_cfg = (vim.g.settings or {})[name]
+        if project_cfg then
+            cfg.settings = vim.tbl_deep_extend("force", (cfg.settings or {}), (project_cfg.settings or {}))
         end
         vim.lsp.config(name, cfg)
         vim.lsp.enable(name)
@@ -135,4 +136,18 @@ function M.merge_with_local_config(default, relative_path, name)
     return default
 end
 
+---@param name string Name of the tool or language server
+---@param patterns ?string[] Patterns to match the tool's config file
+function M.is_enabled(name, patterns)
+    local ok, enabled = Utils.run_when_settings_loaded(function(settings)
+        local tool = settings[name]
+        if tool then
+            return tool.lsp or false
+        end
+    end)
+    if ok and enabled ~= nil then
+        return enabled
+    end
+    return patterns and Utils.tools.file_exists(patterns) or false
+end
 return M

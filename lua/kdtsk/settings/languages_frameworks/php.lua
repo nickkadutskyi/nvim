@@ -16,13 +16,7 @@ return {
                 ---@type table<string,vim.lsp.ConfigLocal>
                 servers = {
                     ["intelephense"] = {
-                        -- `root_dir` already checks for composer.json and .git
-                        -- To enable it create .intelephense.json with empty JSON
-                        -- This is not standard, but it is used to enable the server
-                        -- and provide project specific configuration
-                        enabled = Utils.tools.file_exists({
-                            ".intelephense.json",
-                        }),
+                        enabled = Utils.lsp.is_enabled("intelephense"),
                         local_config = ".intelephense.json",
                         nix_pkg = "intelephense",
                         bin = Utils.php.find_executable("intelephense"),
@@ -48,7 +42,7 @@ return {
                     ["phan"] = {
                         -- `root_dir` already checks for composer.json and .git
                         -- To enable it create .phan/config.php with contents
-                        enabled = Utils.tools.file_exists(".phan/config.php"),
+                        enabled = Utils.lsp.is_enabled("phan", { ".phan/config.php" }),
                         nix_pkg = "php84Packages.phan",
                         bin = Utils.php.find_executable("phan"),
                     },
@@ -56,7 +50,7 @@ return {
                         -- Requires proper project root files (composer.json, .git, .phpactor.json, .phpactor.yml)
                         -- Use it if executable is provided and if there is proper root
                         -- To enable it create either .phpactor.json or .phpactor.yml with contents
-                        enabled = Utils.tools.file_exists({
+                        enabled = Utils.lsp.is_enabled("phpactor", {
                             ".phpactor.json",
                             ".phpactor.yml",
                         }),

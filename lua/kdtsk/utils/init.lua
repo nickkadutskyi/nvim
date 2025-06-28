@@ -38,13 +38,15 @@ setmetatable(M, {
 
 ---@type table<function>
 local run_when_settings_loaded_functions = {}
----@param fn function
+---@param fn fun(settings: kdtsk.Settings): any?
+---@return boolean, any -- Returns true if settings are already loaded, false otherwise
 function M.run_when_settings_loaded(fn)
     if vim.g.settings_loaded then
-        fn(vim.g.settings)
+        return true, fn(vim.g.settings)
     else
         assert(type(fn) == "function", "run_when_settings_loaded expects a function, but got: " .. type(fn))
         table.insert(run_when_settings_loaded_functions, fn)
+        return false, nil
     end
 end
 vim.api.nvim_create_autocmd("User", {

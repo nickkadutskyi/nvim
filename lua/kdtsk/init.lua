@@ -1,4 +1,14 @@
+--- key should be tool's name that is used in the config context,
+--- e.g. if it's a language server than use its name instead of the binary name
+---@alias kdtsk.Settings table<string, {
+---    style: boolean, -- if true then use the tool for code reformat
+---    quality: boolean, -- if true then use the tool for linting
+---    lsp: boolean, -- if true then use the tool for LSP
+---    settings: table, -- provide settings for LSP
+---  }>
+---@type kdtsk.Settings
 vim.g.settings = nil
+---@type boolean
 vim.g.settings_loaded = false
 _G.Utils = require("kdtsk.utils")
 
