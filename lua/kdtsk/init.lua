@@ -1,15 +1,13 @@
---- key should be tool's name that is used in the config context,
---- e.g. if it's a language server than use its name instead of the binary name
----@alias kdtsk.Settings table<string, {
----    style: boolean, -- if true then use the tool for code reformat
----    quality: boolean, -- if true then use the tool for linting
----    lsp: boolean, -- if true then use the tool for LSP
----    settings: table, -- provide settings for LSP
----  }>
+--- Example: { php = { php_cs_fixer = { use_for = { style = true } } } }
+---@alias kdtsk.Settings table<string, table<string, {
+---    use_for: table<kdtsk.tools.Purpose, boolean>, -- use the tool for the given purpose
+---    lsp_settings?: table, -- provide settings for LSP
+---  }>>
 ---@type kdtsk.Settings
 vim.g.settings = nil
 ---@type boolean
 vim.g.settings_loaded = false
+
 _G.Utils = require("kdtsk.utils")
 
 -- Loads all the options

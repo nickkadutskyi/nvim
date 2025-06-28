@@ -16,7 +16,10 @@ return {
                 ---@type table<string,vim.lsp.ConfigLocal>
                 servers = {
                     ["intelephense"] = {
-                        enabled = Utils.lsp.is_enabled("intelephense"),
+                        enabled = Utils.tools.is_component_enabled("php", "intelephense", Utils.tools.purpose.LSP, {
+                            ".intelephense.json",
+                            ".intelephense/config.json",
+                        }),
                         local_config = ".intelephense.json",
                         nix_pkg = "intelephense",
                         bin = Utils.php.find_executable("intelephense"),
@@ -42,7 +45,9 @@ return {
                     ["phan"] = {
                         -- `root_dir` already checks for composer.json and .git
                         -- To enable it create .phan/config.php with contents
-                        enabled = Utils.lsp.is_enabled("phan", { ".phan/config.php" }),
+                        enabled = Utils.tools.is_component_enabled("php", "phan", Utils.tools.purpose.LSP, {
+                            ".phan/config.php",
+                        }),
                         nix_pkg = "php84Packages.phan",
                         bin = Utils.php.find_executable("phan"),
                     },
@@ -50,7 +55,7 @@ return {
                         -- Requires proper project root files (composer.json, .git, .phpactor.json, .phpactor.yml)
                         -- Use it if executable is provided and if there is proper root
                         -- To enable it create either .phpactor.json or .phpactor.yml with contents
-                        enabled = Utils.lsp.is_enabled("phpactor", {
+                        enabled = Utils.tools.is_component_enabled("php", "phpactor", Utils.tools.purpose.LSP, {
                             ".phpactor.json",
                             ".phpactor.yml",
                         }),
@@ -60,7 +65,7 @@ return {
                     ["psalm"] = {
                         -- `root_dir` already checks for psalm.xml or psalm.xml.dist
                         -- To enable it create either of these files and configure it
-                        enabled = Utils.lsp.is_enabled("psalm", {
+                        enabled = Utils.tools.is_component_enabled("php", "psalm", Utils.tools.purpose.LSP, {
                             "psalm.xml",
                             "psalm.xml.dist",
                         }),
@@ -75,25 +80,36 @@ return {
         "conform.nvim",
         opts = function(_, opts)
             local util = require("conform.util")
-            local formatters_to_use = {
-                -- stop_after_first = true,
-            }
+            local formatters_to_use = {}
+            -- PHP Code Sniffer
             if
-                Utils.tools.is_tool_enabled(
-                    "phpcbf",
-                    "style",
-                    { ".phpcs.xml", "phpcs.xml", ".phpcs.xml.dist", "phpcs.xml.dist" }
-                )
+                Utils.tools.is_component_enabled("php", "phpcbf", Utils.tools.purpose.STYLE, {
+                    ".phpcs.xml",
+                    "phpcs.xml",
+                    ".phpcs.xml.dist",
+                    "phpcs.xml.dist",
+                })
             then
                 table.insert(formatters_to_use, "phpcbf")
             end
-            if Utils.tools.is_tool_enabled("php_cs_fixer", "style", { ".php-cs-fixer.dist.php" }) then
+            -- PHP CS Fixer
+            if
+                Utils.tools.is_component_enabled("php", "php_cs_fixer", Utils.tools.purpose.STYLE, {
+                    ".php-cs-fixer.dist.php",
+                })
+            then
                 table.insert(formatters_to_use, "php_cs_fixer")
             end
+            -- Intelephense as formatter
             -- runs jsbeautify via intelephense so it's useful to have .jsbeautifyrc
-            if Utils.tools.is_tool_enabled("intelephense", "style") then
+            if
+                Utils.tools.is_component_enabled("php", "intelephense", Utils.tools.purpose.STYLE, {
+                    ".jsbeautifyrc",
+                })
+            then
                 formatters_to_use["lsp_format"] = "first"
             end
+
             return vim.tbl_deep_extend("force", opts, {
                 formatters_by_ft = {
                     php = vim.tbl_extend("force", formatters_to_use, {

@@ -99,15 +99,38 @@ function M.file_exists(paths, cwd)
     return false, nil
 end
 
----@param name string Name of the tool or language server
----@param purpose "lsp"|"quality"|"style" Purpose for which the tool is enabled
+---@enum kdtsk.tools.Purpose
+M.purpose = {
+    LSP = 1,
+    INSPECTION = 2,
+    STYLE = 3,
+    [1] = "LSP",
+    [2] = "INSPECTION",
+    [3] = "STYLE",
+}
+
+---@param purpose string|kdtsk.tools.Purpose
+---@return kdtsk.tools.Purpose?
+local function to_purpose(purpose)
+    if type(purpose) == "string" then
+        assert(M.purpose[string.upper(purpose)], string.format("Invalid purpose: %s", purpose))
+        return M.purpose[string.upper(purpose)]
+    end
+    return purpose
+end
+
+---@param scope string Scope to use the tool within (e.g. php)
+---@param component string Name of the tool, language server, plugin, etc.
+---@param purpose kdtsk.tools.Purpose Purpose for which the tool is enabled
 ---@param patterns ?string[] Patterns to match the tool's config file
-function M.is_tool_enabled(name, purpose, patterns)
+function M.is_component_enabled(scope, component, purpose, patterns)
+    local purposeStr = type(purpose) == "number" and M.purpose[purpose] or purpose
     -- Check if the tool is enabled via .nvim.lua settings
     local ok, enabled = Utils.run_when_settings_loaded(function(settings)
-        local tool = settings[name]
+        local tool = settings[scope] and settings[scope][component]
         if type(tool) == "table" then
-            return tool[purpose]
+            local use_for = type(tool.use_for) == "table" and tool.use_for or {}
+            return use_for[purposeStr]
         end
     end)
     if ok and enabled ~= nil then
