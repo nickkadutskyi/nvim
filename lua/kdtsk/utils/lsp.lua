@@ -139,15 +139,7 @@ end
 ---@param name string Name of the tool or language server
 ---@param patterns ?string[] Patterns to match the tool's config file
 function M.is_enabled(name, patterns)
-    local ok, enabled = Utils.run_when_settings_loaded(function(settings)
-        local tool = settings[name]
-        if tool then
-            return tool.lsp or false
-        end
-    end)
-    if ok and enabled ~= nil then
-        return enabled
-    end
-    return patterns and Utils.tools.file_exists(patterns) or false
+    return Utils.tools.is_tool_enabled(name, "lsp", patterns)
 end
+
 return M

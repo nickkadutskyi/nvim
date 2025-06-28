@@ -99,5 +99,21 @@ function M.file_exists(paths, cwd)
     return false, nil
 end
 
+---@param name string Name of the tool or language server
+---@param purpose "lsp"|"quality"|"style" Purpose for which the tool is enabled
+---@param patterns ?string[] Patterns to match the tool's config file
+function M.is_tool_enabled(name, purpose, patterns)
+    -- Check if the tool is enabled via .nvim.lua settings
+    local ok, enabled = Utils.run_when_settings_loaded(function(settings)
+        local tool = settings[name]
+        if type(tool) == "table" then
+            return tool[purpose]
+        end
+    end)
+    if ok and enabled ~= nil then
+        return enabled
+    end
+    return patterns and Utils.tools.file_exists(patterns) or false
+end
 
 return M
