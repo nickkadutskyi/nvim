@@ -60,7 +60,10 @@ return {
                     ["psalm"] = {
                         -- `root_dir` already checks for psalm.xml or psalm.xml.dist
                         -- To enable it create either of these files and configure it
-                        enabled = true,
+                        enabled = Utils.lsp.is_enabled("psalm", {
+                            "psalm.xml",
+                            "psalm.xml.dist",
+                        }),
                         nix_pkg = "php84Packages.psalm",
                         bin = Utils.php.find_executable("psalm"),
                     },
@@ -72,20 +75,31 @@ return {
         "conform.nvim",
         opts = function(_, opts)
             local util = require("conform.util")
+            local formatters_to_use = {
+                -- stop_after_first = true,
+            }
+            if
+                Utils.tools.is_tool_enabled(
+                    "phpcbf",
+                    "style",
+                    { ".phpcs.xml", "phpcs.xml", ".phpcs.xml.dist", "phpcs.xml.dist" }
+                )
+            then
+                table.insert(formatters_to_use, "phpcbf")
+            end
+            if Utils.tools.is_tool_enabled("php_cs_fixer", "style", { ".php-cs-fixer.dist.php" }) then
+                table.insert(formatters_to_use, "php_cs_fixer")
+            end
+            -- runs jsbeautify via intelephense so it's useful to have .jsbeautifyrc
+            if Utils.tools.is_tool_enabled("intelephense", "style") then
+                formatters_to_use["lsp_format"] = "first"
+            end
             return vim.tbl_deep_extend("force", opts, {
                 formatters_by_ft = {
-                    php = {
-                        -- "phpcbf",
-                        "php_cs_fixer",
-                        -- if phpcbf is used as both linter and formatter there is no need for php-cs-fixer
-                        -- so it's safe to have this options since only one of them will be used
-                        -- but need to install them locally for a project only
-                        -- stop_after_first = true,
-                        -- runs jsbeautify via intelephense so it's useful to have .jsbeautifyrc
-                        -- lsp_format = "first",
+                    php = vim.tbl_extend("force", formatters_to_use, {
                         async = true,
-                        timeout_ms = 2000,
-                    },
+                        timeout_ms = 500,
+                    }),
                 },
                 formatters = {
                     php_cs_fixer = {
