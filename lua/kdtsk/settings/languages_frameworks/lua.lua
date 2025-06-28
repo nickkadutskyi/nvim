@@ -51,19 +51,36 @@ return {
     },
     { -- Quality Tools
         "nvim-lint",
-        opts = {
-            linters_by_ft = {
-                lua = { "luacheck", "selene" },
-            },
-            ---@type table<string, lint.LinterLocal>
-            linters = {
-                selene = {
-                    nix_pkg = "selene",
+        opts = function(_, opts)
+            local linters_to_use = {}
+            if
+                Utils.tools.is_component_enabled("lua", "selene", Utils.tools.purpose.INSPECTION, {
+                    "selene.toml",
+                })
+            then
+                table.insert(linters_to_use, "selene")
+            end
+            if
+                Utils.tools.is_component_enabled("lua", "luacheck", Utils.tools.purpose.INSPECTION, {
+                    ".luacheckrc",
+                })
+            then
+                table.insert(linters_to_use, "luacheck")
+            end
+            return vim.tbl_deep_extend("force", opts, {
+                linters_by_ft = {
+                    lua = linters_to_use,
                 },
-                luacheck = {
-                    nix_pkg = "luajitPackages.luacheck",
+                ---@type table<string, lint.LinterLocal>
+                linters = {
+                    selene = {
+                        nix_pkg = "selene",
+                    },
+                    luacheck = {
+                        nix_pkg = "luajitPackages.luacheck",
+                    },
                 },
-            },
-        },
+            })
+        end,
     },
 }

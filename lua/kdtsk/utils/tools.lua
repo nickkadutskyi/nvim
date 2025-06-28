@@ -119,7 +119,15 @@ local function to_purpose(purpose)
     return purpose
 end
 
----@param scope string Scope to use the tool within (e.g. php)
+---@alias kdtsk.tools.Scope
+---| '"php"'
+---| '"lua"'
+---| '"typescript"'
+---| '"javascript"'
+---| '"python"'
+---| '"go"'
+
+---@param scope kdtsk.tools.Scope Scope to use the tool within (e.g. php)
 ---@param component string Name of the tool, language server, plugin, etc.
 ---@param purpose kdtsk.tools.Purpose Purpose for which the tool is enabled
 ---@param patterns ?string[] Patterns to match the tool's config file
