@@ -147,6 +147,31 @@ function M.is_component_enabled(scope, component, purpose, patterns)
     return patterns and Utils.tools.file_exists(patterns) or false
 end
 
+local function deep_merge_lists(...)
+    local tables = { ... }
+    local out = vim.deepcopy(tables[1])
+
+    for i = 2, #tables do
+        local t = tables[i]
+
+        -- merge the dict part
+        out = vim.tbl_deep_extend("keep", out, t)
+
+        -- merge the list part on this level
+        vim.list_extend(out, t)
+
+        -- if both sides have a key that is itself a table we have to
+        -- merge their list parts as well
+        for k, v in pairs(t) do
+            if type(v) == "table" and type(out[k]) == "table" then
+                vim.list_extend(out[k], v)
+            end
+        end
+    end
+
+    return out
+end
+
 ---@param tbl1 table First table to extend
 ---@param tbl2 table Second table to extend
 ---@param comp {
@@ -157,7 +182,7 @@ end
 --- } Component to check if enabled
 function M.extended_if_enabled(tbl1, tbl2, comp)
     if M.is_component_enabled(unpack(comp)) then
-        return vim.tbl_deep_extend("force", tbl1, tbl2)
+        return deep_merge_lists(tbl1, tbl2)
     else
         return tbl1
     end

@@ -16,7 +16,7 @@ return {
     {
         -- Quality Tools
         "nvim-lint",
-        opts = function()
+        opts = function(_, opts)
             local gitlint = require("lint").linters.gitlint
 
             gitlint.args = gitlint.args or {}
@@ -31,11 +31,12 @@ return {
                 "T5,B6",
             })
 
-            return {
+            return vim.tbl_deep_extend("force", opts, {
+                ---@type table<string, string[]>
                 linters_by_ft = {
                     gitcommit = { "gitlint" },
                 },
-            }
+            })
         end,
     },
     {
