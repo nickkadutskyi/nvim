@@ -73,7 +73,7 @@ function M.gitstat_subsec_is_dirty(status)
         return nil
     end
     if status.is_dirty or status.staged > 0 then
-        return vim.g.nerd_font_is_present and " 󰇂" or " Δ"
+        return vim.g.nerd_font_is_present and "󰇂 " or "Δ "
     end
 end
 
@@ -97,7 +97,7 @@ function M.gitstat_subsec_has_unsaved_buffers()
     _G._buffer_modified_last_check_time = current_time
 
     if _G._buffer_modified_count > 0 then
-        return " 󰽃"
+        return "󰽃 "
     end
 end
 
