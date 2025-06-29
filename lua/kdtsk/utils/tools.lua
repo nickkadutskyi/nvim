@@ -147,4 +147,20 @@ function M.is_component_enabled(scope, component, purpose, patterns)
     return patterns and Utils.tools.file_exists(patterns) or false
 end
 
+---@param tbl1 table First table to extend
+---@param tbl2 table Second table to extend
+---@param comp {
+---  [1]: kdtsk.tools.Scope, # Scope of the component (e.g. "php")
+---  [2]: string, # Name of the component (e.g. "phpactor")
+---  [3]: kdtsk.tools.Purpose, # Purpose of the component (e.g. "LSP")
+---  [4]: string[], # Patterns to match the tool's config file
+--- } Component to check if enabled
+function M.extended_if_enabled(tbl1, tbl2, comp)
+    if M.is_component_enabled(unpack(comp)) then
+        return vim.tbl_deep_extend("force", tbl1, tbl2)
+    else
+        return tbl1
+    end
+end
+
 return M

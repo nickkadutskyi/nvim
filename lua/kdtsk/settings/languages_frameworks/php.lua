@@ -80,43 +80,38 @@ return {
         "conform.nvim",
         opts = function(_, opts)
             local util = require("conform.util")
-            local formatters_to_use = {}
+            local fmt_conf = {
+                async = true,
+                timeout_ms = 500,
+            }
+
             -- PHP Code Sniffer
-            if
-                Utils.tools.is_component_enabled("php", "phpcbf", Utils.tools.purpose.STYLE, {
-                    ".phpcs.xml",
-                    "phpcs.xml",
-                    ".phpcs.xml.dist",
-                    "phpcs.xml.dist",
-                })
-            then
-                table.insert(formatters_to_use, "phpcbf")
-            end
+            fmt_conf = Utils.tools.extended_if_enabled(fmt_conf, { "phpcs" }, {
+                "php",
+                "phpcs",
+                Utils.tools.purpose.STYLE,
+                { ".phpcs.xml", "phpcs.xml" },
+            })
+
             -- PHP CS Fixer
-            if
-                Utils.tools.is_component_enabled("php", "php_cs_fixer", Utils.tools.purpose.STYLE, {
-                    ".php-cs-fixer.dist.php",
-                })
-            then
-                table.insert(formatters_to_use, "php_cs_fixer")
-            end
+            fmt_conf = Utils.tools.extended_if_enabled(fmt_conf, { "php_cs_fixer" }, {
+                "php",
+                "php_cs_fixer",
+                Utils.tools.purpose.STYLE,
+                { ".php-cs-fixer.dist.php" },
+            })
+
             -- Intelephense as formatter
             -- runs jsbeautify via intelephense so it's useful to have .jsbeautifyrc
-            if
-                Utils.tools.is_component_enabled("php", "intelephense", Utils.tools.purpose.STYLE, {
-                    ".jsbeautifyrc",
-                })
-            then
-                formatters_to_use["lsp_format"] = "first"
-            end
+            fmt_conf = Utils.tools.extended_if_enabled(fmt_conf, { lsp_format = "first" }, {
+                "php",
+                "intelephense",
+                Utils.tools.purpose.STYLE,
+                { ".jsbeautifyrc" },
+            })
 
             return vim.tbl_deep_extend("force", opts, {
-                formatters_by_ft = {
-                    php = vim.tbl_extend("force", formatters_to_use, {
-                        async = true,
-                        timeout_ms = 500,
-                    }),
-                },
+                formatters_by_ft = { php = fmt_conf },
                 formatters = {
                     php_cs_fixer = {
                         -- because I have projects with two composer configs
