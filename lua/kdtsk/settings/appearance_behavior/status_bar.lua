@@ -91,7 +91,15 @@ return {
                     lualine_y = {
                         "searchcount",
                         "location",
-                        { "branch", icon = "󰘬", padding = { left = 1, right = 0 } },
+                        {
+                            "branch",
+                            icon = "󰘬",
+                            padding = { left = 1, right = 0 },
+                            cond = function()
+                                return not require("lualine.components.jujutsu").is_jujutsu_repo()
+                            end,
+                        },
+                        { "jujutsu" },
                         {
                             "gitstatus",
                             padding = { left = 0, right = 1 },
