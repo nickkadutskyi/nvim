@@ -7,8 +7,8 @@ local cache = {
     is_jj_repo = nil, -- nil = unknown, true = jj repo, false = not jj repo
 }
 
-local CACHE_DURATION = 1000 -- 1 second in milliseconds
-local DEBOUNCE_DELAY = 400 -- 400ms debounce
+local CACHE_DURATION = 400 -- 1 second in milliseconds
+local DEBOUNCE_DELAY = 200 -- 400ms debounce
 
 local default_options = {}
 
