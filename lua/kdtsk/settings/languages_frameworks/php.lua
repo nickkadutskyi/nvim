@@ -156,6 +156,14 @@ return {
                 { ".phpcs.xml", "phpcs.xml" },
             })
 
+            -- PHP Insights
+            lint_conf = Utils.tools.extended_if_enabled(lint_conf, { "phpinsights" }, {
+                "php",
+                "phpinsights",
+                Utils.tools.purpose.INSPECTION,
+                { "phpinsights.php" },
+            })
+
             -- PHP Mess Detector
             lint_conf = Utils.tools.extended_if_enabled(lint_conf, { "phpmd" }, {
                 "php",
@@ -190,6 +198,12 @@ return {
                     phpmd = Utils.php.linters.phpmd,
                     phpstan = Utils.php.linters.phpstan,
                     psalm = Utils.php.linters.psalm,
+                    phpinsights = {
+                        cmd = function()
+                            return Utils.php.find_executable("phpinsights") or "phpinsights"
+                        end,
+                        nix_pkg = "php84Packages.phpinsights",
+                    },
                 },
             })
         end,
