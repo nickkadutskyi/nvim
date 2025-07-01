@@ -135,7 +135,7 @@ return {
                 replace_netrw = true,
             },
             image = {
-                enabled = true,
+                enabled = false,
             },
             ---@class snacks.picker.Config
             picker = {
