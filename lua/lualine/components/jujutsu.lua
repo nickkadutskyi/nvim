@@ -5,15 +5,31 @@ local cache = {
     timestamp = 0,
     debounce_timer = nil,
     is_jj_repo = nil, -- nil = unknown, true = jj repo, false = not jj repo
+    focus_lost_time = nil, -- when focus was lost
 }
 
 local CACHE_DURATION = 400 -- 1 second in milliseconds
 local DEBOUNCE_DELAY = 200 -- 400ms debounce
+local UNFOCUS_THRESHOLD = 60000 -- 1 minute in milliseconds
 
 local default_options = {}
 
+local function should_use_extended_cache()
+    if not cache.focus_lost_time then
+        return false
+    end
+
+    local current_time = vim.loop.now()
+    return (current_time - cache.focus_lost_time) > UNFOCUS_THRESHOLD
+end
+
 local function get_jujutsu_status()
     local current_time = vim.loop.now()
+
+    -- If unfocused for more than 1 minute, always return cached result
+    if should_use_extended_cache() and cache.result then
+        return cache.result
+    end
 
     -- Return cached result if still valid
     if cache.result and (current_time - cache.timestamp) < CACHE_DURATION then
@@ -95,10 +111,26 @@ vim.api.nvim_create_autocmd({ "DirChanged" }, {
         cache.result = nil
         cache.timestamp = 0
         cache.is_jj_repo = nil
+        cache.focus_lost_time = nil
         if cache.debounce_timer then
             cache.debounce_timer:close()
             cache.debounce_timer = nil
         end
+    end,
+})
+
+-- Track focus state for extended caching
+vim.api.nvim_create_autocmd({ "FocusLost" }, {
+    group = vim.api.nvim_create_augroup("jujutsu-focus", { clear = true }),
+    callback = function()
+        cache.focus_lost_time = vim.loop.now()
+    end,
+})
+
+vim.api.nvim_create_autocmd({ "FocusGained" }, {
+    group = vim.api.nvim_create_augroup("jujutsu-focus", { clear = false }),
+    callback = function()
+        cache.focus_lost_time = nil
     end,
 })
 
