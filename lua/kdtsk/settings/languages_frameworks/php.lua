@@ -36,6 +36,7 @@ return {
                                         -- These are causing high CPU usage
                                         "**/.devenv/**",
                                         "**/.direnv/**",
+                                        "**/.jj/**",
                                     },
                                     maxSize = 10000000,
                                 },
