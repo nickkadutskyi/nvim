@@ -53,40 +53,6 @@ function M.project_abbreviation()
     return result
 end
 
---- Show delta icon if there are uncommitted changes
---- or empty icon if there are no changes
---- or hide if there are unsaved buffers
-function M.gitstat_subsec_delta(status)
-    if _G._buffer_modified_count and _G._buffer_modified_count > 0 then
-        return nil
-    end
-    if status.is_dirty or status.staged > 0 then
-        return vim.g.nerd_font_is_present and "󰇂" or "Δ"
-    else
-        return "∅"
-    end
-end
-
---- Show delta icon if there are uncommitted changes
-function M.gitstat_subsec_is_dirty(status)
-    if _G._buffer_modified_count and _G._buffer_modified_count > 0 then
-        return nil
-    end
-    if status.is_dirty or status.staged > 0 then
-        return vim.g.nerd_font_is_present and "󰇂 " or "Δ "
-    end
-end
-
---- Show empty icon if there are no changes
-function M.gitstat_subsec_is_clean(status)
-    if _G._buffer_modified_count and _G._buffer_modified_count > 0 then
-        return nil
-    end
-    if not (status.is_dirty or status.staged > 0) then
-        return " ∅"
-    end
-end
-
 --- Show icon if there are unsaved buffers
 function M.gitstat_subsec_has_unsaved_buffers()
     local current_time = vim.loop.now()
@@ -97,8 +63,9 @@ function M.gitstat_subsec_has_unsaved_buffers()
     _G._buffer_modified_last_check_time = current_time
 
     if _G._buffer_modified_count > 0 then
-        return "󰽃 "
+        return "󰽃"
     end
+    return ""
 end
 
 return M

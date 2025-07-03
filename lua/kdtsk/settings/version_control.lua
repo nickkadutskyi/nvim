@@ -11,6 +11,18 @@ return {
                 "git_rebase",
                 "diff",
             })
+            local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+            parser_config.jjdescription = {
+                install_info = {
+                    url = "https://github.com/kareigu/tree-sitter-jjdescription", -- local path or git repo
+                    files = { "src/parser.c" }, -- note that some parsers also require src/scanner.c or src/scanner.cc
+                    -- optional entries:
+                    branch = "dev", -- default branch in case of git repo if different from master
+                    generate_requires_npm = true, -- if stand-alone parser without npm dependencies
+                    requires_generate_from_grammar = false, -- if folder contains pre-generated src/parser.c
+                },
+                filetype = "jjdescription", -- if filetype does not match the parser name
+            }
         end,
     },
     {
@@ -192,22 +204,6 @@ return {
                     desc = "VCS: [p]revious [c]hange hunk",
                 })
             end,
-        },
-    },
-    { -- TODO: Consider to rewrite this plugin to adjust event when it is updating status
-        "abccsss/nvim-gitstatus",
-        event = "VeryLazy",
-        ---@type GitStatusOptions
-        opts = {
-            --- Interval to automatically run `git fetch`, in milliseconds.
-            --- Set to `false` to disable auto fetch.
-            auto_fetch_interval = os.getenv("NO1P") == "1" and 30000 or false,
-
-            --- Timeout in milliseconds for `git status` to complete before it is killed.
-            git_status_timeout = 1000,
-
-            --- Whether to show debug messages.
-            debug = false,
         },
     },
 }

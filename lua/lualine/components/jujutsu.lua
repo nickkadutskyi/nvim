@@ -45,7 +45,7 @@ local function get_jujutsu_status()
     cache.debounce_timer = vim.defer_fn(function()
         cache.debounce_timer = nil
 
-        local handle = io.popen("starship-jj starship prompt 2>/dev/null")
+        local handle = io.popen("starship-jj --ignore-working-copy starship prompt 2>/dev/null")
         if not handle then
             cache.result = ""
             cache.timestamp = current_time

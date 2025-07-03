@@ -87,6 +87,11 @@ return {
                             end,
                         },
                         { Utils.lualine.component_macro_recording },
+                        {
+                            Utils.lualine.gitstat_subsec_has_unsaved_buffers,
+                            color = "StatusBarHasUnsavedBuffers",
+                            padding = { left = 0, right = 1 },
+                        },
                     },
                     lualine_y = {
                         "searchcount",
@@ -100,17 +105,6 @@ return {
                             end,
                         },
                         { "jujutsu" },
-                        {
-                            "gitstatus",
-                            padding = { left = 0, right = 1 },
-                            sections = {
-                                { "behind", format = "󰦸 ", hl = "VCSIconsUnpulled" },
-                                { "ahead", format = "󰧆 ", hl = "VCSIconsUnmerged" },
-                                { Utils.lualine.gitstat_subsec_has_unsaved_buffers, hl = "StatusBarHasUnsavedBuffers" },
-                                { Utils.lualine.gitstat_subsec_is_dirty, hl = "GitToolBoxColorsIconsDirty" },
-                            },
-                            sep = "",
-                        },
                     },
                     lualine_z = {
                         {
