@@ -37,6 +37,7 @@ return {
                                         "**/.devenv/**",
                                         "**/.direnv/**",
                                         "**/.jj/**",
+                                        "**/.idea/**",
                                     },
                                     maxSize = 10000000,
                                 },
