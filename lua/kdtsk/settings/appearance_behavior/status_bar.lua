@@ -94,8 +94,6 @@ return {
                         },
                     },
                     lualine_y = {
-                        "searchcount",
-                        "location",
                         {
                             "branch",
                             icon = "󰘬",
@@ -105,6 +103,8 @@ return {
                             end,
                         },
                         { "jujutsu" },
+                        { "searchcount", padding = { left = 0, right = 1 } },
+                        { "location", padding = { left = 0, right = 1 } },
                     },
                     lualine_z = {
                         {

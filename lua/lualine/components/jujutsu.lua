@@ -45,7 +45,7 @@ local function get_jujutsu_status()
     cache.debounce_timer = vim.defer_fn(function()
         cache.debounce_timer = nil
 
-        local handle = io.popen("starship-jj --ignore-working-copy starship prompt 2>/dev/null")
+        local handle = io.popen('starship-jj --ignore-working-copy starship prompt 2>/dev/null; echo "EXIT_CODE:$?"')
         if not handle then
             cache.result = ""
             cache.timestamp = current_time
@@ -53,14 +53,17 @@ local function get_jujutsu_status()
         end
 
         local output = handle:read("*all")
-        local success = handle:close()
+        handle:close()
 
-        if success and output then
+        -- Extract exit code from the output
+        local command_output, exit_code_str = output:match("^(.*)EXIT_CODE:(%d+)%s*$")
+        local exit_code = tonumber(exit_code_str) or 1
+
+        if exit_code == 0 and command_output and vim.trim(command_output) ~= "" then
             -- Remove ANSI escape codes and trailing whitespace/newlines
-            local cleaned = output:gsub("\27%[[0-9;]*m", "")
+            local cleaned = command_output:gsub("\27%[[0-9;]*m", "")
             cache.result = vim.trim(cleaned)
-            -- Set repo type based on whether we got output
-            cache.is_jj_repo = cache.result ~= ""
+            cache.is_jj_repo = true
         else
             cache.result = ""
             cache.is_jj_repo = false
