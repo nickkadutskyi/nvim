@@ -5,7 +5,7 @@ return {
         dependencies = { "folke/which-key.nvim" },
         cond = function()
             return Utils.is_path_in_paths(vim.fn.getcwd(), {
-                "~/Developer",
+                "~/Documents",
                 "~/.config/nvim",
                 "~/.config/nixos-config",
             })

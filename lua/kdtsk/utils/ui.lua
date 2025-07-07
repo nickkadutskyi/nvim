@@ -3,7 +3,7 @@ local M = {}
 
 -- Ensures relative file path if there are multiple files with same name in project
 function M.titlestring()
-    local devpath = vim.fn.fnamemodify("~/Developer", ":p")
+    local devpath = vim.fn.fnamemodify("~/Documents", ":p")
     local cwd = vim.fn.getcwd()
     local projectName = vim.fn.fnamemodify(cwd, ":t")
     local project = projectName

@@ -149,7 +149,7 @@ vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost" }, {
     callback = function(_)
         if allowed_check_todos == nil then
             allowed_check_todos = Utils.is_path_in_paths(vim.fn.getcwd(), {
-                "~/Developer",
+                "~/Documents",
                 "~/.config/nvim",
                 "~/.config/nixos-config",
             })
