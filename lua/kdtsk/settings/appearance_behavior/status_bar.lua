@@ -1,4 +1,3 @@
--- TODO: create a nav_bar component for lualine (feline) similar to IntelliJ's
 -- Setup autocmds to update buffer_modified_count when relevant events occur
 vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter", "BufModifiedSet", "FileChangedShellPost" }, {
     callback = function()
@@ -42,7 +41,7 @@ return {
                 },
                 sections = {
                     lualine_a = {
-                        { Utils.lualine.project_abbreviation },
+                        -- { Utils.lualine.project_abbreviation },
                     },
                     lualine_b = {},
                     lualine_c = {

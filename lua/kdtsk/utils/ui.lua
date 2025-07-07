@@ -7,12 +7,6 @@ function M.titlestring()
     local cwd = vim.fn.getcwd()
     local projectName = vim.fn.fnamemodify(cwd, ":t")
     local project = projectName
-    if cwd:find(devpath, 1, true) == 1 then
-        local code = vim.fs.basename(vim.fs.dirname(cwd))
-        code = tonumber(code) or code
-        local account = vim.fs.basename(vim.fs.dirname(vim.fn.fnamemodify(cwd, ":h")))
-        project = account .. "" .. code .. " " .. projectName
-    end
     local rootPath = vim.fn.resolve(vim.fn.getcwd())
     local relativeFilePath = vim.fn.expand("%")
     local filePath = vim.fn.expand("%:p")
