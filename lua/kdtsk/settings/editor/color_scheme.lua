@@ -28,9 +28,12 @@ return {
             vim.cmd("colorscheme jb")
         end,
     },
+    -- Treesitter for syntax highlight
     {
-        -- Treesitter for syntax highlight
         "nvim-treesitter/nvim-treesitter",
+        dependencies = {
+            "nvim-treesitter/nvim-treesitter-textobjects",
+        },
         build = ":TSUpdate",
         enabled = true,
         opts = {

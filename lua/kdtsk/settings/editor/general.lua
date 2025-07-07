@@ -1,9 +1,7 @@
 ---@type LazySpec
 return {
+    -- Similar to Sticky Lines in Intellij
     {
-        "nvim-treesitter/nvim-treesitter-textobjects",
-    },
-    { -- Similar to Sticky Lines in Intellij
         "nvim-treesitter/nvim-treesitter-context",
         enabled = true,
         config = function()
@@ -24,7 +22,8 @@ return {
             })
         end,
     },
-    { -- Better folding behavior with lots of behaviors defined in Utils.fold
+    -- Better folding behavior with lots of behaviors defined in Utils.fold
+    {
         "kevinhwang91/nvim-ufo",
         dependencies = "kevinhwang91/promise-async",
         enabled = true,

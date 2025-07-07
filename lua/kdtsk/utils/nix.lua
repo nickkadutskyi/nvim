@@ -23,7 +23,11 @@ function M.get_cmd_via_nix(nix_pkg, command, callback, flake)
             .. 'pname = if builtins.hasAttr "pname" drv then drv.pname else "unknown"; '
             .. 'meta = if builtins.hasAttr "meta" drv then drv.meta else {}; '
             .. " }",
-    }, { text = true }, function(o)
+    }, {
+        text = true,
+        -- Timeout to avoid spawning nix processes in case if registry is not available
+        timeout = 5000,
+    }, function(o)
         if o.code == 0 then
             -- if found package then use `nix shell` which is slower than `nix run`
             -- but doesn't require `meta.mainProgram`
