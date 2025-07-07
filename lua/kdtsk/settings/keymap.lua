@@ -84,7 +84,7 @@ return {
                 { "<A-s>", desc = "TS: Increment Scope" },
                 { "<A-Down>", desc = "TS: Decrement Node" },
             },
-            delay = 200,
+            delay = 1500,
             icons = {
                 rules = {
                     { pattern = "^plugins:.*", icon = "", color = "grey" },
