@@ -22,4 +22,7 @@ vim.filetype.add({
         -- (used by Intelephense https://github.com/bmewburn/vscode-intelephense/issues/729)
         [".jsbeautifyrc"] = "json",
     },
+    pattern = {
+        ["%.env%..*"] = "sh",
+    },
 })

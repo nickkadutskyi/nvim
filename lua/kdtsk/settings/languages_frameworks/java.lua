@@ -15,6 +15,7 @@ return {
             servers = {
                 java_language_server = {
                     cmd = { "java-language-server" },
+                    nix_pkg = "java-language-server",
                 },
             },
         },
