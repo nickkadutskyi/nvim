@@ -5,6 +5,7 @@ return {
         opts = function(_, opts)
             vim.list_extend(opts.ensure_installed, {
                 "java",
+                "javadoc",
             })
         end,
     },
@@ -16,6 +17,9 @@ return {
                 java_language_server = {
                     cmd = { "java-language-server" },
                     nix_pkg = "java-language-server",
+                },
+                ["jdtls"] = {
+                    nix_pkg = "jdt-language-server",
                 },
             },
         },
