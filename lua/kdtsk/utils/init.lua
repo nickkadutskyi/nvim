@@ -464,47 +464,6 @@ function M.nix_shell_type()
     return nil
 end
 
----@param nix_pkg string
----@param callback fun(cmd: table, output: table)
----@param flake string?
-function M.cmd_via_nix(nix_pkg, command, callback, flake)
-    flake = flake or "nixpkgs"
-    local cmd = {}
-    vim.system({
-        "nix",
-        "eval",
-        "--json",
-        flake .. "#" .. nix_pkg,
-        "--apply",
-        'drv: { pname = if builtins.hasAttr "pname" drv then drv.pname else (if builtins.hasAttr "name" drv then drv.name else "unknown"); meta = if builtins.hasAttr "meta" drv then drv.meta else {}; }',
-    }, { text = true }, function(o)
-        if o.code == 0 then
-            cmd = { "nix", "shell", "--impure", flake .. "#" .. nix_pkg, "--command", command }
-            vim.schedule(function()
-                local ok, pkg = pcall(vim.fn.json_decode, o.stdout)
-                if ok then
-                    if pkg.meta.mainProgram == command then
-                        cmd = { "nix", "run", "--impure", flake .. "#" .. nix_pkg, "--" }
-                    end
-                else
-                    vim.notify("Failed to decode package info: " .. nix_pkg, vim.log.levels.WARN, {
-                        title = "Utils.init.cmd_via_nix",
-                    })
-                end
-                callback(cmd, o)
-            end)
-        else
-            vim.notify("Did't find " .. nix_pkg .. " package due: " .. o.stderr, vim.log.levels.WARN, {
-                title = "Utils.init.cmd_via_nix",
-            })
-            cmd = { command }
-            vim.schedule(function()
-                callback(cmd, o)
-            end)
-        end
-    end)
-end
-
 ---@param commands table<string, string|function|string[]>
 ---@return table<string, string>, table<string, string>, table<string, string>
 function M.handle_commands(commands)

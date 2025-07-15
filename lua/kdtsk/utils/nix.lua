@@ -41,9 +41,9 @@ function M.get_cmd_via_nix(nix_pkg, command, callback, flake)
                     end
                 else
                     vim.notify(
-                        "Failed to decode `" .. nix_pkg .. "` package's info.",
+                        "Failed to decode `" .. nix_pkg .. "` package's info: \n" .. o.stdout,
                         vim.log.levels.WARN,
-                        { title = "Utils.nix" }
+                        { title = "Utils.nix.get_cmd_via_nix" }
                     )
                 end
                 callback(cmd, o)
@@ -52,7 +52,7 @@ function M.get_cmd_via_nix(nix_pkg, command, callback, flake)
             vim.notify(
                 "Did't find `" .. nix_pkg .. "` package for `" .. command .. " cmd due to`: \n" .. o.stderr,
                 vim.log.levels.WARN,
-                { title = "Utils.nix" }
+                { title = "Utils.nix.get_cmd_via_nix" }
             )
             vim.schedule(function()
                 callback(cmd, o)

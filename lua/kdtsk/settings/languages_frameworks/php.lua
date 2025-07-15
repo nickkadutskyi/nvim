@@ -84,7 +84,7 @@ return {
             local util = require("conform.util")
             local fmt_conf = {
                 async = true,
-                timeout_ms = 500,
+                timeout_ms = 1500,
             }
 
             -- PHP Code Sniffer Beautifier
@@ -118,21 +118,18 @@ return {
                     php_cs_fixer = {
                         -- because I have projects with two composer configs
                         cwd = util.root_file({ "php-cs-fixer.dist.php", ".git" }),
-                        command = util.find_executable({
-                            "tools/php-cs-fixer/vendor/bin/php-cs-fixer",
-                            "vendor/bin/php-cs-fixer",
-                            ".devenv/profile/bin/php-cs-fixer",
-                        }, "php-cs-fixer"),
+                        command = function(_, ctx)
+                            return Utils.php.find_executable("php-cs-fixer", ctx.dirname) or "php-cs-fixer"
+                        end,
                         options = {
-                            nix_pkg = "php84Packages.php-cs-fixer",
+                            nix_pkg = "php83Packages.php-cs-fixer",
                             cmd = "php-cs-fixer",
                         },
                     },
                     phpcbf = {
-                        command = util.find_executable({
-                            "vendor/bin/phpcbf",
-                            ".devenv/profile/bin/phpcbf",
-                        }, "phpcbf"),
+                        command = function(_, ctx)
+                            return Utils.php.find_executable("phpcbf", ctx.dirname) or "phpcbf"
+                        end,
                         options = {
                             nix_pkg = "php84Packages.php-codesniffer",
                             cmd = "phpcbf",
