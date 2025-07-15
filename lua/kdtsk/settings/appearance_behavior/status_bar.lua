@@ -85,6 +85,17 @@ return {
                                 return utils.stl_escape(str)
                             end,
                         },
+                        {
+                            -- Shows currently running linters
+                            function()
+                                local linters = require("lint").get_running()
+                                linters = vim.tbl_map(function(linter)
+                                    return " " .. linter
+                                end, linters)
+
+                                return #linters > 0 and table.concat(linters, " ") or ""
+                            end,
+                        },
                         { Utils.lualine.component_macro_recording },
                         {
                             Utils.lualine.gitstat_subsec_has_unsaved_buffers,

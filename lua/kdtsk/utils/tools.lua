@@ -4,6 +4,8 @@ local M = {}
 -- Cache for memoizing find_executable results
 local cache = {}
 
+---Find an executable in the given paths, checking both absolute and relative paths.
+---If found cache the result to avoid repeated lookups.
 ---@param paths string[]
 ---@param default string
 ---@param cwd? string
@@ -185,6 +187,27 @@ function M.extended_if_enabled(tbl1, tbl2, comp)
         return deep_merge_lists(tbl1, tbl2)
     else
         return tbl1
+    end
+end
+
+---Determines if a command can be run directly or needs to be run via Nix.
+---Uses Nix to run the command only if outside of a Nix shell because
+---Nix shells have to provide the environment for the command to run.
+---@param command string|function|table Command to run
+---@return boolean, boolean, string (directly, via_nix, command)
+function M.run_command_via(command)
+    command = type(command) == "function" and command() or command
+    command = type(command) == "table" and command[1] or command
+    assert(
+        type(command) == "string" and command ~= "",
+        "Command must be a non-empty string, but got: " .. vim.inspect(command)
+    )
+    if vim.fn.executable(command) == 1 then
+        return true, false, command
+    elseif vim.fn.executable("nix") == 1 and Utils.nix.nix_shell_type() == nil then
+        return false, true, command
+    else
+        return false, false, command
     end
 end
 
