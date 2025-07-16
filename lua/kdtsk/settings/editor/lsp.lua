@@ -372,50 +372,48 @@ return {
         event = { "BufReadPre", "BufNewFile" },
         cmd = { "LspInfo", "LspInstall", "LspUninstall" },
         config = function(_, opts)
-            local utils = require("kdtsk.utils")
             ---@type table<string, vim.lsp.ConfigLocal>
             local servers = opts.servers or {}
 
-            -- Sort server commands by how to handle them
-            local commands = {}
-            for name, cfg in pairs(servers) do
-                local command = cfg.cmd or (vim.lsp.config[name] and vim.lsp.config[name].cmd or nil)
-                if cfg.enabled ~= false and command and type(command) ~= "function" then
-                    if cfg.bin then
-                        command[1] = cfg.bin
-                    end
-                    commands[name] = command
-                end
-            end
-            local via_nix, existing, _ = utils.handle_commands(commands)
+            -- Resolve executables for each server
+            for server_name, server_cfg in pairs(servers) do
+                local default_cfg = vim.lsp.config[server_name] or {}
+                local command = server_cfg.cmd or (default_cfg.cmd or nil)
 
-            -- Sets up existing servers
-            for name, _ in pairs(existing) do
-                Utils.lsp.setup(name, servers[name])
-            end
+                if server_cfg.enabled ~= false then
+                    if type(command) ~= "function" and command then
+                        local run_directly, run_via_nix, binary = Utils.tools.run_command_via(command)
+                        if run_directly then
+                            -- If runnable directly then set up the server with this config
+                            Utils.lsp.setup(server_name, server_cfg)
+                        elseif run_via_nix then
+                            -- If not runnable directly and outside of Nix shell then use Nix to run it
+                            local nix_pkg = server_cfg.nix_pkg or binary
+                            Utils.nix.get_cmd_via_nix(nix_pkg, binary, function(nix_cmd, o)
+                                if o.code == 0 then
+                                    local cmd = command
+                                    assert(type(cmd) ~= "function", "`cmd` should not be a function")
 
-            -- Check if Nix package exists, install via Nix and set up
-            for name, command in pairs(via_nix) do
-                local nix_pkg = servers[name].nix_pkg or command
-                Utils.nix.get_cmd_via_nix(nix_pkg, command, function(nix_cmd, o)
-                    if o.code == 0 then
-                        local cmd = servers[name].cmd or vim.lsp.config[name].cmd
-                        assert(type(cmd) ~= "function", "`cmd` should not be a function")
+                                    if cmd and not vim.tbl_isempty(cmd) then
+                                        -- Prepend nix-based cmd to the existing cmd
+                                        table.remove(cmd, 1)
+                                        server_cfg.cmd = vim.list_extend(nix_cmd, cmd)
 
-                        if cmd and not vim.tbl_isempty(cmd) then
-                            -- Prepend nix-based cmd to the existing cmd
-                            table.remove(cmd, 1)
-                            servers[name].cmd = vim.list_extend(nix_cmd, cmd)
+                                        -- Finally set up the server
+                                        Utils.lsp.setup(server_name, server_cfg)
 
-                            -- Finally set up the server
-                            Utils.lsp.setup(name, servers[name])
-
-                            -- Create and start the server since it was not started yet
-                            -- on FileType event
-                            Utils.lsp.create_clients_and_start_servers(vim.lsp.config[name])
+                                        -- Create and start the server since it was not started yet
+                                        -- on FileType event
+                                        Utils.lsp.create_clients_and_start_servers(vim.lsp.config[server_name])
+                                    end
+                                end
+                            end)
                         end
+                    elseif type(command) == "function" then
+                        -- If command is a function it might require params so not resolving the binary
+                        Utils.lsp.setup(server_name, server_cfg)
                     end
-                end)
+                end
             end
         end,
     },
