@@ -128,6 +128,9 @@ end
 ---| '"javascript"'
 ---| '"python"'
 ---| '"go"'
+---| '"zig"'
+---| '"yaml"'
+---| '"ruby"'
 
 ---@param scope kdtsk.tools.Scope Scope to use the tool within (e.g. php)
 ---@param component string Name of the tool, language server, plugin, etc.
@@ -182,7 +185,7 @@ end
 ---  [3]: kdtsk.tools.Purpose, # Purpose of the component (e.g. "LSP")
 ---  [4]: string[], # Patterns to match the tool's config file
 --- } Component to check if enabled
-function M.extended_if_enabled(tbl1, tbl2, comp)
+function M.extend_if_enabled(tbl1, tbl2, comp)
     if M.is_component_enabled(unpack(comp)) then
         return deep_merge_lists(tbl1, tbl2)
     else

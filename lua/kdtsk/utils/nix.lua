@@ -50,7 +50,7 @@ function M.get_cmd_via_nix(nix_pkg, command, callback, flake)
             end)
         else
             vim.notify(
-                "Did't find `" .. nix_pkg .. "` package for `" .. command .. " cmd due to`: \n" .. o.stderr,
+                "Did't find `" .. nix_pkg .. "` package for `" .. vim.inspect(command) .. " cmd due to`: \n" .. o.stderr,
                 vim.log.levels.WARN,
                 { title = "Utils.nix.get_cmd_via_nix" }
             )

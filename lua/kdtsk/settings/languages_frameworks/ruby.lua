@@ -36,10 +36,32 @@ return {
         opts = {
             ---@type table<string,vim.lsp.ConfigLocal>
             servers = {
-                rubocop = {}, -- as linter
-                ruby_lsp = {},
-                solargraph = {},
+                rubocop = {
+                    enabled = Utils.tools.is_component_enabled(
+                        "ruby",
+                        "rubocop",
+                        Utils.tools.purpose.LSP,
+                        { ".rubocop.yml" }
+                    ),
+                }, -- as linter
+                ruby_lsp = {
+                    enabled = Utils.tools.is_component_enabled(
+                        "ruby",
+                        "ruby_lsp",
+                        Utils.tools.purpose.LSP,
+                        { ".index.yml" }
+                    ),
+                },
+                solargraph = {
+                    enabled = Utils.tools.is_component_enabled(
+                        "ruby",
+                        "solargraph",
+                        Utils.tools.purpose.LSP,
+                        { ".solargraph.yml" }
+                    ),
+                },
                 standardrb = {
+                    enabled = Utils.tools.is_component_enabled("ruby", "standardrb", Utils.tools.purpose.LSP, {}),
                     nix_pkg = "rubyPackages.standard",
                 }, -- as linter
             },

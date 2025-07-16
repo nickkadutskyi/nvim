@@ -88,7 +88,7 @@ return {
             }
 
             -- PHP Code Sniffer Beautifier
-            fmt_conf = Utils.tools.extended_if_enabled(fmt_conf, { "phpcbf" }, {
+            fmt_conf = Utils.tools.extend_if_enabled(fmt_conf, { "phpcbf" }, {
                 "php",
                 "phpcbf",
                 Utils.tools.purpose.STYLE,
@@ -96,7 +96,7 @@ return {
             })
 
             -- PHP CS Fixer
-            fmt_conf = Utils.tools.extended_if_enabled(fmt_conf, { "php_cs_fixer" }, {
+            fmt_conf = Utils.tools.extend_if_enabled(fmt_conf, { "php_cs_fixer" }, {
                 "php",
                 "php_cs_fixer",
                 Utils.tools.purpose.STYLE,
@@ -105,7 +105,7 @@ return {
 
             -- Intelephense as formatter
             -- runs jsbeautify via intelephense so it's useful to have .jsbeautifyrc
-            fmt_conf = Utils.tools.extended_if_enabled(fmt_conf, { lsp_format = "first" }, {
+            fmt_conf = Utils.tools.extend_if_enabled(fmt_conf, { lsp_format = "first" }, {
                 "php",
                 "intelephense",
                 Utils.tools.purpose.STYLE,
@@ -148,7 +148,7 @@ return {
             }
 
             -- PHP Code Sniffer
-            lint_conf = Utils.tools.extended_if_enabled(lint_conf, { "phpcs" }, {
+            lint_conf = Utils.tools.extend_if_enabled(lint_conf, { "phpcs" }, {
                 "php",
                 "phpcs",
                 Utils.tools.purpose.INSPECTION,
@@ -156,7 +156,7 @@ return {
             })
 
             -- PHP Insights
-            lint_conf = Utils.tools.extended_if_enabled(lint_conf, { "phpinsights" }, {
+            lint_conf = Utils.tools.extend_if_enabled(lint_conf, { "phpinsights" }, {
                 "php",
                 "phpinsights",
                 Utils.tools.purpose.INSPECTION,
@@ -164,7 +164,7 @@ return {
             })
 
             -- PHP Mess Detector
-            lint_conf = Utils.tools.extended_if_enabled(lint_conf, { "phpmd" }, {
+            lint_conf = Utils.tools.extend_if_enabled(lint_conf, { "phpmd" }, {
                 "php",
                 "phpmd",
                 Utils.tools.purpose.INSPECTION,
@@ -172,7 +172,7 @@ return {
             })
 
             -- PHPStan
-            lint_conf = Utils.tools.extended_if_enabled(lint_conf, { "phpstan" }, {
+            lint_conf = Utils.tools.extend_if_enabled(lint_conf, { "phpstan" }, {
                 "php",
                 "phpstan",
                 Utils.tools.purpose.INSPECTION,
@@ -180,7 +180,7 @@ return {
             })
 
             -- Psalm
-            lint_conf = Utils.tools.extended_if_enabled(lint_conf, { "psalm" }, {
+            lint_conf = Utils.tools.extend_if_enabled(lint_conf, { "psalm" }, {
                 "php",
                 "psalm",
                 Utils.tools.purpose.INSPECTION,
