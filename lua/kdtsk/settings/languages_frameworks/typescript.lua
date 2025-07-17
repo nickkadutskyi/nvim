@@ -12,85 +12,93 @@ return {
     },
     {
         "nvim-lspconfig",
-        opts = {
-            ---@type table<string,vim.lsp.ConfigLocal>
-            servers = {
-                ["ts_ls"] = {
-                    enabled = false,
-                    init_options = {
-                        plugins = {
-                            {
-                                name = "@vue/typescript-plugin",
-                                -- location = "/usr/local/lib/node_modules/@vue/typescript-plugin",
-                                location = "",
-                                languages = { "javascript", "typescript", "vue" },
-                            },
-                        },
-                        hostInfo = "neovim",
-                        preferences = {
-                            includeCompletionsForModuleExports = true,
-                            includeCompletionsForImportStatements = true,
-                            importModuleSpecifierPreference = "relative",
-                        },
-                    },
-                    filetypes = {
-                        "typescript",
-                        "javascript",
-                        "javascriptreact",
-                        "typescriptreact",
-                        "vue",
-                        "javascript.jsx",
-                        "typescript.tsx",
-                    },
-                },
-                ["vtsls"] = {
-                    settings = {
-                        complete_function_calls = true,
-                        vtsls = {
-                            enableMoveToFileCodeAction = true,
-                            autoUseWorkspaceTsdk = true,
-                            experimental = {
-                                maxInlayHintLength = 30,
-                                completion = {
-                                    enableServerSideFuzzyMatch = true,
+        opts = function(_, opts)
+            return vim.tbl_deep_extend("force", opts, {
+                ---@type table<string,vim.lsp.ConfigLocal>
+                servers = {
+                    ["ts_ls"] = {
+                        enabled = Utils.tools.is_component_enabled("typescript", "ts_ls", Utils.tools.purpose.LSP, {
+                            "tsconfig.json",
+                            "jsconfig.json",
+                        }),
+                        nix_pkg = "typescript-language-server",
+                        init_options = {
+                            plugins = {
+                                {
+                                    name = "@vue/typescript-plugin",
+                                    -- location = "/usr/local/lib/node_modules/@vue/typescript-plugin",
+                                    location = "",
+                                    languages = { "javascript", "typescript", "vue" },
                                 },
                             },
-                        },
-                        javascript = {
-                            updateImportsOnFileMove = "always",
-                        },
-                        typescript = {
-                            updateImportsOnFileMove = { enabled = "always" },
-                            suggest = {
-                                completeFunctionCalls = true,
-                            },
-                            inlayHints = {
-                                enumMemberValues = { enabled = true },
-                                functionLikeReturnTypes = { enabled = true },
-                                parameterNames = { enabled = "literals" },
-                                parameterTypes = { enabled = true },
-                                propertyDeclarationTypes = { enabled = true },
-                                variableTypes = { enabled = false },
-                            },
+                            hostInfo = "neovim",
                             preferences = {
                                 includeCompletionsForModuleExports = true,
                                 includeCompletionsForImportStatements = true,
-                                importModuleSpecifier = "non-relative",
+                                importModuleSpecifierPreference = "relative",
                             },
                         },
+                        filetypes = {
+                            "typescript",
+                            "javascript",
+                            "javascriptreact",
+                            "typescriptreact",
+                            "vue",
+                            "javascript.jsx",
+                            "typescript.tsx",
+                        },
                     },
-                    filetypes = {
-                        "typescript",
-                        "javascript",
-                        "javascriptreact",
-                        "typescriptreact",
-                        "vue",
-                        "javascript.jsx",
-                        "typescript.tsx",
+                    ["vtsls"] = {
+                        enabled = Utils.tools.is_component_enabled("typescript", "vtsls", Utils.tools.purpose.LSP),
+                        nix_pkg = "vtsls",
+                        settings = {
+                            complete_function_calls = true,
+                            vtsls = {
+                                enableMoveToFileCodeAction = true,
+                                autoUseWorkspaceTsdk = true,
+                                experimental = {
+                                    maxInlayHintLength = 30,
+                                    completion = {
+                                        enableServerSideFuzzyMatch = true,
+                                    },
+                                },
+                            },
+                            javascript = {
+                                updateImportsOnFileMove = "always",
+                            },
+                            typescript = {
+                                updateImportsOnFileMove = { enabled = "always" },
+                                suggest = {
+                                    completeFunctionCalls = true,
+                                },
+                                inlayHints = {
+                                    enumMemberValues = { enabled = true },
+                                    functionLikeReturnTypes = { enabled = true },
+                                    parameterNames = { enabled = "literals" },
+                                    parameterTypes = { enabled = true },
+                                    propertyDeclarationTypes = { enabled = true },
+                                    variableTypes = { enabled = false },
+                                },
+                                preferences = {
+                                    includeCompletionsForModuleExports = true,
+                                    includeCompletionsForImportStatements = true,
+                                    importModuleSpecifier = "non-relative",
+                                },
+                            },
+                        },
+                        filetypes = {
+                            "typescript",
+                            "javascript",
+                            "javascriptreact",
+                            "typescriptreact",
+                            "vue",
+                            "javascript.jsx",
+                            "typescript.tsx",
+                        },
                     },
                 },
-            },
-        },
+            })
+        end,
     },
     { -- Code Style
         "conform.nvim",
