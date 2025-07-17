@@ -23,14 +23,6 @@ return {
                         }),
                         nix_pkg = "typescript-language-server",
                         init_options = {
-                            plugins = {
-                                {
-                                    name = "@vue/typescript-plugin",
-                                    -- location = "/usr/local/lib/node_modules/@vue/typescript-plugin",
-                                    location = "",
-                                    languages = { "javascript", "typescript", "vue" },
-                                },
-                            },
                             hostInfo = "neovim",
                             preferences = {
                                 includeCompletionsForModuleExports = true,
@@ -38,19 +30,17 @@ return {
                                 importModuleSpecifierPreference = "relative",
                             },
                         },
-                        filetypes = {
-                            "typescript",
-                            "javascript",
-                            "javascriptreact",
-                            "typescriptreact",
-                            "vue",
-                            "javascript.jsx",
-                            "typescript.tsx",
-                        },
+                        filetypes = vim.lsp.config["ts_ls"].filetypes or {},
                     },
                     ["vtsls"] = {
-                        enabled = Utils.tools.is_component_enabled("typescript", "vtsls", Utils.tools.purpose.LSP),
+                        enabled = Utils.tools.is_component_enabled("typescript", "vtsls", Utils.tools.purpose.LSP, {
+                            "tsconfig.json",
+                            "jsconfig.json",
+                        })
+                            -- Enable if vue_ls is enabled since it requires vtsls
+                            or Utils.tools.is_component_enabled("vue", "vue_ls", Utils.tools.purpose.LSP),
                         nix_pkg = "vtsls",
+                        filetypes = vim.lsp.config["vtsls"].filetypes or {},
                         settings = {
                             complete_function_calls = true,
                             vtsls = {
@@ -61,6 +51,10 @@ return {
                                     completion = {
                                         enableServerSideFuzzyMatch = true,
                                     },
+                                },
+                                tsserver = {
+                                    -- Add plugins in corresponding files
+                                    globalPlugins = {},
                                 },
                             },
                             javascript = {
@@ -85,15 +79,6 @@ return {
                                     importModuleSpecifier = "non-relative",
                                 },
                             },
-                        },
-                        filetypes = {
-                            "typescript",
-                            "javascript",
-                            "javascriptreact",
-                            "typescriptreact",
-                            "vue",
-                            "javascript.jsx",
-                            "typescript.tsx",
                         },
                     },
                 },

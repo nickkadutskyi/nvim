@@ -153,7 +153,7 @@ function M.is_component_enabled(scope, component, purpose, patterns)
     return patterns and Utils.tools.file_exists(patterns) or false
 end
 
-local function deep_merge_lists(...)
+function M.deep_merge_lists(...)
     local tables = { ... }
     local out = vim.deepcopy(tables[1])
 
@@ -188,7 +188,7 @@ end
 --- } Component to check if enabled
 function M.extend_if_enabled(tbl1, tbl2, comp)
     if M.is_component_enabled(unpack(comp)) then
-        return deep_merge_lists(tbl1, tbl2)
+        return M.deep_merge_lists(tbl1, tbl2)
     else
         return tbl1
     end
