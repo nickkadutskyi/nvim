@@ -197,7 +197,7 @@ end
 ---Uses Nix to run the command only if outside of a Nix shell because
 ---Nix shells have to provide the environment for the command to run.
 ---@param command string|function|table Command to run
----@return boolean, boolean, string (directly, via_nix, command)
+---@return boolean, boolean, string, nil|boolean (directly, via_nix, command, can_run_via_nix)
 function M.run_command_via(command)
     command = type(command) == "function" and command() or command
     command = type(command) == "table" and command[1] or command
@@ -206,11 +206,13 @@ function M.run_command_via(command)
         "Command must be a non-empty string, but got: " .. vim.inspect(command)
     )
     if vim.fn.executable(command) == 1 then
-        return true, false, command
+        return true, false, command, nil
     elseif vim.fn.executable("nix") == 1 and Utils.nix.nix_shell_type() == nil then
-        return false, true, command
+        return false, true, command, true
+    elseif vim.fn.executable("nix") == 1 and Utils.nix.nix_shell_type() ~= nil then
+        return false, false, command, true
     else
-        return false, false, command
+        return false, false, command, false
     end
 end
 
