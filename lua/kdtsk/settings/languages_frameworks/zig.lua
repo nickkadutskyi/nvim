@@ -30,7 +30,7 @@ return {
 
             return vim.tbl_deep_extend("force", opts, {
                 ---@type table<string, string[]>
-                linters_by_ft = { php = lint_conf },
+                linters_by_ft = { zig = lint_conf },
                 ---@type table<string, lint.LinterLocal>
                 linters = {},
             })

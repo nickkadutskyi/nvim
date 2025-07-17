@@ -382,7 +382,13 @@ return {
 
                 if server_cfg.enabled ~= false then
                     if type(command) ~= "function" and command then
+                        -- Use resolved binary
+                        if type(command) == "table" and server_cfg.bin then
+                            command[1] = server_cfg.bin
+                        end
+
                         local run_directly, run_via_nix, binary = Utils.tools.run_command_via(command)
+
                         if run_directly then
                             -- If runnable directly then set up the server with this config
                             Utils.lsp.setup(server_name, server_cfg)
