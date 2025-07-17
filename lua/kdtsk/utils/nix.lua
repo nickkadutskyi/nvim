@@ -1,40 +1,6 @@
 ---@class kdtsk.utils.nix
 local M = {}
 
--- Queue for sequential nix eval execution
-local eval_queue = {}
-local is_processing = false
-
----Process the next item in the queue
-local function process_queue()
-    if is_processing or #eval_queue == 0 then
-        return
-    end
-
-    is_processing = true
-    local item = table.remove(eval_queue, 1)
-
-    vim.system(item.cmd, item.opts, function(o)
-        is_processing = false
-        item.callback(o)
-        -- Process next item in queue
-        vim.schedule(process_queue)
-    end)
-end
-
----Add nix eval command to queue
----@param cmd table
----@param opts table
----@param callback function
-local function queue_nix_eval(cmd, opts, callback)
-    table.insert(eval_queue, {
-        cmd = cmd,
-        opts = opts,
-        callback = callback,
-    })
-    process_queue()
-end
-
 ---Get a cmd via Nix package manager using `nix run` or `nix shell --command`
 ---@param nix_pkg string
 ---@param command string
@@ -47,7 +13,7 @@ function M.get_cmd_via_nix(nix_pkg, command, callback, flake)
 
     -- nix eval flake output for a package and get pname and meta keys
     -- to check if it can do nix run (requires meta.mainProgram)
-    queue_nix_eval({
+    Utils.queue_command({
         "nix",
         "eval",
         "--json",
