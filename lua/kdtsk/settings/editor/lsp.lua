@@ -330,6 +330,7 @@ return {
         event = "VeryLazy",
         ---@type Options
         opts = {
+            depth_limit = 4,
             highlight = true,
             color_correction = "dynamic",
             lsp = {
