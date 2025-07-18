@@ -120,6 +120,11 @@ return {
                     try_lint(true)
                 end),
             })
+
+            -- Keymap
+            vim.keymap.set({ "n" }, "<leader>ic", try_lint, {
+                desc = "Code: [i]nspect [c]ode",
+            })
         end,
     },
 }

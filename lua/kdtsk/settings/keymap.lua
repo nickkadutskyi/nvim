@@ -37,6 +37,8 @@ return {
                     { "<leader>f", group = "[f]ind" },
                     -- Go to
                     { "<leader>g", group = "[g]o to" },
+                    -- Inspect
+                    { "<leader>i", group = "[i]nspect", icon = { icon = "", hl = "WhichKeyValue" } },
                     -- Reformat
                     { "<leader>r", group = "[r]eformat" },
                     -- Show
