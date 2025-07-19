@@ -8,6 +8,7 @@
 ---@field fold kdtsk.utils.fold
 ---@field linter_phpmd kdtsk.utils.linter_phpmd
 ---@field php kdtsk.utils.php
+---@field js kdtsk.utils.js
 ---@field tools kdtsk.utils.tools
 ---@field nix kdtsk.utils.nix
 local M = {}
