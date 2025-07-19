@@ -19,27 +19,27 @@ return {
 
             -- Prettierd
             fmt_conf = Utils.tools.extend_if_enabled(fmt_conf, { "prettierd" }, {
-                "typescript",
+                "vue",
                 "prettierd",
                 Utils.tools.purpose.STYLE,
                 { ".prettierrc", ".prettierrc.json", ".prettierrc.js", ".prettierrc.yaml", ".prettierrc.yml" },
             })
             -- Prettier
             fmt_conf = Utils.tools.extend_if_enabled(fmt_conf, { "prettier" }, {
-                "typescript",
+                "vue",
                 "prettier",
                 Utils.tools.purpose.STYLE,
             })
             -- Eslint_d
             fmt_conf = Utils.tools.extend_if_enabled(fmt_conf, { "eslint_d" }, {
-                "typescript",
+                "vue",
                 "eslint_d",
                 Utils.tools.purpose.STYLE,
                 { ".eslintrc", ".eslintrc.json", ".eslintrc.js", "eslint.config.js", "eslint.config.ts" },
             })
 
             return vim.tbl_deep_extend("force", opts, {
-                formatters_by_ft = { typescript = fmt_conf },
+                formatters_by_ft = { vue = fmt_conf },
                 formtters = {
                     eslint_d = { nix_pkg = "eslint_d" },
                     prettier = { nix_pkg = "prettier" },
