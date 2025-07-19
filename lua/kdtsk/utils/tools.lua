@@ -132,6 +132,7 @@ end
 ---| '"yaml"'
 ---| '"ruby"'
 ---| '"vue"'
+---| '"tailwindcss"'
 
 ---@param scope kdtsk.tools.Scope Scope to use the tool within (e.g. php)
 ---@param component string Name of the tool, language server, plugin, etc.
