@@ -16,6 +16,16 @@ return {
             return vim.tbl_deep_extend("force", opts, {
                 ---@type table<string,vim.lsp.ConfigLocal>
                 servers = {
+                    ["eslint"] = {
+                        enabled = Utils.tools.is_component_enabled("typescript", "eslint", Utils.tools.purpose.LSP, {
+                            ".eslintrc",
+                            ".eslintrc.json",
+                            ".eslintrc.js",
+                            "eslint.config.js",
+                            "eslint.config.ts",
+                        }),
+                        nix_pkg = "vscode-langservers-extracted",
+                    },
                     ["ts_ls"] = {
                         enabled = Utils.tools.is_component_enabled("typescript", "ts_ls", Utils.tools.purpose.LSP, {
                             "tsconfig.json",
@@ -88,26 +98,74 @@ return {
     { -- Code Style
         "conform.nvim",
         opts = function(_, opts)
+            local fmt_conf = {
+                async = true,
+                timeout_ms = 1500,
+            }
+
+            -- Prettierd
+            fmt_conf = Utils.tools.extend_if_enabled(fmt_conf, { "prettierd" }, {
+                "typescript",
+                "prettierd",
+                Utils.tools.purpose.STYLE,
+                { ".prettierrc", ".prettierrc.json", ".prettierrc.js", ".prettierrc.yaml", ".prettierrc.yml" },
+            })
+            -- Prettier
+            fmt_conf = Utils.tools.extend_if_enabled(fmt_conf, { "prettier" }, {
+                "typescript",
+                "prettier",
+                Utils.tools.purpose.STYLE,
+            })
+            -- Eslint_d
+            fmt_conf = Utils.tools.extend_if_enabled(fmt_conf, { "eslint_d" }, {
+                "typescript",
+                "eslint_d",
+                Utils.tools.purpose.STYLE,
+                { ".eslintrc", ".eslintrc.json", ".eslintrc.js", "eslint.config.js", "eslint.config.ts" },
+            })
+            -- Eslint as formatter
+            fmt_conf = Utils.tools.extend_if_enabled(fmt_conf, { lsp_format = "first" }, {
+                "typescript",
+                "eslint",
+                Utils.tools.purpose.STYLE,
+            })
+
             return vim.tbl_deep_extend("force", opts, {
-                formatters_by_ft = {
-                    typescript = {
-                        "prettierd",
-                    },
+                formatters_by_ft = { typescript = fmt_conf },
+                formtters = {
+                    eslint_d = { nix_pkg = "eslint_d" },
+                    prettier = { nix_pkg = "prettier" },
+                    prettierd = { nix_pkg = "prettierd" },
                 },
             })
         end,
     },
-    { -- Quality Tools
-        "nvim-lint",
+    {
+        "nvim-lint", -- Quality Tools
         event = { "BufReadPre", "BufNewFile" },
-        dependencies = { "stevearc/conform.nvim" },
         opts = function(_, opts) -- Configure in opts to run all configs for all languages
+            local lint_conf = {}
+
+            -- Eslint_d
+            lint_conf = Utils.tools.extend_if_enabled(lint_conf, { "eslint_d" }, {
+                "typescript",
+                "eslint_d",
+                Utils.tools.purpose.INSPECTION,
+                { ".eslintrc", ".eslintrc.json", ".eslintrc.js", "eslint.config.js", "eslint.config.ts" },
+            })
+            -- Eslint
+            lint_conf = Utils.tools.extend_if_enabled(lint_conf, { "eslint" }, {
+                "typescript",
+                "eslint",
+                Utils.tools.purpose.INSPECTION,
+                { ".eslintrc", ".eslintrc.json", ".eslintrc.js", "eslint.config.js", "eslint.config.ts" },
+            })
+
             return vim.tbl_deep_extend("force", opts, {
-                linters_by_ft = {
-                    typescript = {
-                        "eslint_d",
-                    },
-                },
+                ---@type table<string, string[]>
+                linters_by_ft = { typescript = lint_conf },
+                ---@type table<string, lint.LinterLocal>
+                linters = {},
             })
         end,
     },

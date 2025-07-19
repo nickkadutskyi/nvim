@@ -9,6 +9,45 @@ return {
             })
         end,
     },
+    { -- Code Style
+        "conform.nvim",
+        opts = function(_, opts)
+            local fmt_conf = {
+                async = true,
+                timeout_ms = 1500,
+            }
+
+            -- Prettierd
+            fmt_conf = Utils.tools.extend_if_enabled(fmt_conf, { "prettierd" }, {
+                "typescript",
+                "prettierd",
+                Utils.tools.purpose.STYLE,
+                { ".prettierrc", ".prettierrc.json", ".prettierrc.js", ".prettierrc.yaml", ".prettierrc.yml" },
+            })
+            -- Prettier
+            fmt_conf = Utils.tools.extend_if_enabled(fmt_conf, { "prettier" }, {
+                "typescript",
+                "prettier",
+                Utils.tools.purpose.STYLE,
+            })
+            -- Eslint_d
+            fmt_conf = Utils.tools.extend_if_enabled(fmt_conf, { "eslint_d" }, {
+                "typescript",
+                "eslint_d",
+                Utils.tools.purpose.STYLE,
+                { ".eslintrc", ".eslintrc.json", ".eslintrc.js", "eslint.config.js", "eslint.config.ts" },
+            })
+
+            return vim.tbl_deep_extend("force", opts, {
+                formatters_by_ft = { typescript = fmt_conf },
+                formtters = {
+                    eslint_d = { nix_pkg = "eslint_d" },
+                    prettier = { nix_pkg = "prettier" },
+                    prettierd = { nix_pkg = "prettierd" },
+                },
+            })
+        end,
+    },
     {
         "nvim-lspconfig",
         opts = function(_, opts)
