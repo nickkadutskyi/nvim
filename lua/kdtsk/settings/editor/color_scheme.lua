@@ -6,7 +6,6 @@ vim.opt.termguicolors = true
 ---@type LazySpec
 return {
     {
-        -- My new color scheme inspired by IntelliJ
         "nickkadutskyi/jb.nvim",
         lazy = false,
         priority = 1000,
