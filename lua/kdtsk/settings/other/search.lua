@@ -17,9 +17,6 @@ return {
         -- Faster fzf in case of a large project
         -- DEPENDENCIES: Linux or Mac, fzf or skim, OPTIONAL: fd, rg, bat, delta, chafa
         "ibhagwan/fzf-lua",
-        dependencies = {
-            "nickkadutskyi/jb.nvim",
-        },
         config = function(_, _)
             local fzf = require("fzf-lua")
             local actions = require("fzf-lua.actions")
