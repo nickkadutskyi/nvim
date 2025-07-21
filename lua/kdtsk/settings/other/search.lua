@@ -17,7 +17,6 @@ return {
         -- Faster fzf in case of a large project
         -- DEPENDENCIES: Linux or Mac, fzf or skim, OPTIONAL: fd, rg, bat, delta, chafa
         "ibhagwan/fzf-lua",
-        dev = true,
         dependencies = {
             "nickkadutskyi/jb.nvim",
         },
