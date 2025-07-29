@@ -353,9 +353,27 @@ return {
         config = function(_, opts)
             local navic = require("nvim-navic")
 
+            -- Adjusts icon for JSON objects
+            local format_data = function(data, opts_internal)
+                if vim.bo.filetype == "json" then
+                    for _, item in ipairs(data) do
+                        if item.type == "Module" then
+                            item.type = "Object"
+                            item.kind = 19
+                        end
+                    end
+                end
+                return data
+            end
+            navic.get_location = function(opts_internal, bufnr)
+                local data = navic.get_data(bufnr)
+                data = format_data(data, opts_internal)
+                return navic.format_data(data, opts_internal)
+            end
+
             -- Sets icons from jb.nvim
             opts.icons = vim.tbl_map(function(icon)
-                return icon .. " "
+                return icon ~= "" and icon .. " " or ""
             end, Utils.icons.kind)
 
             navic.setup(opts)
