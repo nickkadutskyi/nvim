@@ -182,7 +182,7 @@ return {
                     },
                     prompt = "  ",
                     actions = {
-                        ["backspace"] = { fn = actions.buf_del, reload = true },
+                        ["alt-backspace"] = { fn = actions.buf_del, reload = true },
                     },
                 },
                 grep = {
