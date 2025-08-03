@@ -4,8 +4,9 @@ return {
         "nvim-treesitter", -- Color Scheme
         opts = function(_, opts)
             vim.list_extend(opts.ensure_installed, {
-                "latex",
-                "bibtex",
+                -- Requires tree-sitter executable so disabling for now
+                -- "latex",
+                -- "bibtex",
             })
         end,
     },
