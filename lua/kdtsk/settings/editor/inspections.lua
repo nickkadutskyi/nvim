@@ -98,30 +98,35 @@ return {
                         -- remove Package since luals uses it for control flow structures
                         ["not"] = { ft = "lua", kind = "Package" },
                         any = {
+                            -- PHP: only show class name, constructor, properties and methods
+                            { ft = "php", kind = { "Class", "Constructor", "Property", "Method" } },
+                            -- non-PHP: fall back to default list
+                            {
+                                ["not"] = { ft = "php" },
+                                kind = {
+                                    "Class",
+                                    "Constructor",
+                                    "Enum",
+                                    "Field",
+                                    "Function",
+                                    "Interface",
+                                    "Method",
+                                    "Module",
+                                    "Namespace",
+                                    "Package",
+                                    "Property",
+                                    "Struct",
+                                    "Trait",
+                                    "String",
+                                    "Number",
+                                    "Null",
+                                    "Variable",
+                                    "Object",
+                                    "Array",
+                                },
+                            },
                             -- all symbol kinds for help / markdown files
                             ft = { "help", "markdown" },
-                            -- default set of symbol kinds
-                            kind = {
-                                "Class",
-                                "Constructor",
-                                "Enum",
-                                "Field",
-                                "Function",
-                                "Interface",
-                                "Method",
-                                "Module",
-                                "Namespace",
-                                "Package",
-                                "Property",
-                                "Struct",
-                                "Trait",
-                                "String",
-                                "Number",
-                                "Null",
-                                "Variable",
-                                "Object",
-                                "Array",
-                            },
                         },
                     },
                 },
@@ -131,7 +136,7 @@ return {
             local trouble = require("trouble")
 
             -- Do it here for performance reasons because Utils runs setmetatable for icons
-            opts.icons = { kind = Utils.icons.kind }
+            opts.icons = { kinds = Utils.icons.kind }
             trouble.setup(opts)
 
             ---@type fun(mode?: string|table)
