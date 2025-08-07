@@ -55,14 +55,20 @@ return {
             if Utils.tools.is_component_enabled("vue", "vue_ls", Utils.tools.purpose.LSP) then
                 -- See https://github.com/vuejs/language-tools/wiki/Neovim for Vue language server setup
                 Utils.extend(opts.servers.vtsls, "filetypes", { "vue" })
+                Utils.extend(opts.servers.ts_ls, "filetypes", { "vue" })
+                local vue_plugin = {
+                    name = "@vue/typescript-plugin",
+                    location = vim.fn.getcwd() .. "/node_modules/@vue/language-server",
+                    languages = { "vue" },
+                    configNamespace = "typescript",
+                    enableForWorkspaceTypeScriptVersions = true,
+                }
+
                 Utils.extend(opts.servers.vtsls, "settings.vtsls.tsserver.globalPlugins", {
-                    {
-                        name = "@vue/typescript-plugin",
-                        location = vim.fn.getcwd() .. "/node_modules/@vue/language-server",
-                        languages = { "vue" },
-                        configNamespace = "typescript",
-                        enableForWorkspaceTypeScriptVersions = true,
-                    },
+                    vue_plugin,
+                })
+                Utils.extend(opts.servers.ts_ls, "init_options.plugins", {
+                    vue_plugin,
                 })
 
                 servers["vue_ls"] = {
