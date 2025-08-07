@@ -99,7 +99,7 @@ return {
                         ["not"] = { ft = "lua", kind = "Package" },
                         any = {
                             -- PHP: only show class name, constructor, properties and methods
-                            { ft = "php", kind = { "Class", "Constructor", "Property", "Method" } },
+                            { ft = "php", kind = { "Class", "Constructor", "Property", "Method", "Field" } },
                             -- non-PHP: fall back to default list
                             {
                                 ["not"] = { ft = "php" },

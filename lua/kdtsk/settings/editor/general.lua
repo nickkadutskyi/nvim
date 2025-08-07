@@ -91,7 +91,7 @@ return {
                     python = { "comment", "imports" },
                     go = { "comment", "imports" },
                     rust = { "comment", "imports" },
-                    php = { "comment", "imports" },
+                    php = { "imports" },
                 },
                 provider_selector = function(bufnr, filetype, buftype)
                     return ftMap[filetype] or Utils.fold.ufo_provider_selector
