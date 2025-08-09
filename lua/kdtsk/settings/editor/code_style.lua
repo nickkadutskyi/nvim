@@ -19,9 +19,9 @@ return {
         event = "VeryLazy",
         ---@type conform.setupOpts
         opts = {
-            format_on_save = {
-                timeout_ms = 2000,
-            },
+            -- format_on_save = {
+            --     timeout_ms = 2000,
+            -- },
             default_format_opts = {
                 stop_after_first = true,
             },
