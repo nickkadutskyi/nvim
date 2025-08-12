@@ -59,6 +59,9 @@ return {
                 fish = { "treesitter", "indent" },
                 git = "",
                 gitcommit = "",
+                fff_list = "",
+                fff_preview = "",
+                fff_input = "",
                 help = "indent",
                 text = "indent",
             }
@@ -94,6 +97,9 @@ return {
                     php = { "imports" },
                 },
                 provider_selector = function(bufnr, filetype, buftype)
+                    if buftype ~= "" then
+                        return nil -- Don't use ufo in non-file buffers
+                    end
                     return ftMap[filetype] or Utils.fold.ufo_provider_selector
                 end,
             })
