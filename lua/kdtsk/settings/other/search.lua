@@ -18,7 +18,38 @@ return {
         -- or if you are using nixos
         build = "nix run .#release",
         opts = {
-            -- pass here all the options
+            base_path = vim.fn.getcwd(),
+            prompt = " ",
+            title = "Files",
+            max_results = 100,
+            max_threads = 4,
+            layout = {
+                -- height = 25,
+                -- width = 95,
+                height = function(_terminal_width, terminal_height)
+                    return 28/terminal_height
+                end,
+                width = function(terminal_width, _terminal_height)
+                    return 98/terminal_width
+                end,
+                prompt_position = "top", -- or 'top'
+                preview_position = "bottom", -- or 'left', 'right', 'top', 'bottom'
+                preview_size = 0.5,
+            },
+            preview = {
+                enabled = true,
+            },
+            hl = {
+                border = "FloatBorder",
+                normal = "FzfLuaFzfNormal",
+                cursor = "FzfLuaFzfCursorLine",
+                matched = "FzfLuaFzfMatch",
+                title = "FzfLuaFzfHeader",
+                prompt = "FzfLuaFzfPrompt",
+                active_file = "FzfLuaFzfCursorLine",
+                frecency = "Number",
+                debug = "Comment",
+            },
         },
         keys = {
             {
