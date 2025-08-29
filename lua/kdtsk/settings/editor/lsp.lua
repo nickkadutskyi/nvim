@@ -218,7 +218,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
         -- The following two autocommands are used to highlight references of the
         -- word under your cursor when your cursor rests there for a little while.
         -- When you move your cursor, the highlights will be cleared (the second autocommand).
-        if client and client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
+        if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
             local default_handler = vim.lsp.handlers["textDocument/documentHighlight"]
 
             -- Looks for line numbers of the highlighted references and stores them in a global variable
@@ -280,7 +280,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
         if
             client
             and (
-                client.supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint)
+                client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint)
                 or client.server_capabilities.inlayHintProvider
             )
         then
