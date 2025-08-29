@@ -16,6 +16,7 @@ return {
                         "scss",
                         "vue",
                         "javascript",
+                        "blade",
                     },
                 },
             },
