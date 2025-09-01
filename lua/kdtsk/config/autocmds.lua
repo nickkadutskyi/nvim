@@ -164,6 +164,24 @@ vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost" }, {
         end
     end,
 })
+-- Reconfigures todo-comments highlighting based on whether
+-- the current buffer has a treesitter parser available
+local group_todos_reconfigure = augroup("todos-reconfigure")
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost" }, {
+    group = group_todos_reconfigure,
+    callback = function(e)
+        if e.buf ~= vim.api.nvim_get_current_buf() then
+            return
+        end
+
+        local ts_parsers = require("nvim-treesitter.parsers")
+        if ts_parsers.has_parser(ts_parsers.get_buf_lang(e.buf)) then
+            require("todo-comments").setup({ highlight = { comments_only = true } })
+        else
+            require("todo-comments").setup({ highlight = { comments_only = false } })
+        end
+    end,
+})
 -- Highlights when yanking text
 vim.api.nvim_create_autocmd("TextYankPost", {
     group = augroup("highlight-yank"),
