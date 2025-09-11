@@ -20,39 +20,43 @@ return {
             local harpoon = require("harpoon")
 
             -- REQUIRED
-            harpoon:setup()
+            harpoon:setup({ settings = { save_on_toggle = true } })
             -- REQUIRED
+
+            local harpoon_extensions = require("harpoon.extensions")
+            harpoon:extend(harpoon_extensions.builtins.highlight_current_file())
+            harpoon:extend(harpoon_extensions.builtins.navigate_with_number())
 
             vim.keymap.set("n", "<leader>a", function()
                 harpoon:list():add()
-            end)
+            end, { desc = "Bookmarks: add current buffers to the list" })
             vim.keymap.set("n", "<C-e>", function()
                 harpoon.ui:toggle_quick_menu(harpoon:list())
-            end)
+            end, { desc = "Bookmarks: toggele list modal" })
 
             vim.keymap.set("n", "<C-1>", function()
                 harpoon:list():select(1)
-            end)
+            end, { desc = "Bookmarks: select 1st item in the list." })
             vim.keymap.set("n", "<C-2>", function()
                 harpoon:list():select(2)
-            end)
+            end, { desc = "Bookmarks: select 2nd item in the list." })
             vim.keymap.set("n", "<C-3>", function()
                 harpoon:list():select(3)
-            end)
+            end, { desc = "Bookmarks: select 3rd item in the list." })
             vim.keymap.set("n", "<C-4>", function()
                 harpoon:list():select(4)
-            end)
+            end, { desc = "Bookmarks: select 4th item in the list." })
             vim.keymap.set("n", "<C-5>", function()
                 harpoon:list():select(harpoon:list():length())
-            end)
+            end, { desc = "Bookmarks: select last item in the list." })
 
             -- Toggle previous & next buffers stored within Harpoon list
             vim.keymap.set("n", "<C-P>", function()
-                harpoon:list():prev()
-            end)
+                harpoon:list():prev({ ui_nav_wrap = true })
+            end, { desc = "Bookmarks: select next item" })
             vim.keymap.set("n", "<C-N>", function()
-                harpoon:list():next()
-            end)
+                harpoon:list():next({ ui_nav_wrap = true })
+            end, { desc = "Bookmarks: select previous item" })
         end,
     },
     {
