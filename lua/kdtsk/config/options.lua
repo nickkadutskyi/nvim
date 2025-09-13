@@ -8,7 +8,8 @@ vim.opt.exrc = true
 -- Mouse reporting
 vim.opt.mouse = "a"
 -- Removes cmd line to allow more space
-vim.opt.cmdheight = 0
+-- Moved this to later event to avoid '"[No Name]" --No lines in buffer--' message
+-- vim.opt.cmdheight = 0
 -- File name and path in Window header
 vim.opt.title = true
 vim.opt.titlestring = [[%{v:lua.Utils.ui.titlestring()}]]

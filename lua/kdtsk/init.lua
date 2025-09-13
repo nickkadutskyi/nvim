@@ -72,6 +72,9 @@ Utils.on_later(function()
     -- Starts LSP logs rotation
     Utils.lsp.rotate_lsp_logs()
     vim.fn.timer_start(3600000, Utils.lsp.rotate_lsp_logs, { ["repeat"] = -1 })
+
+    -- Setting it here delayed to avoid '"[No Name]" --No lines in buffer--' message
+    vim.opt.cmdheight = 0
 end, vim.api.nvim_create_augroup("kdtsk-lazyvim", { clear = true }))
 
 -- Loads Settings modules via Lazy.nvim
