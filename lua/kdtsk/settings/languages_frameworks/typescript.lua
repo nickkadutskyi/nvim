@@ -168,7 +168,11 @@ return {
             })
 
             return vim.tbl_deep_extend("force", opts, {
-                formatters_by_ft = { typescript = fmt_conf },
+                formatters_by_ft = {
+                    typescript = fmt_conf,
+                    javascriptreact = fmt_conf,
+                    typescriptreact = fmt_conf,
+                },
                 formtters = {
                     eslint_d = { nix_pkg = "eslint_d" },
                     prettier = { nix_pkg = "prettier" },
