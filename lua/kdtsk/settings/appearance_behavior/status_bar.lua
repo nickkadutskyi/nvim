@@ -97,18 +97,7 @@ return {
                             end,
                         },
                         { Utils.lualine.component_macro_recording },
-                        {
-                            "harpoon2",
-                            icon = "",
-                            -- Plain numbers
-                            -- indicators = { "①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧" },
-                            -- active_indicators = { "➊", "➋", "➌", "➍", "➎", "➏", "➐", "➑" },
-                            -- Nerd font icons
-                            indicators = { "󰲡", "󰲣", "󰲥", "󰲧", "󰲩", "󰲫", "󰲭", "󰲯" },
-                            active_indicators = { "󰲠", "󰲢", "󰲤", "󰲦", "󰲨", "󰲪", "󰲬", "󰲮" },
-                            _separator = " ",
-                            no_harpoon = "Harpoon not loaded",
-                        },
+                        { "harpoon" },
                         {
                             Utils.lualine.gitstat_subsec_has_unsaved_buffers,
                             color = "StatusBarHasUnsavedBuffers",

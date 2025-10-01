@@ -26,6 +26,16 @@ return {
             local harpoon_extensions = require("harpoon.extensions")
             harpoon:extend(harpoon_extensions.builtins.highlight_current_file())
             harpoon:extend(harpoon_extensions.builtins.navigate_with_number())
+            harpoon:extend({
+                -- Clear the list if the only item in the list is nil
+                LIST_CHANGE = function()
+                    if harpoon:list():length() == 1 and harpoon:list():get(1) == nil then
+                        vim.schedule(function()
+                            harpoon:list():clear()
+                        end)
+                    end
+                end,
+            })
 
             vim.keymap.set("n", "<leader>a", function()
                 harpoon:list():add()
@@ -60,12 +70,29 @@ return {
         end,
     },
     {
-        "letieu/harpoon-lualine",
-        dependencies = {
-            {
-                "ThePrimeagen/harpoon",
-                branch = "harpoon2",
+        "kristoferssolo/lualine-harpoon.nvim",
+        dependencies = { { "ThePrimeagen/harpoon", branch = "harpoon2" } },
+        opts = {
+            -- Configure symbols used in the display
+            symbol = {
+                -- open = "[",
+                open = "",
+                -- close = "]",
+                close = "",
+                separator = "/",
+                unknown = "?",
             },
+            -- Icon displayed before the harpoon status
+            icon = "󰀱",
+            -- icon = "",
+            -- Show component even when there are no harpoon marks
+            show_when_empty = false,
+            -- Custom format function (overrides default formatting)
+            -- format = function(current, total)
+            --     return string.format("Harpoon: %s/%d", current or "?", total)
+            -- end,
+            -- Cache timeout in milliseconds for performance
+            cache_timeout = 100,
         },
     },
     {
