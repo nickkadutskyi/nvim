@@ -80,8 +80,10 @@ local function is_simple_bracket(firstText, endText)
         { open = "{%s*$", close = "^%s*};%s*$" },
         { open = "{%s*$", close = "^%s*}%)%s*$" },
         { open = "{%s*$", close = "^%s*}.*%)%s*$" },
+        { open = "{%s*$", close = "^%s*}.*%);%s*$" },
         { open = "%[%s*$", close = "^%s*]%s*$" },
         { open = "%(%s*$", close = "^%s*%)%s*$" },
+        { open = "%(%s*$", close = "^%s*%);%s*$" },
     }
 
     for _, bracket in ipairs(brackets) do
