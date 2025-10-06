@@ -77,6 +77,7 @@ local function is_simple_bracket(firstText, endText)
     local brackets = {
         { open = "{%s*$", close = "^%s*}%s*$" },
         { open = "{%s*$", close = "^%s*},%s*$" },
+        { open = "{%s*$", close = "^%s*};%s*$" },
         { open = "{%s*$", close = "^%s*}%)%s*$" },
         { open = "{%s*$", close = "^%s*}.*%)%s*$" },
         { open = "%[%s*$", close = "^%s*]%s*$" },
