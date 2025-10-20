@@ -45,7 +45,7 @@ return {
                     },
                     lualine_b = {},
                     lualine_c = {
-                        { "nav_bar" },
+                        { "nav_bar", padding = { left = 1, right = 0 } },
                         {
                             "filetype",
                             padding = { left = 0, right = 0 },
