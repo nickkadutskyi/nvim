@@ -36,7 +36,7 @@ return {
                 documentation = {
                     -- Shows documentation pop-up automatically when available
                     auto_show = true,
-                    window = { border = "rounded", scrollbar = false },
+                    window = { border = "rounded", scrollbar = false, max_width = 100, },
                 },
                 menu = {
                     scrollbar = false,
