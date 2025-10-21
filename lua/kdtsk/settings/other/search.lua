@@ -125,7 +125,7 @@ return {
                 preview_size = 0.5,
             },
             preview = {
-                enabled = true,
+                enabled = false,
             },
             hl = {
                 border = "FloatBorder",

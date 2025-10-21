@@ -1,3 +1,4 @@
+---@type LazySpec[]
 return {
     {
         "saghen/blink.cmp",
@@ -28,7 +29,7 @@ return {
             -- See :h blink-cmp-config-keymap for defining your own keymap
             keymap = {
                 preset = "default",
-                ["<C-a>"] = { 'show', 'show_documentation', 'hide_documentation' },
+                ["<C-a>"] = { "show", "show_documentation", "hide_documentation" },
             },
 
             completion = {
