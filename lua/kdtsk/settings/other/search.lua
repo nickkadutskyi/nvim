@@ -380,6 +380,7 @@ return {
                             -- Return filename with relative parent path
                             return name .. " - " .. relParentPath
                         end,
+                        snacks_image = { enabled = true, render_inline = false },
                     },
                 },
             })
