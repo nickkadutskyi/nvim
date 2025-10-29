@@ -45,7 +45,8 @@ local function get_jujutsu_status()
     cache.debounce_timer = vim.defer_fn(function()
         cache.debounce_timer = nil
 
-        local handle = io.popen('starship-jj --ignore-working-copy starship prompt 2>/dev/null; echo "EXIT_CODE:$?"')
+        -- Get jujutsu status via starship-jj and clear ANSI codes
+        local handle = io.popen('starship-jj --ignore-working-copy starship prompt | sed \'s/\\x1b\\[[0-9;]*m//g\' | xargs 2>/dev/null; echo "EXIT_CODE:$?"')
         if not handle then
             cache.result = ""
             cache.timestamp = current_time
@@ -61,7 +62,9 @@ local function get_jujutsu_status()
 
         if exit_code == 0 and command_output and vim.trim(command_output) ~= "" then
             -- Remove ANSI escape codes and trailing whitespace/newlines
-            local cleaned = command_output:gsub("\27%[[0-9;]*m", "")
+            -- We are not cleaning ANSI codes here because we already did it in the shell command
+            -- local cleaned = command_output:gsub("\27%[[0-9;]*m", "")
+            local cleaned = command_output
             cache.result = vim.trim(cleaned)
             cache.is_jj_repo = true
         else
