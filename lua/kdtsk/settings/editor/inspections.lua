@@ -120,7 +120,7 @@ return {
                                     "String",
                                     "Number",
                                     "Null",
-                                    "Variable",
+                                    -- "Variable",
                                     "Object",
                                     "Array",
                                 },
