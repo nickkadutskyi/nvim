@@ -46,7 +46,7 @@ local function get_jujutsu_status()
         cache.debounce_timer = nil
 
         -- Get jujutsu status via starship-jj and clear ANSI codes
-        local handle = io.popen('starship-jj --ignore-working-copy starship prompt 2>/dev/null | sed \'s/\\x1b\\[[0-9;]*m//g\' | xargs ; echo "EXIT_CODE:$?"')
+        local handle = io.popen('out=$(starship-jj --ignore-working-copy starship prompt 2>/dev/null) && printf "%s" "$out" | sed \'s/\\x1b\\[[0-9;]*m//g\' | xargs ; echo "EXIT_CODE:$?" || echo "EXIT_CODE:$?"')
         if not handle then
             cache.result = ""
             cache.timestamp = current_time
