@@ -121,24 +121,44 @@ return {
                         {
                             "mode",
                             fmt = function(mode)
+                                -- local modes = {
+                                --     ["NORMAL"] = "NORM",
+                                --     ["O-PENDING"] = "OPND",
+                                --     ["VISUAL"] = "VISU",
+                                --     ["V-LINE"] = "VISL",
+                                --     ["V-BLOCK"] = "VISB",
+                                --     ["SELECT"] = "SELE",
+                                --     ["S-LINE"] = "SELL",
+                                --     ["S-BLOCK"] = "SELB",
+                                --     ["INSERT"] = "INSE",
+                                --     ["REPLACE"] = "RPLC",
+                                --     ["V-REPLACE"] = "VRPL",
+                                --     ["COMMAND"] = "COMM",
+                                --     ["EX"] = "ExEC",
+                                --     ["MORE"] = "MORE",
+                                --     ["CONFIRM"] = "CONF",
+                                --     ["SHELL"] = "SHEL",
+                                --     ["TERMINAL"] = "TERM",
+                                -- }
+                                -- Shortened mode names
                                 local modes = {
-                                    ["NORMAL"] = "NORM",
-                                    ["O-PENDING"] = "OPND",
-                                    ["VISUAL"] = "VISU",
-                                    ["V-LINE"] = "VISL",
-                                    ["V-BLOCK"] = "VISB",
-                                    ["SELECT"] = "SELE",
-                                    ["S-LINE"] = "SELL",
-                                    ["S-BLOCK"] = "SELB",
-                                    ["INSERT"] = "INSE",
-                                    ["REPLACE"] = "RPLC",
-                                    ["V-REPLACE"] = "VRPL",
-                                    ["COMMAND"] = "COMM",
-                                    ["EX"] = "ExEC",
-                                    ["MORE"] = "MORE",
-                                    ["CONFIRM"] = "CONF",
-                                    ["SHELL"] = "SHEL",
-                                    ["TERMINAL"] = "TERM",
+                                    ["NORMAL"] = "NO", -- Normal mode
+                                    ["O-PENDING"] = "OP", -- Operator-pending (e.g., after 'd', 'c', etc.)
+                                    ["VISUAL"] = "VI", -- Visual char-wise
+                                    ["V-LINE"] = "VL", -- Visual line-wise
+                                    ["V-BLOCK"] = "VB", -- Visual block-wise
+                                    ["SELECT"] = "SE", -- Select char-wise
+                                    ["S-LINE"] = "SL", -- Select line-wise
+                                    ["S-BLOCK"] = "SB", -- Select block-wise
+                                    ["INSERT"] = "IN", -- Insert mode
+                                    ["REPLACE"] = "RE", -- Replace mode
+                                    ["V-REPLACE"] = "VR", -- Virtual Replace mode
+                                    ["COMMAND"] = "CL", -- Command-line mode
+                                    ["EX"] = "Ex", -- Ex mode (rare)
+                                    ["MORE"] = "MO", -- More prompt (e.g., -- More --)
+                                    ["CONFIRM"] = "??", -- Confirmation prompt
+                                    ["SHELL"] = "Sh", -- Shell command (via :!)
+                                    ["TERMINAL"] = "TE", -- Terminal-Job mode
                                 }
                                 return modes[mode] or mode
                             end,
