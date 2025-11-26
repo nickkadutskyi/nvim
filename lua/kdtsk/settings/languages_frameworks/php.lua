@@ -48,6 +48,8 @@ return {
                                         "**/vendor/**/{Tests,tests}/**",
                                         "**/.history/**",
                                         "**/vendor/**/vendor/**",
+                                        -- This is for WordPress Starter Projects
+                                        "**/public/wp/**",
                                     },
                                     maxSize = 10000000,
                                 },
