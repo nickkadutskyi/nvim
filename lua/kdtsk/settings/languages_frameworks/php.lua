@@ -50,6 +50,9 @@ return {
                                         "**/vendor/**/vendor/**",
                                         -- This is for WordPress Starter Projects
                                         "**/public/wp/**",
+                                        "**/public/content/plugins/vendor-**",
+                                        "**/public/content/mu-plugins/vendor-**",
+                                        "**/public/content/themes/vendor-**",
                                     },
                                     maxSize = 10000000,
                                 },
