@@ -8,7 +8,6 @@ return {
             "rafamadriz/friendly-snippets",
             "folke/lazydev.nvim",
             "mikavilpas/blink-ripgrep.nvim",
-            "Kaiser-Yang/blink-cmp-avante",
         },
 
         -- use a release tag to download pre-built binaries
@@ -54,34 +53,12 @@ return {
             -- Default list of enabled providers defined so that you can extend it
             -- elsewhere in your config, without redefining it, due to `opts_extend`
             sources = {
-                default = { "lsp", "path", "snippets", "buffer", "avante" },
+                default = { "lsp", "path", "snippets", "buffer" },
                 per_filetype = {
                     lua = { inherit_defaults = true, "lazydev" },
                 },
                 providers = {
                     lsp = { fallbacks = {} },
-                    avante = {
-                        module = "blink-cmp-avante",
-                        name = "Avante",
-                        opts = {
-                            kind_icons = {
-                                Avante = "󰘳",
-                                AvanteCmd = "󰘳",
-                                AvanteMention = "",
-                            },
-                            command = {
-                                get_kind_name = function(_)
-                                    return "AvanteCmd"
-                                end,
-                            },
-                            mention = {
-                                get_kind_name = function(_)
-                                    return "AvanteMention"
-                                end,
-                            },
-                            avante = {},
-                        },
-                    },
                     lazydev = {
                         name = "LazyDev",
                         module = "lazydev.integrations.blink",
