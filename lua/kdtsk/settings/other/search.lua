@@ -138,6 +138,10 @@ return {
                 frecency = "Number",
                 debug = "Comment",
             },
+            keymaps = {
+                -- goes to the previous query in history
+                cycle_previous_query = "<C-q>",
+            },
         },
         keys = {
             {
