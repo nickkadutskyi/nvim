@@ -97,6 +97,7 @@ return {
     },
     {
         "dmtrKovalenko/fff.nvim",
+        commit = "03124925701ce1730856bcf9a21f73fa3e55455b",
         build = function()
             -- this will download prebuild binary or try to use existing rustup toolchain to build from source
             -- (if you are using lazy you can use gb for rebuilding a plugin if needed)
