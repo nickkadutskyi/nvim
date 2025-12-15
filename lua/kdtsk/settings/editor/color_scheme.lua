@@ -30,9 +30,8 @@ return {
     -- Treesitter for syntax highlight
     {
         "nvim-treesitter/nvim-treesitter",
-        dependencies = {
-            "nvim-treesitter/nvim-treesitter-textobjects",
-        },
+        lazy = false,
+        branch = "main",
         build = ":TSUpdate",
         enabled = true,
         opts = {
@@ -60,53 +59,110 @@ return {
             sync_install = false, -- Install parsers synchronously
             highlight = {
                 enable = true,
-                additional_vim_regex_highlighting = false,
             },
             indent = { enable = true },
-            incremental_selection = {
-                enable = true,
-                keymaps = {
-                    init_selection = "<A-Up>",
-                    node_incremental = "<A-Up>",
-                    scope_incremental = "<A-s>",
-                    node_decremental = "<A-Down>",
-                },
-            },
-            textobjects = {
-                select = {
-                    enable = true,
-                    keymaps = {
-                        -- You can use the capture groups defined in textobjects.scm
-                        ["af"] = "@function.outer",
-                        ["if"] = "@function.inner",
-                        ["ac"] = "@class.outer",
-                        ["ic"] = "@class.inner",
-                    },
-                },
-                move = {
-                    enable = true,
-                    set_jumps = true, -- whether to set jumps in the jumplist
-                    goto_next_start = {
-                        ["]m"] = "@function.outer",
-                        ["]]"] = "@class.outer",
-                    },
-                    goto_next_end = {
-                        ["]M"] = "@function.outer",
-                        ["]["] = "@class.outer",
-                    },
-                    goto_previous_start = {
-                        ["[m"] = "@function.outer",
-                        ["[["] = "@class.outer",
-                    },
-                    goto_previous_end = {
-                        ["[M"] = "@function.outer",
-                        ["[]"] = "@class.outer",
-                    },
-                },
-            },
         },
         config = function(_, opts)
-            require("nvim-treesitter.configs").setup(opts)
+            local ts = require("nvim-treesitter")
+            local ts_config = require("nvim-treesitter.config")
+
+            local ensure_installed = opts.ensure_installed
+            local already_installed = ts_config.get_installed("parsers")
+            local parsers_to_install = vim.iter(ensure_installed)
+                :filter(function(parser)
+                    return not vim.tbl_contains(already_installed, parser)
+                end)
+                :totable()
+
+            if #parsers_to_install > 0 then
+                ts.install(parsers_to_install)
+            end
+
+            -- filetype overrides
+            local syntax_map = {
+                ["tiltfile"] = "starlark",
+                ["gotexttmpl"] = "gotmpl",
+                ["gohtmltmpl"] = "gotmpl",
+            }
+
+            local function ts_start(bufnr, parser_name)
+                if opts.highlight.enable then
+                    vim.treesitter.start(bufnr, parser_name)
+                    -- Use regex based syntax-highlighting as fallback as some plugins might need it
+                    vim.bo[bufnr].syntax = "ON"
+                end
+                -- Use treesitter for folds
+                vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+                vim.wo.foldtext = "v:lua.vim.treesitter.foldtext()"
+
+                if opts.indent.enable then
+                    -- Use treesitter for indentation
+                    -- vim.bo[bufnr].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+                    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+                end
+            end
+
+            ts.setup({
+                -- Directory to install parsers and queries to
+                install_dir = vim.fn.stdpath("data") .. "/site",
+            })
+
+            -- Auto-install and start parsers for any buffer
+            vim.api.nvim_create_autocmd({ "FileType" }, {
+                desc = "Enable Treesitter",
+                callback = function(event)
+                    local bufnr = event.buf
+                    local filetype = event.match
+
+                    -- Skip if no filetype
+                    if filetype == "" then
+                        return
+                    end
+                    -- Get parser name based on filetype
+                    local lang = vim.tbl_get(syntax_map, filetype)
+                    if lang == nil then
+                        lang = filetype
+                    else
+                        vim.notify("Using language override " .. lang)
+                    end
+                    local parser_name = vim.treesitter.language.get_lang(lang)
+                    if not parser_name then
+                        vim.notify(
+                            vim.inspect("No treesitter parser found for filetype: " .. lang),
+                            vim.log.levels.WARN
+                        )
+                        return
+                    end
+
+                    -- Try to get existing parser
+                    if not vim.tbl_contains(ts_config.get_available(), parser_name) then
+                        return
+                    end
+
+                    -- Check if parser is already installed
+                    if not vim.tbl_contains(already_installed, parser_name) then
+                        -- If not installed, install parser asynchronously and start treesitter
+                        if opts.auto_install == true then
+                            vim.notify("Installing parser for " .. parser_name, vim.log.levels.INFO)
+                            if opts.sync_install == true then
+                                ts.install({ parser_name })
+                                vim.defer_fn(function()
+                                    ts_start(bufnr, parser_name)
+                                end, 5000)
+                            else
+                                -- ts.install({ parser_name })
+                                ts.install({ parser_name }):await(function()
+                                    ts_start(bufnr, parser_name)
+                                end)
+                            end
+                        end
+                        return
+                    end
+
+                    -- Start treesitter for this buffer
+                    ts_start(bufnr, parser_name)
+                end,
+            })
 
             -- Treesitter Inspect builtin
             vim.keymap.set("n", "<leader>si", ":Inspect<CR>", {

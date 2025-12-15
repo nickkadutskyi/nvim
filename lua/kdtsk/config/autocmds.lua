@@ -54,6 +54,7 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.bo[event.buf].buflisted = false
         vim.schedule(function()
             local opts = { buffer = event.buf, silent = true, desc = "Buffer: [q/Esc] Close" }
+            -- TODO: check if it's the last window in the tabpage, and if so, close the tabpage instead
             vim.keymap.set("n", "q", function()
                 vim.cmd("close")
                 pcall(vim.api.nvim_buf_delete, event.buf, { force = true })
