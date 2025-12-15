@@ -89,7 +89,7 @@ return {
                 if opts.highlight.enable then
                     vim.treesitter.start(bufnr, parser_name)
                     -- Use regex based syntax-highlighting as fallback as some plugins might need it
-                    vim.bo[bufnr].syntax = "ON"
+                    -- vim.bo[bufnr].syntax = "ON"
                 end
                 -- Use treesitter for folds
                 vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
