@@ -135,6 +135,28 @@ return {
                 active_file = "FzfLuaFzfCursorLine",
                 frecency = "Number",
                 debug = "Comment",
+
+                -- Git text highlights for file names
+                git_staged = "CustomFFFGitStaged",
+                git_modified = "CustomFFFGitModified",
+                git_deleted = "CustomFFFGitDeleted",
+                git_renamed = "CustomFFFGitRenamed",
+                git_untracked = "CustomFFFGitUntracked",
+                git_ignored = "CustomFFFGitIgnored",
+                -- Git sign/border highlights
+                git_sign_staged = "CustomFFFGitSignStaged",
+                git_sign_modified = "CustomFFFGitSignModified",
+                git_sign_deleted = "CustomFFFGitSignDeleted",
+                git_sign_renamed = "CustomFFFGitSignRenamed",
+                git_sign_untracked = "CustomFFFGitSignUntracked",
+                git_sign_ignored = "CustomFFFGitSignIgnored",
+                -- Git sign selected highlights
+                git_sign_staged_selected = "CustomFFFGitSignStagedSelected",
+                git_sign_modified_selected = "CustomFFFGitSignModifiedSelected",
+                git_sign_deleted_selected = "CustomFFFGitSignDeletedSelected",
+                git_sign_renamed_selected = "CustomFFFGitSignRenamedSelected",
+                git_sign_untracked_selected = "CustomFFFGitSignUntrackedSelected",
+                git_sign_ignored_selected = "CustomFFFGitSignIgnoredSelected",
             },
             keymaps = {
                 -- goes to the previous query in history
@@ -150,6 +172,39 @@ return {
                 desc = "Open file picker",
             },
         },
+    },
+    {
+        -- TODO: integrate it properly and see if it's good enough
+        -- Provides frecency functionality to fzf-lua
+        "elanmed/fzf-lua-frecency.nvim",
+        opts = {
+            -- -- the default actions for FzfLua files, with an additional
+            -- -- ["ctrl-x"] action to remove a file's frecency score
+            -- actions = actions,
+            -- -- FzfLua's default previewer
+            -- previewer = previewer,
+            file_icons = true,
+            color_icons = true,
+            git_icons = false,
+            fzf_opts = {
+                ["--multi"] = true,
+                ["--scheme"] = "path",
+                ["--no-sort"] = true,
+            },
+            winopts = { preview = { winopts = { cursorline = false } } },
+            multiprocess = true,
+            -- fn_transform = function(abs_file, opts)
+            --     local entry = FzfLua.make_entry.file(rel_file, opts)
+            --     -- ...
+            --     -- prepends the frecency score if `display_score=true`
+            --     -- filters out files that no longer exist if `stat_file=true`
+            --     -- ...
+            --     return entry
+            -- end,
+        },
+        config = function(opts, _)
+            require("fzf-lua-frecency").setup(opts)
+        end,
     },
     {
         -- Search Everywhere
