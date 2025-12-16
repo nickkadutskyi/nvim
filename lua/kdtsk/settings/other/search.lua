@@ -136,6 +136,12 @@ return {
                 frecency = "Number",
                 debug = "Comment",
 
+                combo_header = "Number",
+                scrollbar = "FzfLuaFzfScrollbar", -- Highlight for scrollbar thumb (track uses border)
+                -- Multi-select highlights
+                selected = "FFFSelected",
+                selected_active = "FFFSelectedActive",
+
                 -- Git text highlights for file names
                 git_staged = "CustomFFFGitStaged",
                 git_modified = "CustomFFFGitModified",
@@ -160,7 +166,7 @@ return {
             },
             keymaps = {
                 -- goes to the previous query in history
-                cycle_previous_query = "<C-q>",
+                cycle_previous_query = "<C-h>",
             },
         },
         keys = {
