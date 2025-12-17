@@ -138,35 +138,14 @@ return {
 
                 combo_header = "Number",
                 scrollbar = "FzfLuaFzfScrollbar", -- Highlight for scrollbar thumb (track uses border)
-                -- Multi-select highlights
-                selected = "FFFSelected",
-                selected_active = "FFFSelectedActive",
-
-                -- Git text highlights for file names
-                git_staged = "CustomFFFGitStaged",
-                git_modified = "CustomFFFGitModified",
-                git_deleted = "CustomFFFGitDeleted",
-                git_renamed = "CustomFFFGitRenamed",
-                git_untracked = "CustomFFFGitUntracked",
-                git_ignored = "CustomFFFGitIgnored",
-                -- Git sign/border highlights
-                git_sign_staged = "CustomFFFGitSignStaged",
-                git_sign_modified = "CustomFFFGitSignModified",
-                git_sign_deleted = "CustomFFFGitSignDeleted",
-                git_sign_renamed = "CustomFFFGitSignRenamed",
-                git_sign_untracked = "CustomFFFGitSignUntracked",
-                git_sign_ignored = "CustomFFFGitSignIgnored",
-                -- Git sign selected highlights
-                git_sign_staged_selected = "CustomFFFGitSignStagedSelected",
-                git_sign_modified_selected = "CustomFFFGitSignModifiedSelected",
-                git_sign_deleted_selected = "CustomFFFGitSignDeletedSelected",
-                git_sign_renamed_selected = "CustomFFFGitSignRenamedSelected",
-                git_sign_untracked_selected = "CustomFFFGitSignUntrackedSelected",
-                git_sign_ignored_selected = "CustomFFFGitSignIgnoredSelected",
             },
             keymaps = {
                 -- goes to the previous query in history
                 cycle_previous_query = "<C-h>",
+            },
+            -- Git integration
+            git = {
+                status_text_color = true, -- Apply git status colors to filename text (default: false, only sign column)
             },
         },
         keys = {
