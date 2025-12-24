@@ -162,6 +162,7 @@ return {
         -- TODO: integrate it properly and see if it's good enough
         -- Provides frecency functionality to fzf-lua
         "elanmed/fzf-lua-frecency.nvim",
+        enabled = false,
         opts = {
             -- -- the default actions for FzfLua files, with an additional
             -- -- ["ctrl-x"] action to remove a file's frecency score
