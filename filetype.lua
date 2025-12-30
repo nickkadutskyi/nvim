@@ -1,6 +1,7 @@
 -- This file is automatically loaded by Neovim before any filetype is detected
 vim.filetype.add({
     extension = {
+        caddy = 'caddy',
         -- Neon is a YAML-like language
         neon = "yaml",
         yml = "yaml",
@@ -21,6 +22,7 @@ vim.filetype.add({
         -- Config file for js-beautify
         -- (used by Intelephense https://github.com/bmewburn/vscode-intelephense/issues/729)
         [".jsbeautifyrc"] = "json",
+        Caddyfile = 'caddy',
     },
     pattern = {
         ["%.env%..*"] = "sh",
