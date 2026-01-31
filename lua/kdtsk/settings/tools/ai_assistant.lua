@@ -47,6 +47,7 @@ return {
             local cwd = vim.uv.cwd()
             local basename = vim.fs.basename(cwd)
             _99.setup({
+                model = "github-copilot/claude-opus-4.5",
                 logger = {
                     level = _99.DEBUG,
                     path = "/tmp/" .. basename .. ".99.debug",
@@ -73,14 +74,13 @@ return {
                     --- ... the other rules in that dir ...
                     ---
                     custom_rules = {
-                      "scratch/custom_rules/",
+                        "scratch/custom_rules/",
                     },
 
                     --- What autocomplete do you use.  We currently only
                     --- support cmp right now
                     -- source = "cmp",
                 },
-
 
                 --- WARNING: if you change cwd then this is likely broken
                 --- ill likely fix this in a later change
@@ -98,7 +98,8 @@ return {
 
             -- Create your own short cuts for the different types of actions
             vim.keymap.set("n", "<leader>9f", function()
-                _99.fill_in_function()
+                -- _99.fill_in_function()
+                _99.fill_in_function_prompt()
             end)
             -- take extra note that i have visual selection only in v mode
             -- technically whatever your last visual selection is, will be used
@@ -108,7 +109,8 @@ return {
             -- likely ill add a mode check and assert on required visual mode
             -- so just prepare for it now
             vim.keymap.set("v", "<leader>9v", function()
-                _99.visual()
+                -- _99.visual()
+                _99.visual_prompt({})
             end)
 
             --- if you have a request you dont want to make any changes, just cancel it
