@@ -2,7 +2,11 @@
 local M = {}
 
 function M.add_todos_to_global()
-    require("todo-comments.search").search(function(results)
+    local has_todo_search, todo_search = pcall(require, "todo-comments.search")
+    if not has_todo_search then
+        return
+    end
+    todo_search.search(function(results)
         local todos_lines = {}
         for _, result in ipairs(results) do
             todos_lines[result.filename] = todos_lines[result.filename] or {}
