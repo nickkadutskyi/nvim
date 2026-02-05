@@ -15,13 +15,28 @@ return {
             local fmt_conf_twig = {
                 async = true,
                 timeout_ms = 1500,
+                stop_after_first = false,
             }
 
+            -- Twig-CS-Fixer
             fmt_conf_twig = Utils.tools.extend_if_enabled(fmt_conf_twig, { "twig-cs-fixer" }, {
                 "twig",
                 "twig-cs-fixer",
                 Utils.tools.purpose.STYLE,
                 { ".twig-cs-fixer.dist.php", ".twig-cs-fixer.php", "symfony.lock" },
+            })
+            -- Prettierd
+            fmt_conf_twig = Utils.tools.extend_if_enabled(fmt_conf_twig, { "prettierd" }, {
+                "twig",
+                "prettierd",
+                Utils.tools.purpose.STYLE,
+                { ".prettierrc", ".prettierrc.json", ".prettierrc.js", ".prettierrc.yaml", ".prettierrc.yml" },
+            })
+            -- Prettier
+            fmt_conf_twig = Utils.tools.extend_if_enabled(fmt_conf_twig, { "prettier" }, {
+                "twig",
+                "prettier",
+                Utils.tools.purpose.STYLE,
             })
 
             return vim.tbl_deep_extend("force", opts, {
