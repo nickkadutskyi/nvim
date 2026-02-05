@@ -23,6 +23,31 @@ return {
                     },
                 },
                 transparent = true,
+                enforce_float_style = {
+                    {
+                        style = { border = require("jb.borders").borders.dialog.default },
+                        condition = function(_, _, config)
+                            if type(config.title) ~= "string" then
+                                return false
+                            end
+                            return config.title == " Plugins " or config.title:find("99") ~= nil
+                        end,
+                    },
+                    {
+                        style = { border = require("jb.borders").borders.dialog.split_top },
+                        condition = function(bufnr, _, _)
+                            local fff_input_buf = require("fff.picker_ui").state.input_buf
+                            return bufnr == fff_input_buf
+                        end,
+                    },
+                    {
+                        style = { border = require("jb.borders").borders.dialog.default },
+                        condition = function(bufnr, _, _)
+                            local fff_list_buf = require("fff.picker_ui").state.list_buf
+                            return bufnr == fff_list_buf
+                        end,
+                    },
+                },
             })
             vim.cmd("colorscheme jb")
         end,

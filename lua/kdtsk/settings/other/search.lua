@@ -41,7 +41,11 @@ return {
                 harpoon:list():add()
             end, { desc = "Bookmarks: add current buffers to the list" })
             vim.keymap.set("n", "<C-e>", function()
-                harpoon.ui:toggle_quick_menu(harpoon:list())
+                harpoon.ui:toggle_quick_menu(harpoon:list(), {
+                    title = " Bookmarks ",
+                    title_pos = "center",
+                    border = require("jb.borders").borders.dialog.default,
+                })
             end, { desc = "Bookmarks: toggele list modal" })
 
             vim.keymap.set("n", "<C-1>", function()
@@ -130,7 +134,7 @@ return {
                 normal = "FzfLuaFzfNormal",
                 cursor = "FzfLuaFzfCursorLine",
                 matched = "FzfLuaFzfMatch",
-                title = "FzfLuaFzfHeader",
+                title = "FzfLuaTitle",
                 prompt = "FzfLuaFzfPrompt",
                 active_file = "FzfLuaFzfCursorLine",
                 frecency = "Number",
