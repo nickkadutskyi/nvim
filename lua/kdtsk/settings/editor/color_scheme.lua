@@ -36,15 +36,24 @@ return {
                     {
                         style = { border = require("jb.borders").borders.dialog.split_top },
                         condition = function(bufnr, _, _)
-                            local fff_input_buf = require("fff.picker_ui").state.input_buf
-                            return bufnr == fff_input_buf
+                            return bufnr == require("fff.picker_ui").state.input_buf
                         end,
                     },
                     {
                         style = { border = require("jb.borders").borders.dialog.default },
                         condition = function(bufnr, _, _)
-                            local fff_list_buf = require("fff.picker_ui").state.list_buf
-                            return bufnr == fff_list_buf
+                            return bufnr == require("fff.picker_ui").state.list_buf
+                        end,
+                    },
+                    {
+                        style = { border = require("jb.borders").borders.dialog.split_bottom },
+                        condition = function(bufnr, _, _)
+                            return bufnr == require("fff.picker_ui").state.preview_buf
+                        end,
+                        after = function(winid, _, _)
+                            vim.schedule(function()
+                                vim.api.nvim_set_option_value("winhl", "Normal:Normal", { win = winid })
+                            end)
                         end,
                     },
                 },

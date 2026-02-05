@@ -127,7 +127,8 @@ return {
                 preview_size = 0.5,
             },
             preview = {
-                enabled = false,
+                -- enabled = false,
+                line_numbers = true,
             },
             hl = {
                 border = "FloatBorder",
@@ -336,7 +337,7 @@ return {
                         row = 0.35,
                         -- Allows to turn on/off preview window
                         preview = {
-                            hidden = true,
+                            -- hidden = true,
                             border = require("jb.borders").borders.dialog.split_bottom,
                         },
                         border = require("jb.borders").borders.dialog.default,
