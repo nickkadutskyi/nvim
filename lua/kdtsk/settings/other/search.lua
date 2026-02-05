@@ -111,7 +111,7 @@ return {
         -- build = "nix run .#release",
         opts = {
             base_path = vim.fn.getcwd(),
-            prompt = " ",
+            prompt = "   ",
             title = "Files",
             layout = {
                 -- height = 25,
