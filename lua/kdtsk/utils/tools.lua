@@ -134,6 +134,7 @@ end
 ---| '"vue"'
 ---| '"tailwindcss"'
 ---| '"blade"'
+---| '"twig"'
 ---| '"css"'
 ---| '"scss"'
 
