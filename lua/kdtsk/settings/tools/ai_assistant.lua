@@ -11,7 +11,7 @@ return {
             })
         end,
         init = function()
-            vim.g.copilot_settings = { selectedCompletionModel = "gpt-4o-copilot" }
+            vim.g.copilot_settings = { selectedCompletionModel = "gpt-41-copilot" }
             vim.g.copilot_integration_id = "vscode-chat"
             vim.g.copilot_lsp_settings = {
                 telemetry = {
@@ -47,7 +47,7 @@ return {
             local cwd = vim.uv.cwd()
             local basename = vim.fs.basename(cwd)
             _99.setup({
-                model = "github-copilot/claude-opus-4.5",
+                model = "github-copilot/claude-opus-4.6",
                 logger = {
                     level = _99.DEBUG,
                     path = "/tmp/" .. basename .. ".99.debug",
