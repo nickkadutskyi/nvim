@@ -164,6 +164,55 @@ return {
         },
     },
     {
+        -- Provides frecency functionality to fzf-lua
+        -- Use this as "Recent Files" feature in Intellij (CMD + E)
+        "elanmed/fzf-lua-frecency.nvim",
+        opts = {
+            cwd_only = true,
+            all_files = false,
+            display_score = false,
+
+            -- -- the default actions for FzfLua files, with an additional
+            -- -- ["ctrl-x"] action to remove a file's frecency score
+            -- actions = actions,
+            -- -- FzfLua's default previewer
+            -- previewer = previewer,
+            file_icons = true,
+            color_icons = true,
+            git_icons = false,
+            fzf_opts = {
+                ["--multi"] = true,
+                ["--scheme"] = "path",
+                ["--no-sort"] = true,
+            },
+            winopts = {
+                title = " Recent Files ",
+                title_pos = "left",
+                preview = { winopts = { cursorline = false } },
+            },
+            multiprocess = true,
+            -- fn_transform = function(abs_file, opts)
+            --     local entry = FzfLua.make_entry.file(rel_file, opts)
+            --     -- ...
+            --     -- prepends the frecency score if `display_score=true`
+            --     -- filters out files that no longer exist if `stat_file=true`
+            --     -- ...
+            --     return entry
+            -- end,
+        },
+        config = function(_, opts)
+            require("fzf-lua-frecency").setup(opts)
+
+            -- Recent Files (Similar to Recent Files in Intellij)
+            vim.keymap.set(
+                "n",
+                "<leader>gr",
+                require("fzf-lua-frecency").frecency,
+                { noremap = true, desc = "Search: [g]o to f[r]ecent files" }
+            )
+        end,
+    },
+    {
         -- Search Everywhere
         -- Faster fzf in case of a large project
         -- DEPENDENCIES: Linux or Mac, fzf or skim, OPTIONAL: fd, rg, bat, delta, chafa
@@ -322,20 +371,20 @@ return {
                         end,
                     },
                 },
-                buffers = {
-                    winopts = {
-                        title = " Switcher ",
-                        title_pos = "left",
-                        preview = {
-                            hidden = true,
-                            border = require("jb.borders").borders.dialog.split_bottom,
-                        },
-                    },
-                    prompt = "  ",
-                    actions = {
-                        ["alt-backspace"] = { fn = actions.buf_del, reload = true },
-                    },
-                },
+                -- buffers = {
+                --     winopts = {
+                --         title = " Switcher ",
+                --         title_pos = "left",
+                --         preview = {
+                --             hidden = true,
+                --             border = require("jb.borders").borders.dialog.split_bottom,
+                --         },
+                --     },
+                --     prompt = "  ",
+                --     actions = {
+                --         ["alt-backspace"] = { fn = actions.buf_del, reload = true },
+                --     },
+                -- },
                 grep = {
                     winopts = {
                         title = " Find in Files ",
@@ -420,9 +469,6 @@ return {
                 end
                 last_find_in_path_time = curr_time
             end, { noremap = true, desc = "Search: [f]ind in [p]ath" })
-
-            -- Go to buffer (Similar to Switcher in Intellij)
-            vim.keymap.set("n", "<leader>gb", fzf.buffers, { noremap = true, desc = "[g]o to [b]uffer" })
         end,
     },
 }
