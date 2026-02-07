@@ -469,6 +469,9 @@ return {
                 end
                 last_find_in_path_time = curr_time
             end, { noremap = true, desc = "Search: [f]ind in [p]ath" })
+
+            -- Go to buffer (Similar to Switcher in Intellij)
+            vim.keymap.set("n", "<leader>gb", fzf.buffers, { noremap = true, desc = "[g]o to [b]uffer" })
         end,
     },
 }
