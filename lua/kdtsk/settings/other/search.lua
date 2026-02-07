@@ -371,20 +371,20 @@ return {
                         end,
                     },
                 },
-                -- buffers = {
-                --     winopts = {
-                --         title = " Switcher ",
-                --         title_pos = "left",
-                --         preview = {
-                --             hidden = true,
-                --             border = require("jb.borders").borders.dialog.split_bottom,
-                --         },
-                --     },
-                --     prompt = "  ",
-                --     actions = {
-                --         ["alt-backspace"] = { fn = actions.buf_del, reload = true },
-                --     },
-                -- },
+                buffers = {
+                    winopts = {
+                        title = " Switcher ",
+                        title_pos = "left",
+                        preview = {
+                            hidden = true,
+                            border = require("jb.borders").borders.dialog.split_bottom,
+                        },
+                    },
+                    prompt = "  ",
+                    actions = {
+                        ["alt-backspace"] = { fn = actions.buf_del, reload = true },
+                    },
+                },
                 grep = {
                     winopts = {
                         title = " Find in Files ",
