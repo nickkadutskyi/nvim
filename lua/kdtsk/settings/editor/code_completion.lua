@@ -35,7 +35,7 @@ return {
                 documentation = {
                     -- Shows documentation pop-up automatically when available
                     auto_show = true,
-                    window = { border = "rounded", scrollbar = false, max_width = 100, },
+                    window = { border = "rounded", scrollbar = false, max_width = 100 },
                 },
                 menu = {
                     scrollbar = false,
@@ -99,6 +99,25 @@ return {
                                 },
                             },
                             debug = false,
+                        },
+                    },
+
+                    snippets = {
+                        opts = {
+                            friendly_snippets = true, -- default
+
+                            -- see the list of frameworks in: https://github.com/rafamadriz/friendly-snippets/tree/main/snippets/frameworks
+                            -- and search for possible languages in: https://github.com/rafamadriz/friendly-snippets/blob/main/package.json
+                            -- the following is just an example, you should only enable the frameworks that you use
+                            extended_filetypes = {
+                                markdown = { "jekyll" },
+                                sh = { "shelldoc" },
+                                php = { "phpdoc" },
+                                cpp = { "unreal" },
+                                javascript = { "jsdoc" },
+                                lua = { "luadoc" },
+                                typescript = { "tsdoc" },
+                            },
                         },
                     },
                 },
