@@ -9,6 +9,36 @@ return {
         end,
     },
     {
+        "nvim-lspconfig", -- Language Servers
+        opts = function(_, opts)
+            local servers = {
+                ["twiggy_language_server"] = {
+                    enabled = Utils.tools.is_component_enabled(
+                        "twig",
+                        "twiggy_language_server",
+                        Utils.tools.purpose.LSP,
+                        { ".twig-cs-fixer.dist.php", ".twig-cs-fixer.php", "symfony.lock" }
+                    ),
+                    bin = Utils.js.find_executable("twiggy-language-server"),
+                    settings = {
+                        twiggy = {
+                            framework = "symfony",
+                            phpExecutable = "php",
+                            symfonyConsolePath = "bin/console",
+                            diagnostics = {
+                                twigCsFixer = false,
+                            },
+                        },
+                    },
+                },
+            }
+            return vim.tbl_deep_extend("force", opts, {
+                ---@type table<string,vim.lsp.ConfigLocal>
+                servers = servers,
+            })
+        end,
+    },
+    {
         "conform.nvim", -- Code Style
         opts = function(_, opts)
             local util = require("conform.util")
