@@ -36,19 +36,22 @@ return {
                     {
                         style = { border = require("jb.borders").borders.dialog.split_top },
                         condition = function(bufnr, _, _)
-                            return bufnr == require("fff.picker_ui").state.input_buf
+                            local ok, fff = pcall(require, "fff.picker_ui")
+                            return not ok and false or bufnr == fff.state.input_buf
                         end,
                     },
                     {
                         style = { border = require("jb.borders").borders.dialog.default },
                         condition = function(bufnr, _, _)
-                            return bufnr == require("fff.picker_ui").state.list_buf
+                            local ok, fff = pcall(require, "fff.picker_ui")
+                            return not ok and false or bufnr == fff.state.list_buf
                         end,
                     },
                     {
                         style = { border = require("jb.borders").borders.dialog.split_bottom },
                         condition = function(bufnr, _, _)
-                            return bufnr == require("fff.picker_ui").state.preview_buf
+                            local ok, fff = pcall(require, "fff.picker_ui")
+                            return not ok and false or bufnr == fff.state.preview_buf
                         end,
                         after = function(winid, _, _)
                             vim.schedule(function()
