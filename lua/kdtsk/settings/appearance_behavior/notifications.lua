@@ -15,12 +15,34 @@ return {
                 WARN = "",
             },
             top_down = false,
-            stages = "static",
-            on_open = function(win)
-                local config = vim.api.nvim_win_get_config(win)
-                config.border = require("jb.borders").borders.notification
-                vim.api.nvim_win_set_config(win, config)
-            end,
+            -- stages = "static",
+            -- NOTE: Using custom stages to provide my own border and padding
+            stages = {
+                function(state)
+                    local next_height = state.message.height + 2
+                    local next_row =
+                        require("notify.stages.util").available_slot(state.open_windows, next_height, "bottom_up")
+                    if not next_row then
+                        return nil
+                    end
+                    return {
+                        relative = "editor",
+                        anchor = "NE",
+                        width = state.message.width,
+                        height = state.message.height,
+                        col = vim.opt.columns:get() - 2,
+                        row = next_row,
+                        border = require("jb.borders").borders.notification,
+                        style = "minimal",
+                    }
+                end,
+                function()
+                    return {
+                        col = vim.opt.columns:get() - 2,
+                        time = true,
+                    }
+                end,
+            },
         },
         init = function()
             vim.notify = function(message, level, opts)
@@ -42,31 +64,6 @@ return {
                 local client = vim.lsp.get_client_by_id(params.client_id) or {}
                 vim.notify(method.message, severity[method.type], { title = "LSP: " .. (client.name or "Unknown") })
             end
-
-            -- Fixes overlap with statusline
-            -- See https://github.com/rcarriga/nvim-notify/issues/189#issuecomment-2225599658
-            local override = function(direction)
-                local top = 0
-                local bottom = vim.opt.lines:get()
-                    - (vim.opt.cmdheight:get() + (vim.opt.laststatus:get() > 0 and 1 or 0))
-                if vim.wo.winbar then
-                    bottom = bottom - 2
-                end
-                local left = 1
-                local right = vim.opt.columns:get()
-                if direction == "top_down" then
-                    return top, bottom
-                elseif direction == "bottom_up" then
-                    return bottom, top
-                elseif direction == "left_right" then
-                    return left, right
-                elseif direction == "right_left" then
-                    return right, left
-                end
-                error(string.format("Invalid direction: %s", direction))
-            end
-            local util = require("notify.stages.util")
-            util.get_slot_range = override
         end,
     },
 }
