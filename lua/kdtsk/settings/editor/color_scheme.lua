@@ -41,7 +41,7 @@ return {
                         end,
                     },
                     {
-                        style = { border = require("jb.borders").borders.dialog.default_box },
+                        style = { border = require("jb.borders").borders.dialog.default_box_split_middle },
                         condition = function(bufnr, _, _)
                             local ok, fff = pcall(require, "fff.picker_ui")
                             return not ok and false or bufnr == fff.state.list_buf
