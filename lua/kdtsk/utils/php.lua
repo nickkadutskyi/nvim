@@ -148,8 +148,8 @@ M.linters = {
                     lnum = lnum,
                     col = col - 1,
                     end_col = end_col - 1,
-                    code = message.identifier and "\n" .. message.identifier or "", -- only works for phpstan >= 1.11
-                    message = message.message .. (message.tip and "\n---\nTip: " .. message.tip or "") .. "\n",
+                    code = message.identifier and message.identifier or "", -- only works for phpstan >= 1.11
+                    message = message.message .. (message.tip and "\n---\nTip: " .. message.tip .. "\n" or ""),
                     source = "phpstan",
                     severity = vim.diagnostic.severity.ERROR,
                 })
