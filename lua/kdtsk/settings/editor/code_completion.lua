@@ -141,6 +141,13 @@ return {
         opts_extend = { "sources.default" },
         config = function(_, opts)
             opts.appearance.kind_icons = Utils.icons.kind
+
+            -- Handle borders
+            local ok, borders = pcall(require, "jb.borders")
+            local border = ok and borders.borders.dialog.default_box or "rounded"
+            opts.completion.documentation.window.border = border
+            opts.completion.menu.border = border
+
             require("blink.cmp").setup(opts)
         end,
     },
