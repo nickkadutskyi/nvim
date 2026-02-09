@@ -12,10 +12,11 @@ Utils.on_later(function()
             -- Shows source of inspection in the front
             source = true,
             header = "",
-            -- max_width = 76,
+            -- max_width = 100,
             max_width = (function()
                 local columns = vim.o.columns
-                return math.floor(columns * 0.8)
+                local width =  math.floor(columns * 0.95)
+                return width <= 100 and width or 100
             end)(),
             prefix = "  ",
 
