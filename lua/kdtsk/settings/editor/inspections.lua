@@ -6,19 +6,28 @@ Utils.on_later(function()
         -- [icon] [source]: [message] [code]
         float = {
             focusable = true,
-            -- NOTE: currently couldn't find any good border pattern
-            -- It looks fine in light but not in dark
-            border = "rounded",
+            -- border = "rounded",
+            border = require("jb.borders").borders.dialog.default_box,
             scope = "cursor",
             -- Shows source of inspection in the front
             source = true,
             header = "",
-            -- Adds inspection icons to indicate severity
-            prefix = function(diagnostic)
-                local icon = Utils.icons.diagnostic[diagnostic.severity]
-                local severity_name = vim.diagnostic.severity[diagnostic.severity]
-                return " " .. icon .. " ", "DiagnosticSign" .. severity_name
-            end,
+            -- max_width = 76,
+            max_width = (function()
+                local columns = vim.o.columns
+                return math.floor(columns * 0.8)
+            end)(),
+
+            -- -- Adds inspection icons to indicate severity
+            -- prefix = function(diagnostic)
+            --     local icon = Utils.icons.diagnostic[diagnostic.severity]
+            --     local severity_name = vim.diagnostic.severity[diagnostic.severity]
+            --     return icon .. " ", "DiagnosticSign" .. severity_name
+            -- end,
+            -- format = function(diagnostic)
+            --     return "\n" .. diagnostic.message
+            -- end,
+
             -- Adds error code in comment style in the end
             suffix = function(diagnostic)
                 local code = diagnostic.code

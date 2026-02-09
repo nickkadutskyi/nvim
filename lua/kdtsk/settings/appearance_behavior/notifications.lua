@@ -16,6 +16,11 @@ return {
             },
             top_down = false,
             stages = "static",
+            on_open = function(win)
+                local config = vim.api.nvim_win_get_config(win)
+                config.border = require("jb.borders").borders.notification
+                vim.api.nvim_win_set_config(win, config)
+            end,
         },
         init = function()
             vim.notify = function(message, level, opts)
