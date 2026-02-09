@@ -17,7 +17,7 @@ Utils.on_later(function()
                 local columns = vim.o.columns
                 return math.floor(columns * 0.8)
             end)(),
-            prefix = " ",
+            prefix = "  ",
 
             -- -- Adds inspection icons to indicate severity
             -- prefix = function(diagnostic)
