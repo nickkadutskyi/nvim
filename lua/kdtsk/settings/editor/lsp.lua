@@ -205,14 +205,18 @@ vim.api.nvim_create_autocmd("LspAttach", {
         )
         vim.keymap.set("n", "<leader>gs", symbol_in_workspace, { buffer = event.buf, desc = "LSP: [g]o to [s]ymbol" })
 
+        local ok, borders = pcall(require, "jb.borders")
+        local border_hover = ok and borders.borders.dialog.default_box or "rounded"
+        local border_signature = ok and borders.borders.dialog.default_box_header or "rounded"
+
         -- LSP Hover or Quick Documentation
         vim.keymap.set("n", "K", function()
-            vim.lsp.buf.hover({ border = "rounded" })
+            vim.lsp.buf.hover({ border = border_hover })
         end, { buffer = event.buf, desc = "LSP: [K]eeword lookup/quick documentation" })
 
         -- LSP Signature Help or Parameter Info
         vim.keymap.set({ "i", "n" }, "<C-s>", function()
-            vim.lsp.buf.signature_help({ border = "rounded" })
+            vim.lsp.buf.signature_help({ border = border_signature })
         end, { desc = "LSP: [C-h]elp signature" })
 
         -- The following two autocommands are used to highlight references of the
