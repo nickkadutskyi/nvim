@@ -44,7 +44,7 @@ return {
                 harpoon.ui:toggle_quick_menu(harpoon:list(), {
                     title = " Bookmarks ",
                     title_pos = "center",
-                    border = require("jb.borders").borders.dialog.default,
+                    border = require("jb.borders").borders.dialog.default_box_header,
                 })
             end, { desc = "Bookmarks: toggele list modal" })
 
@@ -172,11 +172,6 @@ return {
             all_files = false,
             display_score = false,
 
-            -- -- the default actions for FzfLua files, with an additional
-            -- -- ["ctrl-x"] action to remove a file's frecency score
-            -- actions = actions,
-            -- -- FzfLua's default previewer
-            -- previewer = previewer,
             file_icons = true,
             color_icons = true,
             git_icons = false,
@@ -187,29 +182,19 @@ return {
             },
             winopts = {
                 title = " Recent Files ",
-                title_pos = "left",
-                preview = { winopts = { cursorline = false } },
+                preview = {
+                    winopts = {
+                        cursorline = false,
+                    },
+                },
             },
             multiprocess = true,
-            -- fn_transform = function(abs_file, opts)
-            --     local entry = FzfLua.make_entry.file(rel_file, opts)
-            --     -- ...
-            --     -- prepends the frecency score if `display_score=true`
-            --     -- filters out files that no longer exist if `stat_file=true`
-            --     -- ...
-            --     return entry
-            -- end,
         },
         config = function(_, opts)
             require("fzf-lua-frecency").setup(opts)
 
             -- Recent Files (Similar to Recent Files in Intellij)
-            vim.keymap.set(
-                "n",
-                "<leader>gr",
-                require("fzf-lua-frecency").frecency,
-                { noremap = true, desc = "Search: [g]o to f[r]ecent files" }
-            )
+            vim.keymap.set("n", "<leader>gr", require("fzf-lua-frecency").frecency, { noremap = true, desc = "Search: [g]o to f[r]ecent files" })
         end,
     },
     {
@@ -290,7 +275,6 @@ return {
 
             fzf.setup({
                 winopts = {
-                    title_pos = "center",
                     height = 25, -- window height
                     width = 85,
                     row = 0.35,
@@ -300,7 +284,7 @@ return {
                         scrollbar = false,
                         layout = "vertical",
                         vertical = "down:60%",
-                        border = require("jb.borders").borders.dialog.split_bottom,
+                        winopts = {},
                     },
                     border = require("jb.borders").borders.dialog.default,
                 },
@@ -334,10 +318,15 @@ return {
                 },
                 defaults = {
                     winopts = {
-                        title_pos = "center",
+                        border = require("jb.borders").borders.dialog.default_box_split_top,
+                        title_pos = "left",
                         height = 25, -- window height
                         width = 95,
                         row = 0.35,
+                        preview = {
+                            border = require("jb.borders").borders.dialog.default_box_split_bottom,
+                            winopts = {},
+                        },
                     },
                     cwd_prompt = false,
                     prompt = "   ",
@@ -346,16 +335,9 @@ return {
                 files = {
                     winopts = {
                         title = " Files ",
-                        title_pos = "left",
                         height = 25, -- window height
                         width = 95,
                         row = 0.35,
-                        -- Allows to turn on/off preview window
-                        preview = {
-                            -- hidden = true,
-                            border = require("jb.borders").borders.dialog.split_bottom,
-                        },
-                        border = require("jb.borders").borders.dialog.default,
                     },
                     prompt = "   ",
                     -- formatter = { "path.filename_first", 2 },
@@ -374,10 +356,9 @@ return {
                 buffers = {
                     winopts = {
                         title = " Switcher ",
-                        title_pos = "left",
+                        border = require("jb.borders").borders.dialog.default_box_header,
                         preview = {
                             hidden = true,
-                            border = require("jb.borders").borders.dialog.split_bottom,
                         },
                     },
                     prompt = "  ",
@@ -388,14 +369,9 @@ return {
                 grep = {
                     winopts = {
                         title = " Find in Files ",
-                        title_pos = "left",
                         height = 25, -- window height
                         width = 85,
                         row = 0.35,
-                        border = require("jb.borders").borders.dialog.split_top,
-                        preview = {
-                            border = require("jb.borders").borders.dialog.split_bottom,
-                        },
                     },
                     prompt = "   ",
                     previewer = "builtin",
