@@ -17,15 +17,16 @@ Utils.on_later(function()
                 local columns = vim.o.columns
                 return math.floor(columns * 0.8)
             end)(),
+            prefix = " ",
 
             -- -- Adds inspection icons to indicate severity
             -- prefix = function(diagnostic)
             --     local icon = Utils.icons.diagnostic[diagnostic.severity]
             --     local severity_name = vim.diagnostic.severity[diagnostic.severity]
-            --     return icon .. " ", "DiagnosticSign" .. severity_name
+            --     return " " .. icon .. " ", "DiagnosticSign" .. severity_name
             -- end,
             -- format = function(diagnostic)
-            --     return "\n" .. diagnostic.message
+            --     -- return "\n" .. diagnostic.message
             -- end,
 
             -- Adds error code in comment style in the end

@@ -30,15 +30,15 @@ return {
                         anchor = "NE",
                         width = state.message.width,
                         height = state.message.height,
-                        col = vim.opt.columns:get() - 2,
-                        row = next_row,
+                        col = vim.opt.columns:get() - 1,
+                        row = next_row - 1,
                         border = require("jb.borders").borders.notification,
                         style = "minimal",
                     }
                 end,
                 function()
                     return {
-                        col = vim.opt.columns:get() - 2,
+                        col = vim.opt.columns:get() - 1,
                         time = true,
                     }
                 end,
