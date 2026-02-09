@@ -25,7 +25,7 @@ return {
                 transparent = true,
                 enforce_float_style = {
                     {
-                        style = { border = require("jb.borders").borders.dialog.default },
+                        style = { border = require("jb.borders").borders.dialog.default_box_header },
                         condition = function(_, _, config)
                             if type(config.title) ~= "string" then
                                 return false
@@ -34,21 +34,21 @@ return {
                         end,
                     },
                     {
-                        style = { border = require("jb.borders").borders.dialog.split_top },
+                        style = { border = require("jb.borders").borders.dialog.default_box_split_top_no_footer },
                         condition = function(bufnr, _, _)
                             local ok, fff = pcall(require, "fff.picker_ui")
                             return not ok and false or bufnr == fff.state.input_buf
                         end,
                     },
                     {
-                        style = { border = require("jb.borders").borders.dialog.default },
+                        style = { border = require("jb.borders").borders.dialog.default_box },
                         condition = function(bufnr, _, _)
                             local ok, fff = pcall(require, "fff.picker_ui")
                             return not ok and false or bufnr == fff.state.list_buf
                         end,
                     },
                     {
-                        style = { border = require("jb.borders").borders.dialog.split_bottom },
+                        style = { border = require("jb.borders").borders.dialog.default_box_split_bottom },
                         condition = function(bufnr, _, _)
                             local ok, fff = pcall(require, "fff.picker_ui")
                             return not ok and false or bufnr == fff.state.preview_buf

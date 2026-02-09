@@ -162,6 +162,11 @@ return {
                 desc = "Open file picker",
             },
         },
+        config = function(_, opts)
+            require("fff").setup(opts)
+            -- NOTE: doing this to disable combo feature
+            require("fff.combo_renderer").detect_and_prepare = function() end
+        end,
     },
     {
         -- Provides frecency functionality to fzf-lua
@@ -194,7 +199,12 @@ return {
             require("fzf-lua-frecency").setup(opts)
 
             -- Recent Files (Similar to Recent Files in Intellij)
-            vim.keymap.set("n", "<leader>gr", require("fzf-lua-frecency").frecency, { noremap = true, desc = "Search: [g]o to f[r]ecent files" })
+            vim.keymap.set(
+                "n",
+                "<leader>gr",
+                require("fzf-lua-frecency").frecency,
+                { noremap = true, desc = "Search: [g]o to f[r]ecent files" }
+            )
         end,
     },
     {
