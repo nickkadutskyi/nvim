@@ -32,7 +32,11 @@ Utils.on_later(function()
             -- Adds error code in comment style in the end
             suffix = function(diagnostic)
                 local code = diagnostic.code
-                return code and " [" .. code .. "]" or "", "Comment"
+                local suffix_text = code and "[" .. code .. "] " or ""
+                if diagnostic.message:find("\n") and code then
+                    suffix_text = "\n  " .. suffix_text
+                end
+                return " " .. suffix_text, "Comment"
             end,
         },
         signs = {
