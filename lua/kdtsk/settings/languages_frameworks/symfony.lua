@@ -48,13 +48,6 @@ return {
                 stop_after_first = false,
             }
 
-            -- Twig-CS-Fixer
-            fmt_conf_twig = Utils.tools.extend_if_enabled(fmt_conf_twig, { "twig-cs-fixer" }, {
-                "twig",
-                "twig-cs-fixer",
-                Utils.tools.purpose.STYLE,
-                { ".twig-cs-fixer.dist.php", ".twig-cs-fixer.php", "symfony.lock" },
-            })
             -- Prettierd
             fmt_conf_twig = Utils.tools.extend_if_enabled(fmt_conf_twig, { "prettierd" }, {
                 "twig",
@@ -67,6 +60,13 @@ return {
                 "twig",
                 "prettier",
                 Utils.tools.purpose.STYLE,
+            })
+            -- Twig-CS-Fixer
+            fmt_conf_twig = Utils.tools.extend_if_enabled(fmt_conf_twig, { "twig-cs-fixer" }, {
+                "twig",
+                "twig-cs-fixer",
+                Utils.tools.purpose.STYLE,
+                { ".twig-cs-fixer.dist.php", ".twig-cs-fixer.php", "symfony.lock" },
             })
 
             return vim.tbl_deep_extend("force", opts, {
