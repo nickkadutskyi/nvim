@@ -1,7 +1,8 @@
 ---@type LazySpec
 return {
     { -- Snacks.nvim version of bigfile
-        "folke/snacks.nvim",
+        -- "folke/snacks.nvim",
+        "nickkadutskyi/snacks.nvim",
         ---@type snacks.Config
         opts = {
             ---@class snacks.bigfile.Config
@@ -14,18 +15,7 @@ return {
                     git_hl = true, -- use Git Signs hl for fold icons
                 },
             },
-        },
-    },
-    { -- Image Previewer for previewing images in fzf-lua
-        "3rd/image.nvim",
-        event = "VeryLazy",
-        -- so that it doesn't build the rock https://github.com/3rd/image.nvim/issues/91#issuecomment-2453430239
-        build = false,
-        opts = {
-            processor = "magick_cli",
-            integrations = {
-                markdown = { enabled = false },
-            },
+            image = { enabled = true },
         },
     },
 }

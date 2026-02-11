@@ -134,27 +134,6 @@ return {
                 enabled = true,
                 replace_netrw = true,
             },
-            image = {
-                enabled = false,
-                formats = {
-                    "png",
-                    "jpg",
-                    "jpeg",
-                    "gif",
-                    "bmp",
-                    "webp",
-                    "tiff",
-                    "heic",
-                    "avif",
-                    "mp4",
-                    "mov",
-                    "avi",
-                    "mkv",
-                    "webm",
-                    "pdf",
-                    "svg",
-                },
-            },
             ---@class snacks.picker.Config
             picker = {
                 sources = {

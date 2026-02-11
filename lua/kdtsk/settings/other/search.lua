@@ -407,11 +407,6 @@ return {
                 },
                 previewers = {
                     builtin = {
-                        extensions = {
-                            ["svg"] = { "chafa", "{file}" },
-                            ["png"] = { "chafa" },
-                            ["jpg"] = { "viu", "-b" },
-                        },
                         title_fnamemodify = function(s)
                             -- Get absolute path of parent directory
                             local absParentPath = vim.fn.fnamemodify(s, ":h")
@@ -429,7 +424,6 @@ return {
                             -- Return filename with relative parent path
                             return name .. " - " .. relParentPath
                         end,
-                        snacks_image = { enabled = true, render_inline = false },
                     },
                 },
             })
