@@ -144,7 +144,7 @@ return {
 
             -- Handle borders
             local ok, borders = pcall(require, "jb.borders")
-            local border = ok and borders.borders.dialog.default_box or "rounded"
+            local border = ok and borders.borders.dialog.default_box_shadowed or "rounded"
             opts.completion.documentation.window.border = border
             opts.completion.menu.border = border
 

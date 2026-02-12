@@ -25,7 +25,7 @@ return {
                 transparent = true,
                 enforce_float_style = {
                     {
-                        style = { border = require("jb.borders").borders.dialog.default_box_header },
+                        style = { border = require("jb.borders").borders.dialog.default_box_header_shadowed },
                         condition = function(_, _, config)
                             if type(config.title) ~= "string" then
                                 return false
@@ -34,21 +34,21 @@ return {
                         end,
                     },
                     {
-                        style = { border = require("jb.borders").borders.dialog.default_box_split_top_no_footer },
+                        style = { border = require("jb.borders").borders.dialog.default_box_split_top_no_footer_shadowed },
                         condition = function(bufnr, _, _)
                             local ok, fff = pcall(require, "fff.picker_ui")
                             return not ok and false or bufnr == fff.state.input_buf
                         end,
                     },
                     {
-                        style = { border = require("jb.borders").borders.dialog.default_box_split_middle },
+                        style = { border = require("jb.borders").borders.dialog.default_box_split_middle_shadowed },
                         condition = function(bufnr, _, _)
                             local ok, fff = pcall(require, "fff.picker_ui")
                             return not ok and false or bufnr == fff.state.list_buf
                         end,
                     },
                     {
-                        style = { border = require("jb.borders").borders.dialog.default_box_split_bottom },
+                        style = { border = require("jb.borders").borders.dialog.default_box_split_bottom_shadowed },
                         condition = function(bufnr, _, _)
                             local ok, fff = pcall(require, "fff.picker_ui")
                             return not ok and false or bufnr == fff.state.preview_buf

@@ -44,7 +44,7 @@ return {
                 harpoon.ui:toggle_quick_menu(harpoon:list(), {
                     title = " Bookmarks ",
                     title_pos = "center",
-                    border = require("jb.borders").borders.dialog.default_box_header,
+                    border = require("jb.borders").borders.dialog.default_box_header_shadowed,
                 })
             end, { desc = "Bookmarks: toggele list modal" })
 
@@ -296,7 +296,6 @@ return {
                         vertical = "down:60%",
                         winopts = {},
                     },
-                    border = require("jb.borders").borders.dialog.default,
                 },
                 actions = {
                     -- Pickers inheriting these actions:
@@ -328,13 +327,13 @@ return {
                 },
                 defaults = {
                     winopts = {
-                        border = require("jb.borders").borders.dialog.default_box_split_top,
+                        border = require("jb.borders").borders.dialog.default_box_split_top_shadowed,
                         title_pos = "left",
                         height = 25, -- window height
                         width = 95,
                         row = 0.35,
                         preview = {
-                            border = require("jb.borders").borders.dialog.default_box_split_bottom,
+                            border = require("jb.borders").borders.dialog.default_box_split_bottom_shadowed,
                             winopts = {},
                         },
                     },
@@ -366,7 +365,7 @@ return {
                 buffers = {
                     winopts = {
                         title = " Switcher ",
-                        border = require("jb.borders").borders.dialog.default_box_header,
+                        border = require("jb.borders").borders.dialog.default_box_header_shadowed,
                         preview = {
                             hidden = true,
                         },
