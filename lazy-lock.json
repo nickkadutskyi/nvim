@@ -1,7 +1,7 @@
 {
   "99": { "branch": "master", "commit": "96f3682ea890a3f2037aafa253c92d0dd3b82161" },
   "Comment.nvim": { "branch": "master", "commit": "e30b7f2008e52442154b66f7c519bfd2f1e32acb" },
-  "blink-ripgrep.nvim": { "branch": "main", "commit": "923bc6e64215cbb55492c2b8f39756004473ede3" },
+  "blink-ripgrep.nvim": { "branch": "main", "commit": "77763830c897907361ce8451fe57c3638a0d889f" },
   "blink.cmp": { "branch": "main", "commit": "4b18c32adef2898f95cdef6192cbd5796c1a332d" },
   "conform.nvim": { "branch": "master", "commit": "c2526f1cde528a66e086ab1668e996d162c75f4f" },
   "copilot.vim": { "branch": "release", "commit": "a12fd5672110c8aa7e3c8419e28c96943ca179be" },
