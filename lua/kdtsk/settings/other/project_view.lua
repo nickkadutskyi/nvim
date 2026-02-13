@@ -214,9 +214,47 @@ return {
         config = function(_, opts)
             local snacks = require("snacks")
 
+            -- opts = vim.tbl_deep_extend("force", opts, {
+            --     picker = {
+            --         sources = {
+            --             select = {
+            --                 layouts = {
+            --                     select = {
+            --                         hidden = { "preview", "input" },
+            --                         layout = {
+            --                             backdrop = false,
+            --                             width = 0.5,
+            --                             min_width = 80,
+            --                             max_width = 100,
+            --                             height = 0.4,
+            --                             min_height = 2,
+            --                             box = "vertical",
+            --                             -- border = true,
+            --                             border = require("jb.borders").borders.dialog.default_box_split_bottom_shadowed,
+            --                             title = "{title}",
+            --                             title_pos = "center",
+            --                             { win = "input", height = 1, border = "none" },
+            --                             { win = "list", border = "none" },
+            --                             { win = "preview", title = "{preview}", height = 0.4, border = "top" },
+            --                         },
+            --                     },
+            --                 },
+            --                 layout = {
+            --                     -- layout = {
+            --                     --     win_opts = {
+            --                     --         border = "rounded",
+            --                     --     },
+            --                     -- },
+            --                 },
+            --             },
+            --         },
+            --     },
+            -- })
+
             -- Moved here for performance reasons
             ---@type snacks.Config
             snacks.setup(opts)
+
             vim.keymap.set("n", "<leader>ap", function()
                 if Snacks.picker.get({ source = "explorer" })[1] == nil then
                     Snacks.picker.explorer({ auto_close = true })
