@@ -84,6 +84,12 @@ vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {
 
 --- Plugins
 --- VCS
+vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
+    group = augroup("update-git-status-hl"),
+    callback = function(e)
+        Utils.set_git_status_hl(e.buf)
+    end,
+})
 --- Build, Execution, Deployment
 
 --- Languages & Frameworks
