@@ -5,6 +5,8 @@ vim.opt.exrc = true
 
 --- - Appearance
 --- -- UI Options
+-- Messaging
+vim.opt.shortmess:append("I")
 -- Mouse reporting
 vim.opt.mouse = "a"
 -- Removes cmd line to allow more space
