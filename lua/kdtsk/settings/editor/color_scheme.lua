@@ -34,28 +34,34 @@ return {
                         end,
                     },
                     {
-                        style = { border = require("jb.borders").borders.dialog.default_box_split_top_no_footer_shadowed },
+                        style = {
+                            border = require("jb.borders").borders.dialog.default_box_split_top_no_footer_shadowed,
+                        },
                         condition = function(bufnr, _, _)
                             local ok, fff = pcall(require, "fff.picker_ui")
                             return not ok and false or bufnr == fff.state.input_buf
                         end,
                     },
                     {
-                        style = { border = require("jb.borders").borders.dialog.default_box_split_middle_shadowed },
+                        style = {
+                            border = require("jb.borders").borders.dialog.default_box_split_middle_shadowed_no_footer,
+                        },
                         condition = function(bufnr, _, _)
                             local ok, fff = pcall(require, "fff.picker_ui")
                             return not ok and false or bufnr == fff.state.list_buf
                         end,
                     },
                     {
-                        style = { border = require("jb.borders").borders.dialog.default_box_split_bottom_shadowed },
+                        style = {
+                            border = require("jb.borders").borders.dialog.default_box_split_bottom_shadowed_header,
+                        },
                         condition = function(bufnr, _, _)
                             local ok, fff = pcall(require, "fff.picker_ui")
                             return not ok and false or bufnr == fff.state.preview_buf
                         end,
                         after = function(winid, _, _)
                             vim.schedule(function()
-                                vim.api.nvim_set_option_value("winhl", "Normal:Normal", { win = winid })
+                                vim.api.nvim_set_option_value("winhl", "Normal:Normal,IncSearch:FzfLuaSearch,FloatTitle:DialogFloatBorderTop", { win = winid })
                             end)
                         end,
                     },

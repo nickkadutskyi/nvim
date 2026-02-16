@@ -143,23 +143,47 @@ return {
 
                 combo_header = "Number",
                 scrollbar = "FzfLuaFzfScrollbar", -- Highlight for scrollbar thumb (track uses border)
+
+                -- Grep highlights
+                grep_match = "CustomFFFGrepMatch", -- Highlight for matched text in grep results
+                grep_line_number = "CustomFFFGrepLineNr", -- Highlight for :line:col location
+                grep_regex_active = "CustomFFFRegexActive", -- Highlight for keybind + label when regex is on
+                grep_regex_inactive = "CustomFFFRegexInactive", -- Highlight for keybind + label when regex is off
+                grep_fuzzy_active = "CustomFFFRegexInactive", -- Highlight for keybind + label when fuzzy is on
+                -- Cross-mode suggestion highlights
+                suggestion_header = "WarningMsg", -- Highlight for the "No results found. Suggested..." banner
             },
             keymaps = {
                 -- goes to the previous query in history
                 cycle_previous_query = "<C-h>",
+                toggle_grep_regex = { "", "<S-Tab>" },
             },
             -- Git integration
             git = {
                 status_text_color = true, -- Apply git status colors to filename text (default: false, only sign column)
             },
+            grep = {
+                max_file_size = 10 * 1024 * 1024, -- Skip files larger than 10MB
+                max_matches_per_file = 200, -- Maximum matches per file
+                smart_case = true, -- Case-insensitive unless query has uppercase
+                time_budget_ms = 150, -- Max search time in ms per call (prevents UI freeze, 0 = no limit)
+                modes = { "plain", "regex", "fuzzy" }, -- Available grep modes and their cycling order
+            },
         },
         keys = {
             {
-                "ff", -- try it if you didn't it is a banger keybinding for a picker
+                "<leader>gf",
                 function()
-                    require("fff").find_files() -- or find_in_git_root() if you only want git files
+                    require("fff").find_files()
                 end,
-                desc = "Open file picker",
+                desc = "Search(fff.nvim): [g]o to [f]ile",
+            },
+            {
+                "<leader>ff",
+                function()
+                    require("fff").live_grep({ title = "Find in Files" })
+                end,
+                desc = "Search(fff.nvim): [f]ind in [f]iles",
             },
         },
         config = function(_, opts)
@@ -389,7 +413,7 @@ return {
             })
 
             -- Go to file
-            vim.keymap.set("n", "<leader>gf", function()
+            vim.keymap.set("n", "<leader>gaf", function()
                 local curr_time = os.time()
                 if (curr_time - last_go_to_file_time) < resume_within_seconds then
                     fzf.files({ resume = true })
@@ -397,10 +421,10 @@ return {
                     fzf.files()
                 end
                 last_go_to_file_time = curr_time
-            end, { noremap = true, desc = "Search: [g]o to [f]ile" })
+            end, { noremap = true, desc = "Search(fzf-lua): [g]o to [a]ny [f]ile" })
 
             -- Find in path
-            vim.keymap.set("n", "<leader>fp", function()
+            vim.keymap.set("n", "<leader>faf", function()
                 local curr_time = os.time()
                 if (curr_time - last_find_in_path_time) < resume_within_seconds then
                     fzf.live_grep({ resume = true })
@@ -408,7 +432,7 @@ return {
                     fzf.live_grep()
                 end
                 last_find_in_path_time = curr_time
-            end, { noremap = true, desc = "Search: [f]ind in [p]ath" })
+            end, { noremap = true, desc = "Search(fzf-lua): [f]ind in [a]ll [f]iles" })
 
             -- Go to buffer (Similar to Switcher in Intellij)
             vim.keymap.set("n", "<leader>gb", fzf.buffers, { noremap = true, desc = "[g]o to [b]uffer" })
