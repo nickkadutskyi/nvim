@@ -156,7 +156,7 @@ return {
             keymaps = {
                 -- goes to the previous query in history
                 cycle_previous_query = "<C-h>",
-                toggle_grep_regex = { "", "<S-Tab>" },
+                toggle_grep_regex = { "", "<S-Tab>", "<C-A-x>", "<C-M-x>" },
             },
             -- Git integration
             git = {
