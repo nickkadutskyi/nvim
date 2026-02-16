@@ -22,7 +22,7 @@
   "luvit-meta": { "branch": "main", "commit": "0ea4ff636c5bb559ffa78108561d0976f4de9682" },
   "netrw.nvim": { "branch": "master", "commit": "90501c62b9b816ed3ed1e912ae9db9af5671a1b2" },
   "nvim-hlslens": { "branch": "main", "commit": "be2d7b2be01860b5445a007ff2bc72b29896db6b" },
-  "nvim-lint": { "branch": "master", "commit": "bcd1a44edbea8cd473af7e7582d3f7ffc60d8e81" },
+  "nvim-lint": { "branch": "master", "commit": "a3d17105a79fc12055c2a0d732665d9c2b1c2dc3" },
   "nvim-lspconfig": { "branch": "master", "commit": "44acfe887d4056f704ccc4f17513ed41c9e2b2e6" },
   "nvim-navic": { "branch": "master", "commit": "f5eba192f39b453675d115351808bd51276d9de5" },
   "nvim-notify": { "branch": "master", "commit": "ab98fecfe24d31fa03e0b3dcfc7c506c0f9c34c7" },

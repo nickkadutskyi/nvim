@@ -39,7 +39,7 @@ return {
                         },
                         condition = function(bufnr, _, _)
                             local ok, fff = pcall(require, "fff.picker_ui")
-                            return not ok and false or bufnr == fff.state.input_buf
+                            return not ok or not fff.state and false or bufnr == fff.state.input_buf
                         end,
                     },
                     {
@@ -48,7 +48,7 @@ return {
                         },
                         condition = function(bufnr, _, _)
                             local ok, fff = pcall(require, "fff.picker_ui")
-                            return not ok and false or bufnr == fff.state.list_buf
+                            return not ok or not fff.state and false or bufnr == fff.state.list_buf
                         end,
                     },
                     {
@@ -57,7 +57,7 @@ return {
                         },
                         condition = function(bufnr, _, _)
                             local ok, fff = pcall(require, "fff.picker_ui")
-                            return not ok and false or bufnr == fff.state.preview_buf
+                            return not ok or not fff.state and false or bufnr == fff.state.preview_buf
                         end,
                         after = function(winid, _, _)
                             vim.schedule(function()
