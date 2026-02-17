@@ -288,11 +288,16 @@ vim.api.nvim_create_autocmd("LspAttach", {
                 or client.server_capabilities.inlayHintProvider
             )
         then
+            vim.lsp.inlay_hint.enable(true, {
+                bufnr = event.buf,
+            })
             vim.keymap.set("n", "<localleader>th", function()
                 local new_state = not vim.lsp.inlay_hint.is_enabled({
                     bufnr = event.buf,
                 })
-                vim.lsp.inlay_hint.enable(new_state)
+                vim.lsp.inlay_hint.enable(new_state, {
+                    bufnr = event.buf,
+                })
             end, { buffer = event.buf, desc = "LSP: [t]oggle inlay [h]ints" })
         end
     end,
