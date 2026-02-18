@@ -26,13 +26,24 @@ return {
                 "zig",
                 "zig",
                 Utils.tools.purpose.INSPECTION,
+                { "build.zig" },
+            })
+            lint_conf = Utils.tools.extend_if_enabled(lint_conf, { "zlint" }, {
+                "zig",
+                "zlint",
+                Utils.tools.purpose.INSPECTION,
+                -- { "build.zig" },
             })
 
             return vim.tbl_deep_extend("force", opts, {
                 ---@type table<string, string[]>
                 linters_by_ft = { zig = lint_conf },
                 ---@type table<string, lint.LinterLocal>
-                linters = {},
+                linters = {
+                    zlint = {
+                        nix_pkg = "zig-zlint",
+                    },
+                },
             })
         end,
     },
@@ -42,7 +53,8 @@ return {
             ---@type table<string,vim.lsp.ConfigLocal>
             servers = {
                 zls = {
-                    enabled = Utils.tools.is_component_enabled("zig", "zls", Utils.tools.purpose.LSP, { "zls.json" }),
+                    -- enabled = Utils.tools.is_component_enabled("zig", "zls", Utils.tools.purpose.LSP, { "zls.json" }),
+                    nix_pkg = "zls",
                 },
             },
         },
