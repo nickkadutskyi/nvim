@@ -340,6 +340,7 @@ return {
                     fd_opts = cmd_opts.excluded.files.fd,
                     rg_opts = cmd_opts.excluded.files.rg,
                     find_opts = cmd_opts.excluded.files.find,
+                    no_ignore = true,
                     previewer = "builtin",
                     actions = {
                         ["ctrl-e"] = function()
@@ -374,6 +375,8 @@ return {
                     RIPGREP_CONFIG_PATH = vim.env.RIPGREP_CONFIG_PATH,
                     rg_opts = cmd_opts.excluded.live_grep.rg,
                     grep_opts = cmd_opts.excluded.live_grep.grep,
+                    no_ignore = true,
+                    hidden = true,
                     actions = {
                         ["ctrl-e"] = function()
                             live_grep_toggle_excluded(true)
