@@ -26,7 +26,7 @@ vim.opt.inccommand = "split"
 vim.opt.termsync = false
 
 --- - Natural Language
-vim.opt.spell = true
+-- vim.opt.spell = true
 vim.opt.spelllang = { "en_us", "en", "ru", "uk" }
 vim.opt.spellfile = os.getenv("HOME") .. "/.config/nvim_spell/en.utf-8.add"
 
