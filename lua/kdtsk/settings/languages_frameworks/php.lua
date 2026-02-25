@@ -19,7 +19,22 @@ return {
                         enabled = Utils.tools.is_component_enabled("php", "intelephense", Utils.tools.purpose.LSP, {
                             ".intelephense.json",
                             ".intelephense/config.json",
-                        }),
+                        }, function()
+                            -- only enable if we find an executable in the project
+                            local executable = "intelephense"
+                            local cwd = vim.uv.cwd()
+
+                            -- Only look for local executables
+                            local _, found = Utils.tools.find_executable({
+                                "./" .. executable,
+                                "./" .. executable .. ".phar",
+                                "vendor/bin/" .. executable,
+                                "vendor/bin/" .. executable .. ".phar",
+                                ".devenv/profile/bin/" .. executable,
+                            }, executable .. "_", cwd)
+
+                            return found
+                        end),
                         local_config = ".intelephense.json",
                         nix_pkg = "intelephense",
                         bin = Utils.php.find_executable("intelephense"),
@@ -116,6 +131,22 @@ return {
                 "php_cs_fixer",
                 Utils.tools.purpose.STYLE,
                 { ".php-cs-fixer.dist.php" },
+                function()
+                    -- only enable if we find an executable in the project
+                    local executable = "php-cs-fixer"
+                    local cwd = vim.uv.cwd()
+
+                    -- Only look for local executables
+                    local _, found = Utils.tools.find_executable({
+                        "./" .. executable,
+                        "./" .. executable .. ".phar",
+                        "vendor/bin/" .. executable,
+                        "vendor/bin/" .. executable .. ".phar",
+                        ".devenv/profile/bin/" .. executable,
+                    }, executable .. "_", cwd)
+
+                    return found
+                end,
             })
 
             -- Intelephense as formatter

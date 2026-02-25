@@ -144,9 +144,13 @@ end
 ---@param component string Name of the tool, language server, plugin, etc.
 ---@param purpose kdtsk.tools.Purpose Purpose for which the tool is enabled
 ---@param patterns ?string[] Patterns to match the tool's config file
-function M.is_component_enabled(scope, component, purpose, patterns)
+---@param fn ?fun(): boolean Optional function to run if the tool is enabled, should return a boolean indicating if the
+--- tool is enabled or not. If not provided, the function will return true if the tool is enabled via settings or
+--- patterns, false otherwise.
+function M.is_component_enabled(scope, component, purpose, patterns, fn)
     local purposeStr = type(purpose) == "number" and M.purpose[purpose] or purpose
-    -- Check if the tool is enabled via .nvim.lua settings
+
+    -- 1. Check if the tool is explicitly enabled/disabled via .nvim.lua settings
     local ok, enabled = Utils.run_when_settings_loaded(function(settings)
         local tool = settings[scope] and settings[scope][component]
         if type(tool) == "table" then
@@ -157,7 +161,18 @@ function M.is_component_enabled(scope, component, purpose, patterns)
     if ok and enabled ~= nil then
         return enabled
     end
-    return patterns and Utils.tools.file_exists(patterns) or false
+
+    -- 2. No explicit setting; check patterns for config file existence
+    if patterns and Utils.tools.file_exists(patterns) then
+        return true
+    end
+
+    -- 3. No explicit setting and no pattern match; fall back to fn
+    if fn and type(fn) == "function" then
+        return fn()
+    end
+
+    return false
 end
 
 function M.deep_merge_lists(...)
@@ -192,6 +207,7 @@ end
 ---  [2]: string, # Name of the component (e.g. "phpactor")
 ---  [3]: kdtsk.tools.Purpose, # Purpose of the component (e.g. "LSP")
 ---  [4]: string[], # Patterns to match the tool's config file
+---  [5]: fun(): boolean, # Optional function to run if the tool is enabled, should return a boolean indicating if the
 --- } Component to check if enabled
 function M.extend_if_enabled(tbl1, tbl2, comp)
     if M.is_component_enabled(unpack(comp)) then
