@@ -98,6 +98,13 @@ require("lazy").setup({
     install = { colorscheme = { "jb" } },
     ui = { border = "rounded", title = " Plugins ", size = { width = 0.6 } },
     dev = { path = "~/Documents", patterns = { "nickkadutskyi" }, fallback = true },
+    performance = {
+        -- Don't reset paths to let vim.pack.add work
+        reset_packpath = false,
+        rtp = {
+            reset = false,
+        },
+    },
     -- profiling = {
     --     -- Enables extra stats on the debug tab related to the loader cache.
     --     -- Additionally gathers stats about all package.loaders

@@ -297,6 +297,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
                 })
             end, { buffer = event.buf, desc = "LSP: [t]oggle inlay [h]ints" })
         end
+
+        if client and client:supports_method("textDocument/documentColor") then
+            vim.lsp.document_color.enable(true, event.buf, {
+                style = "virtual",
+            })
+        end
     end,
 })
 
