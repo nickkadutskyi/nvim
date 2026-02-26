@@ -1,4 +1,5 @@
 ---@class ide.Utils
+---@field run ide.Utils.Run
 local M = {}
 
 setmetatable(M, {
