@@ -1,0 +1,9 @@
+{
+  "plugins": {
+    "nvim-notify": {
+      "rev": "ab98fecfe24d31fa03e0b3dcfc7c506c0f9c34c7",
+      "src": "https://github.com/rcarriga/nvim-notify",
+      "version": "'ab98fecfe24d31fa03e0b3dcfc7c506c0f9c34c7'"
+    }
+  }
+}
