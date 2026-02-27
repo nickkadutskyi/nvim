@@ -10,10 +10,12 @@ setmetatable(M, {
     end,
 })
 
----Prepends github url to a repo string
----@param repo string in the format "owner/repo"
-function M.prepend_gh(repo)
-    return "https://github.com/" .. repo
+---@param prefix string prefix to prepend
+function M.prepend_fn(prefix)
+    ---@param str string string to prepend prefix to
+    return function(str)
+        return "" .. prefix .. str
+    end
 end
 
 return M

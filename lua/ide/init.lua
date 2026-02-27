@@ -1,6 +1,4 @@
 --- Types
----@class ide.Plugins
----@field loaded table<string, {spec: vim.pack.Spec, path: string}>
 ---
 ---@class settings.PluginData
 ---@field enabled ?boolean disable or enable plugin, default is enabled
