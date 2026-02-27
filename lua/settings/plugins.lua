@@ -1,6 +1,11 @@
+local spec_builder = require("ide.spec.builder")
 local utils = require("ide.utils")
+local loader = require("ide.loader")
 local g = utils.prepend_fn("https://github.com/")
 
+spec_builder.add({
+    { src = g("rcarriga/nvim-notify"), version = "ab98fecfe" },
+})
 --- MODULE DEFINITION ----------------------------------------------------------
 
 ---@class settings.Plugins
@@ -24,9 +29,14 @@ function I.on_load(plugin_data)
     if spec.data and spec.data.enabled == false then
         return
     end
+    -- TODO: run before hook
+
+    -- TODO: merge and resolve opts
 
     vim.cmd.packadd(spec.name)
     M.loaded[spec.name] = plugin_data
+
+    -- TODO: run after hook
 end
 
 function I.create_autocmds()

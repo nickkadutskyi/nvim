@@ -20,10 +20,10 @@ return {
                         Lua = {
                             -- Disable telemetry
                             telemetry = { enable = false },
-                            -- runtime = {
-                            --     version = "LuaJIT",
-                            --     path = runtime_path,
-                            -- },
+                            runtime = {
+                                version = "LuaJIT",
+                                -- path = runtime_path,
+                            },
                             diagnostics = {
                                 globals = { "vim" },
                             },

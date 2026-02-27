@@ -1,0 +1,32 @@
+---@meta
+---
+---@alias ide.SpecData.Opts table | fun(plugin: {spec: vim.pack.Spec, path: string}, opts: table): table?
+---
+---@class (exact) ide.SpecData
+---@field enabled? boolean disable or enable plugin, default is enabled
+---@field build? fun(event: settings.PackEvent) function to run after plugin is installed or updated
+---@field opts? ide.SpecData.Opts either a table of options to merge into the plugin spec, or a function that returns such a table
+---@field opts_extend? table<string> list of dot separated key paths that should be list-appended instead of overridden when merging opts tables, e.g. {"dependencies", "opts.mason.registries"}
+---@field before? fun(plugin: {spec: vim.pack.Spec, path: string}, opts: table)
+---@field after? fun(plugin: {spec: vim.pack.Spec, path: string}, opts: table)
+---
+---@class ide.SpecData.Named : ide.SpecData
+---@field [1] string plugin name
+---
+---@class ide.SpecData.OptsChained : ide.SpecData
+---@field opts_chain table<ide.SpecData.Opts> list of opts tables or functions to merge, in order of application (later entries override earlier ones)
+---
+---@class vim.pack.Spec
+---@diagnostic disable-next-line: duplicate-doc-field
+---@field data? ide.SpecData
+---
+---@class settings.PackEvent
+---@field active boolean
+---@field spec vim.pack.Spec
+---@field kind 'install' | 'update' | 'remove'
+---
+---@alias vim.pack.OnLoad fun(plug_data: {spec: vim.pack.Spec, path: string})
+---
+---@class ide.Spec.Builder.Entry
+---@field spec? vim.pack.Spec
+---@field data_fragments ide.SpecData[]
