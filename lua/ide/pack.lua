@@ -41,6 +41,30 @@ function I.on_load(plugin_data)
         return
     end
 
+    local lazy = false
+
+    -- Event trigger
+    if data.event then
+        lazy = false
+            ~= utils.autocmd.create(data.event, {
+                group = "ide.pack.lazy.event",
+                desc = "ide.pack: Load plugin '" .. (spec.name or "?") .. "' on event(s).",
+                callback = function()
+                    utils.run.later(function()
+                        I.load_plugin(plugin_data)
+                    end, "ide.pack: Failed to load plugin '" .. (spec.name or "?") .. "' on event due to: ")
+                end,
+            })
+    end
+
+    if lazy == false then
+        I.load_plugin(plugin_data)
+    end
+end
+
+function I.load_plugin(plugin_data)
+    local spec = plugin_data.spec
+    local data = spec.data or {}
     -- Loads similarly to vim.pack.add with `load` not specified
     vim.cmd.packadd({ vim.fn.escape(spec.name, " "), bang = vim.v.vim_did_enter == 0, magic = { file = false } })
     -- Source after/plugin/ when loading after startup (packadd never does this)
@@ -62,11 +86,9 @@ end
 
 --- Create autocmds for plugin management, such as running build hooks after install/update
 function I.create_autocmds()
-    local group = vim.api.nvim_create_augroup("ide.pack", { clear = true })
-
-    vim.api.nvim_create_autocmd("PackChanged", {
-        group = group,
-        ---@param e vim.api.keyset.create_autocmd.callback_args
+    utils.autocmd.create("PackChanged", {
+        group = "ide.pack.std",
+        desc = "ide.pack: Runs build hook after plugin install/update",
         callback = function(e)
             local data = e.data --[[@as settings.PackEvent]]
             -- Run build function if plugin is installed/updated and has a build function
@@ -83,8 +105,7 @@ function I.create_autocmds()
                 end, "ide.pack: build hook failed for '" .. (data.spec.name or "?") .. "' due to: ")
             end
         end,
-        desc = "Runs build hook after plugin install/update",
-    })
+    }, { clear = true })
 end
 
 return M

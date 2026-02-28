@@ -1,5 +1,7 @@
 ---@class ide.Utils
 ---@field run ide.Utils.Run
+---@field autocmd ide.Utils.Autocmd
+---@field str ide.Utils.Str
 local M = {}
 
 setmetatable(M, {
@@ -9,13 +11,5 @@ setmetatable(M, {
         return module
     end,
 })
-
----@param prefix string prefix to prepend
-function M.prepend_fn(prefix)
-    ---@param str string string to prepend prefix to
-    return function(str)
-        return "" .. prefix .. str
-    end
-end
 
 return M

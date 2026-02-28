@@ -12,6 +12,14 @@ I.registry = {}
 ---@param spec vim.pack.Spec|vim.pack.Spec[]|ide.SpecData.Named|ide.SpecData.Named[]
 function M.add(spec)
     vim.validate("spec", spec, "table")
+
+    -- check if spec is empty (e.g. empty table or empty list) and ignore it if so
+    if next(spec) == nil then
+        return
+    end
+
+    -- if the first element is a table, we assume it's a list of specs and
+    -- add them all (this allows for convenient grouping of related specs in the input)
     if type(spec[1]) == "table" then
         for _, s in ipairs(spec) do
             M.add(s --[[@as vim.pack.Spec|ide.SpecData.Named]])
@@ -136,6 +144,9 @@ function I.merge_data_fragments(fragments)
         if data.enabled == false then
             result.enabled = false
         end
+        if data.cond ~= nil then
+            result.cond = data.cond
+        end
         if data.opts ~= nil then
             table.insert(result.opts_chain, data.opts)
         end
@@ -154,7 +165,14 @@ function I.merge_data_fragments(fragments)
                 table.insert(result.opts_extend, key)
             end
         end
+        if data.event ~= nil then
+            local event = type(data.event) == "string" and { data.event } or data.event
+            result.event = vim.iter({ result.event or {}, event }):flatten():filter(function(e)
+                return type(e) == "string" and e ~= ""
+            end):totable()
+        end
     end
+
     return result
 end
 

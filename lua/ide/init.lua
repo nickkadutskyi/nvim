@@ -1,4 +1,18 @@
----@meta
+local utils = require("ide.utils")
+
+--- Define custom autocmds
+utils.autocmd.create("UIEnter", {
+    once = true,
+    callback = function()
+        utils.run.later(function()
+            vim.api.nvim_exec_autocmds("User", { pattern = "IdeLater", modeline = false })
+        end)
+    end,
+})
+
+--- TYPES
+---
+---@alias ide.events "IdeLater"
 ---
 ---@alias ide.SpecData.Opts table | fun(spec: vim.pack.Spec, opts: table): table?
 ---
@@ -10,6 +24,7 @@
 ---@field opts_extend? table<string> list of dot separated key paths that should be list-appended instead of overridden when merging opts tables, e.g. {"dependencies", "opts.mason.registries"}
 ---@field before? fun(plugin_data: vim.pack.PluginData)
 ---@field after? fun(plugin_data: vim.pack.PluginData, opts: table)
+---@field event? vim.api.keyset.events|vim.api.keyset.events[]|ide.events|ide.events[]
 ---
 ---@class ide.SpecData.Named : ide.SpecData
 ---@field [1] string plugin name
