@@ -12,7 +12,7 @@ function M.load(specs)
         local data = spec.data or {}
         if type(data.before) == "function" then
             utils.run.now(function()
-                data.before(spec)
+                data.before({ spec = spec, path = "" })
             end, "ide.pack: before hook failed for '" .. (spec.name or "?") .. "' due to: ")
         end
     end
@@ -33,7 +33,7 @@ function I.on_load(plugin_data)
     -- Check `cond` field to determine whether to load plugin
     if type(data.cond) == "function" then
         local ok, result = utils.run.now_res(function()
-            return data.cond(spec)
+            return data.cond(plugin_data)
         end, "ide.pack: cond function failed for '" .. (spec.name or "?") .. "' due to: ")
         data.cond = ok and result or false
     end
@@ -55,7 +55,7 @@ function I.on_load(plugin_data)
     if type(data.after) == "function" then
         local opts = spec_builder.resolve_opts(spec)
         utils.run.now(function()
-            data.after(spec, opts)
+            data.after(plugin_data, opts)
         end, "ide.pack: after hook failed for '" .. (spec.name or "?") .. "' due to: ")
     end
 end

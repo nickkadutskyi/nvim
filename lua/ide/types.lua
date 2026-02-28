@@ -4,12 +4,12 @@
 ---
 ---@class (exact) ide.SpecData
 ---@field enabled? boolean (default true) when false spec is not included
----@field cond? boolean|fun(spec: vim.pack.Spec): boolean condition to determine whether plugin should be loaded, evaluated at load time; if false, plugin is not loaded and after hook is not run
+---@field cond? boolean|fun(plugin_data: vim.pack.PluginData): boolean condition to determine whether plugin should be loaded, evaluated at load time; if false, plugin is not loaded and after hook is not run
 ---@field build? fun(event: settings.PackEvent) function to run after plugin is installed or updated
 ---@field opts? ide.SpecData.Opts either a table of options to merge into the plugin spec, or a function that returns such a table
 ---@field opts_extend? table<string> list of dot separated key paths that should be list-appended instead of overridden when merging opts tables, e.g. {"dependencies", "opts.mason.registries"}
----@field before? fun(spec: vim.pack.Spec)
----@field after? fun(spec: vim.pack.Spec, opts: table)
+---@field before? fun(plugin_data: vim.pack.PluginData)
+---@field after? fun(plugin_data: vim.pack.PluginData, opts: table)
 ---
 ---@class ide.SpecData.Named : ide.SpecData
 ---@field [1] string plugin name
@@ -26,7 +26,9 @@
 ---@field spec vim.pack.Spec
 ---@field kind 'install' | 'update' | 'remove'
 ---
----@alias vim.pack.OnLoad fun(plug_data: {spec: vim.pack.Spec, path: string})
+---@alias vim.pack.OnLoad fun(plug_data: vim.pack.PluginData)
+---
+---@alias vim.pack.PluginData {spec: vim.pack.Spec, path: string}
 ---
 ---@class ide.Spec.Builder.Entry
 ---@field spec? vim.pack.Spec
