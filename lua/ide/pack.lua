@@ -32,8 +32,8 @@ function I.on_load(plugin_data)
 
     -- Check `cond` field to determine whether to load plugin
     if type(data.cond) == "function" then
-        local ok, result = utils.run.run(function()
-            data.cond = data.cond(spec)
+        local ok, result = utils.run.now_res(function()
+            return data.cond(spec)
         end, "ide.pack: cond function failed for '" .. (spec.name or "?") .. "' due to: ")
         data.cond = ok and result or false
     end

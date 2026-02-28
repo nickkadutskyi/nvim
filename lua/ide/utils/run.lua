@@ -7,12 +7,12 @@ local I = {}
 ---@param error_prefix? string Optional prefix to prepend to error messages.
 ---@return boolean ok Whether the function executed successfully.
 ---@return any ... Results from the function call, or nil on error.
-function M.run(fn, error_prefix)
+function M.now_res(fn, error_prefix)
     local ok, result = pcall(fn)
     if not ok then
         table.insert(I.cache.errors, (error_prefix or "") .. tostring(result))
         I.schedule()
-        return ok
+        return ok, nil
     end
     I.schedule()
     return ok, result
