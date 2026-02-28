@@ -82,5 +82,11 @@ function I.report()
     I.notify("There were errors during run:\n\n" .. error_lines, "ERROR")
 end
 
+I.notify = vim.schedule_wrap(function(msg, level)
+  if type(msg) == 'table' then msg = table.concat(msg, '\n') end
+  vim.notify(string.format('(mini.deps) %s', msg), level)
+  vim.cmd('redraw')
+end)
+
 --- MODULE EXPORT --------------------------------------------------------------
 return M
