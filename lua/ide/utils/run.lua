@@ -60,6 +60,8 @@ function I.run()
         local callback = I.cache.queue[1]
         if callback == nil then
             I.cache.scheduled, I.cache.queue = false, {}
+            ---@diagnostic disable-next-line: need-check-nil
+            timer:close()
             I.report()
             return
         end
