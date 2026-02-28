@@ -4,17 +4,34 @@ local M = {}
 local I = {}
 
 ---@param fn function Callable to execute.
-function M.now(fn)
+---@param error_prefix? string Optional prefix to prepend to error messages.
+---@return boolean ok Whether the function executed successfully.
+---@return any ... Results from the function call, or nil on error.
+function M.run(fn, error_prefix)
+    local ok, result = pcall(fn)
+    if not ok then
+        table.insert(I.cache.errors, (error_prefix or "") .. tostring(result))
+        I.schedule()
+        return ok
+    end
+    I.schedule()
+    return ok, result
+end
+
+---@param fn function Callable to execute.
+---@param error_prefix? string Optional prefix to prepend to error messages.
+function M.now(fn, error_prefix)
     local ok, err = pcall(fn)
     if not ok then
-        table.insert(I.cache.errors, err)
+        table.insert(I.cache.errors, (error_prefix or "") .. tostring(err))
     end
     I.schedule()
 end
 
 ---@param fn function Callable to execute.
-function M.later(fn)
-    table.insert(I.cache.queue, fn)
+---@param error_prefix? string Optional prefix to prepend to error messages.
+function M.later(fn, error_prefix)
+    table.insert(I.cache.queue, { fn, error_prefix })
     I.schedule()
 end
 
@@ -22,6 +39,7 @@ end
 ---Cache to track callables etc.
 I.cache = {
     scheduled = false,
+    ---@type {fn: function, error_prefix?: string}[]
     queue = {},
     errors = {},
 }
@@ -37,7 +55,7 @@ end
 
 function I.run()
     local timer, step_delay = vim.loop.new_timer(), 1
-    local fn = nil
+    local fn
     fn = vim.schedule_wrap(function()
         local callback = I.cache.queue[1]
         if callback == nil then
@@ -47,9 +65,11 @@ function I.run()
         end
 
         table.remove(I.cache.queue, 1)
-        M.now(callback)
+        M.now(callback.fn, callback.error_prefix)
+        ---@diagnostic disable-next-line: need-check-nil
         timer:start(step_delay, 0, fn)
     end)
+    ---@diagnostic disable-next-line: need-check-nil
     timer:start(step_delay, 0, fn)
 end
 

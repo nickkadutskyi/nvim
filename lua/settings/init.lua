@@ -1,11 +1,8 @@
 local spec_builder = require("ide.spec.builder")
---- PLUGINS -------------------------------------------------------------------
---- We load all plugins first from a sinle place
-require("settings.plugins")
-
---- SETTINGS -------------------------------------------------------------------
---- This is organized similarly to how IntelliJ orgnizes its settings
+local pack = require("ide.pack")
 
 require("settings.behavior.notifications")
+require("settings.plugins")
 
-local specs = spec_builder.get_specs()
+--- Load plugins after all specs have been added and merged
+pack.load(spec_builder.get_specs())

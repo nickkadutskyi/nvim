@@ -53,17 +53,19 @@ function M.get_specs()
             vim.notify("ide.spec.builder: no src for '" .. name .. "'", vim.log.levels.WARN)
         else
             entry.spec.data = I.merge_data_fragments(entry.data_fragments)
-            table.insert(result, entry.spec)
+            if entry.spec.data.enabled ~= false then
+                table.insert(result, entry.spec)
+            end
         end
     end
     return result
 end
 
 --- Resolve opts chain at load time (called from on_load after packadd right before before hook).
----@param plugin_data {spec: vim.pack.Spec, path: string}
+---@param spec vim.pack.Spec
 ---@return table
-function M.resolve_opts(plugin_data)
-    local data = plugin_data.spec.data or {}
+function M.resolve_opts(spec)
+    local data = spec.data or {}
     local chain = data.opts_chain or {}
     local extend_paths = data.opts_extend or {}
     local opts = {}
@@ -90,7 +92,7 @@ function M.resolve_opts(plugin_data)
                 t[entry.path[#entry.path]] = entry.list
             end
         else
-            opts = item(plugin_data, opts) or opts
+            opts = item(spec, opts) or opts
         end
     end
 
