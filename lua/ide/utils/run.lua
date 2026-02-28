@@ -31,7 +31,7 @@ end
 ---@param fn function Callable to execute.
 ---@param error_prefix? string Optional prefix to prepend to error messages.
 function M.later(fn, error_prefix)
-    table.insert(I.cache.queue, { fn, error_prefix })
+    table.insert(I.cache.queue, { fn = fn, error_prefix = error_prefix })
     I.schedule()
 end
 
@@ -83,9 +83,12 @@ function I.report()
 end
 
 I.notify = vim.schedule_wrap(function(msg, level)
-  if type(msg) == 'table' then msg = table.concat(msg, '\n') end
-  vim.notify(string.format('(mini.deps) %s', msg), level)
-  vim.cmd('redraw')
+    level = level or "INFO"
+    if type(msg) == "table" then
+        msg = table.concat(msg, "\n")
+    end
+    vim.notify(string.format("(ide.utils.run) %s", msg), vim.log.levels[level], { title = "ide.utils.run" })
+    vim.cmd("redraw")
 end)
 
 --- MODULE EXPORT --------------------------------------------------------------
