@@ -144,6 +144,9 @@ function I.merge_data_fragments(fragments)
         if data.enabled == false then
             result.enabled = false
         end
+        if data.dev ~= nil then
+            result.dev = data.dev
+        end
         if data.cond ~= nil then
             result.cond = data.cond
         end

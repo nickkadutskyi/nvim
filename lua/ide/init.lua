@@ -14,10 +14,16 @@ utils.autocmd.create("UIEnter", {
 ---
 ---@alias ide.events "IdeLater"
 ---
+---@class ide.Dev.Config
+---@field path string base dir (string) or per-plugin function returning the full local path
+---@field patterns string[]  plain substrings matched against spec.src to auto-enable dev mode
+---@field fallback boolean   when true, fall back to remote src if the local directory does not exist
+---
 ---@alias ide.SpecData.Opts table | fun(spec: vim.pack.Spec, opts: table): table?
 ---
 ---@class (exact) ide.SpecData
 ---@field enabled? boolean (default true) when false spec is not included
+---@field dev? boolean when true, load from local dev path instead of spec.src (see ide.Dev.Config)
 ---@field cond? boolean|fun(plugin_data: vim.pack.PluginData): boolean condition to determine whether plugin should be loaded, evaluated at load time; if false, plugin is not loaded and after hook is not run
 ---@field build? fun(event: settings.PackEvent) function to run after plugin is installed or updated
 ---@field opts? ide.SpecData.Opts either a table of options to merge into the plugin spec, or a function that returns such a table

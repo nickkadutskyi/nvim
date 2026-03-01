@@ -1,5 +1,9 @@
 {
   "plugins": {
+    "jb.nvim": {
+      "rev": "499b207e0884fe93ecd82143b2781b9b2081fa40",
+      "src": "/Users/nick/Documents/jb.nvim"
+    },
     "nvim-notify": {
       "rev": "ab98fecfe24d31fa03e0b3dcfc7c506c0f9c34c7",
       "src": "https://github.com/rcarriga/nvim-notify",

@@ -1,0 +1,63 @@
+local spec_builder = require("ide.spec.builder")
+
+spec_builder.add({
+    {
+        "nickkadutskyi/jb.nvim",
+        opts = {},
+        after = function(_, opts)
+            require("jb").setup({
+                transparent = true,
+                enforce_float_style = {
+                    {
+                        style = { border = require("jb.borders").borders.dialog.default_box_header_shadowed },
+                        condition = function(_, _, config)
+                            if type(config.title) ~= "string" then
+                                return false
+                            end
+                            return config.title == " Plugins " or config.title:find("99") ~= nil
+                        end,
+                    },
+                    {
+                        style = {
+                            border = require("jb.borders").borders.dialog.default_box_split_top_no_footer_shadowed,
+                        },
+                        condition = function(bufnr, _, _)
+                            local ok, fff = pcall(require, "fff.picker_ui")
+                            return not ok or not fff.state and false or bufnr == fff.state.input_buf
+                        end,
+                    },
+                    {
+                        style = {
+                            border = require("jb.borders").borders.dialog.default_box_split_middle_shadowed_no_footer,
+                        },
+                        condition = function(bufnr, _, _)
+                            local ok, fff = pcall(require, "fff.picker_ui")
+                            return not ok or not fff.state and false or bufnr == fff.state.list_buf
+                        end,
+                    },
+                    {
+                        style = {
+                            border = require("jb.borders").borders.dialog.default_box_split_bottom_shadowed_header,
+                        },
+                        condition = function(bufnr, _, _)
+                            local ok, fff = pcall(require, "fff.picker_ui")
+                            return not ok or not fff.state and false or bufnr == fff.state.preview_buf
+                        end,
+                        after = function(winid, _, _)
+                            vim.schedule(function()
+                                vim.api.nvim_set_option_value(
+                                    "winhl",
+                                    "Normal:Normal,IncSearch:FzfLuaSearch,FloatTitle:DialogFloatBorderTop",
+                                    { win = winid }
+                                )
+                            end)
+                        end,
+                    },
+                },
+            })
+
+            -- Enable color scheme
+            vim.cmd("colorscheme jb")
+        end,
+    },
+})

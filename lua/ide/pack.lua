@@ -7,6 +7,15 @@ local I = {}
 
 ---@param specs vim.pack.Spec[]
 function M.load(specs)
+    -- Dev phase: rewrite spec.src to local path where applicable
+    local dev = require("ide.dev")
+    for _, spec in ipairs(specs) do
+        local dev_path = dev.resolve(spec)
+        if dev_path then
+            spec.src = dev_path
+        end
+    end
+
     -- Pre-load phase: run before hooks for all plugins (mirrors lazy.nvim init)
     for _, spec in ipairs(specs) do
         local data = spec.data or {}
