@@ -14,9 +14,7 @@ end
 utils.autocmd.create("UIEnter", {
     once = true,
     callback = function()
-        utils.run.later(function()
-            vim.api.nvim_exec_autocmds("User", { pattern = "IdeLater", modeline = false })
-        end)
+        vim.api.nvim_exec_autocmds("User", { pattern = "IdeLater", modeline = false })
     end,
 })
 

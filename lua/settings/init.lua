@@ -2,6 +2,8 @@ local import = require("ide.import").import
 local spec_builder = require("ide.spec.builder")
 local pack = require("ide.pack")
 
+--- OPTIONS --------------------------------------------------------------------
+
 --- Project-specific setting provides by .nvim.lua
 ---@type ide.LocalSettings
 vim.g.settings = nil
@@ -14,6 +16,8 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 -- Delays before mapped sequence to complete
 vim.o.timeoutlen = 300
+
+--- IMPORTS --------------------------------------------------------------------
 
 -- In this file we define all the plugins with their `src` so we load it first
 -- to keep the order of how plugins are going to be loaded deterministic.
