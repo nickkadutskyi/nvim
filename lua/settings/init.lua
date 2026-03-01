@@ -8,6 +8,12 @@ vim.g.settings = nil
 ---@type boolean
 vim.g.settings_loaded = false
 
+-- Set leader keys before everything else
+-- leader needs to be set before loading any plugin or module
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+-- Delays before mapped sequence to complete
+vim.o.timeoutlen = 300
 
 --- Configure loader for local development versions of plugins.
 require("ide.dev").setup()

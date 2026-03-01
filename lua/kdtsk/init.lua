@@ -46,8 +46,8 @@ Utils.on_later(function()
     if later_autocmds then
         require("kdtsk.config.autocmds")
     end
-    -- Provides generic (non-plugin-specific) Keymap
-    require("kdtsk.config.keymap")
+    -- -- Provides generic (non-plugin-specific) Keymap
+    -- require("kdtsk.config.keymap")
 
     -- TODO do root detection here or maybe before this autocmd?
 
