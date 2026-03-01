@@ -1,27 +1,9 @@
---- Example: { php = { php_cs_fixer = { use_for = { style = true } } } }
----@alias kdtsk.Settings table<string, table<string, {
----    use_for: table<kdtsk.tools.Purpose, boolean>, -- use the tool for the given purpose
----    lsp_settings?: table, -- provide settings for LSP
----  }>>
----@type kdtsk.Settings
-vim.g.settings = nil
----@type boolean
-vim.g.settings_loaded = false
 
 _G.Utils = require("kdtsk.utils")
 
 -- Loads all the options
 require("kdtsk.config.options")
 
--- If opened a dir then set it as the cwd and if opened a file then set the
--- file's parent dir as the cwd to narrow down the scope for fzf
--- Later ahmedkhalf/project.nvim will adjust cwd based on .git or LSP
-local curr_path = vim.fn.resolve(vim.fn.expand("%"))
-if vim.fn.isdirectory(vim.fn.expand("%")) == 1 then
-    vim.api.nvim_set_current_dir(curr_path)
-elseif vim.fn.filereadable(vim.fn.expand("%")) == 1 then
-    vim.api.nvim_set_current_dir(vim.fn.fnamemodify(curr_path, ":p:h"))
-end
 
 -- Bootstraps lazy.nvim for loading all the plugins and modules
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"

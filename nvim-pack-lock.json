@@ -4,10 +4,18 @@
       "rev": "499b207e0884fe93ecd82143b2781b9b2081fa40",
       "src": "/Users/nick/Documents/jb.nvim"
     },
+    "lazydev.nvim": {
+      "rev": "5231c62aa83c2f8dc8e7ba957aa77098cda1257d",
+      "src": "https://github.com/folke/lazydev.nvim"
+    },
     "nvim-notify": {
       "rev": "ab98fecfe24d31fa03e0b3dcfc7c506c0f9c34c7",
       "src": "https://github.com/rcarriga/nvim-notify",
       "version": "'ab98fecfe'"
+    },
+    "nvim-treesitter": {
+      "rev": "6bc51d020a5e06b7e20ea82dbc47196d3d3027c7",
+      "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     }
   }
 }

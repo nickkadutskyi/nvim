@@ -29,8 +29,11 @@ return {
                             },
                             workspace = {
                                 checkThirdParty = false,
+                                -- Use VIMRUNTIME/lua because lazydev.nvim overrides runtime.path
+                                -- from { "lua/?.lua" } to { "?.lua" }, so library entries must
+                                -- point directly to the lua/ root for module resolution to work.
                                 library = {
-                                    vim.env.VIMRUNTIME,
+                                    vim.env.VIMRUNTIME .. "/lua",
                                     "${3rd}/luv/library",
                                 },
                             },

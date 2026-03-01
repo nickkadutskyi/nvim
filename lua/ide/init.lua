@@ -1,5 +1,15 @@
 local utils = require("ide.utils")
 
+-- If opened a dir then set it as the cwd and if opened a file then set the
+-- file's parent dir as the cwd to narrow down the scope for fzf
+-- Later ahmedkhalf/project.nvim will adjust cwd based on .git or LSP
+local curr_path = vim.fn.resolve(vim.fn.expand("%"))
+if vim.fn.isdirectory(vim.fn.expand("%")) == 1 then
+    vim.api.nvim_set_current_dir(curr_path)
+elseif vim.fn.filereadable(vim.fn.expand("%")) == 1 then
+    vim.api.nvim_set_current_dir(vim.fn.fnamemodify(curr_path, ":p:h"))
+end
+
 --- Define custom autocmds
 utils.autocmd.create("UIEnter", {
     once = true,
@@ -54,3 +64,17 @@ utils.autocmd.create("UIEnter", {
 ---@class ide.Spec.Builder.Entry
 ---@field spec? vim.pack.Spec
 ---@field data_fragments ide.SpecData[]
+---
+---@class ide.Opts.Treesitter
+---@field ensure_installed string[] list of parsers to ensure are installed
+---@field syntax_map table<string, string> optional mapping of filetypes to treesitter parser names
+---@field auto_install boolean whether to automatically install missing parsers when opening a file
+---@field sync_install boolean whether to install parsers synchronously (i.e. blocking)
+---@field highlight {enable: boolean} whether to enable treesitter-based syntax highlighting
+---@field indent {enable: boolean} whether to enable treesitter-based indentation
+---
+---@alias ide.LocalSettings table<string, table<string, {
+---  use_for: table<kdtsk.tools.Purpose, boolean>, -- use the tool for the given purpose
+---  lsp_settings?: table, -- provide settings for LSP
+--- }>>
+---

@@ -8,15 +8,16 @@ local I = {}
 I.config = {
     path = "~/Documents",
     patterns = {},
-    fallback = false,
+    fallback = true,
 }
 
 --- Configure the dev loader. Call before spec_builder.add() calls are made.
 ---@param opts? ide.Dev.Config
 function M.setup(opts)
-    opts = opts or {}
-    vim.validate("opts", opts, "table")
-    I.config = vim.tbl_deep_extend("force", I.config, opts)
+    if opts then
+        vim.validate("opts", opts, "table")
+        I.config = vim.tbl_deep_extend("force", I.config, opts)
+    end
     I.config.path = vim.fn.expand(I.config.path)
 end
 

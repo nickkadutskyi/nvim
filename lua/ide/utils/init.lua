@@ -2,6 +2,7 @@
 ---@field run ide.Utils.Run
 ---@field autocmd ide.Utils.Autocmd
 ---@field str ide.Utils.Str
+---@field treesitter ide.Utils.Plugins.Treesitter
 local M = {}
 
 setmetatable(M, {

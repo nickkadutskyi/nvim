@@ -39,12 +39,6 @@ vim.o.swapfile = true
 vim.o.updatetime = 250
 vim.o.backup = false
 
---- Keymap
--- leader needs to be set before loading any plugin or module
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
--- Delays before mapped sequence to complete
-vim.o.timeoutlen = 300
 
 --- Editor
 

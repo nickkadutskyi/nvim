@@ -7,7 +7,7 @@ return {
         lazy = false,
         branch = "main",
         build = ":TSUpdate",
-        enabled = true,
+        enabled = false,
         opts = {
             -- merged from:
             -- kdtsk.languages_frameworks
