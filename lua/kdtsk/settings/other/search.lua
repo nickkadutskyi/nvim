@@ -65,12 +65,12 @@ return {
             end, { desc = "Bookmarks: select last item in the list." })
 
             -- Toggle previous & next buffers stored within Harpoon list
-            vim.keymap.set("n", "<C-P>", function()
-                harpoon:list():prev({ ui_nav_wrap = true })
-            end, { desc = "Bookmarks: select next item" })
-            vim.keymap.set("n", "<C-N>", function()
-                harpoon:list():next({ ui_nav_wrap = true })
-            end, { desc = "Bookmarks: select previous item" })
+            -- vim.keymap.set("n", "<C-P>", function()
+            --     harpoon:list():prev({ ui_nav_wrap = true })
+            -- end, { desc = "Bookmarks: select next item" })
+            -- vim.keymap.set("n", "<C-N>", function()
+            --     harpoon:list():next({ ui_nav_wrap = true })
+            -- end, { desc = "Bookmarks: select previous item" })
         end,
     },
     {
