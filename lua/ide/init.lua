@@ -20,6 +20,9 @@ utils.autocmd.create("UIEnter", {
     end,
 })
 
+--- Configure loader for local development versions of plugins.
+require("ide.dev").setup()
+
 --- TYPES
 ---
 ---@alias ide.events "IdeLater"

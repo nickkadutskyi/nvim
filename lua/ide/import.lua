@@ -23,7 +23,7 @@ function M.import(modname)
             I.requiremod(modname)
             return
         end
-        vim.notify("ide.spec.import: not found for '" .. modname .. "'", vim.log.levels.WARN)
+        vim.notify("ide.import: not found for '" .. modname .. "'", vim.log.levels.WARN)
         return
     end
 
@@ -58,7 +58,7 @@ end
 function I.requiremod(modname)
     local ok, err = pcall(require, modname)
     if not ok then
-        vim.notify("ide.spec.import: failed to load '" .. modname .. "': " .. tostring(err), vim.log.levels.ERROR)
+        vim.notify("ide.import: failed to load '" .. modname .. "': " .. tostring(err), vim.log.levels.ERROR)
     end
 end
 

@@ -1,4 +1,4 @@
-local import = require("ide.spec.import").import
+local import = require("ide.import").import
 local spec_builder = require("ide.spec.builder")
 local pack = require("ide.pack")
 
@@ -14,9 +14,6 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 -- Delays before mapped sequence to complete
 vim.o.timeoutlen = 300
-
---- Configure loader for local development versions of plugins.
-require("ide.dev").setup()
 
 -- In this file we define all the plugins with their `src` so we load it first
 -- to keep the order of how plugins are going to be loaded deterministic.
