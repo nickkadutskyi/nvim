@@ -1,8 +1,17 @@
 local spec_builder = require("ide.spec.builder")
 
+--- OPTIONS --------------------------------------------------------------------
+
+-- Limits syntax highlighting columns in case of long lines
+vim.opt.synmaxcol = 500
+-- RGB colors
+vim.opt.termguicolors = true
+
+--- PLUGINS --------------------------------------------------------------------
+
 spec_builder.add({
     {
-        "nickkadutskyi/jb.nvim",
+        "jb.nvim",
         opts = {},
         after = function(_, opts)
             require("jb").setup({

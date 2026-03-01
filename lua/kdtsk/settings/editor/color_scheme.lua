@@ -1,7 +1,3 @@
--- Limits syntax highlighting columns in case of long lines
-vim.opt.synmaxcol = 500
--- RGB colors
-vim.opt.termguicolors = true
 
 ---@type LazySpec
 return {
