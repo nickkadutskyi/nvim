@@ -6,6 +6,7 @@ spec_builder.add({
     after = function(_, opts)
         require("notify").setup(opts)
 
+        -- Override vim.notify to use nvim-notify
         ---@diagnostic disable-next-line: duplicate-set-field
         vim.notify = function(message, level, nopts)
             nopts = nopts or {}
@@ -28,7 +29,7 @@ spec_builder.add({
         render = "wrapped-compact",
         icons = { WARN = "" },
         top_down = false,
-        -- NOTE: Using custom stages to provide my own border and padding
+        -- Using custom stages to provide my own border and padding
         stages = {
             function(state)
                 local next_height = state.message.height + 2
