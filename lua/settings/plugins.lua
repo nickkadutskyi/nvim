@@ -15,5 +15,5 @@ spec_builder.add({
     { src = g("nickkadutskyi/jb.nvim"), data = { dev = true } },
     --- Helps with go to definitons and references in lua
     { src = g("folke/lazydev.nvim"), data = { event = "IdeLater" } },
-    { src = g("folke/which-key.nvim"), data = { event = "IdeLater" } },
+    { src = g("folke/which-key.nvim") },
 })

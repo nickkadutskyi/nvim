@@ -32,6 +32,11 @@ require("ide.dev").setup()
 ---
 ---@alias ide.SpecData.Opts table | fun(spec: vim.pack.Spec, opts: table): table?
 ---
+---@class ide.SpecData.Key : vim.keymap.set.Opts
+---@field [1] string lhs key sequence
+---@field [2]? string|fun() rhs action; when omitted the after hook is expected to register the real mapping
+---@field mode? string|string[] mode(s), defaults to "n"
+---
 ---@class (exact) ide.SpecData
 ---@field enabled? boolean (default true) when false spec is not included
 ---@field dev? boolean when true, load from local dev path instead of spec.src (see ide.Dev.Config)
@@ -42,6 +47,8 @@ require("ide.dev").setup()
 ---@field before? fun(plugin_data: vim.pack.PluginData)
 ---@field after? fun(plugin_data: vim.pack.PluginData, opts: table)
 ---@field event? vim.api.keyset.events|vim.api.keyset.events[]|ide.events|ide.events[]
+---@field keys? ide.SpecData.Key[] keymaps; when deferred, each lhs becomes a loader stub that loads the plugin on first press then re-fires the key; when deferred=false, registered as normal mappings after load
+---@field deferred? boolean (default true) set to false to disable all lazy loading – plugin loads immediately even if event/keys are present; keys are still registered as real mappings after load
 ---
 ---@class ide.SpecData.Named : ide.SpecData
 ---@field [1] string plugin name

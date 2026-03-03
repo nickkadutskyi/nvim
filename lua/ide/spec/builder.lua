@@ -174,6 +174,13 @@ function I.merge_data_fragments(fragments)
                 return type(e) == "string" and e ~= ""
             end):totable()
         end
+        if data.keys ~= nil then
+            result.keys = result.keys or {}
+            vim.list_extend(result.keys, data.keys)
+        end
+        if data.deferred ~= nil then
+            result.deferred = data.deferred
+        end
     end
 
     return result

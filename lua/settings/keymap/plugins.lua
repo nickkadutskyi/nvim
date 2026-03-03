@@ -9,27 +9,46 @@ vim.keymap.set("n", "<leader>al", function()
     require("lazy").show()
 end, { silent = true, desc = "Plugins: [a]ctivate [l]azy.nvim manager" })
 
+spec_builder.add({
+    "which-key.nvim",
+    keys = {
+        {
+            "<leader>?n",
+            function()
+                require("which-key").show({ mode = "n", global = true })
+            end,
+            desc = "WK: Global keymap for normal mode",
+        },
+        {
+            "<leader>?i",
+            function()
+                require("which-key").show({ mode = "i", global = true })
+            end,
+            desc = "WK: Global keymaps for insert mode",
+        },
+        {
+            "<localleader>?n",
+            function()
+                require("which-key").show({ mode = "n", global = false })
+            end,
+            desc = "WK: Buffer keymap for normal mode",
+        },
+        {
+            "<localleader>?i",
+            function()
+                require("which-key").show({ mode = "i", global = false })
+            end,
+            desc = "WK: Buffer keymaps for insert mode",
+        },
+    },
+})
+
 --- PLUGINS --------------------------------------------------------------------
 
 spec_builder.add({
     "which-key.nvim",
     after = function(_, opts)
-        local wk = require("which-key")
-        wk.setup(opts)
-
-        -- Keymap
-        vim.keymap.set("n", "<leader>?n", function()
-            wk.show({ mode = "n", global = true })
-        end, { silent = true, desc = "WK: Global keymap for normal mode" })
-        vim.keymap.set("n", "<leader>?i", function()
-            wk.show({ mode = "i", global = true })
-        end, { silent = true, desc = "WK: Global keymaps for insert mode" })
-        vim.keymap.set("n", "<localleader>?n", function()
-            wk.show({ mode = "n", global = false })
-        end, { silent = true, desc = "WK: Buffer keymap for normal mode" })
-        vim.keymap.set("n", "<localleader>?i", function()
-            wk.show({ mode = "i", global = false })
-        end, { silent = true, desc = "WK: Buffer keymaps for insert mode" })
+        require("which-key").setup(opts)
     end,
     ---@type wk.Opts
     opts = {

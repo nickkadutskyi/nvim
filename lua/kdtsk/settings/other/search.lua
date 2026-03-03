@@ -166,7 +166,7 @@ return {
                 max_matches_per_file = 200, -- Maximum matches per file
                 smart_case = true, -- Case-insensitive unless query has uppercase
                 time_budget_ms = 150, -- Max search time in ms per call (prevents UI freeze, 0 = no limit)
-                modes = { "plain", "regex", "fuzzy" }, -- Available grep modes and their cycling order
+                modes = { "fuzzy", "plain", "regex" }, -- Available grep modes and their cycling order
             },
         },
         keys = {
@@ -180,7 +180,12 @@ return {
             {
                 "<leader>ff",
                 function()
-                    require("fff").live_grep({ title = "Find in Files" })
+                    require("fff").live_grep({
+                        title = "Find in Files",
+                        grep = {
+                            modes = { "fuzzy", "plain", "regex" },
+                        },
+                    })
                 end,
                 desc = "Search(fff.nvim): [f]ind in [f]iles",
             },
