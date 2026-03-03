@@ -78,6 +78,25 @@ function I.on_load(plugin_data)
             })
     end
 
+    -- Filetype trigger (only when deferred)
+    if deferred and data.ft and #data.ft > 0 then
+        deferred_load = false
+            ~= utils.autocmd.create("FileType", {
+                group = "ide.pack.lazy.ft",
+                once = true,
+                pattern = data.ft,
+                desc = "ide.pack: Load plugin '" .. name .. "' on filetype(s).",
+                callback = function()
+                    utils.run.later(function()
+                        if not I.loaded[name] then
+                            I.loaded[name] = true
+                            I.load_plugin(plugin_data)
+                        end
+                    end, "ide.pack: Failed to load plugin '" .. name .. "' on ft due to: ")
+                end,
+            })
+    end
+
     -- Keys trigger (only when deferred)
     if deferred and data.keys and #data.keys > 0 then
         deferred_load = true

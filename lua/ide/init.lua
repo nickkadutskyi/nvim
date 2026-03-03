@@ -47,6 +47,7 @@ require("ide.dev").setup()
 ---@field before? fun(plugin_data: vim.pack.PluginData)
 ---@field after? fun(plugin_data: vim.pack.PluginData, opts: table)
 ---@field event? vim.api.keyset.events|vim.api.keyset.events[]|ide.events|ide.events[]
+---@field ft? string|string[] filetype(s) to load the plugin on (FileType autocmd)
 ---@field keys? ide.SpecData.Key[] keymaps; when deferred, each lhs becomes a loader stub that loads the plugin on first press then re-fires the key; when deferred=false, registered as normal mappings after load
 ---@field deferred? boolean (default true) set to false to disable all lazy loading – plugin loads immediately even if event/keys are present; keys are still registered as real mappings after load
 ---

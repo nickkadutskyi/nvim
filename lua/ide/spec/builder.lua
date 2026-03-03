@@ -174,6 +174,12 @@ function I.merge_data_fragments(fragments)
                 return type(e) == "string" and e ~= ""
             end):totable()
         end
+        if data.ft ~= nil then
+            local ft = type(data.ft) == "string" and { data.ft } or data.ft
+            result.ft = vim.iter({ result.ft or {}, ft }):flatten():filter(function(f)
+                return type(f) == "string" and f ~= ""
+            end):totable()
+        end
         if data.keys ~= nil then
             result.keys = result.keys or {}
             vim.list_extend(result.keys, data.keys)
