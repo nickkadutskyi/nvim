@@ -1,10 +1,6 @@
 
 _G.Utils = require("kdtsk.utils")
 
--- Loads all the options
-require("kdtsk.config.options")
-
-
 -- Bootstraps lazy.nvim for loading all the plugins and modules
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
