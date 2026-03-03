@@ -1,2 +1,2 @@
 vim.g.settings = { a = 1 }
-vim.api.nvim_command("doautocmd User SettingsLoaded")
+vim.api.nvim_exec_autocmds("User", { pattern = "SettingsLoaded" })

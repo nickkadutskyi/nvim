@@ -18,19 +18,6 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Handle settings
-vim.api.nvim_create_autocmd("VimEnter", {
-    group = vim.api.nvim_create_augroup("kdtsk-settings", { clear = true }),
-    callback = function()
-        -- Set vim.g.settings and call SettingsLoaded autocmd in .nvim.lua
-        -- to have project specific settings otherwise it's set to defaults
-        if vim.g.settings == nil then
-            vim.g.settings = {}
-        end
-        vim.api.nvim_command("doautocmd User SettingsLoaded")
-    end,
-})
-
 -- If not opening a file or a directory then load autocmds later
 local later_autocmds = vim.fn.argc(-1) == 0
 if not later_autocmds then
