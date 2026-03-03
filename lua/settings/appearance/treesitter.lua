@@ -16,12 +16,4 @@ spec_builder.add({
         highlight = { enable = true },
         indent = { enable = true },
     },
-    after = function(_, opts)
-        local utils = require("ide.utils")
-
-        -- Ensure specified parsers are installed.
-        utils.treesitter.ensure_installed(opts)
-
-        utils.treesitter.create_auto_start_autocmd(opts)
-    end,
 })

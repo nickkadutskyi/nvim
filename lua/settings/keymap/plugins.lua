@@ -47,9 +47,6 @@ spec_builder.add({
 
 spec_builder.add({
     "which-key.nvim",
-    after = function(_, opts)
-        require("which-key").setup(opts)
-    end,
     ---@type wk.Opts
     opts = {
         -- Provides Keymap Groups:

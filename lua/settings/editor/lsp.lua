@@ -15,8 +15,5 @@ spec_builder.add({
                 -- { path = "snacks.nvim", words = { "Snacks" } },
             },
         },
-        after = function(_, opts)
-            require("lazydev").setup(opts)
-        end,
     },
 })

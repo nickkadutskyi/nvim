@@ -6,15 +6,13 @@ local utils = require("ide.utils")
 local M = {}
 local I = {}
 
----@param opts ide.Opts.Treesitter
-function M.ensure_installed(opts)
+---@param parsers ide.Opts.Treesitter
+function M.ensure_installed(parsers)
     local ts = require("nvim-treesitter")
     local ts_config = require("nvim-treesitter.config")
 
-    local ensure_installed = opts.ensure_installed
-
     local already_installed = ts_config.get_installed("parsers")
-    local parsers_to_install = vim.iter(ensure_installed)
+    local parsers_to_install = vim.iter(parsers)
         :filter(function(parser)
             return not vim.tbl_contains(already_installed, parser)
         end)
