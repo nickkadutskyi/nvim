@@ -1,7 +1,7 @@
 {
   "plugins": {
     "jb.nvim": {
-      "rev": "e4bc143ae560b3777f9b1ebb7e4fcaf99559814c",
+      "rev": "499b207e0884fe93ecd82143b2781b9b2081fa40",
       "src": "/Users/nick/Documents/jb.nvim"
     },
     "lazydev.nvim": {
@@ -14,7 +14,7 @@
       "version": "'ab98fecfe'"
     },
     "nvim-treesitter": {
-      "rev": "972f378653c794b0ff82282a844732695064b70f",
+      "rev": "544320a9cf5d6bf539ec1cc54d393064015670c4",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "which-key.nvim": {
