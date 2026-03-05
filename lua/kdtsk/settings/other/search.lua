@@ -184,7 +184,7 @@ return {
                     require("fff").live_grep({
                         title = "Find in Files",
                         grep = {
-                            modes = { "fuzzy", "plain", "regex" },
+                            modes = { "plain", "fuzzy", "regex" },
                         },
                     })
                 end,
