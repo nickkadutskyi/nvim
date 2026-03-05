@@ -24,18 +24,32 @@ function M.setup(opts)
         return vim.notify("ide requires Neovim built with LuaJIT", vim.log.levels.ERROR, { title = "ide" })
     end
 
+    utils.autocmd.create("IdeDone", {
+        once = true,
+        callback = function()
+            if vim.v.vim_did_enter == 1 then
+                utils.run.later(function()
+                    vim.api.nvim_exec_autocmds("User", { pattern = "IdeLater", modeline = false })
+                end)
+            else
+                utils.autocmd.create("UIEnter", {
+                    once = true,
+                    callback = function()
+                        utils.run.later(function()
+                            vim.api.nvim_exec_autocmds("User", { pattern = "IdeLater", modeline = false })
+                        end)
+                    end,
+                })
+            end
+        end,
+    })
+
     require("settings").setup(opts)
 
     vim.api.nvim_exec_autocmds("User", { pattern = "IdeDone", modeline = false })
 end
 
 --- Define custom autocmds
-utils.autocmd.create("UIEnter", {
-    once = true,
-    callback = function()
-        vim.api.nvim_exec_autocmds("User", { pattern = "IdeLater", modeline = false })
-    end,
-})
 
 --- Handle settings
 utils.autocmd.create("VimEnter", {
