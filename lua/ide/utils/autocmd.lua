@@ -49,7 +49,6 @@ function M.create(event, opts, group_opts)
     end
 
     group_opts = group_opts or {}
-    group_opts.clear = group_opts.clear or false
 
     if not opts.group then
         opts.group = vim.api.nvim_create_augroup("ide.utils.autocmd", { clear = false })

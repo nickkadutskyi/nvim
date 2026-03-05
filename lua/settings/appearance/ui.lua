@@ -1,5 +1,22 @@
 local utils = require("ide.utils")
 
+--- AUTOCMDS -------------------------------------------------------------------
+
+utils.run.now_if_args(function()
+    if os.getenv("TMUX") then
+        utils.autocmd.create("BufEnter", {
+            group = "settings.tmux-window-name",
+            desc = "Set tmux window name to the current buffer name",
+            callback = function()
+                -- FIXME: cache titlestring somewhere to avoid re-evaluating it
+                -- TODO: should I make async system call?
+                -- Rename tmux window using the evaluated titlestring
+                vim.fn.system(string.format('tmux rename-window "%s"', Utils.ui.titlestring()))
+            end,
+        })
+    end
+end)
+
 --- OPTIONS --------------------------------------------------------------------
 
 -- Messaging

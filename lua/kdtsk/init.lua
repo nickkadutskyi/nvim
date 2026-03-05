@@ -18,17 +18,9 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- If not opening a file or a directory then load autocmds later
-local later_autocmds = vim.fn.argc(-1) == 0
-if not later_autocmds then
-    require("kdtsk.config.autocmds")
-end
 
 Utils.on_later(function()
     -- Loads modules after all plugins are loaded
-    if later_autocmds then
-        require("kdtsk.config.autocmds")
-    end
     -- -- Provides generic (non-plugin-specific) Keymap
     -- require("kdtsk.config.keymap")
 

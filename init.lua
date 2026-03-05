@@ -5,10 +5,13 @@ require("ide").setup({
         -- This will help with dependendcies. Keep in mind if plugin is loaded on event
         -- then it's going to be out of order.
         "settings.plugins",
+
         "settings.appearance",
         "settings.behavior",
         "settings.keymap",
         "settings.editor",
+        "settings.version_control",
+        "settings.advanced",
     },
 })
 

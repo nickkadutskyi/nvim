@@ -50,7 +50,7 @@ function M.create_auto_start_autocmd(opts)
 
             I.start_treesitter(bufnr, parser_name, opts)
         end,
-    }, { clear = true })
+    })
 end
 
 --- INTERNAL FUNCTIONS ---------------------------------------------------------

@@ -65,7 +65,6 @@ function I.on_load(plugin_data)
     if deferred and data.event then
         deferred_load = false
             ~= utils.autocmd.create(data.event, {
-                group = "ide.pack.lazy.event",
                 once = true,
                 desc = "ide.pack: Load plugin '" .. name .. "' on event(s).",
                 callback = function()
@@ -83,7 +82,6 @@ function I.on_load(plugin_data)
     if deferred and data.ft and #data.ft > 0 then
         deferred_load = false
             ~= utils.autocmd.create("FileType", {
-                group = "ide.pack.lazy.ft",
                 once = true,
                 pattern = data.ft,
                 desc = "ide.pack: Load plugin '" .. name .. "' on filetype(s).",
@@ -202,7 +200,6 @@ end
 --- Create autocmds for plugin management, such as running build hooks after install/update
 function I.create_autocmds()
     utils.autocmd.create("PackChanged", {
-        group = "ide.pack.std",
         desc = "ide.pack: Runs build hook after plugin install/update",
         callback = function(e)
             local data = e.data --[[@as settings.PackEvent]]
@@ -220,7 +217,7 @@ function I.create_autocmds()
                 end, "ide.pack: build hook failed for '" .. (data.spec.name or "?") .. "' due to: ")
             end
         end,
-    }, { clear = true })
+    })
 end
 
 return M

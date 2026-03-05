@@ -2,6 +2,8 @@
 --- other keymap files to ensure leader keys are set before loading any plugin
 --- or module that might use them in their keymaps.
 
+local utils = require("ide.utils")
+
 --- OPTIONS --------------------------------------------------------------------
 
 -- Set leader keys before everything else
@@ -11,9 +13,52 @@ vim.g.maplocalleader = "\\"
 -- Delays before mapped sequence to complete
 vim.o.timeoutlen = 300
 
+--- AUTOCMDS -------------------------------------------------------------------
+
+utils.run.now_if_args(function()
+    -- Close certain windows with q or escape
+    utils.autocmd.create("FileType", {
+        group = "ide.keymap.close_with_q",
+        pattern = {
+            "PlenaryTestPopup",
+            "checkhealth",
+            "dbout",
+            "gitsigns-blame",
+            "grug-far",
+            "help",
+            "lspinfo",
+            "neotest-output",
+            "neotest-output-panel",
+            "neotest-summary",
+            "notify",
+            "qf",
+            "spectre_panel",
+            "startuptime",
+            "tsplayground",
+            "lazy",
+            "nvim-pack",
+        },
+        callback = function(event)
+            vim.bo[event.buf].buflisted = false
+            utils.run.later(function()
+                local opts = { buffer = event.buf, silent = true, desc = "Buffer: [q/Esc] Close" }
+                -- TODO: check if it's the last window in the tabpage, and if so, close the tabpage instead
+                vim.keymap.set("n", "q", function()
+                    vim.cmd("close")
+                    pcall(vim.api.nvim_buf_delete, event.buf, { force = true })
+                end, opts)
+                vim.keymap.set("n", "<Esc>", function()
+                    vim.cmd("close")
+                    pcall(vim.api.nvim_buf_delete, event.buf, { force = true })
+                end, opts)
+            end)
+        end,
+    })
+end)
+
 --- MAPPINGS -------------------------------------------------------------------
 
-require("ide.utils").run.now_if_args(function()
+utils.run.now_if_args(function()
     --- FIND
     -- Clear search highlight
     vim.keymap.set("n", "<Esc>", ":noh<CR>", { desc = "Clear search highlight" })

@@ -1,3 +1,36 @@
+local utils = require("ide.utils")
+
+--- AUTOCMDS -------------------------------------------------------------------
+
+utils.run.now_if_args(function()
+    utils.autocmd.create({ "RecordingEnter", "RecordingLeave" }, {
+        group = "settings.editor-macro-recording",
+        desc = "Tracks macro recording status and stores it in a global variable for use in statusline",
+        callback = function(e)
+            if e.event == "RecordingEnter" then
+                local register = vim.fn.reg_recording()
+                _G._editor_macro_recording = register ~= "" and register or nil
+            else
+                _G._editor_macro_recording = nil
+            end
+        end,
+    })
+    utils.autocmd.create("BufRead", {
+        group = "settings.readonly-dirs",
+        desc = "Enforces readonly for files in vendor and node_modules",
+        pattern = {
+            "*/vendor/*",
+            "*/node_modules/*",
+        },
+        callback = function(e)
+            vim.opt_local.readonly = true
+            vim.opt_local.modifiable = false
+            vim.diagnostic.enable(false, { bufnr = e.buf })
+            vim.opt_local.spell = false
+        end,
+    })
+end)
+
 --- OPTIONS --------------------------------------------------------------------
 
 --- Code Folding
