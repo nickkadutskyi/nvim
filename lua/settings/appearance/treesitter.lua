@@ -2,7 +2,6 @@ local spec_builder = require("ide.spec.builder")
 
 spec_builder.add({
     "nvim-treesitter",
-    opts_extend = { "ensure_installed" },
     ---@type ide.Opts.Treesitter
     opts = {
         ensure_installed = { "vim", "vimdoc" },

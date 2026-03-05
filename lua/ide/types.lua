@@ -48,13 +48,17 @@
 ---@field spec? vim.pack.Spec
 ---@field data_fragments ide.SpecData[]
 
+---@class ide.ParserInfo : ParserInfo
+---@field filetypes? string[] list of filetypes to associate with this parser
+
 ---@class ide.Opts.Treesitter
----@field ensure_installed string[] list of parsers to ensure are installed
----@field syntax_map table<string, string> optional mapping of filetypes to treesitter parser names
----@field auto_install boolean whether to automatically install missing parsers when opening a file
----@field sync_install boolean whether to install parsers synchronously (i.e. blocking)
----@field highlight {enable: boolean} whether to enable treesitter-based syntax highlighting
----@field indent {enable: boolean} whether to enable treesitter-based indentation
+---@field ensure_installed? string[] list of parsers to ensure are installed
+---@field syntax_map? table<string, string> optional mapping of filetypes to treesitter parser names
+---@field auto_install? boolean whether to automatically install missing parsers when opening a file
+---@field sync_install? boolean whether to install parsers synchronously (i.e. blocking)
+---@field highlight? {enable: boolean} whether to enable treesitter-based syntax highlighting
+---@field indent? {enable: boolean} whether to enable treesitter-based indentation
+---@field custom_parsers? table<string, ide.ParserInfo>
 
 ---@alias ide.LocalSettings table<string, table<string, {
 ---  use_for: table<kdtsk.tools.Purpose, boolean>, -- use the tool for the given purpose

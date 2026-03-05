@@ -53,6 +53,24 @@ function M.create_auto_start_autocmd(opts)
     })
 end
 
+---@param custom_parsers? table<string, ide.ParserInfo>
+function M.setup_custom_parsers(custom_parsers)
+    if not custom_parsers then
+        return
+    end
+    utils.autocmd.create("User", {
+        pattern = "TSUpdate",
+        callback = function()
+            for k, v in pairs(custom_parsers) do
+                require("nvim-treesitter.parsers")[k] = v
+                if v.filetypes then
+                    vim.treesitter.language.register(k, v.filetypes)
+                end
+            end
+        end,
+    })
+end
+
 --- INTERNAL FUNCTIONS ---------------------------------------------------------
 
 ---@param parser string
