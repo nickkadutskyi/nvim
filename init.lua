@@ -1,5 +1,4 @@
-require("ide").setup()
-require("settings").setup({
+require("ide").setup({
     imports = {
         -- In this file we define all the plugins with their `src` so we load it first
         -- to keep the order of how plugins are going to be loaded deterministic.

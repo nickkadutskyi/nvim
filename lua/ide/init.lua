@@ -5,7 +5,8 @@ local utils = require("ide.utils")
 local M = {}
 local I = {}
 
-function M.setup()
+---@param opts settings.Opts
+function M.setup(opts)
     -- If opened a dir then set it as the cwd and if opened a file then set the
     -- file's parent dir as the cwd to narrow down the scope for fzf
     -- Later ahmedkhalf/project.nvim will adjust cwd based on .git or LSP
@@ -16,7 +17,16 @@ function M.setup()
         vim.api.nvim_set_current_dir(vim.fn.fnamemodify(curr_path, ":p:h"))
     end
 
-    local later_autocmds = vim.fn.argc(-1) == 0
+    if vim.fn.has("nvim-0.12.0") ~= 1 then
+        return vim.notify("ide requires Neovim >= 0.12.0", vim.log.levels.ERROR, { title = "ide" })
+    end
+    if not (pcall(require, "ffi") and jit and jit.version) then
+        return vim.notify("ide requires Neovim built with LuaJIT", vim.log.levels.ERROR, { title = "ide" })
+    end
+
+    require("settings").setup(opts)
+
+    vim.api.nvim_exec_autocmds("User", { pattern = "IdeDone", modeline = false })
 end
 
 --- Define custom autocmds

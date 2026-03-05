@@ -1,4 +1,4 @@
----@alias ide.events "IdeLater"
+---@alias ide.events "IdeLater"|"IdeDone"|"PackBefore"
 
 ---@class ide.Dev.Config
 ---@field path string base dir (string) or per-plugin function returning the full local path
@@ -61,3 +61,5 @@
 ---  lsp_settings?: table, -- provide settings for LSP
 --- }>>
 
+---@class settings.Opts
+---@field imports string[] List of modules to import

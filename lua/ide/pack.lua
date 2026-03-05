@@ -29,6 +29,7 @@ function M.load(specs)
             end, "ide.pack: before hook failed for '" .. (spec.name or "?") .. "' due to: ")
         end
     end
+    vim.api.nvim_exec_autocmds("User", { pattern = "PackBefore", modeline = false })
 
     I.create_autocmds()
 

@@ -71,6 +71,8 @@ end
 ---@type Dictionary<ide.events>
 I.events = {}
 I.events.IdeLater = { event = "User", pattern = "IdeLater" }
+I.events.IdeDone = { event = "User", pattern = "IdeDone" }
+I.events.PackBefore = { event = "User", pattern = "PackBefore" }
 
 --- INTERNAL FUNCTIONS ---------------------------------------------------------
 
