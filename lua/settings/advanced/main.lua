@@ -29,4 +29,10 @@ utils.run.now_if_args(function()
             (vim.hl or vim.highlight).on_yank()
         end,
     })
+    utils.run.on_deferred(function()
+        -- Starts LSP logs rotation
+        -- TODO: move Utils from kdtsk to ide
+        Utils.lsp.rotate_lsp_logs()
+        vim.fn.timer_start(3600000, Utils.lsp.rotate_lsp_logs, { ["repeat"] = -1 })
+    end)
 end)

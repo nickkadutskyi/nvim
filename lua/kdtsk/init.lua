@@ -1,4 +1,3 @@
-
 _G.Utils = require("kdtsk.utils")
 
 -- Bootstraps lazy.nvim for loading all the plugins and modules
@@ -17,19 +16,6 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
     end
 end
 vim.opt.rtp:prepend(lazypath)
-
-
-Utils.on_later(function()
-    -- Loads modules after all plugins are loaded
-    -- -- Provides generic (non-plugin-specific) Keymap
-    -- require("kdtsk.config.keymap")
-
-    -- TODO do root detection here or maybe before this autocmd?
-
-    -- Starts LSP logs rotation
-    Utils.lsp.rotate_lsp_logs()
-    vim.fn.timer_start(3600000, Utils.lsp.rotate_lsp_logs, { ["repeat"] = -1 })
-end, vim.api.nvim_create_augroup("kdtsk-lazyvim", { clear = true }))
 
 -- Loads Settings modules via Lazy.nvim
 require("lazy").setup({
