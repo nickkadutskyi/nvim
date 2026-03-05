@@ -10,25 +10,25 @@ vim.g.settings = nil
 ---@type boolean
 vim.g.settings_loaded = false
 
--- Set leader keys before everything else
--- leader needs to be set before loading any plugin or module
-vim.g.mapleader = " "
-vim.g.maplocalleader = "\\"
--- Delays before mapped sequence to complete
-vim.o.timeoutlen = 300
+--- MODULE DEFINITION ----------------------------------------------------------
 
---- IMPORTS --------------------------------------------------------------------
+local M = {}
+local I = {}
 
--- In this file we define all the plugins with their `src` so we load it first
--- to keep the order of how plugins are going to be loaded deterministic.
--- This will help with dependendcies. Keep in mind if plugin is loaded on event
--- then it's goign to be out of order.
-import("settings.plugins")
+---@class settings.Opts
+---@field imports string[] List of modules to import
+---
+---@param opts settings.Opts
+function M.setup(opts)
+    opts = opts or {}
+    opts.imports = opts.imports or {}
 
-import("settings.appearance")
-import("settings.behavior")
-import("settings.keymap")
-import("settings.editor")
+    for _, module in ipairs(opts.imports) do
+        import(module)
+    end
 
---- Load plugins after all specs have been added and merged
-pack.load(spec_builder.get_specs())
+    --- Load plugins after all specs have been added and merged
+    pack.load(spec_builder.get_specs())
+end
+
+return M

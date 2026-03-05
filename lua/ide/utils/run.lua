@@ -35,6 +35,15 @@ function M.later(fn, error_prefix)
     I.schedule()
 end
 
+function M.now_if_args(fn, error_prefix)
+    if vim.fn.argc(-1) > 0 then
+        M.now_if_args = M.now
+    else
+        M.now_if_args = M.later
+    end
+    M.now_if_args(fn, error_prefix)
+end
+
 --- INTERNAL DATA --------------------------------------------------------------
 ---Cache to track callables etc.
 I.cache = {
@@ -54,7 +63,7 @@ function I.schedule()
 end
 
 function I.run()
-    local timer, step_delay = vim.loop.new_timer(), 1
+    local timer, step_delay = assert(vim.loop.new_timer()), 1
     local fn
     fn = vim.schedule_wrap(function()
         local callback = I.cache.queue[1]
@@ -68,7 +77,6 @@ function I.run()
 
         table.remove(I.cache.queue, 1)
         M.now(callback.fn, callback.error_prefix)
-        ---@diagnostic disable-next-line: need-check-nil
         timer:start(step_delay, 0, fn)
     end)
     ---@diagnostic disable-next-line: need-check-nil
