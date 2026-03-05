@@ -2,7 +2,7 @@
 
 --- MAPPINGS -------------------------------------------------------------------
 
-require("ide.utils").run.now_if_args(function()
+require("ide.utils").run.now_if_arg_or_deferred(function()
     -- Control what happens to the register when deleting, changing, and pasting
     -- When deleting string don't add it to the register
     vim.keymap.set("n", "<leader>d", '"_d', { desc = "Delete without yanking" })

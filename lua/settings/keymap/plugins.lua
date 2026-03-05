@@ -4,7 +4,7 @@ local spec_builder = require("ide.spec.builder")
 
 --- MAPPINGS -------------------------------------------------------------------
 
-require("ide.utils").run.now_if_args(function()
+require("ide.utils").run.now_if_arg_or_deferred(function()
     --- Lazy.nvim for managing plugins
     vim.keymap.set("n", "<leader>al", function()
         require("lazy").show()

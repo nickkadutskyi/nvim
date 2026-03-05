@@ -15,28 +15,19 @@ vim.o.timeoutlen = 300
 
 --- AUTOCMDS -------------------------------------------------------------------
 
-utils.run.now_if_args(function()
+utils.run.now_if_arg_or_deferred(function()
     -- Close certain windows with q or escape
     utils.autocmd.create("FileType", {
         group = "ide.keymap.close_with_q",
         pattern = {
-            "PlenaryTestPopup",
             "checkhealth",
-            "dbout",
-            "gitsigns-blame",
-            "grug-far",
             "help",
-            "lspinfo",
-            "neotest-output",
-            "neotest-output-panel",
-            "neotest-summary",
-            "notify",
-            "qf",
-            "spectre_panel",
-            "startuptime",
-            "tsplayground",
-            "lazy",
             "nvim-pack",
+            "notify",
+
+            "gitsigns-blame",
+            "qf",
+            "lazy",
         },
         callback = function(event)
             vim.bo[event.buf].buflisted = false
@@ -58,7 +49,7 @@ end)
 
 --- MAPPINGS -------------------------------------------------------------------
 
-utils.run.now_if_args(function()
+utils.run.now_if_arg_or_deferred(function()
     --- FIND
     -- Clear search highlight
     vim.keymap.set("n", "<Esc>", ":noh<CR>", { desc = "Clear search highlight" })

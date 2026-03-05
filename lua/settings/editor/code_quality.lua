@@ -2,7 +2,7 @@ local utils = require("ide.utils")
 
 --- AUTOCMDS -------------------------------------------------------------------
 
-utils.run.now_if_args(function()
+utils.run.now_if_arg_or_deferred(function()
     utils.autocmd.create({ "BufEnter" }, {
         group = "settings.turn-off-diagnostics-outside-projects",
         desc = "Disable diagnostics and spell checking for files outside of project root",

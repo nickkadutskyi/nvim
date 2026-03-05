@@ -2,7 +2,7 @@ local utils = require("ide.utils")
 local I = {}
 
 --- AUTOCMDS -------------------------------------------------------------------
-utils.run.now_if_args(function()
+utils.run.now_if_arg_or_later(function()
     -- Populates `vim.g.todos_in_files` with lines of TODO comments
     -- to use to highlight scrollbar marks
     -- Activate Todo Comments integration only in allowed dirs

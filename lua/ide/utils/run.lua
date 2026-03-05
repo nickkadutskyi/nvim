@@ -42,13 +42,22 @@ end
 --- otherwise schedules it for later execution.
 ---@param fn function Callable to execute.
 ---@param error_prefix? string Optional prefix to prepend to error messages.
-function M.now_if_args(fn, error_prefix)
+function M.now_if_arg_or_later(fn, error_prefix)
     if vim.fn.argc(-1) > 0 then
-        M.now_if_args = M.now
+        M.now_if_arg_or_later = M.now
     else
-        M.now_if_args = M.later
+        M.now_if_arg_or_later = M.later
     end
-    M.now_if_args(fn, error_prefix)
+    M.now_if_arg_or_later(fn, error_prefix)
+end
+
+function M.now_if_arg_or_deferred(fn, error_prefix)
+    if vim.fn.argc(-1) > 0 then
+        M.now_if_arg_or_deferred = M.now
+    else
+        M.now_if_arg_or_deferred = M.on_deferred
+    end
+    M.now_if_arg_or_deferred(fn, error_prefix)
 end
 
 --- Schedules the given function to be executed on the "IdeDeferred" event.

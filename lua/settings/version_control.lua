@@ -3,7 +3,7 @@ local utils = require("ide.utils")
 
 --- AUTOCMDS -------------------------------------------------------------------
 
-utils.run.now_if_args(function()
+utils.run.now_if_arg_or_deferred(function()
     utils.autocmd.create({ "BufEnter", "BufWritePost" }, {
         group = "settings.update-git-status-hl",
         callback = function(e)

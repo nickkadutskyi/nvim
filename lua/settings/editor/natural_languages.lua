@@ -2,7 +2,7 @@ local utils = require("ide.utils")
 
 --- AUTOCMDS -------------------------------------------------------------------
 
-utils.run.now_if_args(function()
+utils.run.now_if_arg_or_deferred(function()
     utils.autocmd.create("TermOpen", {
         group = "settings.no-spell-in-term",
         desc = "Disable spell checking in terminal buffers",

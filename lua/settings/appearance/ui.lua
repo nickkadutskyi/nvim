@@ -2,7 +2,7 @@ local utils = require("ide.utils")
 
 --- AUTOCMDS -------------------------------------------------------------------
 
-utils.run.now_if_args(function()
+utils.run.now_if_arg_or_deferred(function()
     if os.getenv("TMUX") then
         utils.autocmd.create("BufEnter", {
             group = "settings.tmux-window-name",

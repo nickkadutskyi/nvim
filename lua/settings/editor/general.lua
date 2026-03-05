@@ -2,7 +2,7 @@ local utils = require("ide.utils")
 
 --- AUTOCMDS -------------------------------------------------------------------
 
-utils.run.now_if_args(function()
+utils.run.now_if_arg_or_deferred(function()
     utils.autocmd.create({ "RecordingEnter", "RecordingLeave" }, {
         group = "settings.editor-macro-recording",
         desc = "Tracks macro recording status and stores it in a global variable for use in statusline",
