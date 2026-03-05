@@ -25,15 +25,18 @@
 ---@field ft? string|string[] filetype(s) to load the plugin on (FileType autocmd)
 ---@field keys? ide.SpecData.Key[] keymaps; when deferred, each lhs becomes a loader stub that loads the plugin on first press then re-fires the key; when deferred=false, registered as normal mappings after load
 ---@field deferred? boolean (default true) set to false to disable all lazy loading – plugin loads immediately even if event/keys are present; keys are still registered as real mappings after load
+---@field [string]? nil
+
 ---@class ide.SpecData.Named : ide.SpecData
 ---@field [1] string plugin name
 
 ---@class ide.SpecData.OptsChained : ide.SpecData
 ---@field opts_chain table<ide.SpecData.Opts> list of opts tables or functions to merge, in order of application (later entries override earlier ones)
 
----@class vim.pack.Spec
+---@class (exact) vim.pack.Spec
 ---@diagnostic disable-next-line: duplicate-doc-field
 ---@field data? ide.SpecData|ide.SpecData.OptsChained
+---@field [string]? nil
 
 ---@class settings.PackEvent
 ---@field active boolean

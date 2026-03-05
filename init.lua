@@ -11,6 +11,7 @@ require("ide").setup({
         "settings.keymap",
         "settings.editor",
         "settings.version_control",
+        "settings.tools",
         "settings.advanced",
     },
 })

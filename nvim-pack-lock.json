@@ -1,5 +1,13 @@
 {
   "plugins": {
+    "99": {
+      "rev": "ec9872f7df7f4eb8b319719c1c253eb3ea8877ed",
+      "src": "https://github.com/ThePrimeagen/99"
+    },
+    "blink.compat": {
+      "rev": "1454f14a8d855a578ceeba77c62538fa1459a67c",
+      "src": "https://github.com/saghen/blink.compat"
+    },
     "jb.nvim": {
       "rev": "5c64e3dc5c4cae7f842b8199aa89d098255d8adf",
       "src": "/Users/nick/Documents/jb.nvim"

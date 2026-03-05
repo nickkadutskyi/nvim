@@ -49,4 +49,32 @@ spec_builder.add({
             end,
         },
     },
+    --- Compatibility layer for using nvim-cmp sources on blink.cmp
+    --- Required by 99 when using blink as the completion source
+    {
+        src = g("saghen/blink.compat"),
+        data = {
+            event = "IdeDeferred",
+            after = function()
+                require("blink.compat").setup({})
+            end,
+        },
+    },
+    --- AI Assistant for code generation, refactoring, etc.
+    {
+        src = g("ThePrimeagen/99"),
+        data = {
+            event = "IdeDeferred",
+            ---@param opts _99.Options
+            after = function(_, opts)
+                local _99 = require("99")
+                opts.logger = {
+                    level = _99.DEBUG,
+                    path = "/tmp/" .. vim.fs.basename(vim.uv.cwd()) .. ".99.debug",
+                    print_on_error = true,
+                }
+                _99.setup(opts)
+            end,
+        },
+    },
 })

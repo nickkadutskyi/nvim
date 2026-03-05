@@ -3,6 +3,7 @@
 --- or module that might use them in their keymaps.
 
 local utils = require("ide.utils")
+local spec_builder = require("ide.spec.builder")
 
 --- OPTIONS --------------------------------------------------------------------
 
@@ -75,3 +76,32 @@ utils.run.now_if_arg_or_deferred(function()
     vim.keymap.set({ "n", "i" }, "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
     vim.keymap.set({ "n", "i" }, "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 end)
+
+-- TODO: come up with better keymap for this
+spec_builder.add({
+    "ThePrimeagen/99",
+    keys = {
+        {
+            "<leader>9v",
+            function()
+                require("99").visual({})
+            end,
+            desc = "AI: [9]9 visual selection",
+            mode = "v",
+        },
+        {
+            "<leader>9x",
+            function()
+                require("99").stop_all_requests()
+            end,
+            desc = "AI: [9]9 [x] cancel all requests",
+        },
+        {
+            "<leader>9s",
+            function()
+                require("99").search({})
+            end,
+            desc = "AI: [9]9 [s]earch",
+        },
+    },
+})

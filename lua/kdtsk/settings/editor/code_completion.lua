@@ -56,8 +56,15 @@ return {
                 default = { "lsp", "path", "snippets", "buffer" },
                 per_filetype = {
                     lua = { inherit_defaults = true, "lazydev" },
+                    ["99prompt"] = { inherit_defaults = true, "99" },
                 },
                 providers = {
+                    ["99"] = {
+                        name = "99",
+                        module = "blink.compat.source",
+                        score_offset = -3,
+                        opts = {},
+                    },
                     lsp = { fallbacks = {} },
                     lazydev = {
                         name = "LazyDev",

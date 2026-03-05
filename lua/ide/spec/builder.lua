@@ -170,15 +170,21 @@ function I.merge_data_fragments(fragments)
         end
         if data.event ~= nil then
             local event = type(data.event) == "string" and { data.event } or data.event
-            result.event = vim.iter({ result.event or {}, event }):flatten():filter(function(e)
-                return type(e) == "string" and e ~= ""
-            end):totable()
+            result.event = vim.iter({ result.event or {}, event })
+                :flatten()
+                :filter(function(e)
+                    return type(e) == "string" and e ~= ""
+                end)
+                :totable()
         end
         if data.ft ~= nil then
             local ft = type(data.ft) == "string" and { data.ft } or data.ft
-            result.ft = vim.iter({ result.ft or {}, ft }):flatten():filter(function(f)
-                return type(f) == "string" and f ~= ""
-            end):totable()
+            result.ft = vim.iter({ result.ft or {}, ft })
+                :flatten()
+                :filter(function(f)
+                    return type(f) == "string" and f ~= ""
+                end)
+                :totable()
         end
         if data.keys ~= nil then
             result.keys = result.keys or {}
