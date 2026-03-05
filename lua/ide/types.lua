@@ -1,4 +1,4 @@
----@alias ide.events "IdeLater"|"IdeDone"|"PackBefore"
+---@alias ide.events "IdeDeferred"|"IdeDone"|"PackBefore"
 
 ---@class ide.Dev.Config
 ---@field path string base dir (string) or per-plugin function returning the full local path

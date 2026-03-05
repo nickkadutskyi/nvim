@@ -1,3 +1,7 @@
+--- This file name is prefixed with an underscore to make it load before all
+--- other keymap files to ensure leader keys are set before loading any plugin
+--- or module that might use them in their keymaps.
+
 --- OPTIONS --------------------------------------------------------------------
 
 -- Set leader keys before everything else

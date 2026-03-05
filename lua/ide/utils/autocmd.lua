@@ -70,7 +70,7 @@ end
 ---@class (exact) Dictionary<Event>: { [Event]: {event: "User", pattern: Event} }
 ---@type Dictionary<ide.events>
 I.events = {}
-I.events.IdeLater = { event = "User", pattern = "IdeLater" }
+I.events.IdeDeferred = { event = "User", pattern = "IdeDeferred" }
 I.events.IdeDone = { event = "User", pattern = "IdeDone" }
 I.events.PackBefore = { event = "User", pattern = "PackBefore" }
 

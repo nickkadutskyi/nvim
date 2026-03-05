@@ -29,14 +29,14 @@ function M.setup(opts)
         callback = function()
             if vim.v.vim_did_enter == 1 then
                 utils.run.later(function()
-                    vim.api.nvim_exec_autocmds("User", { pattern = "IdeLater", modeline = false })
+                    vim.api.nvim_exec_autocmds("User", { pattern = "IdeDeferred", modeline = false })
                 end)
             else
                 utils.autocmd.create("UIEnter", {
                     once = true,
                     callback = function()
                         utils.run.later(function()
-                            vim.api.nvim_exec_autocmds("User", { pattern = "IdeLater", modeline = false })
+                            vim.api.nvim_exec_autocmds("User", { pattern = "IdeDeferred", modeline = false })
                         end)
                     end,
                 })
