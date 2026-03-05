@@ -167,7 +167,7 @@ return {
                 max_matches_per_file = 200, -- Maximum matches per file
                 smart_case = true, -- Case-insensitive unless query has uppercase
                 time_budget_ms = 150, -- Max search time in ms per call (prevents UI freeze, 0 = no limit)
-                modes = { "fuzzy", "plain", "regex" }, -- Available grep modes and their cycling order
+                modes = { "plain", "fuzzy", "regex" }, -- Available grep modes and their cycling order
             },
         },
         keys = {
