@@ -9,6 +9,10 @@ local I = {}
 ---@type table<string, boolean>
 I.loaded = {}
 
+function M.is_loaded(name)
+    return I.loaded[name] == true
+end
+
 ---@param specs vim.pack.Spec[]
 function M.load(specs)
     -- Dev phase: rewrite spec.src to local path where applicable
@@ -110,6 +114,7 @@ function I.on_load(plugin_data)
     end
 end
 
+---@param plugin_data {spec: vim.pack.Spec, path: string}
 function I.load_plugin(plugin_data)
     local spec = plugin_data.spec
     local data = spec.data or {}
@@ -140,11 +145,24 @@ function I.load_plugin(plugin_data)
     end
 
     -- Run after hook if defined, passing resolved opts
+    if data.after or (data.opts_chain and #data.opts_chain > 0) then
+        I.after(plugin_data)
+    end
+
+    vim.api.nvim_exec_autocmds("User", { pattern = "PackLoad", modeline = false, data = spec.name })
+end
+
+function I.after(plugin_data)
+    local spec = plugin_data.spec
+    local data = spec.data or {}
+
     if type(data.after) == "function" then
         local opts = spec_builder.resolve_opts(spec)
         utils.run.now(function()
             data.after(plugin_data, opts)
         end, "ide.pack: after hook failed for '" .. (spec.name or "?") .. "' due to: ")
+    else
+        -- TODO: try to find main module from spec.scr and run its setup()
     end
 end
 

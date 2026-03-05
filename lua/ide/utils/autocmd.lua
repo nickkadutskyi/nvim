@@ -72,6 +72,7 @@ I.events = {}
 I.events.IdeDeferred = { event = "User", pattern = "IdeDeferred" }
 I.events.IdeDone = { event = "User", pattern = "IdeDone" }
 I.events.PackBefore = { event = "User", pattern = "PackBefore" }
+I.events.PackLoad = { event = "User", pattern = "PackLoad" }
 
 --- INTERNAL FUNCTIONS ---------------------------------------------------------
 

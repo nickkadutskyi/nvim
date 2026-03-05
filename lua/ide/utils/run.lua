@@ -1,3 +1,6 @@
+local utils = require("ide.utils")
+local pack = require("ide.pack")
+
 --- MODULE DEFINITION ----------------------------------------------------------
 ---@class ide.Utils.Run
 local M = {}
@@ -46,6 +49,43 @@ function M.now_if_args(fn, error_prefix)
         M.now_if_args = M.later
     end
     M.now_if_args(fn, error_prefix)
+end
+
+--- Schedules the given function to be executed on the "IdeDeferred" event.
+---@param fn function Callable to execute.
+---@param error_prefix? string Optional prefix to prepend to error messages.
+function M.on_deferred(fn, error_prefix)
+    utils.autocmd.create("IdeDeferred", {
+        once = true,
+        desc = "Run function on IdeDeferred event",
+        callback = function()
+            M.now(fn, error_prefix)
+        end,
+    })
+end
+
+--- Schedules the given function to be executed on the "IdeDone" event.
+---@param name string Name of the plugin to match on the event data.
+---@param fn function Callable to execute.
+---@param error_prefix? string Optional prefix to prepend to error messages.
+function M.on_load(name, fn, error_prefix)
+    if pack.loaded[name] then
+        M.now(function()
+            fn(name)
+        end, error_prefix)
+    else
+        utils.autocmd.create("PackLoad", {
+            once = true,
+            desc = "Run function on PackLoad event for plugin '" .. name .. "'",
+            callback = function(e)
+                if e.data == name then
+                    M.now(function()
+                        fn(name)
+                    end, error_prefix)
+                end
+            end,
+        })
+    end
 end
 
 --- INTERNAL DATA --------------------------------------------------------------

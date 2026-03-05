@@ -1,4 +1,4 @@
----@alias ide.events "IdeDeferred"|"IdeDone"|"PackBefore"
+---@alias ide.events "IdeDeferred"|"IdeDone"|"PackBefore"|"PackLoad"
 
 ---@class ide.Dev.Config
 ---@field path string base dir (string) or per-plugin function returning the full local path
@@ -33,7 +33,7 @@
 
 ---@class vim.pack.Spec
 ---@diagnostic disable-next-line: duplicate-doc-field
----@field data? ide.SpecData
+---@field data? ide.SpecData|ide.SpecData.OptsChained
 
 ---@class settings.PackEvent
 ---@field active boolean
