@@ -4,10 +4,12 @@ local spec_builder = require("ide.spec.builder")
 
 --- MAPPINGS -------------------------------------------------------------------
 
---- Lazy.nvim for managing plugins
-vim.keymap.set("n", "<leader>al", function()
-    require("lazy").show()
-end, { silent = true, desc = "Plugins: [a]ctivate [l]azy.nvim manager" })
+require("ide.utils").run.now_if_args(function()
+    --- Lazy.nvim for managing plugins
+    vim.keymap.set("n", "<leader>al", function()
+        require("lazy").show()
+    end, { silent = true, desc = "Plugins: [a]ctivate [l]azy.nvim manager" })
+end)
 
 spec_builder.add({
     "which-key.nvim",

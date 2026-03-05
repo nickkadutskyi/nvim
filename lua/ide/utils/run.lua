@@ -35,6 +35,10 @@ function M.later(fn, error_prefix)
     I.schedule()
 end
 
+--- Executes the given function immediately if there are command-line arguments,
+--- otherwise schedules it for later execution.
+---@param fn function Callable to execute.
+---@param error_prefix? string Optional prefix to prepend to error messages.
 function M.now_if_args(fn, error_prefix)
     if vim.fn.argc(-1) > 0 then
         M.now_if_args = M.now
