@@ -122,6 +122,7 @@ return {
                 width = function(terminal_width, _terminal_height)
                     return 98 / terminal_width
                 end,
+                flex = false,
                 prompt_position = "top", -- or 'top'
                 preview_position = "bottom", -- or 'left', 'right', 'top', 'bottom'
                 preview_size = 0.5,

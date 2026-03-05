@@ -17,7 +17,7 @@ spec_builder.add({
             enforce_float_style = {
                 {
                     style = { border = require("jb.borders").borders.dialog.default_box_header_shadowed },
-                    condition = function(_, _, config)
+                    condition = function(_, config)
                         if type(config.title) ~= "string" then
                             return false
                         end
@@ -28,7 +28,7 @@ spec_builder.add({
                     style = {
                         border = require("jb.borders").borders.dialog.default_box_split_top_no_footer_shadowed,
                     },
-                    condition = function(bufnr, _, _)
+                    condition = function(bufnr, _)
                         local ok, fff = pcall(require, "fff.picker_ui")
                         return not ok or not fff.state and false or bufnr == fff.state.input_buf
                     end,
@@ -37,7 +37,7 @@ spec_builder.add({
                     style = {
                         border = require("jb.borders").borders.dialog.default_box_split_middle_shadowed_no_footer,
                     },
-                    condition = function(bufnr, _, _)
+                    condition = function(bufnr, _)
                         local ok, fff = pcall(require, "fff.picker_ui")
                         return not ok or not fff.state and false or bufnr == fff.state.list_buf
                     end,
@@ -46,7 +46,7 @@ spec_builder.add({
                     style = {
                         border = require("jb.borders").borders.dialog.default_box_split_bottom_shadowed_header,
                     },
-                    condition = function(bufnr, _, _)
+                    condition = function(bufnr, _)
                         local ok, fff = pcall(require, "fff.picker_ui")
                         return not ok or not fff.state and false or bufnr == fff.state.preview_buf
                     end,

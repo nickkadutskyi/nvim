@@ -1,7 +1,7 @@
 {
   "plugins": {
     "jb.nvim": {
-      "rev": "499b207e0884fe93ecd82143b2781b9b2081fa40",
+      "rev": "5c64e3dc5c4cae7f842b8199aa89d098255d8adf",
       "src": "/Users/nick/Documents/jb.nvim"
     },
     "lazydev.nvim": {
