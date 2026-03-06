@@ -12,12 +12,15 @@ spec_builder.add({
         data = { dev = true, deferred = false },
     },
     --- Gutter or statusline icons, Requires a Nerd Font.
-    --- Depends on jb.nvimfor icon overrides
     {
         src = g("nvim-tree/nvim-web-devicons"),
         data = {
+            -- We load it synchronously because other plugins depend on it
+            -- and might trigger setup before it's loaded, which would
+            -- prevent them from applying the icon overrides
             deferred = false,
             after = function(_, opts)
+                --- Depends on jb.nvim for icon overrides
                 utils.run.on_load("jb.nvim", function()
                     local devicons = require("nvim-web-devicons")
                     local icons = require("jb.icons")
@@ -30,7 +33,7 @@ spec_builder.add({
 
                     -- Set icons every time the background option changes
                     utils.autocmd.create("OptionSet", {
-                        group = "sync-icons-with-bg",
+                        group = "settings.nvim-web-devicons.sync-icons-with-bg",
                         pattern = "background",
                         callback = function()
                             utils.run.later(function()
