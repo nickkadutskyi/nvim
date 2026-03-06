@@ -27,6 +27,7 @@ return {
             "nvim-tree/nvim-web-devicons",
             "arkav/lualine-lsp-progress",
         },
+        enabled = false,
         config = function()
             _G._buffer_modified_count = 0
             _G._buffer_modified_last_check_time = 0

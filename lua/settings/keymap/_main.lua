@@ -4,6 +4,7 @@
 
 local utils = require("ide.utils")
 local spec_builder = require("ide.spec.builder")
+local pack = require("ide.pack")
 
 --- OPTIONS --------------------------------------------------------------------
 
@@ -50,18 +51,101 @@ end)
 
 --- MAPPINGS -------------------------------------------------------------------
 
-utils.run.now_if_arg_or_deferred(function()
-    --- VIEW
+--- EDIT
 
+spec_builder.add({
+    "ThePrimeagen/harpoon",
+    keys = {
+        {
+            lhs = "<leader>ab",
+            rhs = function()
+                require("harpoon"):list():add()
+            end,
+            desc = "Bookmarks: [a]dd [b]ookmark",
+        },
+        {
+            lhs = { "<C-e>", "<leader>ob" },
+            rhs = function()
+                local harpoon = require("harpoon")
+                local opts = {
+                    title = " Bookmarks ",
+                    title_pos = "center",
+                    ui_max_width = 75,
+                }
+                if pack.is_loaded("jb.nvim") then
+                    opts.border = require("jb.borders").borders.dialog.default_box_header_shadowed
+                end
+                harpoon.ui:toggle_quick_menu(harpoon:list(), opts)
+            end,
+            desc = "Bookmarks: [o]pen [b]ookmarks",
+        },
+        {
+            lhs = "<C-S-P>",
+            rhs = function()
+                require("harpoon"):list():prev({ ui_nav_wrap = true })
+            end,
+            desc = "Bookmarks: select previous bookmark in the list.",
+        },
+        {
+            lhs = "<C-S-N>",
+            rhs = function()
+                require("harpoon"):list():next({ ui_nav_wrap = true })
+            end,
+            desc = "Bookmarks: select next bookmark in the list.",
+        },
+        {
+            lhs = "<C-1>",
+            rhs = function()
+                require("harpoon"):list():select(1)
+            end,
+            desc = "Bookmarks: select [1]st item in the list.",
+        },
+        {
+            lhs = "<C-2>",
+            rhs = function()
+                require("harpoon"):list():select(2)
+            end,
+            desc = "Bookmarks: select [2]nd item in the list.",
+        },
+        {
+            lhs = "<C-3>",
+            rhs = function()
+                require("harpoon"):list():select(3)
+            end,
+            desc = "Bookmarks: select [3]rd item in the list.",
+        },
+        {
+            lhs = "<C-4>",
+            rhs = function()
+                require("harpoon"):list():select(4)
+            end,
+            desc = "Bookmarks: select [4]th item in the list.",
+        },
+        {
+            lhs = "<C-5>",
+            rhs = function()
+                local harpoon = require("harpoon")
+                harpoon:list():select(harpoon:list():length())
+            end,
+            desc = "Bookmarks: select [last] item in the list.",
+        },
+    },
+})
+
+--- VIEW
+
+utils.run.now_if_arg_or_deferred(function()
     vim.keymap.set("n", "<leader>sd", vim.diagnostic.open_float, {
         desc = "View: [s]how error [d]escription",
     })
     vim.keymap.set("n", "<leader>sqd", vim.diagnostic.setloclist, {
         desc = "View: [s]show [q]uickfix list with error [d]escriptions",
     })
+end)
 
-    --- Navigate
+--- Navigate
 
+utils.run.now_if_arg_or_deferred(function()
     vim.keymap.set("n", "]d", function()
         vim.diagnostic.jump({ count = 1 })
     end, { desc = "Navigate: [n]ext [d]iagnostic" })
@@ -75,9 +159,11 @@ utils.run.now_if_arg_or_deferred(function()
     vim.keymap.set("n", "<S-F2>", function()
         vim.diagnostic.jump({ count = -1 })
     end, { desc = "Navigate: Previous Highlighted Error" })
+end)
 
-    --- CODE
+--- CODE
 
+utils.run.now_if_arg_or_deferred(function()
     -- TODO: provide an ability to accept partial inline completion (by word or line)
     vim.keymap.set("i", "<Tab>", function()
         if not vim.lsp.inline_completion.get() then
@@ -90,8 +176,40 @@ utils.run.now_if_arg_or_deferred(function()
     vim.keymap.set({ "i", "n" }, "<A-[>", function()
         vim.lsp.inline_completion.select({ count = -1 })
     end, { expr = true, desc = "AI: Previous Inline Proposal" })
+end)
 
-    --- FIND
+-- TODO: come up with better keymap for this
+spec_builder.add({
+    "ThePrimeagen/99",
+    keys = {
+        {
+            lhs = "<leader>9v",
+            rhs = function()
+                require("99").visual({})
+            end,
+            desc = "AI: [9]9 visual selection",
+            mode = "v",
+        },
+        {
+            lhs = "<leader>9x",
+            rhs = function()
+                require("99").stop_all_requests()
+            end,
+            desc = "AI: [9]9 [x] cancel all requests",
+        },
+        {
+            lhs = "<leader>9s",
+            rhs = function()
+                require("99").search({})
+            end,
+            desc = "AI: [9]9 [s]earch",
+        },
+    },
+})
+
+--- FIND
+
+utils.run.now_if_arg_or_deferred(function()
     -- Clear search highlight
     vim.keymap.set("n", "<Esc>", ":noh<CR>", { desc = "Clear search highlight" })
     -- Clear search highlight and delete search history
@@ -107,8 +225,11 @@ utils.run.now_if_arg_or_deferred(function()
         '"hy:%s/<C-r>h/<C-r>h/gci<left><left><left><left>',
         { desc = "Find and replace selected text" }
     )
+end)
 
-    --- WINDOW
+--- WINDOW
+
+utils.run.now_if_arg_or_deferred(function()
     -- Keybinds to make split navigation easier.
     -- Use CTRL+<hjkl> to switch between windows
     vim.keymap.set({ "n", "i" }, "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
@@ -116,32 +237,3 @@ utils.run.now_if_arg_or_deferred(function()
     vim.keymap.set({ "n", "i" }, "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
     vim.keymap.set({ "n", "i" }, "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 end)
-
--- TODO: come up with better keymap for this
-spec_builder.add({
-    "ThePrimeagen/99",
-    keys = {
-        {
-            "<leader>9v",
-            function()
-                require("99").visual({})
-            end,
-            desc = "AI: [9]9 visual selection",
-            mode = "v",
-        },
-        {
-            "<leader>9x",
-            function()
-                require("99").stop_all_requests()
-            end,
-            desc = "AI: [9]9 [x] cancel all requests",
-        },
-        {
-            "<leader>9s",
-            function()
-                require("99").search({})
-            end,
-            desc = "AI: [9]9 [s]earch",
-        },
-    },
-})

@@ -15,29 +15,29 @@ spec_builder.add({
     "which-key.nvim",
     keys = {
         {
-            "<leader>?n",
-            function()
+            lhs = "<leader>?n",
+            rhs = function()
                 require("which-key").show({ mode = "n", global = true })
             end,
             desc = "WK: Global keymap for normal mode",
         },
         {
-            "<leader>?i",
-            function()
+            lhs = "<leader>?i",
+            rhs = function()
                 require("which-key").show({ mode = "i", global = true })
             end,
             desc = "WK: Global keymaps for insert mode",
         },
         {
-            "<localleader>?n",
-            function()
+            lhs = "<localleader>?n",
+            rhs = function()
                 require("which-key").show({ mode = "n", global = false })
             end,
             desc = "WK: Buffer keymap for normal mode",
         },
         {
-            "<localleader>?i",
-            function()
+            lhs = "<localleader>?i",
+            rhs = function()
                 require("which-key").show({ mode = "i", global = false })
             end,
             desc = "WK: Buffer keymaps for insert mode",
@@ -60,18 +60,25 @@ spec_builder.add({
 
                 { "<leader>/", group = "[/]search" },
                 { "<leader>?", group = "[?]help" },
-                {
+                { -- TODO: remove this
                     "<leader>a",
                     group = "[a]ctivate",
 
                     { "<leader>af", group = "[f]ocus" },
                     { "<leader>av", group = "[v]ersion control" },
                 },
+                { "<leader>a", group = "[a]dd" },
                 { "<leader>c", group = "[c]hoose" },
                 { "<leader>e", group = "[e]xpose" },
                 { "<leader>f", group = "[f]ind" },
                 { "<leader>g", group = "[g]o to" },
                 { "<leader>i", group = "[i]nspect", icon = { icon = "", hl = "WhichKeyValue" } },
+                {
+                    "<leader>o",
+                    group = "[o]pen",
+
+                    { "<leader>ov", group = "[v]ersion control" },
+                },
                 { "<leader>r", group = "[r]eformat" },
                 {
                     "<leader>s",
@@ -86,7 +93,7 @@ spec_builder.add({
                 "<LocalLeader>",
                 group = "LocalLeader",
 
-                {
+                { -- TODO: remove this
                     "<localleader>a",
                     group = "[a]ctivate",
                     mode = { "v", "n" },
@@ -94,8 +101,15 @@ spec_builder.add({
                     { "<localleader>?", group = "[?]help" },
                     { "<localleader>av", group = "[v]ersion control" },
                 },
+                { "<localleader>a", group = "[a]dd" },
                 { "<localleader>e", group = "[e]dit", mode = { "v", "n" } },
                 { "<localleader>h", group = "VCS: [h]unk", mode = { "v", "n" } },
+                {
+                    "<localleader>o",
+                    group = "[o]pen",
+
+                    { "<localleader>ov", group = "[v]ersion control" },
+                },
                 { "<localleader>t", group = "[t]oggle" },
             },
             { "]", group = "[n]ext" },

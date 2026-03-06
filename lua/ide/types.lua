@@ -8,8 +8,8 @@
 ---@alias ide.SpecData.Opts table | fun(spec: vim.pack.Spec, opts: table): table?
 
 ---@class ide.SpecData.Key : vim.keymap.set.Opts
----@field [1] string lhs key sequence
----@field [2]? string|fun() rhs action; when omitted the after hook is expected to register the real mapping
+---@field lhs string|string[] lhs key sequence
+---@field rhs? string|fun() rhs action; when omitted the after hook is expected to register the real mapping
 ---@field mode? string|string[] mode(s), defaults to "n"
 ---
 ---@class (exact) ide.SpecData

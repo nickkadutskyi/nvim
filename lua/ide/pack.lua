@@ -123,13 +123,20 @@ function I.load_plugin(plugin_data)
     -- Done before packadd so re-fed keys hit the real mapping when the plugin loads.
     if data.keys then
         for _, key in ipairs(data.keys) do
-            local lhs = key[1]
-            local modes = I.resolve_modes(key.mode)
-            for _, mode in ipairs(modes) do
-                pcall(vim.keymap.del, mode, lhs)
-            end
-            if key[2] ~= nil then
-                vim.keymap.set(modes, lhs, key[2], I.key_to_opts(key))
+            local lhss = type(key.lhs) == "string" and { key.lhs } or key.lhs
+            lhss = vim.iter(lhss)
+                :filter(function(lhs)
+                    return type(lhs) == "string"
+                end)
+                :totable()
+            for _, lhs in ipairs(lhss) do
+                local modes = I.resolve_modes(key.mode)
+                for _, mode in ipairs(modes) do
+                    pcall(vim.keymap.del, mode, lhs)
+                end
+                if key.rhs ~= nil then
+                    vim.keymap.set(modes, lhs, key.rhs, I.key_to_opts(key))
+                end
             end
         end
     end
@@ -171,21 +178,29 @@ end
 ---@param plugin_data vim.pack.PluginData
 function I.set_placeholder_key(key, plugin_data)
     local spec = plugin_data.spec
-    local data = spec.data or {}
     local name = spec.name or "?"
-    local lhs = key[1]
-    local modes = I.resolve_modes(key.mode)
-    for _, mode in ipairs(modes) do
-        local opts = I.key_to_opts(key)
-        opts.desc = opts.desc or ("ide.pack: Load '" .. name .. "' on key")
-        vim.keymap.set(mode, lhs, function()
-            if not I.loaded[name] then
-                I.loaded[name] = true
-                I.load_plugin(plugin_data)
-            end
-            -- Re-feed so the real mapping (set in load_plugin or the after hook) handles it.
-            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(lhs, true, false, true), "m", false)
-        end, opts)
+
+    local lhss = type(key.lhs) == "string" and { key.lhs } or key.lhs
+    lhss = vim.iter(lhss)
+        :filter(function(lhs)
+            return type(lhs) == "string"
+        end)
+        :totable()
+
+    for _, lhs in ipairs(lhss) do
+        local modes = I.resolve_modes(key.mode)
+        for _, mode in ipairs(modes) do
+            local opts = I.key_to_opts(key)
+            opts.desc = opts.desc or ("ide.pack: Load '" .. name .. "' on key")
+            vim.keymap.set(mode, lhs, function()
+                if not I.loaded[name] then
+                    I.loaded[name] = true
+                    I.load_plugin(plugin_data)
+                end
+                -- Re-feed so the real mapping (set in load_plugin or the after hook) handles it.
+                vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(lhs, true, false, true), "m", false)
+            end, opts)
+        end
     end
 end
 
@@ -208,7 +223,7 @@ end
 function I.key_to_opts(key)
     local opts = {}
     for k, v in pairs(key) do
-        if k ~= 1 and k ~= 2 and k ~= "mode" then
+        if k ~= "lhs" and k ~= "rhs" and k ~= "mode" then
             opts[k] = v
         end
     end

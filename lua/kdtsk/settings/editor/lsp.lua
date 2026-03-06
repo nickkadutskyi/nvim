@@ -156,7 +156,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
                 )
             end
         end
-        vim.keymap.set("n", "<leader>o", find_class, { buffer = event.buf, desc = "LSP: Find Class by name" })
+        -- vim.keymap.set("n", "<leader>o", find_class, { buffer = event.buf, desc = "LSP: Find Class by name" })
         vim.keymap.set("n", "<leader>gc", find_class, { buffer = event.buf, desc = "LSP: [g]o to [c]lass" })
 
         -- LSP Document Symbols or Find a Symbol in the current file

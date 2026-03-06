@@ -4,6 +4,7 @@ local g = utils.str.prepend_fn("https://github.com/")
 
 --- Define all plugins with their src here. Feature files patch via name only.
 spec_builder.add({
+    { src = g("nvim-lua/plenary.nvim"), data = { deferred = false } },
     --- A notification manager with a nice UI
     { src = g("rcarriga/nvim-notify"), version = "ab98fecfe", data = { deferred = false } },
     --- My color scheme that recreates IntelliJeJ's look and feel in Neovim
@@ -111,4 +112,21 @@ spec_builder.add({
             end,
         },
     },
+    -- LSP Progress lualine componenet
+    -- Required by lualine.nvim
+    { src = g("arkav/lualine-lsp-progress"), data = { event = "IdeDeferred", deferred = false } },
+    --- Statusline configurator
+    {
+        src = g("nvim-lualine/lualine.nvim"),
+        data = {
+            -- TODO: run it defferred later when resolved conflict with harpoon
+            event = "IdeDeferred",
+            deferred = false,
+            after = function(_, opts)
+                require("lualine").setup(opts)
+            end,
+        },
+    },
+    --- Bookmarks manager; `after` in lua/settings/advanced/main.lua
+    { src = g("ThePrimeagen/harpoon"), version = "harpoon2", data = { event = "IdeDeferred", deferred = false } },
 })
