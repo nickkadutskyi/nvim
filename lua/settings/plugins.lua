@@ -5,7 +5,43 @@ local g = utils.str.prepend_fn("https://github.com/")
 --- Define all plugins with their src here. Feature files patch via name only.
 spec_builder.add({
     --- A notification manager with a nice UI
-    { src = g("rcarriga/nvim-notify"), version = "ab98fecfe" },
+    { src = g("rcarriga/nvim-notify"), version = "ab98fecfe", data = { deferred = false } },
+    --- My color scheme that recreates IntelliJeJ's look and feel in Neovim
+    {
+        src = g("nickkadutskyi/jb.nvim"),
+        data = { dev = true, deferred = false },
+    },
+    --- Gutter or statusline icons, Requires a Nerd Font.
+    --- Depends on jb.nvimfor icon overrides
+    {
+        src = g("nvim-tree/nvim-web-devicons"),
+        data = {
+            deferred = false,
+            after = function(_, opts)
+                utils.run.on_load("jb.nvim", function()
+                    local devicons = require("nvim-web-devicons")
+                    local icons = require("jb.icons")
+
+                    opts.override_by_filename = icons.files.by_filename
+                    opts.override_by_extension = icons.files.by_extension
+
+                    devicons.setup(opts)
+                    devicons.set_icon(icons.by_variant(vim.o.background))
+
+                    -- Set icons every time the background option changes
+                    utils.autocmd.create("OptionSet", {
+                        group = "sync-icons-with-bg",
+                        pattern = "background",
+                        callback = function()
+                            utils.run.later(function()
+                                devicons.set_icon(icons.by_variant(vim.o.background))
+                            end)
+                        end,
+                    })
+                end)
+            end,
+        },
+    },
     --- Treesitter for syntax highlighting, folding, etc.
     {
         --- Requires: tree-sitter, tar, curl, c compiler
@@ -23,11 +59,6 @@ spec_builder.add({
                 uts.setup_custom_parsers(opts.custom_parsers)
             end,
         },
-    },
-    --- My color scheme that recreates IntelliJeJ's look and feel in Neovim
-    {
-        src = g("nickkadutskyi/jb.nvim"),
-        data = { dev = true, deferred = false },
     },
     --- Helps with go to definitons and references in lua
     {

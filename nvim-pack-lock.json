@@ -9,7 +9,7 @@
       "src": "https://github.com/saghen/blink.compat"
     },
     "jb.nvim": {
-      "rev": "5c64e3dc5c4cae7f842b8199aa89d098255d8adf",
+      "rev": "6dcdb9a15d4203fef0ab7f98178133fe74c6ec0f",
       "src": "/Users/nick/Documents/jb.nvim"
     },
     "lazydev.nvim": {
@@ -24,6 +24,10 @@
     "nvim-treesitter": {
       "rev": "544320a9cf5d6bf539ec1cc54d393064015670c4",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
+    },
+    "nvim-web-devicons": {
+      "rev": "737cf6c657898d0c697311d79d361288a1343d50",
+      "src": "https://github.com/nvim-tree/nvim-web-devicons"
     },
     "which-key.nvim": {
       "rev": "3aab2147e74890957785941f0c1ad87d0a44c15a",

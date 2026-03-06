@@ -78,7 +78,7 @@ end
 ---@param fn function Callable to execute.
 ---@param error_prefix? string Optional prefix to prepend to error messages.
 function M.on_load(name, fn, error_prefix)
-    if pack.loaded[name] then
+    if pack.is_loaded(name) then
         M.now(function()
             fn(name)
         end, error_prefix)
