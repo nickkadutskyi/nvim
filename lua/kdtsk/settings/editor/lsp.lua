@@ -306,26 +306,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end,
 })
 
--- Jump to the next/previous diagnostic
-vim.keymap.set("n", "]d", function()
-    vim.diagnostic.jump({ count = 1 })
-end, { desc = "LSP: [n]ext [d]iagnostic" })
-vim.keymap.set("n", "[d", function()
-    vim.diagnostic.jump({ count = -1 })
-end, { desc = "LSP: [p]rev [d]iagnostic" })
-
--- Show diagnostic in floating window
-vim.keymap.set("n", "<leader>sd", vim.diagnostic.open_float, {
-    noremap = true,
-    desc = "LSP: [s]how [d]iagnostic float",
-})
-
--- Show diagnostic in quickfix list
-vim.keymap.set("n", "<leader>sq", vim.diagnostic.setloclist, {
-    noremap = true,
-    desc = "LSP: [s]how diagostic [q]uickfix list",
-})
-
 ---@type LazySpec
 return {
     { -- Rename with incremental search

@@ -51,6 +51,31 @@ end)
 --- MAPPINGS -------------------------------------------------------------------
 
 utils.run.now_if_arg_or_deferred(function()
+    --- VIEW
+
+    vim.keymap.set("n", "<leader>sd", vim.diagnostic.open_float, {
+        desc = "View: [s]how error [d]escription",
+    })
+    vim.keymap.set("n", "<leader>sqd", vim.diagnostic.setloclist, {
+        desc = "View: [s]show [q]uickfix list with error [d]escriptions",
+    })
+
+    --- Navigate
+
+    vim.keymap.set("n", "]d", function()
+        vim.diagnostic.jump({ count = 1 })
+    end, { desc = "Navigate: [n]ext [d]iagnostic" })
+    vim.keymap.set("n", "<F2>", function()
+        vim.diagnostic.jump({ count = 1 })
+    end, { desc = "Navigate: Next Highlighted Error" })
+
+    vim.keymap.set("n", "[d", function()
+        vim.diagnostic.jump({ count = -1 })
+    end, { desc = "Navigate: [p]rev [d]iagnostic" })
+    vim.keymap.set("n", "<S-F2>", function()
+        vim.diagnostic.jump({ count = -1 })
+    end, { desc = "Navigate: Previous Highlighted Error" })
+
     --- CODE
 
     -- TODO: provide an ability to accept partial inline completion (by word or line)
