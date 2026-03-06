@@ -1,4 +1,5 @@
 local utils = require("ide.utils")
+local spec_builder = require("ide.spec.builder")
 
 --- AUTOCMDS -------------------------------------------------------------------
 
@@ -15,3 +16,16 @@ utils.run.now_if_arg_or_deferred(function()
         end,
     })
 end)
+
+--- PLUGINS --------------------------------------------------------------------
+
+spec_builder.add({
+    "b0o/incline.nvim",
+    opts = {
+        render = function(props)
+            return {
+                { Utils.incline.component_diagnostics(props) },
+            }
+        end,
+    },
+})

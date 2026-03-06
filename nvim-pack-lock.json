@@ -13,6 +13,10 @@
       "src": "https://github.com/ThePrimeagen/harpoon",
       "version": "'harpoon2'"
     },
+    "incline.nvim": {
+      "rev": "8b54c59bcb23366645ae10edca6edfb9d3a0853e",
+      "src": "https://github.com/b0o/incline.nvim"
+    },
     "jb.nvim": {
       "rev": "6dcdb9a15d4203fef0ab7f98178133fe74c6ec0f",
       "src": "/Users/nick/Documents/jb.nvim"
@@ -23,7 +27,7 @@
     },
     "lualine-harpoon.nvim": {
       "rev": "9ee90e6309c4219d6a06b771b53db6a59c8d32fa",
-      "src": "https://github.com/kristoferssolo/lualine-harpoon.nvim"
+      "src": "https://codeberg.org/kristoferssolo/lualine-harpoon.nvim"
     },
     "lualine-lsp-progress": {
       "rev": "56842d097245a08d77912edf5f2a69ba29f275d7",

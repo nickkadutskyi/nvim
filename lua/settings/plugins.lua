@@ -154,4 +154,14 @@ spec_builder.add({
             end,
         },
     },
+    -- Status bar controller in the top right corner
+    {
+        src = g("b0o/incline.nvim"),
+        data = {
+            event = "IdeDeferred",
+            after = function(_, opts)
+                require("incline").setup(opts)
+            end,
+        },
+    },
 })

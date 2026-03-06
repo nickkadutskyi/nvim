@@ -20,8 +20,6 @@ vim.opt.rtp:prepend(lazypath)
 -- Loads Settings modules via Lazy.nvim
 require("lazy").setup({
     spec = {
-        -- Customizes IDE (non-editor-specific parts) appearance and behavior
-        { import = "kdtsk.settings.appearance_behavior" },
         -- Configures all editor specific parts (completion, code style and quality, color scheme, etc.)
         { import = "kdtsk.settings.editor" },
         -- Everything related to version control systems (e.g. Git)
