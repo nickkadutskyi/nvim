@@ -51,6 +51,21 @@ end)
 --- MAPPINGS -------------------------------------------------------------------
 
 utils.run.now_if_arg_or_deferred(function()
+    --- CODE
+
+    -- TODO: provide an ability to accept partial inline completion (by word or line)
+    vim.keymap.set("i", "<Tab>", function()
+        if not vim.lsp.inline_completion.get() then
+            return "<Tab>"
+        end
+    end, { expr = true, desc = "AI: Insert Inline Proposal" })
+    vim.keymap.set({ "i", "n" }, "<A-]>", function()
+        vim.lsp.inline_completion.select({ count = 1 })
+    end, { expr = true, desc = "AI: Next Inline Proposal" })
+    vim.keymap.set({ "i", "n" }, "<A-[>", function()
+        vim.lsp.inline_completion.select({ count = -1 })
+    end, { expr = true, desc = "AI: Previous Inline Proposal" })
+
     --- FIND
     -- Clear search highlight
     vim.keymap.set("n", "<Esc>", ":noh<CR>", { desc = "Clear search highlight" })

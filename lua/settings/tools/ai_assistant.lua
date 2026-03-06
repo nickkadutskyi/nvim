@@ -1,4 +1,14 @@
 local spec_builder = require("ide.spec.builder")
+local utils = require("ide.utils")
+
+--- OPTIONS --------------------------------------------------------------------
+
+utils.run.now_if_arg_or_deferred(function()
+    -- Used to let copilot-language-server to provide inline completions
+    vim.lsp.inline_completion.enable()
+end)
+
+--- PLUGINS --------------------------------------------------------------------
 
 spec_builder.add({
     "ThePrimeagen/99",
