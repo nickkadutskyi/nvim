@@ -1,9 +1,12 @@
 local spec_builder = require("ide.spec.builder")
 local utils = require("ide.utils")
 local g = utils.str.prepend_fn("https://github.com/")
+local c = utils.str.prepend_fn("https://codeberg.org/")
 
 --- Define all plugins with their src here. Feature files patch via name only.
 spec_builder.add({
+    --- A library of lua functions used by lots of plugins
+    --- Required by: harpoon
     { src = g("nvim-lua/plenary.nvim"), data = { deferred = false } },
     --- A notification manager with a nice UI
     { src = g("rcarriga/nvim-notify"), version = "ab98fecfe", data = { deferred = false } },
@@ -47,8 +50,8 @@ spec_builder.add({
         },
     },
     --- Treesitter for syntax highlighting, folding, etc.
+    --- Requires: tree-sitter, tar, curl, c compiler
     {
-        --- Requires: tree-sitter, tar, curl, c compiler
         src = g("nvim-treesitter/nvim-treesitter"),
         data = {
             opts_extend = { "ensure_installed" },
@@ -113,20 +116,42 @@ spec_builder.add({
         },
     },
     -- LSP Progress lualine componenet
-    -- Required by lualine.nvim
-    { src = g("arkav/lualine-lsp-progress"), data = { event = "IdeDeferred", deferred = false } },
+    -- Required by: lualine.nvim
+    { src = g("arkav/lualine-lsp-progress"), data = { event = "IdeDeferred" } },
     --- Statusline configurator
+    --- Requires: lualine-lsp-progress
     {
         src = g("nvim-lualine/lualine.nvim"),
         data = {
-            -- TODO: run it defferred later when resolved conflict with harpoon
+            -- TODO: run it defferred later when resolved conflict with harpoon-lualine
             event = "IdeDeferred",
-            deferred = false,
             after = function(_, opts)
-                require("lualine").setup(opts)
+                -- Running it later to ensure that all components are registered
+                -- because some may need to use lualine_require before lualine is setup
+                utils.run.later(function()
+                    -- TODO: check why I need this variables
+                    _G._buffer_modified_count = 0
+                    _G._buffer_modified_last_check_time = 0
+
+                    require("lualine").setup(opts)
+                end)
             end,
         },
     },
-    --- Bookmarks manager; `after` in lua/settings/advanced/main.lua
-    { src = g("ThePrimeagen/harpoon"), version = "harpoon2", data = { event = "IdeDeferred", deferred = false } },
+    --- Bookmarks manager;
+    --- Loaded: on IdeDeffered because lualine-harpoon.nvim requires it to be loaded first
+    --- Requires: plenary.nvim
+    --- Required by: lualine-harpoon.nvim
+    { src = g("ThePrimeagen/harpoon"), version = "harpoon2", data = { event = "IdeDeferred" } }, -- `after` in lua/settings/advanced/main.lua
+    --- Displays your current Harpoon mark as [x/y] in your Lualine.
+    --- Requires: lualine.nvim, harpoon
+    {
+        src = c("kristoferssolo/lualine-harpoon.nvim"),
+        data = {
+            event = "IdeDeferred",
+            after = function(_, opts)
+                require("lualine-harpoon").setup(opts)
+            end,
+        },
+    },
 })

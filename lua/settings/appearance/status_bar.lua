@@ -1,7 +1,46 @@
 local spec_builder = require("ide.spec.builder")
 local pack = require("ide.pack")
+local utils = require("ide.utils")
+
+--- AUTOCMDS -------------------------------------------------------------------
+
+utils.run.now_if_arg_or_deferred(function()
+    -- Setup autocmds to update buffer_modified_count when relevant events occur
+    utils.autocmd.create({ "BufWritePost", "BufEnter", "BufModifiedSet", "FileChangedShellPost" }, {
+        callback = function()
+            _G._buffer_modified_last_check_time = 0
+        end,
+        desc = "Reset buffer modified check timer for status line updates.",
+    })
+end)
 
 --- PLUGINS --------------------------------------------------------------------
+
+spec_builder.add({
+    "kristoferssolo/lualine-harpoon.nvim",
+    opts = {
+        -- Configure symbols used in the display
+        symbol = {
+            -- open = "[",
+            open = "",
+            -- close = "]",
+            close = "",
+            separator = "/",
+            unknown = "?",
+        },
+        -- Icon displayed before the harpoon status
+        icon = "󰀱",
+        -- icon = "",
+        -- Show component even when there are no harpoon marks
+        show_when_empty = false,
+        -- Custom format function (overrides default formatting)
+        -- format = function(current, total)
+        --     return string.format("Harpoon: %s/%d", current or "?", total)
+        -- end,
+        -- Cache timeout in milliseconds for performance
+        cache_timeout = 100,
+    },
+})
 
 spec_builder.add({
     "nvim-lualine/lualine.nvim",

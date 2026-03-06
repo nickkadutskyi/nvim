@@ -21,6 +21,10 @@
       "rev": "5231c62aa83c2f8dc8e7ba957aa77098cda1257d",
       "src": "https://github.com/folke/lazydev.nvim"
     },
+    "lualine-harpoon.nvim": {
+      "rev": "9ee90e6309c4219d6a06b771b53db6a59c8d32fa",
+      "src": "https://github.com/kristoferssolo/lualine-harpoon.nvim"
+    },
     "lualine-lsp-progress": {
       "rev": "56842d097245a08d77912edf5f2a69ba29f275d7",
       "src": "https://github.com/arkav/lualine-lsp-progress"

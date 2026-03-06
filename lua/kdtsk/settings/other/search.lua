@@ -13,32 +13,6 @@ local resume_within_seconds = 60
 -- Lazy.nvim modules
 return {
     {
-        "kristoferssolo/lualine-harpoon.nvim",
-        dependencies = { { "ThePrimeagen/harpoon", branch = "harpoon2" } },
-        opts = {
-            -- Configure symbols used in the display
-            symbol = {
-                -- open = "[",
-                open = "",
-                -- close = "]",
-                close = "",
-                separator = "/",
-                unknown = "?",
-            },
-            -- Icon displayed before the harpoon status
-            icon = "󰀱",
-            -- icon = "",
-            -- Show component even when there are no harpoon marks
-            show_when_empty = false,
-            -- Custom format function (overrides default formatting)
-            -- format = function(current, total)
-            --     return string.format("Harpoon: %s/%d", current or "?", total)
-            -- end,
-            -- Cache timeout in milliseconds for performance
-            cache_timeout = 100,
-        },
-    },
-    {
         "dmtrKovalenko/fff.nvim",
         -- commit = "03124925701ce1730856bcf9a21f73fa3e55455b",
         build = function()
