@@ -1,4 +1,5 @@
 local utils = require("ide.utils")
+local spec_builder = require("ide.spec.builder")
 
 --- AUTOCMDS -------------------------------------------------------------------
 
@@ -31,9 +32,61 @@ utils.run.now_if_arg_or_deferred(function()
     })
 end)
 
---- OPTIONS --------------------------------------------------------------------
+--- Appearance --------------------------------------------------------------------
 
---- Code Folding
+spec_builder.add({
+    "lukas-reineke/indent-blankline.nvim",
+    ---@type ibl.config
+    opts = {
+        indent = { char = "▏", tab_char = "▏" },
+        -- disables underline
+        scope = { char = "▏", show_start = false, show_end = false },
+    },
+})
+spec_builder.add({
+    "petertriho/nvim-scrollbar",
+    opts = {
+        show = true,
+        set_highlights = false,
+        hide_if_all_visible = false,
+        handlers = {
+            diagnostic = true,
+            gitsigns = true, -- Requires gitsigns
+            handle = true,
+            search = true, -- Requires hlslens
+            cursor = false,
+        },
+        excluded_filetypes = { "snacks_picker_list" },
+        marks = {
+            GitAdd = {
+                text = "│",
+            },
+            GitChange = {
+                text = "│",
+            },
+            IdentifierUnderCaret = {
+                text = { "-", "=" },
+                priority = 1,
+                gui = nil,
+                color = nil,
+                cterm = nil,
+                color_nr = nil, -- cterm
+                highlight = "IdentifierUnderCaret",
+            },
+            Todo = {
+                text = { "-", "=" },
+                priority = 1,
+                gui = nil,
+                color = nil,
+                cterm = nil,
+                color_nr = nil, -- cterm
+                highlight = "Todo",
+            },
+        },
+    },
+})
+
+--- Code Folding ---------------------------------------------------------------
 
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
@@ -48,12 +101,12 @@ vim.opt.foldenable = true
 vim.opt.foldopen = "block,hor,insert,jump,mark,percent,quickfix,search,tag,undo"
 vim.opt.foldclose = "all"
 
---- Editor Tabs
+--- Editor Tabs ----------------------------------------------------------------
 
 _G._ide_tabline = utils.tabline.tabline
 vim.opt.tabline = "%!v:lua._ide_tabline()"
 
---- Soft wrap
+--- Soft wrap ------------------------------------------------------------------
 
 vim.opt.wrap = false
 -- Soft wrap at line break - disabled for now

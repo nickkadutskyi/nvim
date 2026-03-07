@@ -164,4 +164,52 @@ spec_builder.add({
             end,
         },
     },
+    -- Visual guides
+    {
+        src = g("lukas-reineke/virt-column.nvim"),
+        data = {
+            event = "IdeDeferred",
+            after = function(_, opts)
+                require("virt-column").setup(opts)
+            end,
+        },
+    },
+    -- Ident Guides
+    {
+        src = g("lukas-reineke/indent-blankline.nvim"),
+        data = {
+            event = "IdeDeferred",
+            after = function(_, opts)
+                require("ibl").setup(opts)
+            end,
+        },
+    },
+    -- Highlight search results and provide a nice UI for it
+    -- Required by: nvim-scrollbar
+    {
+        src = g("kevinhwang91/nvim-hlslens"),
+        data = {
+            event = "IdeDeferred",
+            -- after = function(_, opts)
+            --     require("hlslens").setup(opts)
+            -- end,
+        },
+    },
+    -- Error stripes and VCS status in Scrollbar
+    -- Requires: nvim-hlslens
+    {
+        src = g("petertriho/nvim-scrollbar"),
+        data = {
+            event = "IdeDeferred",
+            after = function(_, opts)
+                require("scrollbar").setup(opts)
+                require("scrollbar.handlers").register("under_caret", function(bufnr)
+                    return vim.g.highlighted_lines or {}
+                end)
+                require("scrollbar.handlers").register("todo", function(bufnr)
+                    return (vim.g.todos_in_files or {})[vim.api.nvim_buf_get_name(bufnr)] or {}
+                end)
+            end,
+        },
+    },
 })
