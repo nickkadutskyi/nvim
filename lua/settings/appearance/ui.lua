@@ -26,9 +26,10 @@ vim.o.pumborder = "bold" -- Use border in built-in completion menu
 utils.run.later(function()
     require("vim._core.ui2").enable({
         enable = true,
-        -- msg = {
-        --     target = "cmd", -- box might be buggy
-        -- },
+        msg = {
+            target = "cmd", -- box might be buggy
+            timeout = 4000,
+        },
     })
 end)
 
