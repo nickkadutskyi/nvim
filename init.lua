@@ -16,7 +16,7 @@ require("ide").setup({
         -- Everything related to version control systems (e.g. Git)
         "settings.version_control",
         -- Provides language-specific settings (Lazy modules provide `opts` but configured in other areas)
-        -- "settings.languages_frameworks"
+        "settings.languages",
         -- Other tools (terminal, task runner, AI assistant, etc.)
         "settings.tools",
         -- Uncategorized and rarely changed settings
