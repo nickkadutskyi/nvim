@@ -19,6 +19,19 @@ end)
 
 --- OPTIONS --------------------------------------------------------------------
 
+vim.o.pummaxwidth = 100 -- Limit maximum width of popup menu
+vim.o.completetimeout = 100
+vim.o.pumborder = "bold" -- Use border in built-in completion menu
+
+utils.run.later(function()
+    require("vim._core.ui2").enable({
+        enable = true,
+        -- msg = {
+        --     target = "cmd", -- box might be buggy
+        -- },
+    })
+end)
+
 -- Messaging
 vim.opt.shortmess:append("I")
 -- Mouse reporting

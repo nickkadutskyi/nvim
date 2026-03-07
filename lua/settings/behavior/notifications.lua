@@ -6,6 +6,7 @@ spec_builder.add({
     after = function(_, opts)
         require("notify").setup(opts)
 
+        vim.notify_orig = vim.notify
         -- Override vim.notify to use nvim-notify
         ---@diagnostic disable-next-line: duplicate-set-field
         vim.notify = function(message, level, nopts)
