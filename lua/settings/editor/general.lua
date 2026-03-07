@@ -34,6 +34,7 @@ end)
 --- OPTIONS --------------------------------------------------------------------
 
 --- Code Folding
+
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldcolumn = "1"
@@ -47,8 +48,13 @@ vim.opt.foldenable = true
 vim.opt.foldopen = "block,hor,insert,jump,mark,percent,quickfix,search,tag,undo"
 vim.opt.foldclose = "all"
 
---- Config
--- Soft wrap
+--- Editor Tabs
+
+_G._ide_tabline = utils.tabline.tabline
+vim.opt.tabline = "%!v:lua._ide_tabline()"
+
+--- Soft wrap
+
 vim.opt.wrap = false
 -- Soft wrap at line break - disabled for now
 vim.opt.linebreak = false

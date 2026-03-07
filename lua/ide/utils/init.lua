@@ -3,6 +3,7 @@
 ---@field autocmd ide.Utils.Autocmd
 ---@field str ide.Utils.Str
 ---@field treesitter ide.Utils.Plugins.Treesitter
+---@field tabline ide.Utils.Tabline
 local M = {}
 
 setmetatable(M, {

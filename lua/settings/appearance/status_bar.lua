@@ -29,7 +29,7 @@ spec_builder.add({
             unknown = "?",
         },
         -- Icon displayed before the harpoon status
-        icon = "󰀱",
+        icon = "",
         -- icon = "",
         -- Show component even when there are no harpoon marks
         show_when_empty = false,

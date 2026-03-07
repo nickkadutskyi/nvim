@@ -236,4 +236,13 @@ utils.run.now_if_arg_or_deferred(function()
     vim.keymap.set({ "n", "i" }, "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
     vim.keymap.set({ "n", "i" }, "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
     vim.keymap.set({ "n", "i" }, "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+
+    -- Editor Tabs
+    vim.keymap.set({ "n", "i", "v" }, "<M-w>", function()
+        if vim.fn.tabpagenr("$") == 1 then
+            vim.cmd("bd")
+        else
+            vim.cmd("tabc")
+        end
+    end, { desc = "Close current tab (or buffer if last tab)" })
 end)

@@ -4,7 +4,7 @@ spec_builder.add({
     "nvim-treesitter",
     ---@type ide.Opts.Treesitter
     opts = {
-        ensure_installed = { "vim", "vimdoc" },
+        ensure_installed = { "vim", "vimdoc", "json" },
         syntax_map = {
             ["tiltfile"] = "starlark",
             ["gotexttmpl"] = "gotmpl",
