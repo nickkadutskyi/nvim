@@ -1,10 +1,24 @@
 local spec_builder = require("ide.spec.builder")
+local utils = require("ide.utils")
 
 --- OPTIONS --------------------------------------------------------------------
 
 --- MAPPINGS -------------------------------------------------------------------
 
-require("ide.utils").run.now_if_arg_or_deferred(function()
+utils.run.now_if_arg_or_deferred(function()
+    vim.keymap.set("n", "<leader>mu", function()
+        vim.pack.update()
+    end, { silent = true, desc = "Plugins: plugin [m]anager" })
+    vim.keymap.set("n", "<leader>mfu", function()
+        vim.pack.update(nil, { force = true })
+    end, { silent = true, desc = "Plugins: plugin [m]anager [f]orce [u]pdate" })
+    vim.keymap.set("n", "<leader>mr", function()
+        vim.pack.update(nil, { target = "lockfile" })
+    end, { silent = true, desc = "Plugins: plugin [m]anager [r]estore from lockfile" })
+    vim.keymap.set("n", "<leader>mfr", function()
+        vim.pack.update(nil, { force = true, target = "lockfile" })
+    end, { silent = true, desc = "Plugins: plugin [m]anager [f]orce [r]estore from lockfile" })
+
     --- Lazy.nvim for managing plugins
     vim.keymap.set("n", "<leader>ol", function()
         require("lazy").show()
