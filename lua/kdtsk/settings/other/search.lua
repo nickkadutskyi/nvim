@@ -70,6 +70,7 @@ return {
             keymaps = {
                 -- goes to the previous query in history
                 cycle_previous_query = "<C-h>",
+                select_tab = { "<C-t>", "<M-CR>" },
             },
             -- Git integration
             git = {

@@ -143,6 +143,14 @@ return {
                         title = "Project",
                         hidden = true,
                         ignored = true,
+                        win = {
+                            list = {
+                                keys = {
+                                    ["<M-CR>"] = "tab",
+                                    ["<C-t>"] = "tab",
+                                },
+                            },
+                        },
                         formatters = {
                             file = {
                                 filename_first = false, -- display filename before the file path

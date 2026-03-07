@@ -245,4 +245,7 @@ utils.run.now_if_arg_or_deferred(function()
             vim.cmd("tabc")
         end
     end, { desc = "Close current tab (or buffer if last tab)" })
+    vim.keymap.set({ "n", "i", "v" }, "<M-t>", function()
+        vim.cmd("tabnew")
+    end, { desc = "Open new tab" })
 end)
