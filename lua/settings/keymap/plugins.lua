@@ -54,19 +54,13 @@ spec_builder.add({
         -- Provides Keymap Groups:
         -- [Leader|LocalLeader|None] > [Action] > [Modifier|None] > [Object]
         spec = {
+            { "<leader>", group = "Leader" },
             { -- Global Context
-                "<Leader>",
+                "<leader>",
                 group = "Leader",
 
                 { "<leader>/", group = "[/]search" },
                 { "<leader>?", group = "[?]help" },
-                { -- TODO: remove this
-                    "<leader>a",
-                    group = "[a]ctivate",
-
-                    { "<leader>af", group = "[f]ocus" },
-                    { "<leader>av", group = "[v]ersion control" },
-                },
                 { "<leader>a", group = "[a]dd" },
                 { "<leader>c", group = "[c]hoose" },
                 { "<leader>e", group = "[e]xpose" },
@@ -90,17 +84,10 @@ spec_builder.add({
                 { "<leader>t", group = "[t]oggle" },
             },
             { -- Local Context
-                "<LocalLeader>",
+                "<localleader>",
                 group = "LocalLeader",
 
-                { -- TODO: remove this
-                    "<localleader>a",
-                    group = "[a]ctivate",
-                    mode = { "v", "n" },
-
-                    { "<localleader>?", group = "[?]help" },
-                    { "<localleader>av", group = "[v]ersion control" },
-                },
+                { "<localleader>?", group = "[?]help" },
                 { "<localleader>a", group = "[a]dd" },
                 { "<localleader>e", group = "[e]dit", mode = { "v", "n" } },
                 { "<localleader>h", group = "VCS: [h]unk", mode = { "v", "n" } },

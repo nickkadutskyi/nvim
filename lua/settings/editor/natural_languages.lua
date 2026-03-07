@@ -1,4 +1,5 @@
 local utils = require("ide.utils")
+local spec_builder = require("ide.spec.builder")
 
 --- AUTOCMDS -------------------------------------------------------------------
 
@@ -28,4 +29,14 @@ vim.opt.spelllang = { "en_us", "en", "ru", "uk" }
 vim.opt.spellfile = os.getenv("HOME") .. "/.config/nvim_spell/en.utf-8.add"
 
 --- PLUGINS --------------------------------------------------------------------
--- TODO: WhichKey for spelling suggestions
+spec_builder.add({
+    "which-key.nvim",
+    opts = {
+        spelling = {
+            -- enabling this will show WhichKey when pressing z= to select spelling suggestions
+            enabled = true,
+            -- how many suggestions should be shown in the list?
+            suggestions = 10,
+        },
+    },
+})

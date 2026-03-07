@@ -79,16 +79,16 @@ spec_builder.add({
     },
     --- Provides a popup with possible keymaps of the command you started typing
     {
-        --- Loaded on keymap trigger in lua/settings/keymap/plugins.lua
         src = g("folke/which-key.nvim"),
         data = {
+            event = "IdeDeferred",
             after = function(_, opts)
                 require("which-key").setup(opts)
             end,
         },
     },
     --- Compatibility layer for using nvim-cmp sources on blink.cmp
-    --- Required by 99 when using blink as the completion source
+    --- Required by: 99 (when using blink as the completion source)
     {
         src = g("saghen/blink.compat"),
         data = {
