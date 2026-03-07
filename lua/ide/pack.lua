@@ -41,6 +41,31 @@ function M.load(specs)
     vim.pack.add(specs, { load = I.on_load, confirm = true })
 end
 
+--- Get all active plugins whose spec.src is a local filesystem path (not a URL).
+---@return vim.pack.PlugData[]
+function M.get_local_plugins()
+    return vim.iter(vim.pack.get())
+        :filter(function(p)
+            if not p.active or not p.spec.src then
+                return false
+            end
+            local src = p.spec.src
+            -- A URL starts with a scheme like https:// or git@; a local path does not.
+            return vim.fn.isdirectory(src) == 1 or (not src:match("^%w+://") and not src:match("^%w+@"))
+        end)
+        :totable()
+end
+
+--- Get names of all local plugins.
+---@return string[]
+function M.get_local_plugin_names()
+    return vim.iter(M.get_local_plugins())
+        :map(function(p)
+            return p.spec.name
+        end)
+        :totable()
+end
+
 --- INTERNAL FUNCTIONS ---------------------------------------------------------
 
 ---@param plugin_data {spec: vim.pack.Spec, path: string}

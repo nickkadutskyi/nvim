@@ -1,5 +1,6 @@
 local spec_builder = require("ide.spec.builder")
 local utils = require("ide.utils")
+local pack = require("ide.pack")
 
 --- OPTIONS --------------------------------------------------------------------
 
@@ -8,10 +9,16 @@ local utils = require("ide.utils")
 utils.run.now_if_arg_or_deferred(function()
     vim.keymap.set("n", "<leader>mu", function()
         vim.pack.update()
-    end, { silent = true, desc = "Plugins: plugin [m]anager" })
+    end, { silent = true, desc = "Plugins: plugin [m]anager [u]pdate" })
     vim.keymap.set("n", "<leader>mfu", function()
         vim.pack.update(nil, { force = true })
     end, { silent = true, desc = "Plugins: plugin [m]anager [f]orce [u]pdate" })
+    vim.keymap.set("n", "<leader>mlu", function()
+        vim.pack.update(pack.get_local_plugin_names())
+    end, { silent = true, desc = "Plugins: plugin [m]anager [l]ocal [u]pdate" })
+    vim.keymap.set("n", "<leader>mlfu", function()
+        vim.pack.update(pack.get_local_plugin_names(), { force = true })
+    end, { silent = true, desc = "Plugins: plugin [m]anager [l]ocal [f]orce [u]pdate" })
     vim.keymap.set("n", "<leader>mr", function()
         vim.pack.update(nil, { target = "lockfile" })
     end, { silent = true, desc = "Plugins: plugin [m]anager [r]estore from lockfile" })
@@ -79,6 +86,20 @@ spec_builder.add({
                 { "<leader>f", group = "[f]ind", icon = { icon = "", hl = "WhichKeyValue" } },
                 { "<leader>g", group = "[g]o to", icon = { icon = "", hl = "WhichKeyValue" } },
                 { "<leader>i", group = "[i]nspect", icon = { icon = "", hl = "WhichKeyValue" } },
+                {
+                    "<leader>m",
+                    group = "plugin [m]anager",
+                    icon = { icon = "", hl = "WhichKeyValue" },
+
+                    { "<leader>mf", group = "[f]orce", icon = { icon = "", hl = "WhichKeyValue" } },
+                    {
+                        "<leader>ml",
+                        group = "[l]ocal",
+                        icon = { icon = "", hl = "WhichKeyValue" },
+
+                        { "<leader>mlf", group = "[f]orce", icon = { icon = "", hl = "WhichKeyValue" } },
+                    },
+                },
                 { "<leader>o", group = "[o]pen", icon = { icon = "", hl = "WhichKeyValue" } },
                 { "<leader>r", group = "[r]eformat", icon = { icon = "", hl = "WhichKeyValue" } },
                 {
