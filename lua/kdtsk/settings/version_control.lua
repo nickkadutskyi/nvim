@@ -87,15 +87,15 @@ return {
                     vim.cmd("DiffviewClose")
                 end
             end
-            vim.keymap.set("n", "<localleader>avl", function()
+            vim.keymap.set("n", "<localleader>ovl", function()
                 toggle_diffview("DiffviewFileHistory %")
-            end, { noremap = true, desc = "VCS: [a]ctivate [v]cs [l]og for current file" })
-            vim.keymap.set("n", "<leader>avl", function()
+            end, { noremap = true, desc = "VCS: [o]pen [v]cs [l]og for current file" })
+            vim.keymap.set("n", "<leader>ovl", function()
                 toggle_diffview("DiffviewFileHistory")
-            end, { noremap = true, desc = "VCS: [a]ctivate [v]cs [l]og" })
-            vim.keymap.set("n", "<leader>avs", function()
+            end, { noremap = true, desc = "VCS: [o]pen [v]cs [l]og" })
+            vim.keymap.set("n", "<leader>ovs", function()
                 toggle_diffview("DiffviewOpen")
-            end, { noremap = true, desc = "VCS: [a]ctivate [v]cs [s]tatus" })
+            end, { noremap = true, desc = "VCS: [o]pen [v]cs [s]tatus" })
         end,
     },
     {

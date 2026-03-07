@@ -79,8 +79,8 @@ local function toggle_vim_explorer_float()
     end
 end
 
-vim.keymap.set("n", "<leader>ae", toggle_vim_explorer_float, {
-    desc = "Project: [a]ctivate [p]roject tool window.",
+vim.keymap.set("n", "<leader>oe", toggle_vim_explorer_float, {
+    desc = "Project: [o]pen [p]roject tool window.",
 })
 
 local group_start = vim.api.nvim_create_augroup("kdtsk-netrw-start", { clear = true })
@@ -255,7 +255,7 @@ return {
             ---@type snacks.Config
             snacks.setup(opts)
 
-            vim.keymap.set("n", "<leader>ap", function()
+            vim.keymap.set("n", "<leader>op", function()
                 if Snacks.picker.get({ source = "explorer" })[1] == nil then
                     Snacks.picker.explorer({ auto_close = true })
                 elseif Snacks.picker.get({ source = "explorer" })[1]:is_focused() == true then
@@ -264,7 +264,7 @@ return {
                     Snacks.picker.get({ source = "explorer" })[1]:focus()
                 end
             end, {
-                desc = "Project: [a]ctivate [p]roject tool window.",
+                desc = "Project: [o]pen [p]roject tool window.",
             })
         end,
     },

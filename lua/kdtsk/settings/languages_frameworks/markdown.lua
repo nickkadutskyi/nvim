@@ -19,8 +19,8 @@ return {
         },
         keys = {
             {
-                "<leader>amd",
-                desc = "Toggle [a]ctivate [m]ark[d]own",
+                "<leader>tm",
+                desc = "[t]oggle [m]arkdown",
                 mode = { "n" },
             },
         },
@@ -28,8 +28,8 @@ return {
             require("render-markdown").setup(opts)
             vim.api.nvim_set_hl(0, "RenderMarkdownH1", { fg = "Red", bold = true })
 
-            vim.keymap.set({ "n" }, "<leader>amd", "<cmd>RenderMarkdown toggle<cr>", {
-                desc = "Toggle [a]ctivate [m]ark[d]own",
+            vim.keymap.set({ "n" }, "<leader>tm", "<cmd>RenderMarkdown toggle<cr>", {
+                desc = "[t]oggle [m]arkdown",
             })
         end,
     },

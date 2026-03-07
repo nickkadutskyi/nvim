@@ -6,9 +6,9 @@ local spec_builder = require("ide.spec.builder")
 
 require("ide.utils").run.now_if_arg_or_deferred(function()
     --- Lazy.nvim for managing plugins
-    vim.keymap.set("n", "<leader>al", function()
+    vim.keymap.set("n", "<leader>ol", function()
         require("lazy").show()
-    end, { silent = true, desc = "Plugins: [a]ctivate [l]azy.nvim manager" })
+    end, { silent = true, desc = "Plugins: [o]pen [l]azy.nvim manager" })
 end)
 
 spec_builder.add({
