@@ -19,31 +19,26 @@ end)
 
 --- OPTIONS --------------------------------------------------------------------
 
-vim.o.pummaxwidth = 100 -- Limit maximum width of popup menu
-vim.o.completetimeout = 100
-vim.o.pumborder = "bold" -- Use border in built-in completion menu
-
 utils.run.later(function()
     require("vim._core.ui2").enable({
         enable = true,
         msg = {
-            target = "cmd", -- box might be buggy
+            targets = { bufwrite = "msg" },
             timeout = 4000,
         },
     })
 end)
+
+vim.o.pummaxwidth = 100 -- Limit maximum width of popup menu
+vim.o.completetimeout = 100
+vim.o.pumborder = "bold" -- Use border in built-in completion menu
 
 -- Messaging
 vim.opt.shortmess:append("I")
 -- Mouse reporting
 vim.opt.mouse = "a"
 -- Removes cmd line to allow more space
--- Moved this to later event to avoid '"[No Name]" --No lines in buffer--' message
--- vim.opt.cmdheight = 0
-utils.run.later(function()
-    -- Setting it here delayed to avoid '"[No Name]" --No lines in buffer--' message
-    vim.opt.cmdheight = 0
-end)
+vim.opt.cmdheight = 0
 -- File name and path in Window header
 vim.opt.title = true
 -- TODO: move titlestring function to ide.utils and use it here

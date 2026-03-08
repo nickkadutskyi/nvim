@@ -2,7 +2,7 @@
 local M = {}
 local I = {}
 
----@param event string|string[] event(s) to trigger autocmd
+---@param event vim.api.keyset.events|vim.api.keyset.events[]|ide.events|ide.events[] event(s) to trigger autocmd
 ---@param opts vim.api.keyset.create_autocmd
 ---@param group_opts? vim.api.keyset.create_augroup
 ---@return integer|false # autocmd id(s)

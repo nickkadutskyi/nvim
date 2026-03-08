@@ -4,7 +4,6 @@
 
 local utils = require("ide.utils")
 local spec_builder = require("ide.spec.builder")
-local pack = require("ide.pack")
 
 --- OPTIONS --------------------------------------------------------------------
 
@@ -62,22 +61,6 @@ spec_builder.add({
                 require("harpoon"):list():add()
             end,
             desc = "Bookmarks: [a]dd [b]ookmark",
-        },
-        {
-            lhs = { "<C-e>", "<leader>ob" },
-            rhs = function()
-                local harpoon = require("harpoon")
-                local opts = {
-                    title = " Bookmarks ",
-                    title_pos = "center",
-                    ui_max_width = 75,
-                }
-                if pack.is_loaded("jb.nvim") then
-                    opts.border = require("jb.borders").borders.dialog.default_box_header_shadowed
-                end
-                harpoon.ui:toggle_quick_menu(harpoon:list(), opts)
-            end,
-            desc = "Bookmarks: [o]pen [b]ookmarks",
         },
         {
             lhs = "<C-S-P>",
@@ -159,6 +142,13 @@ utils.run.now_if_arg_or_deferred(function()
     vim.keymap.set("n", "<S-F2>", function()
         vim.diagnostic.jump({ count = -1 })
     end, { desc = "Navigate: Previous Highlighted Error" })
+
+    vim.keymap.set("n", "]p", function()
+        require("trouble")._action("next")("document_diagnostics")
+    end, { desc = "Problems: next [p]roblem" })
+    vim.keymap.set("n", "[p", function()
+        require("trouble")._action("prev")("document_diagnostics")
+    end, { desc = "Problems: previous [p]roblem" })
 end)
 
 --- CODE

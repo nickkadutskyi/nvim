@@ -83,6 +83,10 @@
       "rev": "b9fd5226c2f76c951fc8ed5923d85e4de065e509",
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
+    "trouble.nvim": {
+      "rev": "bd67efe408d4816e25e8491cc5ad4088e708a69a",
+      "src": "https://github.com/folke/trouble.nvim"
+    },
     "virt-column.nvim": {
       "rev": "b87e3e0864211a32724a2ebf3be37e24e9e2fa99",
       "src": "https://github.com/lukas-reineke/virt-column.nvim"

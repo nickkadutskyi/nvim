@@ -245,4 +245,24 @@ spec_builder.add({
             end,
         },
     },
+    --- Problems tool window
+    {
+        src = g("folke/trouble.nvim"),
+        data = {
+            -- enabled = false,
+            event = "IdeDeferred",
+            after = function(_, opts)
+                local trouble = require("trouble")
+                local ran_setup = false
+                utils.run.on_load("jb.nvim", function()
+                    opts.icons = { kinds = require("jb.icons").kind }
+                    trouble.setup(opts)
+                    ran_setup = true
+                end)
+                if not ran_setup then
+                    trouble.setup(opts)
+                end
+            end,
+        },
+    },
 })
