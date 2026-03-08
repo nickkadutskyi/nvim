@@ -86,6 +86,109 @@ spec_builder.add({
     },
 })
 
+--- Code Complection -----------------------------------------------------------
+
+spec_builder.add({
+    "saghen/blink.cmp",
+    opts = {
+        -- All presets have the following mappings:
+        -- C-space: Open menu or open docs if already open
+        -- C-n/C-p or Up/Down: Select next/previous item
+        -- C-e: Hide menu
+        -- C-k: Toggle signature help (if signature.enabled = true)
+        -- See :h blink-cmp-config-keymap for defining your own keymap
+        keymap = {
+            preset = "default",
+            ["<C-a>"] = { "show", "show_documentation", "hide_documentation" },
+        },
+
+        completion = {
+            documentation = {
+                -- Shows documentation pop-up automatically when available
+                auto_show = true,
+                window = { border = "rounded", scrollbar = false, max_width = 100 },
+            },
+            menu = {
+                scrollbar = false,
+                border = "rounded",
+                auto_show = true,
+                draw = {
+                    columns = {
+                        { "kind_icon" },
+                        { "label", "label_description" },
+                    },
+                },
+            },
+        },
+
+        -- Default list of enabled providers defined so that you can extend it
+        -- elsewhere in your config, without redefining it, due to `opts_extend`
+        sources = {
+            default = { "lsp", "path", "snippets", "buffer", "ripgrep" },
+            per_filetype = {
+                lua = { "lazydev", "lsp", "path", "snippets", "buffer", "ripgrep" },
+                ["99prompt"] = { "99", "lsp", "path", "buffer" },
+            },
+            providers = {
+                ["99"] = {
+                    name = "99",
+                    module = "blink.compat.source",
+                    score_offset = -3,
+                    opts = {},
+                },
+                lsp = { fallbacks = {} },
+                lazydev = {
+                    name = "LazyDev",
+                    module = "lazydev.integrations.blink",
+                    score_offset = 100,
+                },
+
+                -- Disabled because slow in large projects
+                ripgrep = {
+                    module = "blink-ripgrep",
+                    name = "Ripgrep",
+                    ---@module "blink-ripgrep"
+                    ---@type blink-ripgrep.Options
+                    opts = {},
+                },
+
+                snippets = {
+                    opts = {
+                        friendly_snippets = true, -- default
+
+                        -- see the list of frameworks in: https://github.com/rafamadriz/friendly-snippets/tree/main/snippets/frameworks
+                        -- and search for possible languages in: https://github.com/rafamadriz/friendly-snippets/blob/main/package.json
+                        -- the following is just an example, you should only enable the frameworks that you use
+                        extended_filetypes = {
+                            markdown = { "jekyll" },
+                            sh = { "shelldoc" },
+                            php = { "phpdoc" },
+                            cpp = { "unreal" },
+                            javascript = { "jsdoc" },
+                            lua = { "luadoc" },
+                            typescript = { "tsdoc" },
+                        },
+                    },
+                },
+            },
+        },
+        snippets = { preset = "default" },
+
+        -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
+        -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
+        -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
+        --
+        -- See the fuzzy documentation for more information
+        fuzzy = { implementation = "prefer_rust_with_warning" },
+        appearance = {
+            -- highlight_ns = vim.api.nvim_create_namespace("blink_cmp"),
+            -- Set to 'mono' for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
+            -- Adjusts spacing to ensure icons are aligned
+            nerd_font_variant = "mono",
+        },
+    },
+})
+
 --- Code Folding ---------------------------------------------------------------
 
 vim.opt.foldmethod = "expr"

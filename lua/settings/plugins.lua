@@ -212,4 +212,35 @@ spec_builder.add({
             end,
         },
     },
+    -- Ripgrep/gitgrep source for the blink.cmp
+    { src = g("mikavilpas/blink-ripgrep.nvim"), data = { event = "IdeDeferred" } },
+    -- Set of preconfigured snippets for different languages.
+    { src = g("rafamadriz/friendly-snippets"), data = { event = "IdeDeferred" } },
+    -- Performant, batteries-included completion
+    {
+        src = g("saghen/blink.cmp"),
+        version = vim.version.range("1.*"),
+        data = {
+            opts_extend = { "sources.default" },
+            event = "InsertEnter",
+            after = function(_, opts)
+                opts.appearance.highlight_ns = vim.api.nvim_create_namespace("blink_cmp")
+                local setup = false
+                utils.run.on_load("jb.nvim", function()
+                    -- Handle icons
+                    opts.appearance.kind_icons = require("jb.icons").kind
+                    -- Handle borders
+                    local border = require("jb.borders").borders.dialog.default_box_shadowed
+                    opts.completion.documentation.window.border = border
+                    opts.completion.menu.border = border
+
+                    require("blink.cmp").setup(opts)
+                    setup = true
+                end)
+                if not setup then
+                    require("blink.cmp").setup(opts)
+                end
+            end,
+        },
+    },
 })
