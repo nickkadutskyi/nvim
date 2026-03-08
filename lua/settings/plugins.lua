@@ -300,13 +300,22 @@ spec_builder.add({
         data = {
             opts = {
                 select = { lookahead = true, include_surrounding_whitespace = false },
-                move = { set_jumps = true }
+                move = { set_jumps = true },
             },
             before = function()
                 vim.g.no_plugin_maps = true
             end,
             after = function(_, opts)
                 require("nvim-treesitter-textobjects").setup(opts)
+            end,
+        },
+    },
+    {
+        src = g("nvim-treesitter/nvim-treesitter-context"),
+        data = {
+            event = "IdeDeferred",
+            after = function(_, opts)
+                require("treesitter-context").setup(opts)
             end,
         },
     },
