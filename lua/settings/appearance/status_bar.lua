@@ -17,7 +17,7 @@ end)
 --- PLUGINS --------------------------------------------------------------------
 
 spec_builder.add({
-    "kristoferssolo/lualine-harpoon.nvim",
+    "lualine-harpoon.nvim",
     opts = {
         -- Configure symbols used in the display
         symbol = {
@@ -43,7 +43,7 @@ spec_builder.add({
 })
 
 spec_builder.add({
-    "nvim-lualine/lualine.nvim",
+    "lualine.nvim",
     opts = {
         options = {
             globalstatus = true, -- sets vim.o.laststatus to 3, making the status line global

@@ -4,7 +4,7 @@ local pack = require("ide.pack")
 -- 0 Commit (Compose a commit, stage/unstage hunks/files)
 -- 1 Project (Project view/Explorer)
 spec_builder.add({
-    "folke/trouble.nvim",
+    "trouble.nvim",
     keys = {
         {
             desc = "Problems: [t]oggle [p]roblem tool window",
@@ -24,7 +24,7 @@ spec_builder.add({
 })
 -- 2 Bookmarks
 spec_builder.add({
-    "ThePrimeagen/harpoon",
+    "harpoon",
     keys = {
         {
             lhs = { "<C-e>", "<leader>ob" },

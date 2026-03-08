@@ -41,7 +41,7 @@ end)
 --- PLUGINS --------------------------------------------------------------------
 
 spec_builder.add({
-    "ThePrimeagen/harpoon",
+    "harpoon",
     opts = { settings = { save_on_toggle = true } },
     after = function(_, opts)
         local harpoon = require("harpoon")

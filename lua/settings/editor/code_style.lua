@@ -4,7 +4,7 @@ local spec_builder = require("ide.spec.builder")
 
 spec_builder.add({
     {
-        "lukas-reineke/virt-column.nvim",
+        "virt-column.nvim",
         opts = {
             -- Highlight groups from kdtsk/jb.nvim
             highlight = {

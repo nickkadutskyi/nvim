@@ -35,7 +35,7 @@ end)
 --- Appearance --------------------------------------------------------------------
 
 spec_builder.add({
-    "lukas-reineke/indent-blankline.nvim",
+    "indent-blankline.nvim",
     ---@type ibl.config
     opts = {
         indent = { char = "▏", tab_char = "▏" },
@@ -44,7 +44,7 @@ spec_builder.add({
     },
 })
 spec_builder.add({
-    "petertriho/nvim-scrollbar",
+    "nvim-scrollbar",
     opts = {
         show = true,
         set_highlights = false,
@@ -89,7 +89,7 @@ spec_builder.add({
 --- Code Complection -----------------------------------------------------------
 
 spec_builder.add({
-    "saghen/blink.cmp",
+    "blink.cmp",
     opts = {
         -- All presets have the following mappings:
         -- C-space: Open menu or open docs if already open

@@ -1,7 +1,7 @@
 local spec_builder = require("ide.spec.builder")
 
 spec_builder.add({
-    "folke/trouble.nvim",
+    "trouble.nvim",
     ---@class trouble.Config
     opts = {
         modes = {

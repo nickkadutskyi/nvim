@@ -81,7 +81,7 @@ utils.autocmd.create("IdeDeferred", {
 --- PLUGINS --------------------------------------------------------------------
 
 spec_builder.add({
-    "b0o/incline.nvim",
+    "incline.nvim",
     opts = {
         render = function(props)
             return {
@@ -92,7 +92,7 @@ spec_builder.add({
 })
 
 spec_builder.add({
-    "folke/trouble.nvim",
+    "trouble.nvim",
     ---@class trouble.Config
     opts = {
         auto_close = true,

@@ -3,7 +3,7 @@ local spec_builder = require("ide.spec.builder")
 --- PLUGINS --------------------------------------------------------------------
 
 spec_builder.add({
-    "nvim-tree/nvim-web-devicons",
+    "nvim-web-devicons",
     opts = {
         default = false,
         strict = true,

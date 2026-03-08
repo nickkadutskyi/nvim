@@ -53,7 +53,7 @@ end)
 --- EDIT
 
 spec_builder.add({
-    "ThePrimeagen/harpoon",
+    "harpoon",
     keys = {
         {
             lhs = "<leader>ab",
@@ -215,7 +215,7 @@ spec_builder.add({
 
 -- TODO: come up with better keymap for this
 spec_builder.add({
-    "ThePrimeagen/99",
+    "99",
     keys = {
         {
             lhs = "<leader>9v",

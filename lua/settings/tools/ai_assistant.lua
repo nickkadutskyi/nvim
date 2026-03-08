@@ -3,16 +3,16 @@ local utils = require("ide.utils")
 
 --- OPTIONS --------------------------------------------------------------------
 
-utils.run.now_if_arg_or_deferred(function()
+-- utils.run.now_if_arg_or_deferred(function()
     -- NOTE: Disabled it to use via blink.cmp for awhile
     -- Used to let copilot-language-server to provide inline completions
     -- vim.lsp.inline_completion.enable()
-end)
+-- end)
 
 --- PLUGINS --------------------------------------------------------------------
 
 spec_builder.add({
-    "ThePrimeagen/99",
+    "99",
     --- @type _99.Options
     opts = {
         model = "github-copilot/claude-opus-4.6",
