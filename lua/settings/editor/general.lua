@@ -211,6 +211,74 @@ vim.opt.foldenable = true
 vim.opt.foldopen = "block,hor,insert,jump,mark,percent,quickfix,search,tag,undo"
 vim.opt.foldclose = "all"
 
+-- Define folding method per filetype (max 2 providers)
+local ftMap = {
+    vim = "indent",
+    python = { "treesitter", "indent" },
+    lua = { "treesitter", "indent" },
+    javascript = { "treesitter", "indent" },
+    typescript = { "treesitter", "indent" },
+    javascriptreact = { "treesitter", "indent" },
+    typescriptreact = { "treesitter", "indent" },
+    vue = { "indent", "treesitter" },
+    json = { "treesitter", "indent" },
+    jsonc = { "treesitter", "indent" },
+    yaml = { "treesitter", "indent" },
+    toml = { "treesitter", "indent" },
+    rust = { "lsp", "treesitter" },
+    go = { "lsp", "treesitter" },
+    php = { "lsp", "treesitter" },
+    ruby = { "treesitter", "indent" },
+    c = { "lsp", "treesitter" },
+    cpp = { "lsp", "treesitter" },
+    java = { "lsp", "treesitter" },
+    css = { "treesitter", "indent" },
+    scss = { "treesitter", "indent" },
+    html = { "treesitter", "indent" },
+    xml = { "treesitter", "indent" },
+    markdown = { "treesitter", "indent" },
+    sh = { "treesitter", "indent" },
+    zsh = { "treesitter", "indent" },
+    fish = { "treesitter", "indent" },
+    git = "",
+    gitcommit = "",
+    fff_list = "",
+    fff_preview = "",
+    fff_input = "",
+    help = "indent",
+    text = "indent",
+}
+
+spec_builder.add({
+    "nvim-ufo",
+    opts = {
+        open_fold_hl_timeout = 150,
+        enable_get_fold_virt_text = true,
+        fold_virt_text_handler = Utils.fold.ufo_virt_text_handler_enhanced,
+        close_fold_kinds_for_ft = {
+            default = { "imports", "comment" },
+            json = { "array" },
+            jsonc = { "array" },
+            c = { "comment", "region" },
+            cpp = { "comment", "region" },
+            java = { "comment", "imports" },
+            javascript = { "comment", "imports" },
+            typescript = { "comment", "imports" },
+            vue = { "imports" },
+            python = { "comment", "imports" },
+            go = { "comment", "imports" },
+            rust = { "comment", "imports" },
+            php = { "imports" },
+        },
+        provider_selector = function(bufnr, filetype, buftype)
+            if buftype ~= "" then
+                return nil -- Don't use ufo in non-file buffers
+            end
+            return ftMap[filetype] or Utils.fold.ufo_provider_selector
+        end,
+    },
+})
+
 --- Editor Tabs ----------------------------------------------------------------
 
 _G._ide_tabline = utils.tabline.tabline

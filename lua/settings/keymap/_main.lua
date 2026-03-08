@@ -168,6 +168,51 @@ utils.run.now_if_arg_or_deferred(function()
     end, { expr = true, desc = "AI: Previous Inline Proposal" })
 end)
 
+--- Code Folding
+spec_builder.add({
+    "nvim-ufo",
+    keys = {
+        {
+            desc = "Folds: [zR] open all folds",
+            lhs = "zR",
+            rhs = function()
+                require("ufo").openAllFolds()
+            end,
+        },
+        {
+            desc = "Folds: [zM] close all folds",
+            lhs = "zM",
+            rhs = function()
+                require("ufo").closeAllFolds()
+            end,
+        },
+        {
+            desc = "Folds: [zr] open folds except kinds",
+            lhs = "zr",
+            rhs = function()
+                require("ufo").openFoldsExceptKinds()
+            end,
+        },
+        {
+            desc = "Folds: [zm] close folds with",
+            lhs = "zm",
+            rhs = function()
+                require("ufo").closeFoldsWith()
+            end,
+        },
+        {
+            desc = "Folds: [zp] peek fold or hover",
+            lhs = "zp",
+            rhs = function()
+                local winid = require("ufo").peekFoldedLinesUnderCursor()
+                if not winid then
+                    vim.lsp.buf.hover()
+                end
+            end,
+        },
+    },
+})
+
 -- TODO: come up with better keymap for this
 spec_builder.add({
     "ThePrimeagen/99",

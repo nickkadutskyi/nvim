@@ -310,12 +310,27 @@ spec_builder.add({
             end,
         },
     },
+    --- Sticky Lines
     {
         src = g("nvim-treesitter/nvim-treesitter-context"),
         data = {
             event = "IdeDeferred",
             after = function(_, opts)
                 require("treesitter-context").setup(opts)
+            end,
+        },
+    },
+    --- Promise & Async in Lua
+    --- Required by: nvim-ufo
+    { src = g("kevinhwang91/promise-async"), data = { event = "IdeDeferred" } },
+    -- Better folding behavior with lots of behaviors defined in Utils.fold
+    -- Requires: promise-async
+    {
+        src = g("kevinhwang91/nvim-ufo"),
+        data = {
+            event = "IdeDeferred",
+            after = function(_, opts)
+                require("ufo").setup(opts)
             end,
         },
     },
