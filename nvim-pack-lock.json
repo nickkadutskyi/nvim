@@ -4,6 +4,10 @@
       "rev": "ec9872f7df7f4eb8b319719c1c253eb3ea8877ed",
       "src": "https://github.com/ThePrimeagen/99"
     },
+    "blink-copilot": {
+      "rev": "7ad8209b2f880a2840c94cdcd80ab4dc511d4f39",
+      "src": "https://github.com/fang2hou/blink-copilot"
+    },
     "blink-ripgrep.nvim": {
       "rev": "ba324fd6fd5f32150fb5a6cd8a7d4669085e115b",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"

@@ -216,6 +216,8 @@ spec_builder.add({
     { src = g("mikavilpas/blink-ripgrep.nvim"), data = { event = "IdeDeferred" } },
     -- Set of preconfigured snippets for different languages.
     { src = g("rafamadriz/friendly-snippets"), data = { event = "IdeDeferred" } },
+    -- Configurable GitHub Copilot blink.cmp source
+    { src = g("fang2hou/blink-copilot"), data = { event = "IdeDeferred" } },
     -- Performant, batteries-included completion
     {
         src = g("saghen/blink.cmp"),

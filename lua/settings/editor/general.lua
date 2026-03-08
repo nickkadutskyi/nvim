@@ -124,9 +124,9 @@ spec_builder.add({
         -- Default list of enabled providers defined so that you can extend it
         -- elsewhere in your config, without redefining it, due to `opts_extend`
         sources = {
-            default = { "lsp", "path", "snippets", "buffer", "ripgrep" },
+            default = { "lsp", "path", "snippets", "buffer", "ripgrep", "copilot" },
             per_filetype = {
-                lua = { "lazydev", "lsp", "path", "snippets", "buffer", "ripgrep" },
+                lua = { "lazydev", "lsp", "path", "snippets", "buffer", "ripgrep", "copilot" },
                 ["99prompt"] = { "99", "lsp", "path", "buffer" },
             },
             providers = {
@@ -135,6 +135,11 @@ spec_builder.add({
                     module = "blink.compat.source",
                     score_offset = -3,
                     opts = {},
+                },
+                copilot = {
+                    name = "copilot",
+                    module = "blink-copilot",
+                    async = true,
                 },
                 lsp = { fallbacks = {} },
                 lazydev = {
