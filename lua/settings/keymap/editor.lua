@@ -1,8 +1,28 @@
+local utils = require("ide.utils")
+local spec_builder = require("ide.spec.builder")
+
 --- OPTIONS --------------------------------------------------------------------
 
 --- MAPPINGS -------------------------------------------------------------------
 
-require("ide.utils").run.now_if_arg_or_deferred(function()
+--- Extend Selection
+spec_builder.add({
+    "treesitter-modules.nvim",
+    ---@type ts.mod.UserConfig
+    opts = {
+        incremental_selection = {
+            enable = true,
+            keymaps = {
+                init_selection = "<A-Up>",
+                node_incremental = "<A-Up>",
+                scope_incremental = "<A-s>",
+                node_decremental = "<A-Down>",
+            },
+        },
+    },
+})
+
+utils.run.now_if_arg_or_deferred(function()
     -- Control what happens to the register when deleting, changing, and pasting
     -- When deleting string don't add it to the register
     vim.keymap.set("n", "<leader>d", '"_d', { desc = "Delete without yanking" })

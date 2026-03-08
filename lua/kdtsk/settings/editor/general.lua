@@ -1,23 +1,5 @@
 ---@type LazySpec
 return {
-    {
-        "MeanderingProgrammer/treesitter-modules.nvim",
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
-        ---@module 'treesitter-modules'
-        ---@type ts.mod.UserConfig
-        opts = {
-            incremental_selection = {
-                enable = true,
-                disable = false,
-                keymaps = {
-                    init_selection = "<A-Up>",
-                    node_incremental = "<A-Up>",
-                    scope_incremental = "<A-s>",
-                    node_decremental = "<A-Down>",
-                },
-            },
-        },
-    },
     -- Better way to select, move, swap, and peek function blocks, classes, etc.
     {
         "nvim-treesitter/nvim-treesitter-textobjects",

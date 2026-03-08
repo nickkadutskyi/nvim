@@ -9,7 +9,25 @@ spec_builder.add({
     --- Required by: harpoon
     { src = g("nvim-lua/plenary.nvim"), data = { deferred = false } },
     --- A notification manager with a nice UI
-    { src = g("rcarriga/nvim-notify"), version = "ab98fecfe", data = { deferred = false } },
+    ---TODO: move to snacks.nvim and style snacks.nvim notify or other notifications
+    {
+        src = g("rcarriga/nvim-notify"),
+        version = "ab98fecfe",
+        data = {
+            deferred = false,
+            after = function(_, opts)
+                require("notify").setup(opts)
+                vim.notify_orig = vim.notify
+                vim.notify = require("notify")
+                -- TODO: move this a different location
+                local severity = { "error", "warn", "info", "info" }
+                vim.lsp.handlers["window/showMessage"] = function(_, method, params)
+                    local client = vim.lsp.get_client_by_id(params.client_id) or {}
+                    vim.notify(method.message, severity[method.type], { title = "LSP: " .. (client.name or "Unknown") })
+                end
+            end,
+        },
+    },
     --- My color scheme that recreates IntelliJeJ's look and feel in Neovim
     {
         src = g("nickkadutskyi/jb.nvim"),
@@ -262,6 +280,17 @@ spec_builder.add({
                 if not ran_setup then
                     trouble.setup(opts)
                 end
+            end,
+        },
+    },
+    -- Original modules from nvim-treesitter master branch
+    -- Requires: nvim-treesitter
+    {
+        src = g("MeanderingProgrammer/treesitter-modules.nvim"),
+        data = {
+            event = "IdeDeferred",
+            after = function(_, opts)
+                require("treesitter-modules").setup(opts)
             end,
         },
     },
