@@ -22,6 +22,97 @@ spec_builder.add({
     },
 })
 
+-- Select by scope
+spec_builder.add({
+    "nvim-treesitter-textobjects",
+    keys = {
+        {
+            mode = { "x", "o" },
+            lhs = "am",
+            rhs = function()
+                require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
+            end,
+        },
+        {
+            mode = { "x", "o" },
+            lhs = "im",
+            rhs = function()
+                require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
+            end,
+        },
+        {
+            mode = { "x", "o" },
+            lhs = "ac",
+            rhs = function()
+                require("nvim-treesitter-textobjects.select").select_textobject("@class.outer", "textobjects")
+            end,
+        },
+        {
+            mode = { "x", "o" },
+            lhs = "ic",
+            rhs = function()
+                require("nvim-treesitter-textobjects.select").select_textobject("@class.inner", "textobjects")
+            end,
+        },
+        {
+            mode = { "x", "o" },
+            lhs = "as",
+            rhs = function()
+                require("nvim-treesitter-textobjects.select").select_textobject("@local.scope", "textobjects")
+            end,
+        },
+    },
+})
+
+-- Move by scope
+spec_builder.add({
+    "nvim-treesitter-textobjects",
+    keys = {
+        {
+            mode = { "n", "x", "o" },
+            lhs = "]m",
+            rhs = function()
+                require("nvim-treesitter-textobjects.move").goto_next_start("@function.outer", "textobjects")
+            end,
+        },
+        {
+            mode = { "n", "x", "o" },
+            lhs = "]]",
+            rhs = function()
+                require("nvim-treesitter-textobjects.move").goto_next_start("@class.outer", "textobjects")
+            end,
+        },
+        {
+            mode = { "n", "x", "o" },
+            lhs = "]M",
+            rhs = function()
+                require("nvim-treesitter-textobjects.move").goto_next_end("@function.outer", "textobjects")
+            end,
+        },
+        {
+            mode = { "n", "x", "o" },
+            lhs = "][",
+            rhs = function()
+                require("nvim-treesitter-textobjects.move").goto_next_end("@class.outer", "textobjects")
+            end,
+        },
+        {
+            mode = { "n", "x", "o" },
+            lhs = "[m",
+            rhs = function()
+                require("nvim-treesitter-textobjects.move").goto_previous_start("@function.outer", "textobjects")
+            end,
+        },
+        {
+            mode = { "n", "x", "o" },
+            lhs = "[[",
+            rhs = function()
+                require("nvim-treesitter-textobjects.move").goto_previous_start("@class.outer", "textobjects")
+            end,
+        },
+    },
+})
+
 utils.run.now_if_arg_or_deferred(function()
     -- Control what happens to the register when deleting, changing, and pasting
     -- When deleting string don't add it to the register
