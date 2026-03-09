@@ -73,24 +73,7 @@ spec_builder.add({
     ---@type ide.Opts.Treesitter
     opts = {
         -- Previous ensure installed
-        -- TODO: move it to respective files
-        -- "c",
-        -- "comment",
-        -- "cpp",
-        -- "css",
-        -- "doxygen",
-        -- "editorconfig",
-        -- "gitignore",
-        -- "http",
-        -- "markdown",
-        -- "markdown_inline",
-        -- "regex",
-        -- "scss",
-        -- "sql",
-        -- "vim",
-        -- "vimdoc",
-        -- "yaml",
-        ensure_installed = { "comment", "vim", "vimdoc", "json", "gitignore", "editorconfig" },
+        ensure_installed = { "comment", "vim", "vimdoc", "editorconfig", "tmux", "sql", "regex", "http" },
         syntax_map = { ["tiltfile"] = "starlark" },
         auto_install = true, -- Automatically install missing parsers
         sync_install = false, -- Install parsers synchronously

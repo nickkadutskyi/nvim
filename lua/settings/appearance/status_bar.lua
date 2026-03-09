@@ -2,6 +2,9 @@ local spec_builder = require("ide.spec.builder")
 local pack = require("ide.pack")
 local utils = require("ide.utils")
 
+-- TODO: Consider https://github.com/Bekaboo/dropbar.nvim instead of Navic or
+--       buiuld my own tool like dropbar.nvim but with better better keymap navigation
+
 --- AUTOCMDS -------------------------------------------------------------------
 
 utils.run.now_if_arg_or_deferred(function()

@@ -1,14 +1,6 @@
 ---@type LazySpec
 return {
     {
-        "nvim-treesitter", -- Color Scheme
-        opts = function(_, opts)
-            vim.list_extend(opts.ensure_installed, {
-                "yaml",
-            })
-        end,
-    },
-    {
         "conform.nvim", -- Code Style
         opts = function(_, opts)
             local fmt_conf = {}

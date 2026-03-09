@@ -1,16 +1,6 @@
 ---@type LazySpec
 return {
     {
-        "nvim-treesitter", -- Color Scheme
-        opts = function(_, opts)
-            vim.list_extend(opts.ensure_installed, {
-                -- Requires tree-sitter executable so disabling for now
-                -- "latex",
-                -- "bibtex",
-            })
-        end,
-    },
-    {
         "nvim-lspconfig", -- Language Servers
         opts = function(_, opts)
             return vim.tbl_deep_extend("force", opts, {

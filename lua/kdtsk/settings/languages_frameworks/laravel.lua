@@ -1,13 +1,5 @@
 ---@type LazySpec
 return {
-    { -- Color Scheme
-        "nvim-treesitter",
-        opts = function(_, opts)
-            vim.list_extend(opts.ensure_installed, {
-                "blade",
-            })
-        end,
-    },
     {
         "nvim-lspconfig", -- Language Servers
         opts = function(_, opts)
