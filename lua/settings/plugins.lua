@@ -334,4 +334,25 @@ spec_builder.add({
             end,
         },
     },
+    --- Highlight, list and search todo comments in your projects
+    --- Requires: plenary.nvim
+    {
+        src = g("folke/todo-comments.nvim"),
+        data = {
+            event = "IdeDeferred",
+            after = function(_, opts)
+                require("todo-comments").setup(opts)
+            end,
+        },
+    },
+    -- Smart and powerful comment plugin for neovim. Supports treesitter, dot repeat, left-right/up-down motions, hooks, and more
+    {
+        src = g("numToStr/Comment.nvim"),
+        data = {
+            event = "IdeDeferred",
+            after = function(_, opts)
+                require("Comment").setup(opts)
+            end,
+        },
+    },
 })

@@ -213,6 +213,27 @@ spec_builder.add({
     },
 })
 
+-- Comment Action
+spec_builder.add({
+    "todo-comments.nvim",
+    keys = {
+        {
+            desc = "TODO: Jump to [n]ext [t]odo comment",
+            lhs = "]t",
+            rhs = function()
+                require("todo-comments").jump_next()
+            end,
+        },
+        {
+            desc = "TODO: Jump to [p]revious [t]odo comment",
+            lhs = "[t",
+            rhs = function()
+                require("todo-comments").jump_prev()
+            end,
+        },
+    },
+})
+
 -- TODO: come up with better keymap for this
 spec_builder.add({
     "99",
