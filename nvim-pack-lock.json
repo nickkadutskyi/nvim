@@ -13,7 +13,7 @@
       "src": "https://github.com/fang2hou/blink-copilot"
     },
     "blink-ripgrep.nvim": {
-      "rev": "a911920f6c44a3ddbfb83957bd5bc95272973271",
+      "rev": "bd2ad142b60e06fac4b7bc323c525c69796cf9ad",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "blink.cmp": {
@@ -100,7 +100,7 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "project.nvim": {
-      "rev": "3ed1889337eafb3653fe9649357dec2117935bf3",
+      "rev": "c8debe138a84fe52275fd91fbe1cbfeb40cbede9",
       "src": "https://github.com/DrKJeff16/project.nvim"
     },
     "promise-async": {
