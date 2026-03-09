@@ -29,6 +29,7 @@ spec_builder.add({
     },
 })
 
+-- Corret root directory after project.nvim is loaded to use its patterns and lsp
 utils.run.on_load("project.nvim", function()
     local project_api = require("project.api")
 
