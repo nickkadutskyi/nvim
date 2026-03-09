@@ -106,6 +106,8 @@ return {
             },
         },
         config = function(_, opts)
+            -- we set this here to ensure proper root
+            opts.base_path = vim.fn.getcwd()
             require("fff").setup(opts)
             -- NOTE: doing this to disable combo feature
             require("fff.combo_renderer").detect_and_prepare = function() end

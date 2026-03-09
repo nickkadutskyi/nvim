@@ -43,7 +43,7 @@ end
 ---@param fn function Callable to execute.
 ---@param error_prefix? string Optional prefix to prepend to error messages.
 function M.now_if_arg_or_later(fn, error_prefix)
-    if vim.fn.argc(-1) > 0 then
+    if vim.fn.argc(-1) > 0 and not vim.g.ide_opened_dir then
         M.now_if_arg_or_later = M.now
     else
         M.now_if_arg_or_later = M.later
@@ -52,7 +52,7 @@ function M.now_if_arg_or_later(fn, error_prefix)
 end
 
 function M.now_if_arg_or_deferred(fn, error_prefix)
-    if vim.fn.argc(-1) > 0 then
+    if vim.fn.argc(-1) > 0 and not vim.g.ide_opened_dir then
         M.now_if_arg_or_deferred = M.now
     else
         M.now_if_arg_or_deferred = M.on_deferred
@@ -83,11 +83,13 @@ function M.on_load(name, fn, error_prefix)
             fn(name)
         end, error_prefix)
     else
-        utils.autocmd.create("PackLoad", {
-            once = true,
+        local autocmdid
+        autocmdid = utils.autocmd.create("PackLoad", {
             desc = "Run function on PackLoad event for plugin '" .. name .. "'",
+            nested = true,
             callback = function(e)
                 if e.data == name then
+                    vim.api.nvim_del_autocmd(autocmdid)
                     M.now(function()
                         fn(name)
                     end, error_prefix)

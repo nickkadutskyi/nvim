@@ -11,11 +11,13 @@ local I = {}
 function M.setup(opts)
     -- If opened a dir then set it as the cwd and if opened a file then set the
     -- file's parent dir as the cwd to narrow down the scope for fzf
-    -- Later ahmedkhalf/project.nvim will adjust cwd based on .git or LSP
+    -- Later project.nvim will adjust cwd based on .git or LSP
     local curr_path = vim.fn.resolve(vim.fn.expand("%"))
     if vim.fn.isdirectory(vim.fn.expand("%")) == 1 then
+        vim.g.ide_opened_dir = true
         vim.api.nvim_set_current_dir(curr_path)
     elseif vim.fn.filereadable(vim.fn.expand("%")) == 1 then
+        vim.g.ide_opened_file = true
         vim.api.nvim_set_current_dir(vim.fn.fnamemodify(curr_path, ":p:h"))
     end
 

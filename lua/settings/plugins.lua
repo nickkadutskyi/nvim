@@ -147,6 +147,7 @@ spec_builder.add({
                 -- Running it later to ensure that all components are registered
                 -- because some may need to use lualine_require before lualine is setup
                 utils.run.later(function()
+                    vim.o.laststatus = vim.g.lualine_laststatus
                     -- TODO: check why I need this variables
                     _G._buffer_modified_count = 0
                     _G._buffer_modified_last_check_time = 0
@@ -242,7 +243,7 @@ spec_builder.add({
         version = vim.version.range("1.*"),
         data = {
             opts_extend = { "sources.default" },
-            event = "InsertEnter",
+            event = { "InsertEnter", "CmdlineEnter" },
             after = function(_, opts)
                 opts.appearance.highlight_ns = vim.api.nvim_create_namespace("blink_cmp")
                 local setup = false
@@ -352,6 +353,22 @@ spec_builder.add({
             event = "IdeDeferred",
             after = function(_, opts)
                 require("Comment").setup(opts)
+            end,
+        },
+    },
+    -- Detect and chdir to the project root
+    -- Using it in my own way only for root detection via both pattern and lsp
+    -- See lua/settings/behavior/system.lua
+    {
+        src = g("DrKJeff16/project.nvim"),
+        data = {
+            -- Need to run it on UIEnter or later IdeDeferred to ensure that the first buffer is loaded
+            event = "IdeDeferred",
+            ---@param opts Project.Config.Options
+            after = function(_, opts)
+                opts.patterns = vim.list_extend(opts.patterns or {}, require("project.config.defaults").patterns)
+
+                require("project").setup(opts)
             end,
         },
     },
