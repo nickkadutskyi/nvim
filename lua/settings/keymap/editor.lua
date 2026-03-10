@@ -5,6 +5,20 @@ local spec_builder = require("ide.spec.builder")
 
 --- MAPPINGS -------------------------------------------------------------------
 
+--- Extend Selection
+utils.run.now_if_arg_or_deferred(function()
+    vim.keymap.set("n", "<A-Up>", function()
+        vim.cmd("normal! v")
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("an", true, false, true), "x", false)
+    end, { desc = "Increment selection" })
+    vim.keymap.set("x", "<A-Up>", function()
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("an", true, false, true), "x", false)
+    end, { desc = "Increment selection" })
+    vim.keymap.set("x", "<A-Down>", function()
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("in", true, false, true), "x", false)
+    end, { desc = "Decrement selection" })
+end)
+
 -- Select by scope
 spec_builder.add({
     "nvim-treesitter-textobjects",
