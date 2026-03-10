@@ -17,62 +17,51 @@ utils.run.now_if_arg_or_deferred(function()
     })
 end)
 
+--- OPTIONS --------------------------------------------------------------------
+
 -- Configure diagnostics with custom floating window and signs
 utils.run.on_deferred(function()
-    -- jb.nvim integration for borders and icons, but falls back to defaults if not loaded yet
-    ---@type string|table
-    local border = "rounded"
-    local signs_text = {}
-    utils.run.on_load("jb.nvim", function()
-        border = require("jb.borders").borders.dialog.default_box
-        signs_text = require("jb.icons").diagnostic
-    end)
+    local function diagnostic_config(border, signs_text)
+        border = border or "rounded"
+        signs_text = signs_text or {}
 
-    vim.diagnostic.config({
-        update_in_insert = true,
-        virtual_text = false,
-        -- [icon] [source]: [message] [code]
-        float = {
-            focusable = true,
-            border = border,
-            scope = "cursor",
-            -- Shows source of inspection in the front
-            source = true,
-            header = "",
-            -- max_width = 100,
-            max_width = (function()
-                local columns = vim.o.columns
-                local width = math.floor(columns * 0.95)
-                return width <= 100 and width or 100
-            end)(),
-            prefix = "  ",
-
-            -- -- Adds inspection icons to indicate severity
-            -- prefix = function(diagnostic)
-            --     local icon = Utils.icons.diagnostic[diagnostic.severity]
-            --     local severity_name = vim.diagnostic.severity[diagnostic.severity]
-            --     return " " .. icon .. " ", "DiagnosticSign" .. severity_name
-            -- end,
-            -- format = function(diagnostic)
-            --     -- return "\n" .. diagnostic.message
-            -- end,
-
-            -- Adds error code in comment style in the end
-            suffix = function(diagnostic)
-                local code = diagnostic.code
-                local suffix_text = code and "[" .. code .. "] " or ""
-                if diagnostic.message:find("\n") and code then
-                    suffix_text = "\n  " .. suffix_text
-                end
-                return " " .. suffix_text, "Comment"
-            end,
-        },
-        signs = {
+        vim.diagnostic.config({
+            update_in_insert = true,
+            virtual_text = false,
+            float = { -- [icon] [source]: [message] [code]
+                focusable = true,
+                border = border,
+                scope = "cursor",
+                source = true, -- Shows source of inspection in the front
+                header = "",
+                max_width = (function()
+                    local columns = vim.o.columns
+                    local width = math.floor(columns * 0.95)
+                    return width <= 100 and width or 100
+                end)(),
+                prefix = "  ",
+                suffix = function(diag) -- Adds error code in comment style in the end
+                    local suffix_text = diag.code and "[" .. diag.code .. "] " or ""
+                    if diag.message:find("\n") and diag.code then
+                        suffix_text = "\n  " .. suffix_text
+                    end
+                    return " " .. suffix_text, "Comment"
+                end,
+            },
             -- Disables in gutter but Problem tool window will still show them
-            severity = {},
-            text = signs_text,
-        },
-    })
+            signs = { severity = {}, text = signs_text },
+        })
+    end
+
+    local diag_confed = false
+    -- jb.nvim integration for borders and icons, but falls back to defaults if not loaded yet
+    utils.run.on_load("jb.nvim", function()
+        diag_confed = true
+        diagnostic_config(require("jb.borders").borders.dialog.default_box, require("jb.icons").diagnostic)
+    end)
+    if not diag_confed then
+        diagnostic_config()
+    end
 end)
 
 --- PLUGINS --------------------------------------------------------------------
