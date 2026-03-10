@@ -19,6 +19,14 @@ spec_builder.add({
     "nvim-treesitter",
     ---@type ide.Opts.Treesitter
     opts = {
+        ensure_installed = {
+            "jjdescription",
+            "gitignore",
+            "gitcommit",
+            "git_config",
+            "git_rebase",
+            "diff",
+        },
         custom_parsers = {
             jjdescription = {
                 install_info = {

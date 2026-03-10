@@ -13,7 +13,7 @@
       "src": "https://github.com/fang2hou/blink-copilot"
     },
     "blink-ripgrep.nvim": {
-      "rev": "bd2ad142b60e06fac4b7bc323c525c69796cf9ad",
+      "rev": "f1ef35c67e2b7c5573c8686d7d89f802c0d3333c",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "blink.cmp": {
