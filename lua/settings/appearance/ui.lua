@@ -35,6 +35,7 @@ vim.o.pumborder = "bold" -- Use border in built-in completion menu
 
 -- Messaging
 vim.opt.shortmess:append("I")
+vim.opt.report = 20 -- to suppress message after yanking
 -- Mouse reporting
 vim.opt.mouse = "a"
 -- Removes cmd line to allow more space
