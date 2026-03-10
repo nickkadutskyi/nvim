@@ -1,5 +1,7 @@
 -- TODO: add ability to jump to a file path in PHP files provided as __DIR__."/path/to/file"
 -- TODO: improve performance when this file is required
+-- TODO: switch from fzf-lua to quick list for go to definition selection, also see
+--       https://www.reddit.com/r/neovim/comments/1fhy2xi/how_switch_between_references_like_theprimeagen/
 
 -- Set by `smjonas/inc-rename.nvim` plugin on `init`
 local has_inc_rename = false

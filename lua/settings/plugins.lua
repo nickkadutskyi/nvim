@@ -284,17 +284,6 @@ spec_builder.add({
             end,
         },
     },
-    -- Original modules from nvim-treesitter master branch
-    -- Requires: nvim-treesitter
-    {
-        src = g("MeanderingProgrammer/treesitter-modules.nvim"),
-        data = {
-            event = "IdeDeferred",
-            after = function(_, opts)
-                require("treesitter-modules").setup(opts)
-            end,
-        },
-    },
     -- Better way to select, move, swap, and peek function blocks, classes, etc.
     {
         src = g("nvim-treesitter/nvim-treesitter-textobjects"),

@@ -5,23 +5,6 @@ local spec_builder = require("ide.spec.builder")
 
 --- MAPPINGS -------------------------------------------------------------------
 
---- Extend Selection
-spec_builder.add({
-    "treesitter-modules.nvim",
-    ---@type ts.mod.UserConfig
-    opts = {
-        incremental_selection = {
-            enable = true,
-            keymaps = {
-                init_selection = "<A-Up>",
-                node_incremental = "<A-Up>",
-                scope_incremental = "<A-s>",
-                node_decremental = "<A-Down>",
-            },
-        },
-    },
-})
-
 -- Select by scope
 spec_builder.add({
     "nvim-treesitter-textobjects",
