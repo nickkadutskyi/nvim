@@ -51,6 +51,10 @@ function M.now_if_arg_or_later(fn, error_prefix)
     M.now_if_arg_or_later(fn, error_prefix)
 end
 
+--- Executes the given function immediately if there are command-line arguments,
+--- otherwise schedules it to run on the "IdeDeferred" event.
+---@param fn function Callable to execute.
+---@param error_prefix? string Optional prefix to prepend to error messages.
 function M.now_if_arg_or_deferred(fn, error_prefix)
     if vim.fn.argc(-1) > 0 and not vim.g.ide_opened_dir then
         M.now_if_arg_or_deferred = M.now

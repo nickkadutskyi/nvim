@@ -14,4 +14,14 @@ setmetatable(M, {
     end,
 })
 
+---@enum ide.Purpose
+M.purpose = {
+    LSP = 1,
+    INSPECT = 2,
+    STYLE = 3,
+    [1] = "LSP",
+    [2] = "INSPECT",
+    [3] = "STYLE",
+}
+
 return M

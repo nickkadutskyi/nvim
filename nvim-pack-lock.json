@@ -66,6 +66,10 @@
       "rev": "be2d7b2be01860b5445a007ff2bc72b29896db6b",
       "src": "https://github.com/kevinhwang91/nvim-hlslens"
     },
+    "nvim-lint": {
+      "rev": "606b823a57b027502a9ae00978ebf4f5d5158098",
+      "src": "https://github.com/mfussenegger/nvim-lint"
+    },
     "nvim-notify": {
       "rev": "ab98fecfe24d31fa03e0b3dcfc7c506c0f9c34c7",
       "src": "https://github.com/rcarriga/nvim-notify",

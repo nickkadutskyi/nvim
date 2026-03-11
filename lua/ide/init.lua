@@ -53,20 +53,10 @@ function M.setup(opts)
     vim.api.nvim_exec_autocmds("User", { pattern = "IdeDone", modeline = false })
 end
 
---- Define custom autocmds
-
---- Handle settings
-utils.autocmd.create("VimEnter", {
-    once = true,
-    callback = function()
-        -- Set vim.g.settings and call SettingsLoaded autocmd in .nvim.lua
-        -- to have project specific settings otherwise it's set to defaults
-        if vim.g.settings == nil then
-            vim.g.settings = {}
-        end
-        vim.api.nvim_command("doautocmd User SettingsLoaded")
-    end,
-})
+--- Configure tools via custom properties from editorconfig
+require("editorconfig").properties.tools_lsp = function(bufnr, val, opts) end
+require("editorconfig").properties.tools_inspect = function(bufnr, val, opts) end
+require("editorconfig").properties.tools_style = function(bufnr, val, opts) end
 
 --- Configure loader for local development versions of plugins.
 require("ide.dev").setup()

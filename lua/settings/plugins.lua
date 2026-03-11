@@ -78,10 +78,10 @@ spec_builder.add({
             end,
             ---@param opts ide.Opts.Treesitter
             after = function(_, opts)
-                local uts = require("ide.utils").treesitter
-                uts.ensure_installed(opts.ensure_installed)
-                uts.create_auto_start_autocmd(opts)
-                uts.setup_custom_parsers(opts.custom_parsers)
+                local ide_ts = require("ide.treesitter")
+                ide_ts.ensure_installed(opts.ensure_installed)
+                ide_ts.create_auto_start_autocmd(opts)
+                ide_ts.setup_custom_parsers(opts.custom_parsers)
             end,
         },
     },
@@ -358,6 +358,16 @@ spec_builder.add({
                 opts.patterns = vim.list_extend(opts.patterns or {}, require("project.config.defaults").patterns)
 
                 require("project").setup(opts)
+            end,
+        },
+    },
+    {
+        src = g("mfussenegger/nvim-lint"),
+        data = {
+            event = { "BufReadPre", "BufNewFile" },
+            opts = { linters_by_ft = {}, linters = {} },
+            after = function(_, opts)
+                require("ide.lint").setup(opts)
             end,
         },
     },
