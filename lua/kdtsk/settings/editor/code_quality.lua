@@ -16,6 +16,7 @@ return {
         event = { "BufReadPre", "BufNewFile" },
         dependencies = { "stevearc/conform.nvim" },
         opts = { linters_by_ft = {}, linters = {} },
+        enabled = false,
         config = function(_, opts)
             local lint = require("lint")
             ---@type table<string, lint.LinterLocal>
@@ -68,6 +69,7 @@ return {
                                 local args = vim.list_extend(nix_cmd, lint.linters[linter_name].args or {})
                                 lint.linters[linter_name].args = args
 
+                                lint.linters_by_ft[file_type] = lint.linters_by_ft[file_type] or {}
                                 vim.list_extend(lint.linters_by_ft[file_type], { linter_name })
 
                                 -- Runs linter after it is configured if file type matches

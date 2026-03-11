@@ -365,7 +365,6 @@ spec_builder.add({
         src = g("mfussenegger/nvim-lint"),
         data = {
             event = { "BufReadPre", "BufNewFile" },
-            opts = { linters_by_ft = {}, linters = {} },
             after = function(_, opts)
                 require("ide.lint").setup(opts)
             end,

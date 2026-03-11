@@ -18,7 +18,7 @@ function M.find_executable(executable, cwd)
 end
 
 -- Overrides for nvim-lint
----@type table<string, lint.LinterLocal>
+---@type table<string, lint.LinterLocal|ide.Linter>
 M.linters = {
     -- TODO: implement this https://docs.wpvip.com/php_codesniffer/phpcs-report/
     -- PHP Code Sniffer
@@ -26,7 +26,7 @@ M.linters = {
         cmd = function()
             return Utils.php.find_executable("phpcs") or "phpcs"
         end,
-        nix_pkg = "php84Packages.php-codesniffer",
+        nix_pkg = "php85Packages.php-codesniffer",
         -- Sets col and end_col to whole row
         parser = function(output, bufnr)
             local severities = {

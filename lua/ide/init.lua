@@ -55,7 +55,7 @@ end
 
 --- Configure tools via custom properties from editorconfig
 require("editorconfig").properties.tools_lsp = function(bufnr, val, opts) end
-require("editorconfig").properties.tools_inspect = function(bufnr, val, opts) end
+require("editorconfig").properties.tools_inspect = require("ide.lint").handle_tools_inspect_declaration
 require("editorconfig").properties.tools_style = function(bufnr, val, opts) end
 
 --- Configure loader for local development versions of plugins.

@@ -97,12 +97,10 @@ function I.on_load(plugin_data)
                 once = true,
                 desc = "ide.pack: Load plugin '" .. name .. "' on event(s).",
                 callback = function()
-                    utils.run.later(function()
-                        if not I.loaded[name] then
-                            I.loaded[name] = true
-                            I.load_plugin(plugin_data)
-                        end
-                    end, "ide.pack: Failed to load plugin '" .. name .. "' on event due to: ")
+                    if not I.loaded[name] then
+                        I.loaded[name] = true
+                        I.load_plugin(plugin_data)
+                    end
                 end,
             })
     end
@@ -115,12 +113,10 @@ function I.on_load(plugin_data)
                 pattern = data.ft,
                 desc = "ide.pack: Load plugin '" .. name .. "' on filetype(s).",
                 callback = function()
-                    utils.run.later(function()
-                        if not I.loaded[name] then
-                            I.loaded[name] = true
-                            I.load_plugin(plugin_data)
-                        end
-                    end, "ide.pack: Failed to load plugin '" .. name .. "' on ft due to: ")
+                    if not I.loaded[name] then
+                        I.loaded[name] = true
+                        I.load_plugin(plugin_data)
+                    end
                 end,
             })
     end

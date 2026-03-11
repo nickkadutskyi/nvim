@@ -103,6 +103,86 @@ function M.on_load(name, fn, error_prefix)
     end
 end
 
+---Determines if a command can be run directly
+---@param cmd string|function|table Command to run
+---@return boolean, string
+function M.can_run_command(cmd)
+    cmd = type(cmd) == "function" and cmd() or cmd
+    cmd = type(cmd) == "table" and cmd[1] or cmd
+    assert(type(cmd) == "string" and cmd ~= "", "command must be a non-empty string, got: " .. vim.inspect(cmd))
+
+    if vim.fn.executable(cmd) == 1 then
+        return true, cmd
+    end
+
+    return false, cmd
+end
+
+function I.non_empty_str(v)
+    return type(v) == "string" and v ~= ""
+end
+
+---@param opts {flake?: string, pkg: string, program: string}
+---@param callback fun(cmd: table, output: table)
+function M.get_nix_cmd(opts, callback)
+    vim.validate("callback", callback, "function")
+    vim.validate("opts.pkg", opts.pkg, I.non_empty_str, "non-empty-string")
+    vim.validate("opts.program", opts.program, I.non_empty_str, "non-empty-string")
+    vim.validate("opts.flake", opts.flake, I.non_empty_str, true, "non-empty-string")
+
+    local flake = opts.flake or "nixpkgs"
+    local cmd = { opts.program }
+
+    -- nix eval flake output for a package and get pname and meta keys
+    -- to check if it can do nix run (requires meta.mainProgram)
+    Utils.queue_command({
+        "nix",
+        "eval",
+        "--json",
+        flake .. "#" .. opts.pkg,
+        "--apply",
+        "drv: { "
+            .. 'pname = if builtins.hasAttr "pname" drv then drv.pname else "unknown"; '
+            .. 'meta = if builtins.hasAttr "meta" drv then drv.meta else {}; '
+            .. " }",
+    }, {
+        text = true,
+        -- Timeout to avoid spawning nix processes in case if registry is not available
+        -- timeout = 5000,
+    }, function(o)
+        if o.code == 0 then
+            -- if found package then use `nix shell` which is slower than `nix run`
+            -- but doesn't require `meta.mainProgram`
+            cmd = { "nix", "shell", "--impure", flake .. "#" .. opts.pkg, "--command", opts.program }
+            vim.schedule(function()
+                -- check meta.mainProgram to see if we can use `nix run`
+                local ok, pkg = pcall(vim.fn.json_decode, o.stdout)
+                if ok then
+                    if pkg.meta.mainProgram == opts.program then
+                        cmd = { "nix", "run", "--impure", flake .. "#" .. opts.pkg, "--" }
+                    end
+                else
+                    vim.notify(
+                        "Failed to decode `" .. opts.pkg .. "` package's info: \n" .. o.stdout,
+                        vim.log.levels.WARN,
+                        { title = "ide.Utils.Run.get_nix_cmd" }
+                    )
+                end
+                callback(cmd, o)
+            end)
+        else
+            vim.notify(
+                string.format("Didn't find `%s` package for `%s` cmd due to:\n%s", opts.pkg, opts.program, o.stderr),
+                vim.log.levels.WARN,
+                { title = "ide.Utils.Run.get_nix_cmd" }
+            )
+            vim.schedule(function()
+                callback(cmd, o)
+            end)
+        end
+    end)
+end
+
 --- INTERNAL DATA --------------------------------------------------------------
 ---Cache to track callables etc.
 I.cache = {

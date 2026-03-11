@@ -154,19 +154,35 @@ end)
 --- CODE
 
 utils.run.now_if_arg_or_deferred(function()
-    -- TODO: provide an ability to accept partial inline completion (by word or line)
-    vim.keymap.set("i", "<Tab>", function()
-        if not vim.lsp.inline_completion.get() then
-            return "<Tab>"
-        end
-    end, { expr = true, desc = "AI: Insert Inline Proposal" })
-    vim.keymap.set({ "i", "n" }, "<A-]>", function()
-        vim.lsp.inline_completion.select({ count = 1 })
-    end, { expr = true, desc = "AI: Next Inline Proposal" })
-    vim.keymap.set({ "i", "n" }, "<A-[>", function()
-        vim.lsp.inline_completion.select({ count = -1 })
-    end, { expr = true, desc = "AI: Previous Inline Proposal" })
+    if vim.lsp.inline_completion.is_enabled() then
+        -- TODO: provide an ability to accept partial inline completion (by word or line)
+        vim.keymap.set("i", "<Tab>", function()
+            if not vim.lsp.inline_completion.get() then
+                return "<Tab>"
+            end
+        end, { expr = true, desc = "AI: Insert Inline Proposal" })
+        vim.keymap.set({ "i", "n" }, "<A-]>", function()
+            vim.lsp.inline_completion.select({ count = 1 })
+        end, { expr = true, desc = "AI: Next Inline Proposal" })
+        vim.keymap.set({ "i", "n" }, "<A-[>", function()
+            vim.lsp.inline_completion.select({ count = -1 })
+        end, { expr = true, desc = "AI: Previous Inline Proposal" })
+    end
 end)
+
+--- Inspect Code
+spec_builder.add({
+    "nvim-lint",
+    keys = {
+        {
+            desc = "Code: [i]nspect [c]ode",
+            lhs = "<leader>ic",
+            rhs = function()
+                require("lint").try_lint()
+            end,
+        },
+    },
+})
 
 --- Code Folding
 spec_builder.add({

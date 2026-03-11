@@ -64,8 +64,8 @@
 ---@field custom_parsers? table<string, ide.ParserInfo>
 
 ---@class ide.Opts.Lint
----@field linters? table<string, ide.Linter>
----@field linters_by_ft? table
+---@field linters? table<string, ide.Linter|fun():ide.Linter>
+---@field linters_by_ft? table<string,table<ide.Tool>>
 
 ---@alias ide.LocalSettings table<string, table<string, {
 ---  use_for: table<kdtsk.tools.Purpose, boolean>, -- use the tool for the given purpose
@@ -80,14 +80,12 @@
 ---@field cmd? string|fun():string
 ---@field parser? lint.Parser|lint.parse
 ---@field nix_pkg? string
----@field enabled? boolean
 
 ---@class ide.Tool
----@field [1] ide.Scope Scope to use the tool within, e.g. typescript or javascript
----@field [2] string Name of the tool, e.g. phpactor
----@field [3] ide.Purpose Purpose of the tool: LSP, INSPECTION, STYLE
----@field [4] string[] Patterns of files. Turns on a tool when file is present
----@field [5]? fun(): boolean Optionally run the function to turn on/off the tool
+---@field [1] string Name of the tool, e.g. phpactor
+---@field [2]? string[] Patterns of files. Turns on a tool when file is present
+---@field [3]? fun(): boolean Optionally run the function to turn on/off the tool
+---@field [4]? boolean Force enable or disable
 
 ---@alias ide.Scope
 ---| '"php"'
