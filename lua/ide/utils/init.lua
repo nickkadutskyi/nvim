@@ -85,12 +85,8 @@ function M.resolve_tools_by_ft(tools_by_ft)
                 return false
             end)
             :fold({}, function(acc, v)
-                -- merging with options
-                local res = vim.deepcopy(v[5] or {})
-                vim.list_extend(res, acc)
-                table.insert(res, v[1])
-
-                return res
+                local only_opts = v[1]:sub(1, 1) == "_"
+                return M.merge_lists_dicts(acc, v[5] or {}, only_opts and {} or { v[1] })
             end)
     end
     return resolved
@@ -117,6 +113,26 @@ function M.list_add_rem(list, add, remove)
         table.insert(result, item)
     end
     return result
+end
+
+function M.merge_lists_dicts(...)
+    local tables = { ... }
+    local out = vim.deepcopy(tables[1])
+
+    for i = 2, #tables do
+        local t = tables[i]
+
+        -- merge the list part on this level
+        vim.list_extend(out, t)
+
+        for k, v in pairs(t) do
+            if type(k) ~= "number" then
+                out[k] = v
+            end
+        end
+    end
+
+    return out
 end
 
 return M

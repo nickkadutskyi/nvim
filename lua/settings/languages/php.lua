@@ -39,6 +39,8 @@ spec.add({
     opts = { ---@type ide.Opts.Conform
         formatters_by_ft = {
             php = {
+                { "_", nil, nil, true, { async = true, timeout_ms = 1500 } },
+                { "_intelephense", { ".jsbeautifyrc" }, nil, nil, { lsp_format = "first" } },
                 { "phpcbf", { ".phpcs.xml", "phpcs.xml" } },
                 {
                     "php_cs_fixer",
@@ -60,7 +62,6 @@ spec.add({
                         return found
                     end,
                 },
-                { "intelephense", { ".jsbeautifyrc" }, nil, nil, { lsp_format = "first" } },
             },
         },
         conform_opts = {
