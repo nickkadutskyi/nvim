@@ -8,14 +8,6 @@ return {
             },
         },
     },
-    { -- Quality Tools
-        "nvim-lint",
-        opts = {
-            linters_by_ft = {
-                rust = { "clippy" },
-            },
-        },
-    },
     { -- Language Servers
         "nvim-lspconfig",
         opts = {

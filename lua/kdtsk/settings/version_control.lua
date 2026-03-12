@@ -1,31 +1,5 @@
 return {
     {
-        -- Quality Tools
-        "nvim-lint",
-        opts = function(_, opts)
-            local gitlint = require("lint").linters.gitlint
-
-            gitlint.args = gitlint.args or {}
-
-            vim.list_extend(gitlint.args, {
-                -- "--staged",
-                "--contrib",
-                "CT1",
-                "-c",
-                "CT1.types=fix,feat,chore,docs,style,refactor,perf,test,revert,ci,build,wip",
-                "--ignore",
-                "T5,B6",
-            })
-
-            return vim.tbl_deep_extend("force", opts, {
-                ---@type table<string, string[]>
-                linters_by_ft = {
-                    gitcommit = { "gitlint" },
-                },
-            })
-        end,
-    },
-    {
         "sindrets/diffview.nvim",
         config = function()
             require("diffview").setup({

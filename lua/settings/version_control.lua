@@ -1,4 +1,4 @@
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
 local utils = require("ide.utils")
 
 --- AUTOCMDS -------------------------------------------------------------------
@@ -15,7 +15,7 @@ end)
 
 --- PLUGINS --------------------------------------------------------------------
 
-spec_builder.add({
+spec.add({
     "nvim-treesitter",
     ---@type ide.Opts.Treesitter
     opts = {
@@ -38,4 +38,29 @@ spec_builder.add({
             },
         },
     },
+})
+spec.add({
+    "nvim-lint",
+    ---@param opts ide.Opts.Lint
+    opts = function(_, opts)
+        local gitlint = require("lint").linters.gitlint
+
+        gitlint.args = gitlint.args or {}
+
+        vim.list_extend(gitlint.args, {
+            -- "--staged",
+            "--contrib",
+            "CT1",
+            "-c",
+            "CT1.types=fix,feat,chore,docs,style,refactor,perf,test,revert,ci,build,wip",
+            "--ignore",
+            "T5,B6",
+        })
+
+        return vim.tbl_deep_extend("force", opts, {
+            linters_by_ft = {
+                gitcommit = { { "gitlint", nil, nil, true } },
+            },
+        })
+    end,
 })

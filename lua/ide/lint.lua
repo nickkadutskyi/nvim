@@ -16,7 +16,17 @@ function M.setup(opts)
         local lint = require("lint")
         I.merge_linters(opts.linters and opts.linters or {})
         lint.linters_by_ft = utils.resolve_tools_by_ft(opts.linters_by_ft)
-        I.create_autocmds()
+        utils.autocmd.create("BufReadPost", {
+            group = "ide-lint",
+            callback = function(e)
+                local filetype = vim.api.nvim_get_option_value("filetype", { buf = e.buf })
+                if I.configured_ft[filetype] then
+                    return
+                end
+
+                M.handle_tools_inspect_declaration(e.buf, "", {})
+            end,
+        })
     end, "Failed to setup ide.Lint due to: ")
 end
 
@@ -88,6 +98,7 @@ function M.handle_tools_inspect_declaration(bufnr, val, opts)
         lint.try_lint(nil, { ignore_errors = true })
 
         I.configured_ft[filetype] = true
+        I.create_ft_autocmds(string.format("*.%s", filetype))
     end, "Failed to configure tools_inspect due to: ")
 end
 
@@ -113,24 +124,32 @@ function I.merge_linters(linters)
     end
 end
 
-function I.create_autocmds()
-    utils.run.on_load("nvim-lint", function()
-        -- TODO: move debounce from kdtsk to ide utils
-        -- Run linters that require a file to be saved and stdin
-        vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPre", "BufNewFile" }, {
-            group = vim.api.nvim_create_augroup("kdtsk-lint-all", { clear = true }),
-            callback = Utils.debounce(100, function()
-                require("lint").try_lint()
-            end),
-        })
-        -- Run linters that use stdin
-        vim.api.nvim_create_autocmd({ "InsertLeave", "TextChanged" }, {
-            group = vim.api.nvim_create_augroup("kdtsk-lint-stdin", { clear = true }),
-            callback = Utils.debounce(100, function()
-                require("lint").try_lint(nil, { filter = "stdin" })
-            end),
-        })
-    end)
+function I.create_ft_autocmds(pattern)
+    -- TODO: move debounce from kdtsk to ide utils
+    -- Run linters that require a file to be saved and stdin
+    utils.autocmd.create({ "BufWritePost", "BufReadPre", "BufNewFile" }, {
+        group = "ide-lint-write",
+        pattern = pattern,
+        callback = Utils.debounce(100, function(e)
+            local filetype = vim.api.nvim_get_option_value("filetype", { buf = e.buf })
+            if not I.configured_ft[filetype] then
+                return
+            end
+            require("lint").try_lint()
+        end),
+    }, { clear = false })
+    -- Run linters that use stdin
+    utils.autocmd.create({ "InsertLeave", "TextChanged" }, {
+        group = "ide-lint-stdin",
+        pattern = pattern,
+        callback = Utils.debounce(100, function(e)
+            local filetype = vim.api.nvim_get_option_value("filetype", { buf = e.buf })
+            if not I.configured_ft[filetype] then
+                return
+            end
+            require("lint").try_lint(nil, { filter = "stdin" })
+        end),
+    }, { clear = false })
 end
 
 return M
