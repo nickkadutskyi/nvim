@@ -35,7 +35,7 @@ I.configured_ft = {}
 
 --- Handling editorconfig integration for tools_inspect property
 ---@type fun(bufnr: integer, val: string, opts?: table)
-function M.handle_tools_inspect_declaration(bufnr, val, opts)
+function M.handle_tools_inspect_declaration(bufnr, val, _)
     utils.run.on_load("nvim-lint", function()
         local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
         if I.configured_ft[filetype] then
@@ -68,12 +68,11 @@ function M.handle_tools_inspect_declaration(bufnr, val, opts)
                 if can_run then
                     vim.list_extend(add, { tool })
                 elseif vim.fn.executable("nix") then
+                    -- Removing it for now until we get nix command to run it
                     vim.list_extend(remove, { name })
                     -- TODO: add set up process status into statusline
                     local nix_pkg = (lnt.linters[name] --[[@as ide.Linter]] or {}).nix_pkg or binary
                     utils.run.get_nix_cmd({ pkg = nix_pkg, program = binary }, function(nix_cmd, o)
-                        local add = {}
-                        local remove = {}
                         if o.code == 0 then
                             -- `nix` is cmd now
                             lnt.linters[name].cmd = table.remove(nix_cmd, 1)
@@ -132,7 +131,7 @@ function I.create_ft_autocmds(pattern)
     utils.autocmd.create({ "BufWritePost", "BufReadPre", "BufNewFile" }, {
         group = "ide-lint-write",
         pattern = pattern,
-        callback = Utils.debounce(100, function(e)
+        callback = Utils.debounce(100, function()
             require("lint").try_lint()
         end),
     }, { clear = false })
@@ -140,7 +139,7 @@ function I.create_ft_autocmds(pattern)
     utils.autocmd.create({ "InsertLeave", "TextChanged" }, {
         group = "ide-lint-stdin",
         pattern = pattern,
-        callback = Utils.debounce(100, function(e)
+        callback = Utils.debounce(100, function()
             require("lint").try_lint(nil, { filter = "stdin" })
         end),
     }, { clear = false })
