@@ -1,8 +1,4 @@
 local spec_builder = require("ide.spec.builder")
 
-spec_builder.add({ -- Color Scheme
-    "nvim-treesitter",
-    opts = { ---@type ide.Opts.Treesitter
-        ensure_installed = { "html", "html_tags" },
-    },
-})
+spec_builder.add({ "nvim-treesitter", opts = { ensure_installed = { "html", "html_tags" } } })
+

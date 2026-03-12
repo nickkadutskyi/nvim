@@ -20,27 +20,6 @@ return {
         end,
     },
     {
-        "nvim-lint", -- Quality Tools
-        opts = function(_, opts)
-            local lint_conf = {}
-
-            -- YAMLLint
-            lint_conf = Utils.tools.extend_if_enabled(lint_conf, { "yamllint" }, {
-                "yaml",
-                "yamllint",
-                Utils.tools.purpose.INSPECTION,
-                { ".yamllint", ".yamllint.yaml", ".yamllint.yml" },
-            })
-
-            return vim.tbl_deep_extend("force", opts, {
-                ---@type table<string, string[]>
-                linters_by_ft = { yaml = lint_conf },
-                ---@type table<string, lint.LinterLocal>
-                linters = {},
-            })
-        end,
-    },
-    {
         "nvim-lspconfig", -- Language Servers
         opts = {
             ---@type table<string,vim.lsp.ConfigLocal>

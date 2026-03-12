@@ -18,7 +18,7 @@ function M.find_executable(executable, cwd)
 end
 
 -- Overrides for nvim-lint
----@type table<string, lint.LinterLocal|ide.Linter>
+---@type table<string, ide.Linter>
 M.linters = {
     -- TODO: implement this https://docs.wpvip.com/php_codesniffer/phpcs-report/
     -- PHP Code Sniffer

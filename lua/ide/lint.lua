@@ -58,6 +58,7 @@ function M.handle_tools_inspect_declaration(bufnr, val, opts)
                 if can_run then
                     vim.list_extend(add, { tool })
                 elseif vim.fn.executable("nix") then
+                    -- TODO: add set up process status into statusline
                     local nix_pkg = (lint.linters[name] --[[@as ide.Linter]] or {}).nix_pkg or binary
                     utils.run.get_nix_cmd({ pkg = nix_pkg, program = binary }, function(nix_cmd, o)
                         if o.code == 0 then

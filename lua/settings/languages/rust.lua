@@ -1,8 +1,6 @@
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
 
-spec_builder.add({ -- Color Scheme
-    "nvim-treesitter",
-    opts = { ---@type ide.Opts.Treesitter
-        ensure_installed = { "rust" },
-    },
-})
+spec.add({ "nvim-treesitter", opts = { ensure_installed = { "rust" } } })
+
+spec.add({ "nvim-lint", opts = { linters_by_ft = { rust = { { "clippy", nil, nil, true } } } } })
+

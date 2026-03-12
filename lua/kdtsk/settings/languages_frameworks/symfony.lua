@@ -107,26 +107,4 @@ return {
             })
         end,
     },
-    {
-        "nvim-lint", -- Quality Tools
-        event = { "BufReadPre", "BufNewFile" },
-        opts = function(_, opts)
-            local lint_conf = {}
-
-            -- Twig-CS-Fixer
-            lint_conf = Utils.tools.extend_if_enabled(lint_conf, { "twig-cs-fixer" }, {
-                "twig",
-                "twig-cs-fixer",
-                Utils.tools.purpose.INSPECTION,
-                { ".twig-cs-fixer.dist.php", ".twig-cs-fixer.php", "symfony.lock" },
-            })
-
-            return vim.tbl_deep_extend("force", opts, {
-                ---@type table<string, string[]>
-                linters_by_ft = { twig = lint_conf },
-                ---@type table<string, lint.LinterLocal>
-                linters = {},
-            })
-        end,
-    },
 }

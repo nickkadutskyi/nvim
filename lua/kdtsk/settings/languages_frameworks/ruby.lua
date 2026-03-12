@@ -15,14 +15,6 @@ return {
             },
         },
     },
-    { -- Quality Tools (moved to LSP)
-        -- "nvim-lint",
-        -- opts = {
-        --     linters_by_ft = {
-        --         ruby = { "RuboCop", "StandardRB" },
-        --     },
-        -- },
-    },
     { -- Language Servers
         "nvim-lspconfig",
         opts = {

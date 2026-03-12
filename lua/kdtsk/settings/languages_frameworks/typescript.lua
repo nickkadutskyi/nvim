@@ -101,33 +101,4 @@ return {
             })
         end,
     },
-    {
-        "nvim-lint", -- Quality Tools
-        event = { "BufReadPre", "BufNewFile" },
-        opts = function(_, opts) -- Configure in opts to run all configs for all languages
-            local lint_conf = {}
-
-            -- Eslint_d
-            lint_conf = Utils.tools.extend_if_enabled(lint_conf, { "eslint_d" }, {
-                "typescript",
-                "eslint_d",
-                Utils.tools.purpose.INSPECTION,
-                { ".eslintrc", ".eslintrc.json", ".eslintrc.js", "eslint.config.js", "eslint.config.ts" },
-            })
-            -- Eslint
-            lint_conf = Utils.tools.extend_if_enabled(lint_conf, { "eslint" }, {
-                "typescript",
-                "eslint",
-                Utils.tools.purpose.INSPECTION,
-                { ".eslintrc", ".eslintrc.json", ".eslintrc.js", "eslint.config.js", "eslint.config.ts" },
-            })
-
-            return vim.tbl_deep_extend("force", opts, {
-                ---@type table<string, string[]>
-                linters_by_ft = { typescript = lint_conf },
-                ---@type table<string, lint.LinterLocal>
-                linters = {},
-            })
-        end,
-    },
 }

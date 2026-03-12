@@ -1,8 +1,13 @@
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
 
-spec_builder.add({ -- Color Scheme
-    "nvim-treesitter",
-    opts = { ---@type ide.Opts.Treesitter
-        ensure_installed = { "twig" },
+spec.add({ "nvim-treesitter", opts = { ensure_installed = { "twig" } } })
+
+spec.add({
+    "nvim-lint",
+    ---@type ide.Opts.Lint
+    opts = {
+        linters_by_ft = {
+            twig = { { "twig-cs-fixer", { ".twig-cs-fixer.dist.php", ".twig-cs-fixer.php", "symfony.lock" } } },
+        },
     },
 })

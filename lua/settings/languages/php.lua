@@ -3,7 +3,7 @@ local spec = require("ide.spec.builder")
 spec.add({ "nvim-treesitter", opts = { ensure_installed = { "php", "phpdoc" } } })
 
 spec.add({
-    "mfussenegger/nvim-lint",
+    "nvim-lint",
     ---@type ide.Opts.Lint
     opts = {
         linters_by_ft = {

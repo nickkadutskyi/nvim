@@ -42,18 +42,4 @@ return {
             })
         end,
     },
-    { -- Quality Tools
-        "nvim-lint",
-        event = { "BufReadPre", "BufNewFile" },
-        dependencies = { "stevearc/conform.nvim" },
-        opts = function(_, opts) -- Configure in opts to run all configs for all languages
-            return vim.tbl_deep_extend("force", opts, {
-                linters_by_ft = {
-                    javascript = {
-                        "eslint_d",
-                    },
-                },
-            })
-        end,
-    },
 }
