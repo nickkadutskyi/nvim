@@ -21,24 +21,12 @@ return {
                 "javascript",
                 "eslint",
                 Utils.tools.purpose.LSP,
-                { "eslint.config.js", "eslint.config.mjs", "eslint.config.cjs"},
+                { "eslint.config.js", "eslint.config.mjs", "eslint.config.cjs" },
             })
 
             return vim.tbl_deep_extend("force", opts, {
                 ---@type table<string,vim.lsp.ConfigLocal>
                 servers = servers,
-            })
-        end,
-    },
-    { -- Code Style
-        "conform.nvim",
-        opts = function(_, opts)
-            return vim.tbl_deep_extend("force", opts, {
-                formatters_by_ft = {
-                    javascript = {
-                        "prettierd",
-                    },
-                },
             })
         end,
     },

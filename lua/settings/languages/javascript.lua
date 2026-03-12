@@ -6,3 +6,8 @@ spec.add({
     ---@type ide.Opts.Lint
     opts = { linters_by_ft = { javascript = { { "eslint_d", nil, nil, true } } } },
 })
+spec.add({
+    "conform.nvim",
+    ---@type ide.Opts.Conform
+    opts = { formatters_by_ft = { javascript = { { "prettierd", nil, nil, true } } } },
+})

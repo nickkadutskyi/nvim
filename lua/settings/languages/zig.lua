@@ -15,3 +15,8 @@ spec.add({
         linters = { zlint = { nix_pkg = "zig-zlint" } },
     },
 })
+spec.add({
+    "conform.nvim",
+    ---@type ide.Opts.Conform
+    opts = { formatters_by_ft = { zig = { { "zigfmt", nil, nil, true, { lsp_format = "fallback" } } } } },
+})

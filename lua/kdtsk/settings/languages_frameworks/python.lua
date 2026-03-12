@@ -1,29 +1,5 @@
 ---@type LazySpec
 return {
-    { -- Code Style
-        "conform.nvim",
-        opts = function(_, opts)
-            local fmt_conf = {}
-
-            fmt_conf = Utils.tools.extend_if_enabled(fmt_conf, { "isort" }, {
-                "python",
-                "isort",
-                Utils.tools.purpose.STYLE,
-                { ".isort.cfg" },
-            })
-
-            fmt_conf = Utils.tools.extend_if_enabled(fmt_conf, { "black" }, {
-                "python",
-                "black",
-                Utils.tools.purpose.STYLE,
-            })
-
-            return vim.tbl_deep_extend("force", opts, {
-                formatters_by_ft = { python = fmt_conf },
-                formatters = {},
-            })
-        end,
-    },
     { -- Language Servers
         "nvim-lspconfig",
         opts = {

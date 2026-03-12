@@ -18,3 +18,12 @@ spec.add({
         },
     },
 })
+
+spec.add({
+    "conform.nvim",
+    opts = {
+        formatters_by_ft = {
+            lua = { { "stylua", nil, nil, true, { timeout_ms = 2000 } } },
+        },
+    },
+})

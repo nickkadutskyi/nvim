@@ -1,20 +1,5 @@
 ---@type LazySpec
 return {
-    { -- Code Style
-        "conform.nvim",
-        opts = {
-            formatters_by_ft = {
-                ruby = { "standardrb", lsp_format = "fallback" },
-            },
-            formatters = {
-                standardrb = {
-                    options = {
-                        nix_pkg = "rubyPackages.standard",
-                    },
-                },
-            },
-        },
-    },
     { -- Language Servers
         "nvim-lspconfig",
         opts = {

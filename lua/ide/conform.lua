@@ -52,12 +52,13 @@ function M.handle_tools_style_declartion(bufnr, val, _)
         local add = {}
         local remove = {}
         for _, tool in ipairs(tools) do
+            vim.validate("tool", tool, "string", "non-empty string")
             local enable = tool:sub(1, 1) ~= "!"
             local name = tool:sub(enable and 1 or 2)
             if not enable then
                 vim.list_extend(remove, { name })
             else
-                vim.list_extend(add, { tool })
+                vim.list_extend(add, { name })
             end
         end
         if #add > 0 then

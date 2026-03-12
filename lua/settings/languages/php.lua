@@ -68,9 +68,9 @@ spec.add({
             formatters = {
                 php_cs_fixer = {
                     -- because I have projects with two composer configs
-                    cwd = function()
+                    cwd = function(...)
                         local util = require("conform.util")
-                        util.root_file({ "php-cs-fixer.dist.php", ".git" })
+                        return util.root_file({ "php-cs-fixer.dist.php", ".git" })(...)
                     end,
                     command = function(_, ctx)
                         return Utils.php.find_executable("php-cs-fixer", ctx.dirname) or "php-cs-fixer"

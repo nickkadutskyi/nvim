@@ -11,3 +11,12 @@ spec.add({
         },
     },
 })
+spec.add({
+    "conform.nvim",
+    ---@type ide.Opts.Conform
+    opts = {
+        formatters_by_ft = {
+            yaml = { { "yamlfmt", { ".yamlfmt" } } },
+        },
+    },
+})

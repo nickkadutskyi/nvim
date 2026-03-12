@@ -34,12 +34,4 @@ return {
             },
         },
     },
-    { -- Code Style
-        "conform.nvim",
-        opts = {
-            formatters_by_ft = {
-                lua = { "stylua", timeout_ms = 2000 },
-            },
-        },
-    },
 }

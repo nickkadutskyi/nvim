@@ -18,12 +18,4 @@ return {
             },
         },
     },
-    { -- Code Style
-        "conform.nvim",
-        opts = {
-            formatters_by_ft = {
-                xml = { "prettier", lsp_format = "prefer" },
-            },
-        },
-    },
 }
