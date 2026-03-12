@@ -250,6 +250,21 @@ spec_builder.add({
     },
 })
 
+-- Code Formatting
+spec_builder.add({
+    "conform.nvim",
+    keys = {
+        {
+            mode = { "n", "v" },
+            desc = "Code: [r]eformat [c]ode",
+            lhs = "<leader>rc",
+            rhs = function()
+                require("conform").format()
+            end,
+        },
+    },
+})
+
 -- TODO: come up with better keymap for this
 spec_builder.add({
     "99",

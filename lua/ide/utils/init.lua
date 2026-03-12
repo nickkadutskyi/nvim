@@ -84,10 +84,14 @@ function M.resolve_tools_by_ft(tools_by_ft)
 
                 return false
             end)
-            :map(function(tool)
-                return tool[1]
+            :fold({}, function(acc, v)
+                -- merging with options
+                local res = vim.deepcopy(v[5] or {})
+                vim.list_extend(res, acc)
+                table.insert(res, v[1])
+
+                return res
             end)
-            :totable()
     end
     return resolved
 end

@@ -43,6 +43,7 @@ return {
                 },
             },
         },
+        enabled = false,
         ---@param opts? conform.setupOpts
         config = function(_, opts)
             local conform = require("conform")

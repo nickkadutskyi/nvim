@@ -67,6 +67,10 @@
 ---@field linters? table<string, ide.Linter|fun():ide.Linter>
 ---@field linters_by_ft? table<string,table<ide.Tool>>
 
+---@class ide.Opts.Conform
+---@field formatters_by_ft? table<string, table<ide.Tool>>
+---@field conform_opts? conform.setupOpts
+
 ---@alias ide.LocalSettings table<string, table<string, {
 ---  use_for: table<kdtsk.tools.Purpose, boolean>, -- use the tool for the given purpose
 ---  lsp_settings?: table, -- provide settings for LSP
@@ -86,6 +90,7 @@
 ---@field [2]? string[] Patterns of files. Turns on a tool when file is present
 ---@field [3]? fun(): boolean Optionally run the function to turn on/off the tool
 ---@field [4]? boolean Force enable or disable
+---@field [5]? table Arbitrary opts to merge into containing table (needed for conform.nvim)
 
 ---@alias ide.Scope
 ---| '"php"'

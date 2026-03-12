@@ -16,6 +16,7 @@ function M.setup(opts)
         local lint = require("lint")
         I.merge_linters(opts.linters and opts.linters or {})
         lint.linters_by_ft = utils.resolve_tools_by_ft(opts.linters_by_ft)
+        require("editorconfig").properties.tools_inspect = M.handle_tools_inspect_declaration
         utils.autocmd.create("BufReadPost", {
             group = "ide-lint",
             callback = function(e)
@@ -41,6 +42,7 @@ function M.handle_tools_inspect_declaration(bufnr, val, _)
         if I.configured_ft[filetype] then
             return
         end
+        local lnt = require("lint")
 
         local tools = vim.iter(vim.split(val, ",", { plain = true, trimempty = true }))
             :filter(function(v)
@@ -48,7 +50,6 @@ function M.handle_tools_inspect_declaration(bufnr, val, _)
             end)
             :totable()
 
-        local lnt = require("lint")
         lnt.linters_by_ft[filetype] = lnt.linters_by_ft[filetype] or {}
 
         -- Iterate over both tools configured in ide and in .editorconfig

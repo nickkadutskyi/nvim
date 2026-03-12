@@ -133,8 +133,8 @@ spec_builder.add({
             end,
         },
     },
-    -- LSP Progress lualine componenet
-    -- Required by: lualine.nvim
+    --- LSP Progress lualine componenet
+    --- Required by: lualine.nvim
     { src = g("arkav/lualine-lsp-progress"), data = { event = "IdeDeferred" } },
     --- Statusline configurator
     --- Requires: lualine-lsp-progress
@@ -173,7 +173,7 @@ spec_builder.add({
             end,
         },
     },
-    -- Status bar controller in the top right corner
+    --- Status bar controller in the top right corner
     {
         src = g("b0o/incline.nvim"),
         data = {
@@ -183,7 +183,7 @@ spec_builder.add({
             end,
         },
     },
-    -- Visual guides
+    --- Visual guides
     {
         src = g("lukas-reineke/virt-column.nvim"),
         data = {
@@ -193,7 +193,7 @@ spec_builder.add({
             end,
         },
     },
-    -- Ident Guides
+    --- Ident Guides
     {
         src = g("lukas-reineke/indent-blankline.nvim"),
         data = {
@@ -203,8 +203,8 @@ spec_builder.add({
             end,
         },
     },
-    -- Highlight search results and provide a nice UI for it
-    -- Required by: nvim-scrollbar
+    --- Highlight search results and provide a nice UI for it
+    --- Required by: nvim-scrollbar
     {
         src = g("kevinhwang91/nvim-hlslens"),
         data = {
@@ -214,8 +214,8 @@ spec_builder.add({
             -- end,
         },
     },
-    -- Error stripes and VCS status in Scrollbar
-    -- Requires: nvim-hlslens
+    --- Error stripes and VCS status in Scrollbar
+    --- Requires: nvim-hlslens
     {
         src = g("petertriho/nvim-scrollbar"),
         data = {
@@ -231,13 +231,13 @@ spec_builder.add({
             end,
         },
     },
-    -- Ripgrep/gitgrep source for the blink.cmp
+    --- Ripgrep/gitgrep source for the blink.cmp
     { src = g("mikavilpas/blink-ripgrep.nvim"), data = { event = "IdeDeferred" } },
-    -- Set of preconfigured snippets for different languages.
+    --- Set of preconfigured snippets for different languages.
     { src = g("rafamadriz/friendly-snippets"), data = { event = "IdeDeferred" } },
-    -- Configurable GitHub Copilot blink.cmp source
+    --- Configurable GitHub Copilot blink.cmp source
     { src = g("fang2hou/blink-copilot"), data = { event = "IdeDeferred" } },
-    -- Performant, batteries-included completion
+    --- Performant, batteries-included completion
     {
         src = g("saghen/blink.cmp"),
         version = vim.version.range("1.*"),
@@ -284,7 +284,7 @@ spec_builder.add({
             end,
         },
     },
-    -- Better way to select, move, swap, and peek function blocks, classes, etc.
+    --- Better way to select, move, swap, and peek function blocks, classes, etc.
     {
         src = g("nvim-treesitter/nvim-treesitter-textobjects"),
         data = {
@@ -313,8 +313,8 @@ spec_builder.add({
     --- Promise & Async in Lua
     --- Required by: nvim-ufo
     { src = g("kevinhwang91/promise-async"), data = { event = "IdeDeferred" } },
-    -- Better folding behavior with lots of behaviors defined in Utils.fold
-    -- Requires: promise-async
+    --- Better folding behavior with lots of behaviors defined in Utils.fold
+    --- Requires: promise-async
     {
         src = g("kevinhwang91/nvim-ufo"),
         data = {
@@ -335,7 +335,7 @@ spec_builder.add({
             end,
         },
     },
-    -- Smart and powerful comment plugin for neovim. Supports treesitter, dot repeat, left-right/up-down motions, hooks, and more
+    --- Smart and powerful comment plugin for neovim. Supports treesitter, dot repeat, left-right/up-down motions, hooks, and more
     {
         src = g("numToStr/Comment.nvim"),
         data = {
@@ -345,9 +345,9 @@ spec_builder.add({
             end,
         },
     },
-    -- Detect and chdir to the project root
-    -- Using it in my own way only for root detection via both pattern and lsp
-    -- See lua/settings/behavior/system.lua
+    --- Detect and chdir to the project root
+    --- Using it in my own way only for root detection via both pattern and lsp
+    --- See lua/settings/behavior/system.lua
     {
         src = g("DrKJeff16/project.nvim"),
         data = {
@@ -361,12 +361,31 @@ spec_builder.add({
             end,
         },
     },
+    --- An asynchronous linter plugin for Neovim complementary to the built-in Language Server Protocol support.
     {
         src = g("mfussenegger/nvim-lint"),
         data = {
             event = { "BufReadPre", "BufNewFile" },
             after = function(_, opts)
                 require("ide.lint").setup(opts)
+            end,
+        },
+    },
+    --- Lightweight yet powerful formatter
+    {
+        src = g("stevearc/conform.nvim"),
+        data = {
+            event = { "BufReadPre", "BufNewFile" },
+            ---@type ide.Opts.Conform
+            opts = {
+                conform_opts = {
+                    default_format_opts = {
+                        stop_after_first = true,
+                    },
+                },
+            },
+            after = function(_, opts)
+                require("ide.conform").setup(opts)
             end,
         },
     },
