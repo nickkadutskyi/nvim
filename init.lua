@@ -1,3 +1,6 @@
+-- using byte-compilation cache
+vim.loader.enable()
+
 require("ide").setup({
     imports = {
         -- In this file we define all the plugins with their `src` so we load it first
