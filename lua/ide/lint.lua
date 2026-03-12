@@ -48,11 +48,11 @@ function M.handle_tools_inspect_declaration(bufnr, val, opts)
             end)
             :totable()
 
-        local lint = require("lint")
-        lint.linters_by_ft[filetype] = lint.linters_by_ft[filetype] or {}
+        local lnt = require("lint")
+        lnt.linters_by_ft[filetype] = lnt.linters_by_ft[filetype] or {}
 
         -- Iterate over both tools configured in ide and in .editorconfig
-        vim.list_extend(tools, lint.linters_by_ft[filetype])
+        vim.list_extend(tools, lnt.linters_by_ft[filetype])
 
         local add = {}
         local remove = {}
@@ -60,42 +60,44 @@ function M.handle_tools_inspect_declaration(bufnr, val, opts)
         for _, tool in ipairs(tools) do
             local enable = tool:sub(1, 1) ~= "!"
             local name = tool:sub(enable and 1 or 2)
-            if not enable or lint.linters[name] == nil then
+            if not enable or lnt.linters[name] == nil then
                 vim.list_extend(remove, { name })
             else
-                local command = lint.linters[name].cmd
+                local command = lnt.linters[name].cmd
                 local can_run, binary = utils.run.can_run_command(command)
                 if can_run then
                     vim.list_extend(add, { tool })
                 elseif vim.fn.executable("nix") then
+                    vim.list_extend(remove, { name })
                     -- TODO: add set up process status into statusline
-                    local nix_pkg = (lint.linters[name] --[[@as ide.Linter]] or {}).nix_pkg or binary
+                    local nix_pkg = (lnt.linters[name] --[[@as ide.Linter]] or {}).nix_pkg or binary
                     utils.run.get_nix_cmd({ pkg = nix_pkg, program = binary }, function(nix_cmd, o)
+                        local add = {}
+                        local remove = {}
                         if o.code == 0 then
                             -- `nix` is cmd now
-                            lint.linters[name].cmd = table.remove(nix_cmd, 1)
+                            lnt.linters[name].cmd = table.remove(nix_cmd, 1)
                             -- Prepend args with nix command (`run --impure ..` or `shell --impure ..`)
-                            lint.linters[name].args = vim.list_extend(nix_cmd, lint.linters[name].args or {})
+                            lnt.linters[name].args = vim.list_extend(nix_cmd, lnt.linters[name].args or {})
 
-                            vim.list_extend(add, { tool })
+                            lnt.linters_by_ft[filetype] = utils.list_add_rem(lnt.linters_by_ft[filetype], { name }, {})
 
                             -- Runs linter after it is configured if file type matches
                             if string.match(vim.api.nvim_buf_get_name(0), "%." .. filetype .. "$") ~= nil then
-                                lint.try_lint({ name })
+                                lnt.try_lint({ name })
                             end
                         else
-                            vim.list_extend(remove, { name })
+                            lnt.linters_by_ft[filetype] = utils.list_add_rem(lnt.linters_by_ft[filetype], {}, { name })
                         end
-                        lint.linters_by_ft[filetype] = utils.list_add_remove(lint.linters_by_ft[filetype], add, remove)
                     end)
                 end
             end
         end
 
-        lint.linters_by_ft[filetype] = utils.list_add_remove(lint.linters_by_ft[filetype], add, remove)
+        lnt.linters_by_ft[filetype] = utils.list_add_rem(lnt.linters_by_ft[filetype], add, remove)
 
         -- We are ignoring errors here because some of the linters might not have their binaries configured
-        lint.try_lint(nil, { ignore_errors = true })
+        lnt.try_lint(nil, { ignore_errors = true })
 
         I.configured_ft[filetype] = true
         I.create_ft_autocmds(string.format("*.%s", filetype))
@@ -131,10 +133,6 @@ function I.create_ft_autocmds(pattern)
         group = "ide-lint-write",
         pattern = pattern,
         callback = Utils.debounce(100, function(e)
-            local filetype = vim.api.nvim_get_option_value("filetype", { buf = e.buf })
-            if not I.configured_ft[filetype] then
-                return
-            end
             require("lint").try_lint()
         end),
     }, { clear = false })
@@ -143,10 +141,6 @@ function I.create_ft_autocmds(pattern)
         group = "ide-lint-stdin",
         pattern = pattern,
         callback = Utils.debounce(100, function(e)
-            local filetype = vim.api.nvim_get_option_value("filetype", { buf = e.buf })
-            if not I.configured_ft[filetype] then
-                return
-            end
             require("lint").try_lint(nil, { filter = "stdin" })
         end),
     }, { clear = false })
