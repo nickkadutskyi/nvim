@@ -18,7 +18,7 @@ function M.setup(opts)
         cnfm.setup(opts.conform_opts or {})
         require("editorconfig").properties.tools_style = M.handle_tools_style_declartion
         utils.autocmd.create("BufReadPost", {
-            group = "ide-lint",
+            group = "ide-conform",
             callback = function(e)
                 local filetype = vim.api.nvim_get_option_value("filetype", { buf = e.buf })
                 if I.configured_ft[filetype] then
@@ -78,6 +78,7 @@ function M.handle_tools_style_declartion(bufnr, val, _)
         end
 
         cnfm.setup({ formatters_by_ft = utils.resolve_tools_by_ft(I.opts.formatters_by_ft) })
+
         for _, formatter_names in pairs(cnfm.formatters_by_ft) do
             if type(formatter_names) ~= "function" then
                 -- Don't handle if it's a function because it requires parameters provided by conform.nvim

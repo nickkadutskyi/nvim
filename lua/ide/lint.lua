@@ -64,37 +64,42 @@ function M.handle_tools_inspect_declaration(bufnr, val, _)
             if not enable or lnt.linters[name] == nil then
                 vim.list_extend(remove, { name })
             else
-                local command = lnt.linters[name].cmd
-                local can_run, binary = utils.run.can_run_command(command)
-                if can_run then
-                    vim.list_extend(add, { tool })
-                elseif vim.fn.executable("nix") then
-                    -- Removing it for now until we get nix command to run it
-                    vim.list_extend(remove, { name })
-                    -- TODO: add set up process status into statusline
-                    local nix_pkg = (lnt.linters[name] --[[@as ide.Linter]] or {}).nix_pkg or binary
-                    utils.run.get_nix_cmd({ pkg = nix_pkg, program = binary }, function(nix_cmd, o)
-                        if o.code == 0 then
-                            -- `nix` is cmd now
-                            lnt.linters[name].cmd = table.remove(nix_cmd, 1)
-                            -- Prepend args with nix command (`run --impure ..` or `shell --impure ..`)
-                            lnt.linters[name].args = vim.list_extend(nix_cmd, lnt.linters[name].args or {})
-
-                            lnt.linters_by_ft[filetype] = utils.list_add_rem(lnt.linters_by_ft[filetype], { name }, {})
-
-                            -- Runs linter after it is configured if file type matches
-                            if string.match(vim.api.nvim_buf_get_name(0), "%." .. filetype .. "$") ~= nil then
-                                lnt.try_lint({ name })
-                            end
-                        else
-                            lnt.linters_by_ft[filetype] = utils.list_add_rem(lnt.linters_by_ft[filetype], {}, { name })
-                        end
-                    end)
-                end
+                vim.list_extend(add, { name })
             end
         end
 
         lnt.linters_by_ft[filetype] = utils.list_add_rem(lnt.linters_by_ft[filetype], add, remove)
+
+        for _, tool in ipairs(lnt.linters_by_ft[filetype]) do
+            local name = tool
+            local command = lnt.linters[name].cmd
+            local can_run, binary = utils.run.can_run_command(command)
+            if can_run then
+                lnt.linters_by_ft[filetype] = utils.list_add_rem(lnt.linters_by_ft[filetype], { name }, {})
+            elseif vim.fn.executable("nix") then
+                -- Removing it for now until we get nix command to run it
+                lnt.linters_by_ft[filetype] = utils.list_add_rem(lnt.linters_by_ft[filetype], {}, { name })
+                -- TODO: add set up process status into statusline
+                local nix_pkg = (lnt.linters[name] --[[@as ide.Linter]] or {}).nix_pkg or binary
+                utils.run.get_nix_cmd({ pkg = nix_pkg, program = binary }, function(nix_cmd, o)
+                    if o.code == 0 then
+                        -- `nix` is cmd now
+                        lnt.linters[name].cmd = table.remove(nix_cmd, 1)
+                        -- Prepend args with nix command (`run --impure ..` or `shell --impure ..`)
+                        lnt.linters[name].args = vim.list_extend(nix_cmd, lnt.linters[name].args or {})
+
+                        lnt.linters_by_ft[filetype] = utils.list_add_rem(lnt.linters_by_ft[filetype], { name }, {})
+
+                        -- Runs linter after it is configured if file type matches
+                        if string.match(vim.api.nvim_buf_get_name(0), "%." .. filetype .. "$") ~= nil then
+                            lnt.try_lint({ name })
+                        end
+                    else
+                        lnt.linters_by_ft[filetype] = utils.list_add_rem(lnt.linters_by_ft[filetype], {}, { name })
+                    end
+                end)
+            end
+        end
 
         -- We are ignoring errors here because some of the linters might not have their binaries configured
         lnt.try_lint(nil, { ignore_errors = true })

@@ -48,15 +48,16 @@ function M.setup(opts)
         end,
     })
 
+    --- Configure loader for local development versions of plugins.
+    require("ide.dev").setup()
+
+    --- Configure tools via custom properties from editorconfig
+    require("editorconfig").properties.tools_lsp = function(bufnr, val, opts) end
+
+    --- Load plugins and setup with the settings
     require("settings").setup(opts)
 
     vim.api.nvim_exec_autocmds("User", { pattern = "IdeDone", modeline = false })
 end
-
---- Configure tools via custom properties from editorconfig
-require("editorconfig").properties.tools_lsp = function(bufnr, val, opts) end
-
---- Configure loader for local development versions of plugins.
-require("ide.dev").setup()
 
 return M

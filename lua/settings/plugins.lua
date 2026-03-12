@@ -389,4 +389,6 @@ spec_builder.add({
             end,
         },
     },
+    --- Quickstart configs for Nvim LSP
+    { src = g("neovim/nvim-lspconfig") },
 })
