@@ -7,7 +7,10 @@ local I = {}
 
 ---@type ide.Opts.Conform
 I.opts = {}
+---@type table<string, boolean>
+I.configured_ft = {}
 
+--- Conform.nvim specific config
 ---@param opts ide.Opts.Conform
 function M.setup(opts)
     I.opts = opts or {}
@@ -17,6 +20,7 @@ function M.setup(opts)
 
         -- Conform.nvim merges `formatters_by_ft` and `formatters` for me
         cnfm.setup(opts.conform_opts or {})
+        -- In case we don't have tools_style in .editorconfig we still want to configure LSP clients
         utils.autocmd.create("BufReadPost", {
             group = "ide-conform",
             callback = function(e)
@@ -30,8 +34,6 @@ function M.setup(opts)
         })
     end)
 end
-
-I.configured_ft = {}
 
 --- Handling editorconfig integration for tools_style property
 ---@type fun(bufnr: integer, val: string, opts?: table)

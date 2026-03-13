@@ -19,8 +19,8 @@ function M.setup(opts)
     -- In case we don't have tools_lsp in .editorconfig we still want to configure LSP clients
     -- Running this delayed to ensure we create our autocmd for BufReadPost
     -- after the one created by editorconfig.lua plugin
-    utils.run.later(function()
-        I.autocmdid = utils.autocmd.create("BufReadPost", {
+    I.autocmdid = utils.run.later(function()
+        utils.autocmd.create("BufReadPost", {
             group = "ide-lsp",
             callback = function(e)
                 vim.api.nvim_del_autocmd(I.autocmdid)

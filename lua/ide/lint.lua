@@ -7,6 +7,8 @@ local I = {}
 
 ---@type ide.Opts.Lint
 I.opts = {}
+---@type table<string, boolean>
+I.configured_ft = {}
 
 --- Nvim-lint specific configurator
 ---@param opts ide.Opts.Lint
@@ -17,6 +19,7 @@ function M.setup(opts)
         local lint = require("lint")
         I.merge_linters(opts.linters and opts.linters or {})
         lint.linters_by_ft = utils.tool.resolve_by_ft(opts.linters_by_ft)
+        -- In case we don't have tools_inspect in .editorconfig we still want to configure LSP clients
         utils.autocmd.create("BufReadPost", {
             group = "ide-lint",
             callback = function(e)
@@ -30,9 +33,6 @@ function M.setup(opts)
         })
     end, "Failed to setup ide.Lint due to: ")
 end
-
----@type table<string, boolean>
-I.configured_ft = {}
 
 --- Handling editorconfig integration for tools_inspect property
 ---@param bufnr integer
