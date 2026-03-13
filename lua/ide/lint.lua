@@ -35,8 +35,10 @@ end
 I.configured_ft = {}
 
 --- Handling editorconfig integration for tools_inspect property
----@type fun(bufnr: integer, val: string, opts?: table)
-function M.handle_tools_inspect_declaration(bufnr, val, _)
+---@param bufnr integer
+---@param val string
+---@param opts? table
+function M.handle_tools_inspect_declaration(bufnr, val, opts)
     utils.run.on_load("nvim-lint", function()
         local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
         if I.configured_ft[filetype] then

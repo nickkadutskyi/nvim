@@ -71,6 +71,14 @@
 ---@field formatters_by_ft? table<string, table<ide.Tool>>
 ---@field conform_opts? conform.setupOpts
 
+---@class ide.Opts.Lsp
+---@field clients? table<string, ide.Lsp.Client>
+
+---@class ide.Lsp.Client : vim.lsp.Config
+---@field nix_pkg? string
+---@field enable_rules? {}
+---@field bin? string|fun(): string
+
 ---@alias ide.LocalSettings table<string, table<string, {
 ---  use_for: table<kdtsk.tools.Purpose, boolean>, -- use the tool for the given purpose
 ---  lsp_settings?: table, -- provide settings for LSP

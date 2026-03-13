@@ -390,5 +390,12 @@ spec_builder.add({
         },
     },
     --- Quickstart configs for Nvim LSP
-    { src = g("neovim/nvim-lspconfig") },
+    {
+        src = g("neovim/nvim-lspconfig"),
+        data = { -- Don't need to lazy load it because it's already lazy
+            after = function(_, opts)
+                require("ide.lsp").setup(opts)
+            end,
+        },
+    },
 })
