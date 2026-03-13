@@ -393,7 +393,7 @@ return {
         "neovim/nvim-lspconfig",
         event = { "BufReadPre", "BufNewFile" },
         cmd = { "LspInfo", "LspInstall", "LspUninstall" },
-        enabled = true,
+        enabled = false,
         config = function(_, opts)
             ---@type table<string, vim.lsp.ConfigLocal>
             local servers = opts.servers or {}

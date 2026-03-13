@@ -85,17 +85,6 @@ spec_builder.add({
             end,
         },
     },
-    --- Faster LuaLS setup
-    --- Helps with go to definitons and references in lua
-    {
-        src = g("folke/lazydev.nvim"),
-        data = {
-            ft = "lua",
-            after = function(_, opts)
-                require("lazydev").setup(opts)
-            end,
-        },
-    },
     --- Provides a popup with possible keymaps of the command you started typing
     {
         src = g("folke/which-key.nvim"),
@@ -396,6 +385,17 @@ spec_builder.add({
         data = { -- Don't need to lazy load it because it's already lazy
             after = function(_, opts)
                 require("ide.lsp").setup(opts)
+            end,
+        },
+    },
+    --- Faster LuaLS setup
+    --- Helps with go to definitons and references in lua
+    {
+        src = g("folke/lazydev.nvim"),
+        data = {
+            ft = "lua",
+            after = function(_, opts)
+                require("lazydev").setup(opts)
             end,
         },
     },

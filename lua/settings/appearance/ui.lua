@@ -23,7 +23,10 @@ utils.run.later(function()
     require("vim._core.ui2").enable({
         enable = true,
         msg = {
-            targets = { bufwrite = "msg" },
+            targets = {
+                bufwrite = "msg",
+                undo = "msg",
+            },
             timeout = 4000,
         },
     })

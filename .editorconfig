@@ -16,6 +16,9 @@ indent_style = space
 
 [{*.lua,*.lua.txt}]
 indent_style = space
+tools_lsp = lua_ls
+tools_inspect = selene
+tools_style = stylua
 
 [{*.markdown,*.md}]
 indent_style = space

@@ -3,9 +3,8 @@
 ## Build/Lint/Test Commands
 - **Lint Lua**: `selene .` (configured in selene.toml with Neovim standard)
 - **Format Lua**: `stylua .` (via conform.nvim)
-- **Check Lua**: `luacheck .` (via nvim-lint)
 - **LSP Check**: Use built-in LSP diagnostics (lua_ls server)
-- **Plugin Management**: `nvim --headless "+Lazy! sync" +qa` (Lazy.nvim)
+- **Plugin Management**: `vim.pack.add or vim.pack.get` (vim.pack)
 
 ## Code Style Guidelines
 - **Indentation**: 2 spaces (tabstop=2, shiftwidth=2, expandtab=true)

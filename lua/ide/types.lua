@@ -76,7 +76,7 @@
 
 ---@class ide.Lsp.Client : vim.lsp.Config
 ---@field nix_pkg? string
----@field enable_rules? {}
+---@field enabled? ide.ToolTest|boolean
 ---@field bin? string|fun(): string
 
 ---@alias ide.LocalSettings table<string, table<string, {
@@ -92,6 +92,11 @@
 ---@field cmd? string|fun():string
 ---@field parser? lint.Parser|lint.parse
 ---@field nix_pkg? string
+
+---@class ide.ToolTest
+---@field [1]? string[] Patterns of files. Turns on a tool when file is present
+---@field [2]? fun(): boolean Optionally run the function to turn on/off the tool
+---@field [3]? boolean Force enable or disable
 
 ---@class ide.Tool
 ---@field [1] string Name of the tool, e.g. phpactor

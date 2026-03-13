@@ -12,11 +12,11 @@ I.opts = {}
 function M.setup(opts)
     I.opts = opts or {}
     utils.run.on_load("conform.nvim", function()
+        require("editorconfig").properties.tools_style = M.handle_tools_style_declartion
         local cnfm = require("conform")
 
         -- Conform.nvim merges `formatters_by_ft` and `formatters` for me
         cnfm.setup(opts.conform_opts or {})
-        require("editorconfig").properties.tools_style = M.handle_tools_style_declartion
         utils.autocmd.create("BufReadPost", {
             group = "ide-conform",
             callback = function(e)
@@ -77,7 +77,7 @@ function M.handle_tools_style_declartion(bufnr, val, _)
             end)
         end
 
-        cnfm.setup({ formatters_by_ft = utils.resolve_tools_by_ft(I.opts.formatters_by_ft) })
+        cnfm.setup({ formatters_by_ft = utils.tool.resolve_by_ft(I.opts.formatters_by_ft) })
 
         for _, formatter_names in pairs(cnfm.formatters_by_ft) do
             if type(formatter_names) ~= "function" then

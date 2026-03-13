@@ -13,10 +13,10 @@ I.opts = {}
 function M.setup(opts)
     I.opts = opts or {}
     utils.run.on_load("nvim-lint", function()
+        require("editorconfig").properties.tools_inspect = M.handle_tools_inspect_declaration
         local lint = require("lint")
         I.merge_linters(opts.linters and opts.linters or {})
-        lint.linters_by_ft = utils.resolve_tools_by_ft(opts.linters_by_ft)
-        require("editorconfig").properties.tools_inspect = M.handle_tools_inspect_declaration
+        lint.linters_by_ft = utils.tool.resolve_by_ft(opts.linters_by_ft)
         utils.autocmd.create("BufReadPost", {
             group = "ide-lint",
             callback = function(e)
@@ -40,8 +40,8 @@ I.configured_ft = {}
 ---@param opts? table
 function M.handle_tools_inspect_declaration(bufnr, val, opts)
     utils.run.on_load("nvim-lint", function()
-        local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
-        if I.configured_ft[filetype] then
+        local ft = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
+        if I.configured_ft[ft] then
             return
         end
         local lnt = require("lint")
@@ -52,10 +52,10 @@ function M.handle_tools_inspect_declaration(bufnr, val, opts)
             end)
             :totable()
 
-        lnt.linters_by_ft[filetype] = lnt.linters_by_ft[filetype] or {}
+        lnt.linters_by_ft[ft] = lnt.linters_by_ft[ft] or {}
 
         -- Iterate over both tools configured in ide and in .editorconfig
-        vim.list_extend(tools, lnt.linters_by_ft[filetype])
+        vim.list_extend(tools, lnt.linters_by_ft[ft])
 
         local add = {}
         local remove = {}
@@ -70,17 +70,17 @@ function M.handle_tools_inspect_declaration(bufnr, val, opts)
             end
         end
 
-        lnt.linters_by_ft[filetype] = utils.list_add_rem(lnt.linters_by_ft[filetype], add, remove)
+        lnt.linters_by_ft[ft] = utils.table.list_add_rem(lnt.linters_by_ft[ft], add, remove)
 
-        for _, tool in ipairs(lnt.linters_by_ft[filetype]) do
+        for _, tool in ipairs(lnt.linters_by_ft[ft]) do
             local name = tool
             local command = lnt.linters[name].cmd
             local can_run, binary = utils.run.can_run_command(command)
             if can_run then
-                lnt.linters_by_ft[filetype] = utils.list_add_rem(lnt.linters_by_ft[filetype], { name }, {})
+                lnt.linters_by_ft[ft] = utils.table.list_add_rem(lnt.linters_by_ft[ft], { name }, {})
             elseif vim.fn.executable("nix") then
                 -- Removing it for now until we get nix command to run it
-                lnt.linters_by_ft[filetype] = utils.list_add_rem(lnt.linters_by_ft[filetype], {}, { name })
+                lnt.linters_by_ft[ft] = utils.table.list_add_rem(lnt.linters_by_ft[ft], {}, { name })
                 -- TODO: add set up process status into statusline
                 local nix_pkg = (lnt.linters[name] --[[@as ide.Linter]] or {}).nix_pkg or binary
                 utils.run.get_nix_cmd({ pkg = nix_pkg, program = binary }, function(nix_cmd, o)
@@ -90,14 +90,14 @@ function M.handle_tools_inspect_declaration(bufnr, val, opts)
                         -- Prepend args with nix command (`run --impure ..` or `shell --impure ..`)
                         lnt.linters[name].args = vim.list_extend(nix_cmd, lnt.linters[name].args or {})
 
-                        lnt.linters_by_ft[filetype] = utils.list_add_rem(lnt.linters_by_ft[filetype], { name }, {})
+                        lnt.linters_by_ft[ft] = utils.table.list_add_rem(lnt.linters_by_ft[ft], { name }, {})
 
                         -- Runs linter after it is configured if file type matches
-                        if string.match(vim.api.nvim_buf_get_name(0), "%." .. filetype .. "$") ~= nil then
+                        if string.match(vim.api.nvim_buf_get_name(0), "%." .. ft .. "$") ~= nil then
                             lnt.try_lint({ name })
                         end
                     else
-                        lnt.linters_by_ft[filetype] = utils.list_add_rem(lnt.linters_by_ft[filetype], {}, { name })
+                        lnt.linters_by_ft[ft] = utils.table.list_add_rem(lnt.linters_by_ft[ft], {}, { name })
                     end
                 end)
             end
@@ -106,8 +106,8 @@ function M.handle_tools_inspect_declaration(bufnr, val, opts)
         -- We are ignoring errors here because some of the linters might not have their binaries configured
         lnt.try_lint(nil, { ignore_errors = true })
 
-        I.configured_ft[filetype] = true
-        I.create_ft_autocmds(string.format("*.%s", filetype))
+        I.configured_ft[ft] = true
+        I.create_ft_autocmds(string.format("*.%s", ft))
     end, "Failed to configure tools_inspect due to: ")
 end
 
