@@ -85,6 +85,7 @@ spec_builder.add({
             end,
         },
     },
+    --- Faster LuaLS setup
     --- Helps with go to definitons and references in lua
     {
         src = g("folke/lazydev.nvim"),
