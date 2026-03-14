@@ -115,8 +115,8 @@ function M.find_executable(paths, default, cwd)
     return false, default
 end
 
----Find the PHP executable in the current working directory in PHP specific
----locations or globally with cache support to avoid repeated lookups.
+--- Find the PHP executable in the current working directory in PHP specific
+--- locations or globally with cache support to avoid repeated lookups.
 ---@param executable string The name of the PHP executable to find (e.g., "phpcs", "phpstan")
 ---@param cwd? string Optional current working directory to search in (defaults to vim.fn.getcwd())
 ---@return string|nil bin_path The path to the PHP executable if found, otherwise nil
@@ -126,6 +126,19 @@ function M.find_php_executable(executable, cwd)
         "./" .. executable .. ".phar",
         "vendor/bin/" .. executable,
         "vendor/bin/" .. executable .. ".phar",
+        ".devenv/profile/bin/" .. executable,
+    }, executable, cwd)
+    return found and bin or nil
+end
+
+--- Find the JS executable in the current working directory in JS specific
+--- locations or globally with cache support to avoid repeated lookups.
+---@param executable string The name of the PHP executable to find
+---@param cwd? string Optional current working directory to search in (defaults to vim.fn.getcwd())
+---@return string|nil bin_path The path to the JS executable if found, otherwise nil
+function M.find_js_executable(executable, cwd)
+    local bin, found = Utils.tools.find_executable({
+        "./node_modules/.bin/" .. executable,
         ".devenv/profile/bin/" .. executable,
     }, executable, cwd)
     return found and bin or nil

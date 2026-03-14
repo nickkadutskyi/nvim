@@ -1,11 +1,11 @@
 local spec = require("ide.spec.builder")
+local utils = require("ide.utils")
 
 spec.add({ "nvim-treesitter", opts = { ensure_installed = { "twig" } } })
 
 spec.add({
     "nvim-lint",
-    ---@type ide.Opts.Lint
-    opts = {
+    opts = { ---@type ide.Opts.Lint
         linters_by_ft = {
             twig = { { "twig-cs-fixer", { ".twig-cs-fixer.dist.php", ".twig-cs-fixer.php", "symfony.lock" } } },
         },
@@ -13,9 +13,8 @@ spec.add({
 })
 
 spec.add({
-    "conform.nvim", -- Code Style
-    ---@type ide.Opts.Conform
-    opts = {
+    "conform.nvim",
+    opts = { ---@type ide.Opts.Conform
         formatters_by_ft = {
             twig = {
                 { "_", nil, nil, true, { async = true, timeout_ms = 1500, stop_after_first = false } },
@@ -42,6 +41,58 @@ spec.add({
                             "composer.json",
                         })(...) or vim.fn.getcwd()
                     end,
+                },
+            },
+        },
+    },
+})
+
+spec.add({
+    "nvim-lspconfig",
+    opts = { ---@type ide.Opts.Lsp
+        clients = {
+            ["twiggy_language_server"] = {
+                enabled = { { ".twig-cs-fixer.dist.php", ".twig-cs-fixer.php", "symfony.lock" } },
+                bin = function()
+                    return utils.tool.find_js_executable("twiggy-language-server")
+                end,
+                settings = {
+                    twiggy = {
+                        framework = "symfony",
+                        phpExecutable = "php",
+                        symfonyConsolePath = "bin/console",
+                        diagnostics = {
+                            twigCsFixer = false,
+                        },
+                    },
+                },
+            },
+            ["vimfony"] = {
+                enabled = {
+                    nil,
+                    function()
+                        return utils.tool.find_php_executable("vimfony") ~= nil
+                    end,
+                },
+                bin = function()
+                    return utils.tool.find_php_executable("vimfony")
+                end,
+                cmd = { "vimfony" },
+                filetypes = { "php", "twig", "yaml", "xml" }, -- You can remove file types if you don't like it, but then it won't work in those files
+                root_markers = { ".git" },
+                single_file_support = true,
+                init_options = {
+                    roots = { "templates" },
+                    container_xml_path = (vim.fn.getcwd() .. "/var/cache/dev/App_KernelDevDebugContainer.xml"),
+                    -- OR:
+                    -- container_xml_path = {
+                    --   (git_root .. "/var/cache/dev/App_KernelDevDebugContainer.xml"),
+                    --   (git_root .. "/var/cache/website/dev/App_KernelDevDebugContainer.xml"),
+                    --   (git_root .. "/var/cache/admin/dev/App_KernelDevDebugContainer.xml"),
+                    -- },
+                    vendor_dir = vim.fn.getcwd() .. "/vendor",
+                    -- Optional:
+                    -- php_path = "/usr/bin/php",
                 },
             },
         },
