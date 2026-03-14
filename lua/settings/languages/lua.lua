@@ -53,18 +53,18 @@ spec.add({
                         telemetry = { enable = false },
                         runtime = {
                             version = "LuaJIT",
-                            -- path = runtime_path,
+                            path = { -- This might be overriden by lazydev.nvim
+                                "lua/?.lua",
+                                "lua/?/init.lua",
+                            },
                         },
                         diagnostics = {
                             globals = { "vim" },
                         },
                         workspace = {
                             checkThirdParty = false,
-                            -- Use VIMRUNTIME/lua because lazydev.nvim overrides runtime.path
-                            -- from { "lua/?.lua" } to { "?.lua" }, so library entries must
-                            -- point directly to the lua/ root for module resolution to work.
                             library = {
-                                vim.env.VIMRUNTIME .. "/lua",
+                                vim.env.VIMRUNTIME,
                                 "${3rd}/luv/library",
                             },
                         },

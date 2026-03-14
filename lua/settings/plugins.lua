@@ -395,6 +395,8 @@ spec_builder.add({
         data = {
             ft = "lua",
             after = function(_, opts)
+                -- Make sure lazydev sets proper Lua.runtime.path
+                require("lazydev.config").lua_root = false
                 require("lazydev").setup(opts)
             end,
         },
