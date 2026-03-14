@@ -4,8 +4,7 @@ spec.add({ "nvim-treesitter", opts = { ensure_installed = { "lua", "luadoc", "lu
 
 spec.add({
     "mfussenegger/nvim-lint",
-    ---@type ide.Opts.Lint
-    opts = {
+    opts = { ---@type ide.Opts.Lint
         linters_by_ft = {
             lua = {
                 { "selene", { "selene.toml" } },
@@ -21,7 +20,7 @@ spec.add({
 
 spec.add({
     "conform.nvim",
-    opts = {
+    opts = { ---@type ide.Opts.Conform
         formatters_by_ft = {
             lua = { { "stylua", nil, nil, true, { timeout_ms = 2000 } } },
         },
@@ -31,15 +30,14 @@ spec.add({
 spec.add({
     "lazydev.nvim",
     opts = {
+        -- Until lazy.nvim is present it won't find those in vim.pack unless provide a full path
         library = {
             -- Load luvit types when the `vim.uv` word is found
             { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-            -- { path = "lazy.nvim", words = { "Lazy" } },
-            -- { path = "inc-rename.nvim", words = { "inc_rename" } },
-            -- { path = "nvim-gitstatus", words = { "GitStatus" } },
-            -- { path = "auto-dark-mode.nvim", words = { "AutoDarkMode" } },
-            -- { path = "jb.icons", words = { "jb.icons" } },
-            -- { path = "snacks.nvim", words = { "Snacks" } },
+            { path = "inc-rename.nvim", words = { "inc_rename" } },
+            { path = "snacks.nvim", words = { "Snacks" } },
+            { path = "nvim-lint", words = { "lint%.Linter", "lint%.Parser", "lint%.parse" } },
+            { path = "conform.nvim", words = { "conform%.setupOpts" } },
         },
     },
 })

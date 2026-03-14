@@ -77,7 +77,7 @@
 ---@class ide.Lsp.Client : vim.lsp.Config
 ---@field nix_pkg? string
 ---@field enabled? ide.ToolTest|boolean
----@field bin? string|fun(): string
+---@field bin? string|fun(): string|nil
 
 ---@alias ide.LocalSettings table<string, table<string, {
 ---  use_for: table<kdtsk.tools.Purpose, boolean>, -- use the tool for the given purpose
