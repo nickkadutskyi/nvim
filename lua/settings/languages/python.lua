@@ -30,3 +30,18 @@ spec.add({
         },
     },
 })
+spec.add({
+    "nvim-lspconfig",
+    opts = { ---@type ide.Opts.Lsp
+        clients = {
+            pylsp = {
+                nix_pkg = "python313Packages.python-lsp-server", -- pylsp
+                enabled = { nil, nil, false },
+            },
+            pyright = {
+                nix_pkg = "pyright", -- pyright-langserver
+                enabled = { { "pyrightconfig.json" } },
+            },
+        },
+    },
+})

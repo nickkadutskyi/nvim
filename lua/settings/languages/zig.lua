@@ -20,3 +20,14 @@ spec.add({
     ---@type ide.Opts.Conform
     opts = { formatters_by_ft = { zig = { { "zigfmt", nil, nil, true, { lsp_format = "fallback" } } } } },
 })
+spec.add({
+    "nvim-lspconfig",
+    opts = { ---@type ide.Opts.Lsp
+        clients = {
+            zls = {
+                -- enalbed = { { "zls.json" } },
+                nix_pkg = "zls",
+            },
+        },
+    },
+})

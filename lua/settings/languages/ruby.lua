@@ -13,3 +13,23 @@ spec.add({
         },
     },
 })
+spec.add({
+    "nvim-lspconfig",
+    opts = { ---@type ide.Opts.Lsp
+        clients = {
+            ["rubocop"] = {
+                enabled = { { "rubocop", ".rubocop.yml" } },
+            },
+            ["ruby_ls"] = {
+                enabled = { { ".index.yml", "ruby-lsp", "ruby-lsp.gemspec" } },
+            },
+            ["solargraph"] = {
+                enabled = { { "Gemfile", "solargraph.yml" } },
+            },
+            ["standardrb"] = { -- as linter
+                enabled = { { "standardrb" }, nil, false },
+                nix_pkg = "rubyPackages.standard",
+            },
+        },
+    },
+})

@@ -36,3 +36,38 @@ spec.add({
         },
     },
 })
+spec.add({
+    "nvim-lspconfig",
+    opts = { ---@type ide.Opts.Lsp
+        clients = {
+            ["nixd"] = {
+                nix_pkg = "nixd",
+                settings = {
+                    nixd = {
+                        formatting = {
+                            command = { "nixfmt" },
+                        },
+                    },
+                },
+            },
+            ["nil_ls"] = {
+                nix_pkg = "nil",
+                capabilities = {
+                    workspace = {
+                        didChangeWatchedFiles = {
+                            dynamicRegistration = true,
+                        },
+                    },
+                },
+                settings = {
+                    ["nil"] = {
+                        testSetting = 42,
+                        formatting = {
+                            command = { "nixfmt" },
+                        },
+                    },
+                },
+            },
+        },
+    },
+})

@@ -27,3 +27,13 @@ spec.add({
         },
     },
 })
+spec.add({
+    "nvim-lspconfig",
+    opts = { ---@type ide.Opts.Lsp
+        clients = {
+            ["lemminx"] = {
+                settings = { xml = { server = { workDir = "~/.cache/lemminx" } } },
+            },
+        },
+    },
+})

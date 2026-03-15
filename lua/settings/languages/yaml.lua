@@ -20,3 +20,13 @@ spec.add({
         },
     },
 })
+spec.add({
+    "nvim-lspconfig",
+    opts = { ---@type ide.Opts.Lsp
+        clients = {
+            yamlls = {
+                enabled = { nil, nil, false },
+            },
+        },
+    },
+})
