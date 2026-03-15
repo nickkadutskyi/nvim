@@ -26,3 +26,25 @@ spec.add({
         },
     },
 })
+spec.add({
+    "nvim-lspconfig",
+    opts = { ---@type ide.Opts.Lsp
+        clients = {
+            ["vtsls"] = {
+                on_attach = function(client)
+                    -- NOTE: see https://github.com/vuejs/language-tools/wiki/Neovim#custom-component-highlight
+                    -- Since 3.0.2, semantic tokens are handled
+                    -- on the vue_ls side rather than tsserver,
+                    -- and the token name has changed, to adopt
+                    -- this change you have to:
+                    if vim.bo.filetype == "vue" then
+                        client.server_capabilities.semanticTokensProvider.full = false
+                    else
+                        client.server_capabilities.semanticTokensProvider.full = true
+                    end
+                end,
+                filetypes = { "vue" },
+            },
+        },
+    },
+})

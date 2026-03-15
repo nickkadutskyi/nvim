@@ -83,7 +83,16 @@ function M.resolve_opts(spec)
             -- save the lists we need to extend before merge replaces them
             local saved = {}
             for _, key in ipairs(extend_paths) do
-                local path = vim.split(key, ".", { plain = true })
+                local path = vim.iter(vim.split(key, ".", { plain = true }))
+                    :map(function(v)
+                        if v:match("^[\"']%d+[\"']$") then
+                            return v:sub(2, -2)
+                        elseif v:match("^%d+$") then
+                            return tonumber(v)
+                        end
+                        return v
+                    end)
+                    :totable()
                 local old = vim.tbl_get(opts, unpack(path))
                 local new = vim.tbl_get(item, unpack(path))
                 if type(old) == "table" and type(new) == "table" then

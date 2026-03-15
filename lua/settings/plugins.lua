@@ -383,6 +383,13 @@ spec_builder.add({
     {
         src = g("neovim/nvim-lspconfig"),
         data = { -- Don't need to lazy load it because it's already lazy
+            opts_extend = {
+                "clients.eslint.enabled.1",
+                "clients.vtsls.filetypes",
+                "clients.vtsls.enabled.1",
+                "clients.ts_ls.filetypes",
+                "clients.ts_ls.enabled.1",
+            },
             after = function(_, opts)
                 require("ide.lsp").setup(opts)
             end,

@@ -6,36 +6,55 @@ spec.add({
     ---@type ide.Opts.Lint
     opts = { linters_by_ft = { javascript = { { "eslint_d", nil, nil, true } } } },
 })
+
+local prettier_config_files = {
+    ".prettierrc",
+    ".prettierrc.json",
+    ".prettierrc.yaml",
+    ".prettierrc.yml",
+    ".prettierrc.js",
+    "prettier.config.js",
+    ".prettier.mjs",
+    "prettier.config.mjs",
+    ".prettier.cjs",
+    "prettier.config.cjs",
+    ".prettierrc.toml",
+}
+
+local eslint_config_files = {
+    "eslint.config.js",
+    "eslint.config.mjs",
+    "eslint.config.cjs",
+}
+
 spec.add({
     "conform.nvim",
     ---@type ide.Opts.Conform
-    opts = { formatters_by_ft = { javascript = { { "prettierd", nil, nil, true } } } },
+    opts = {
+        formatters_by_ft = {
+            javascript = {
+                { "_", nil, nil, true, { async = true, timeout_ms = 1500 } },
+                { "prettierd", prettier_config_files },
+                { "eslint_d", eslint_config_files },
+            },
+            javascriptreact = {
+                { "_", nil, nil, true, { async = true, timeout_ms = 1500 } },
+                { "prettierd", prettier_config_files },
+                { "eslint_d", eslint_config_files },
+            },
+        },
+    },
 })
 spec.add({
     "nvim-lspconfig",
     opts = { ---@type ide.Opts.Lsp
         clients = {
-            ["ts_ls"] = {
-                enabled = {
-                    nil,
-                    function()
-                        -- TODO: enable only if vue_Ls or vtsls are not enabled
-                        --       and either tsconfig.json or jsoncfig.json are present
-                        return false
-                    end,
-                },
-                nix_pkg = "typescript-language-server",
-                init_options = {
-                    hostInfo = "neovim",
-                    preferences = {
-                        includeCompletionsForModuleExports = true,
-                        includeCompletionsForImportStatements = true,
-                        importModuleSpecifierPreference = "relative",
-                    },
-                    -- Add plugins in corresponding files
-                    plugins = {},
-                },
-                -- filetypes = vim.lsp.config["ts_ls"].filetypes or {},
+            ["eslint"] = {
+                enabled = { eslint_config_files },
+                nix_pkg = "vscode-langservers-extracted",
+            },
+            ["vtsls"] = {
+                enabled = { { "jsconfig.json" } },
             },
         },
     },
