@@ -41,59 +41,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
         local client = vim.lsp.get_client_by_id(event.data.client_id)
         local has_fzf, fzf = pcall(require, "fzf-lua")
 
-        -- LSP References or Usage
-        local function usages()
-            if has_fzf then
-                fzf.lsp_references({
-                    async = true,
-                    winopts = { title = " Usages " },
-                    ignore_current_line = true,
-                    includeDeclaration = false,
-                })
-            else
-                vim.lsp.buf.references({ includeDeclaration = false })
-            end
-        end
-        vim.keymap.set("n", "gru", usages, { buffer = event.buf, desc = "LSP: [g]o to [r]efactor > [u]sages" })
-        -- Overrides the default LSP references keymap
-        vim.keymap.set("n", "grr", usages, { buffer = event.buf, desc = "LSP: [g]o to [r]efactor > [u]sages" })
-
-        -- LSP Implementation
-        vim.keymap.set("n", "gri", function()
-            if has_fzf then
-                fzf.lsp_implementations({ async = true, winopts = { title = " Choose Implementation " } })
-            else
-                vim.lsp.buf.implementation()
-            end
-        end, { buffer = event.buf, desc = "LSP: [g]o to [r]efactor > [i]mplementations" })
-
-        -- LSP Definition
-        vim.keymap.set("n", "grd", function()
-            if has_fzf then
-                fzf.lsp_definitions({ async = true, winopts = { title = " Choose Definition " } })
-            else
-                vim.lsp.buf.definition()
-            end
-        end, { buffer = event.buf, desc = "LSP: [g]o to [r]efactor > [d]efinitions" })
-
-        -- LSP Declaration
-        vim.keymap.set("n", "grD", function()
-            if has_fzf then
-                fzf.lsp_declarations({ async = true, winopts = { titne = " Choose Declaration " } })
-            else
-                vim.lsp.buf.declaration()
-            end
-        end, { buffer = event.buf, desc = "LSP: [g]o to [r]efactor > [D]eclarations" })
-
-        -- LSP Type Definition
-        vim.keymap.set("n", "grt", function()
-            if has_fzf then
-                fzf.lsp_typedefs({ async = true, winopts = { title = " Choose Type Definition " } })
-            else
-                vim.lsp.buf.type_definition()
-            end
-        end, { buffer = event.buf, desc = "LSP: [g]o to [r]efactor > Type [D]efinitions" })
-
         -- Find a Class by name
         local function find_class()
             if has_fzf then

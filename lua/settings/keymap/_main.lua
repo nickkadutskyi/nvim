@@ -152,6 +152,68 @@ utils.run.now_if_arg_or_deferred(function()
     end, { desc = "Problems: previous [p]roblem" })
 end)
 
+-- Goto by Reference Actions
+utils.run.on_lsp_attach(function(buf, client)
+    -- LSP References or Usage
+    local function usages()
+        if pack.is_loaded("fzf-lua") then
+            require("fzf-lua").lsp_references({
+                async = true,
+                winopts = { title = " Usages " },
+                ignore_current_line = true,
+                includeDeclaration = false,
+            })
+        else
+            vim.lsp.buf.references({ includeDeclaration = false })
+        end
+    end
+    vim.keymap.set("n", "gru", usages, { buffer = buf, desc = "Navigate: [g]o to [r]efactor > [u]sages" })
+    -- Overrides the default LSP references keymap
+    vim.keymap.set("n", "grr", usages, { buffer = buf, desc = "Navigate: [g]o to [r]efactor > [u]sages" })
+
+    -- LSP Implementation
+    vim.keymap.set("n", "gri", function()
+        if pack.is_loaded("fzf-lua") then
+            require("fzf-lua").lsp_implementations({ async = true, winopts = { title = " Choose Implementation " } })
+        else
+            vim.lsp.buf.implementation()
+        end
+    end, { buffer = buf, desc = "Navigate: [g]o to [r]efactor > [i]mplementations" })
+
+    -- LSP Definition
+    vim.keymap.set("n", "grd", function()
+        if pack.is_loaded("fzf-lua") then
+            require("fzf-lua").lsp_definitions({ async = true, winopts = { title = " Choose Definition " } })
+        else
+            vim.lsp.buf.definition()
+        end
+    end, { buffer = buf, desc = "LSP: [g]o to [r]efactor > [d]efinitions" })
+
+    -- LSP Declaration
+    vim.keymap.set("n", "grD", function()
+        if pack.is_loaded("fzf-lua") then
+            require("fzf-lua").lsp_declarations({ async = true, winopts = { titne = " Choose Declaration " } })
+        else
+            vim.lsp.buf.declaration()
+        end
+    end, { buffer = buf, desc = "LSP: [g]o to [r]efactor > [D]eclarations" })
+
+    -- LSP Type Definition
+    vim.keymap.set("n", "grt", function()
+        if pack.is_loaded("fzf-lua") then
+            require("fzf-lua").lsp_typedefs({ async = true, winopts = { title = " Choose Type Definition " } })
+        else
+            vim.lsp.buf.type_definition()
+        end
+    end, { buffer = buf, desc = "LSP: [g]o to [r]efactor > Type [D]efinitions" })
+end)
+utils.run.now_if_arg_or_deferred(function()
+    vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
+    vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
+    vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
+    vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
+end)
+
 --- CODE
 
 utils.run.now_if_arg_or_deferred(function()
@@ -337,12 +399,13 @@ end)
 --- WINDOW
 
 utils.run.now_if_arg_or_deferred(function()
+    -- NOTE: Never used it and use <C-w>Arrow while this keymaps reused for quickfix navigation
     -- Keybinds to make split navigation easier.
     -- Use CTRL+<hjkl> to switch between windows
-    vim.keymap.set({ "n", "i" }, "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-    vim.keymap.set({ "n", "i" }, "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-    vim.keymap.set({ "n", "i" }, "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-    vim.keymap.set({ "n", "i" }, "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+    -- vim.keymap.set({ "n", "i" }, "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
+    -- vim.keymap.set({ "n", "i" }, "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
+    -- vim.keymap.set({ "n", "i" }, "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
+    -- vim.keymap.set({ "n", "i" }, "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
     -- Editor Tabs
     vim.keymap.set({ "n", "i", "v" }, "<M-w>", function()

@@ -408,11 +408,39 @@ spec_builder.add({
             end,
         },
     },
+    --- Incremental LSP renaming based on Neovim's command-preview feature.
     {
         src = g("smjonas/inc-rename.nvim"),
         data = {
             after = function(_, opts)
                 require("inc_rename").setup(opts)
+            end,
+        },
+    },
+    --- Better quickfix window in Neovim, polish old quickfix window.
+    -- {
+    --     src = g("kevinhwang91/nvim-bqf"),
+    --     data = {
+    --         -- ft = "qf",
+    --         event = "IdeDeferred",
+    --         ---@type BqfConfig
+    --         opts = {
+    --             preview = {
+    --                 winblend = 0,
+    --             },
+    --         },
+    --         after = function(_, opts)
+    --             require("bqf").setup(opts)
+    --         end,
+    --     },
+    -- },
+    --- Improved UI and workflow for the Neovim quickfix
+    { -- TODO: Style it
+        src = g("stevearc/quicker.nvim"),
+        data = {
+            event = "IdeDeferred",
+            after = function(_, opts)
+                require("quicker").setup(opts)
             end,
         },
     },
