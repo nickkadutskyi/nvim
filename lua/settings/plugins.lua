@@ -408,4 +408,12 @@ spec_builder.add({
             end,
         },
     },
+    {
+        src = g("smjonas/inc-rename.nvim"),
+        data = {
+            after = function(_, opts)
+                require("inc_rename").setup(opts)
+            end,
+        },
+    },
 })

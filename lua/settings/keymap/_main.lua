@@ -3,7 +3,8 @@
 --- or module that might use them in their keymaps.
 
 local utils = require("ide.utils")
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
+local pack = require("ide.pack")
 
 --- OPTIONS --------------------------------------------------------------------
 
@@ -52,7 +53,7 @@ end)
 
 --- EDIT
 
-spec_builder.add({
+spec.add({
     "harpoon",
     keys = {
         {
@@ -171,7 +172,7 @@ utils.run.now_if_arg_or_deferred(function()
 end)
 
 --- Inspect Code
-spec_builder.add({
+spec.add({
     "nvim-lint",
     keys = {
         {
@@ -185,7 +186,7 @@ spec_builder.add({
 })
 
 --- Code Folding
-spec_builder.add({
+spec.add({
     "nvim-ufo",
     keys = {
         {
@@ -230,7 +231,7 @@ spec_builder.add({
 })
 
 -- Comment Action
-spec_builder.add({
+spec.add({
     "todo-comments.nvim",
     keys = {
         {
@@ -251,7 +252,7 @@ spec_builder.add({
 })
 
 -- Code Formatting
-spec_builder.add({
+spec.add({
     "conform.nvim",
     keys = {
         {
@@ -265,8 +266,27 @@ spec_builder.add({
     },
 })
 
+--- Refactor
+
+-- Rename
+utils.run.on_lsp_attach(function(buf, client)
+    -- LSP Rename or Refactor > Rename variable under the cursor
+    local rename = function()
+        return pack.is_loaded("inc-rename.nvim") and ":IncRename " .. vim.fn.expand("<cword>") or vim.lsp.buf.rename()
+    end
+    local rename_opts = function(desc)
+        return { expr = pack.is_loaded("inc-rename.nvim"), buffer = buf, desc = "Refactor: " .. desc }
+    end
+    -- Mimics IntelliJ's refactor > rename
+    vim.keymap.set("n", "<S-F6>", rename, rename_opts("[S-F6] Rename..."))
+    -- <S-F6> on macOS is <F18>
+    vim.keymap.set("n", "<F18>", rename, rename_opts("[F18] Rename..."))
+    -- Overrides the default LSP rename keymap
+    vim.keymap.set("n", "grn", rename, rename_opts("[g]o [r]efactor > Re[n]ame..."))
+end)
+
 -- TODO: come up with better keymap for this
-spec_builder.add({
+spec.add({
     "99",
     keys = {
         {

@@ -1,10 +1,3 @@
--- TODO: add ability to jump to a file path in PHP files provided as __DIR__."/path/to/file"
--- TODO: improve performance when this file is required
--- TODO: switch from fzf-lua to quick list for go to definition selection, also see
---       https://www.reddit.com/r/neovim/comments/1fhy2xi/how_switch_between_references_like_theprimeagen/
-
--- Set by `smjonas/inc-rename.nvim` plugin on `init`
-local has_inc_rename = false
 -- Gets exclude patterns from environment variable `FZFLUA_EXCLUDE`
 local fzf_colors_switch = {
     [true] = {
@@ -47,33 +40,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(event)
         local client = vim.lsp.get_client_by_id(event.data.client_id)
         local has_fzf, fzf = pcall(require, "fzf-lua")
-
-        -- LSP Rename or Refactor > Rename variable under the cursor
-        local rename = function()
-            return has_inc_rename and ":IncRename " .. vim.fn.expand("<cword>") or vim.lsp.buf.rename()
-        end
-        local rename_opts = function(desc)
-            return { expr = has_inc_rename, buffer = event.buf, desc = "LSP: " .. desc }
-        end
-        -- Mimics IntelliJ's refactor > rename
-        vim.keymap.set("n", "<S-F6>", rename, rename_opts("[S-F6] Refactor > Rename..."))
-        -- <S-F6> on macOS is <F18>
-        vim.keymap.set("n", "<F18>", rename, rename_opts("[F18] Refactor > Rename..."))
-        -- Overrides the default LSP rename keymap
-        vim.keymap.set("n", "grn", rename, rename_opts("[g]o to [r]efactor > Re[n]ame..."))
-
-        -- LSP Code Action or Context Actions
-        vim.keymap.set({ "n", "x" }, "gra", function()
-            if has_fzf then
-                -- Adds preview of a diff
-                fzf.lsp_code_actions({
-                    async = true,
-                    winopts = { title = " Context Actions ", title_pos = "left" },
-                })
-            else
-                vim.lsp.buf.code_action()
-            end
-        end, { buffer = event.buf, desc = "LSP: [g]o to [r]efactor > Context [a]ctions" })
 
         -- LSP References or Usage
         local function usages()
@@ -310,15 +276,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 ---@type LazySpec
 return {
-    { -- Rename with incremental search
-        "smjonas/inc-rename.nvim",
-        ---@type inc_rename.UserConfig
-        opts = {},
-        init = function()
-            -- Sets to switch to IncRename command in keymap
-            has_inc_rename = true
-        end,
-    },
     { -- Uses LSP to show current code context—used in status line
         "SmiteshP/nvim-navic",
         event = "VeryLazy",
@@ -382,69 +339,4 @@ return {
             navic.setup(opts)
         end,
     },
-    {
-        ---@class vim.lsp.ConfigLocal : vim.lsp.Config
-        ---@field nix_pkg? string
-        ---@field enabled? boolean
-        ---@field bin? string|nil
-        ---@field local_config? string
-
-        -- LSP config
-        "neovim/nvim-lspconfig",
-        event = { "BufReadPre", "BufNewFile" },
-        cmd = { "LspInfo", "LspInstall", "LspUninstall" },
-        enabled = false,
-        config = function(_, opts)
-            ---@type table<string, vim.lsp.ConfigLocal>
-            local servers = opts.servers or {}
-
-            -- Resolve executables for each server
-            for server_name, server_cfg in pairs(servers) do
-                local default_cfg = vim.lsp.config[server_name] or {}
-                local command = server_cfg.cmd or (default_cfg.cmd or nil)
-
-                if server_cfg.enabled ~= false then
-                    if type(command) ~= "function" and command then
-                        -- Use resolved binary
-                        if type(command) == "table" and server_cfg.bin then
-                            command[1] = server_cfg.bin
-                        end
-
-                        local run_directly, run_via_nix, binary = Utils.tools.run_command_via(command)
-
-                        if run_directly then
-                            -- If runnable directly then set up the server with this config
-                            Utils.lsp.setup(server_name, server_cfg)
-                        elseif run_via_nix then
-                            -- If not runnable directly and outside of Nix shell then use Nix to run it
-                            local nix_pkg = server_cfg.nix_pkg or binary
-                            Utils.nix.get_cmd_via_nix(nix_pkg, binary, function(nix_cmd, o)
-                                if o.code == 0 then
-                                    local cmd = command
-                                    assert(type(cmd) ~= "function", "`cmd` should not be a function")
-
-                                    if cmd and not vim.tbl_isempty(cmd) then
-                                        -- Prepend nix-based cmd to the existing cmd
-                                        table.remove(cmd, 1)
-                                        server_cfg.cmd = vim.list_extend(nix_cmd, cmd)
-
-                                        -- Finally set up the server
-                                        Utils.lsp.setup(server_name, server_cfg)
-
-                                        -- Create and start the server since it was not started yet
-                                        -- on FileType event
-                                        Utils.lsp.create_clients_and_start_servers(vim.lsp.config[server_name])
-                                    end
-                                end
-                            end)
-                        end
-                    elseif type(command) == "function" then
-                        -- If command is a function it might require params so not resolving the binary
-                        Utils.lsp.setup(server_name, server_cfg)
-                    end
-                end
-            end
-        end,
-    },
-    { "Bilal2453/luvit-meta", lazy = true }, -- optional `vim.uv` typings
 }

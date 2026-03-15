@@ -24,10 +24,6 @@ require("lazy").setup({
         { import = "kdtsk.settings.editor" },
         -- Everything related to version control systems (e.g. Git)
         { import = "kdtsk.settings.version_control" },
-        -- Provides language-specific settings (Lazy modules provide `opts` but configured in other areas)
-        { import = "kdtsk.settings.languages_frameworks" },
-        -- Other tools (terminal, task runner, AI assistant, etc.)
-        { import = "kdtsk.settings.tools" },
         -- Uncategorized
         { import = "kdtsk.settings.other" },
     },

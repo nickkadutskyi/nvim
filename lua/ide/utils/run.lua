@@ -77,6 +77,21 @@ function M.on_deferred(fn, error_prefix)
     })
 end
 
+---@param fn fun(bufnr: number, client?: vim.lsp.Client) Callable to execute with buffer number and LSP client data.
+---@param error_prefix? string Optional prefix to prepend to error messages.
+function M.on_lsp_attach(fn, error_prefix)
+    utils.autocmd.create("LspAttach", {
+        desc = "Run function on LspAttach event",
+        group = "ide.lsp.attach",
+        callback = function(e)
+            local client = vim.lsp.get_client_by_id(e.data.client_id)
+            M.now(function()
+                fn(e.buf, client)
+            end, error_prefix)
+        end,
+    }, { clear = false })
+end
+
 --- Schedules the given function to be executed on the "IdeDone" event.
 ---@param name string Name of the plugin to match on the event data.
 ---@param fn function Callable to execute.

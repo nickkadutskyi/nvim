@@ -137,20 +137,20 @@ function I.create_ft_autocmds(pattern)
     -- TODO: move debounce from kdtsk to ide utils
     -- Run linters that require a file to be saved and stdin
     utils.autocmd.create({ "BufWritePost", "BufReadPre", "BufNewFile" }, {
-        group = "ide-lint-write",
+        group = "ide-lint-write:" .. pattern,
         pattern = pattern,
         callback = Utils.debounce(100, function()
             require("lint").try_lint()
         end),
-    }, { clear = false })
+    })
     -- Run linters that use stdin
     utils.autocmd.create({ "InsertLeave", "TextChanged" }, {
-        group = "ide-lint-stdin",
+        group = "ide-lint-stdin:" .. pattern,
         pattern = pattern,
         callback = Utils.debounce(100, function()
             require("lint").try_lint(nil, { filter = "stdin" })
         end),
-    }, { clear = false })
+    })
 end
 
 return M
