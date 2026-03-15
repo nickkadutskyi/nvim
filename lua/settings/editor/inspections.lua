@@ -1,5 +1,5 @@
 local utils = require("ide.utils")
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
 
 --- AUTOCMDS -------------------------------------------------------------------
 
@@ -66,7 +66,7 @@ end)
 
 --- PLUGINS --------------------------------------------------------------------
 
-spec_builder.add({
+spec.add({
     "incline.nvim",
     opts = {
         render = function(props)
@@ -77,7 +77,7 @@ spec_builder.add({
     },
 })
 
-spec_builder.add({
+spec.add({
     "trouble.nvim",
     ---@class trouble.Config
     opts = {

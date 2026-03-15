@@ -1,4 +1,4 @@
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
 
 --- OPTIONS --------------------------------------------------------------------
 -- Handled via .editorconfig
@@ -17,7 +17,7 @@ vim.opt.virtualedit = "onemore"
 
 --- PLUGINS --------------------------------------------------------------------
 
-spec_builder.add({
+spec.add({
     {
         "virt-column.nvim",
         opts = {

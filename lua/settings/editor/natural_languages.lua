@@ -1,5 +1,5 @@
 local utils = require("ide.utils")
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
 
 --- AUTOCMDS -------------------------------------------------------------------
 
@@ -29,7 +29,7 @@ vim.opt.spelllang = { "en_us", "en", "ru", "uk" }
 vim.opt.spellfile = os.getenv("HOME") .. "/.config/nvim_spell/en.utf-8.add"
 
 --- PLUGINS --------------------------------------------------------------------
-spec_builder.add({
+spec.add({
     "which-key.nvim",
     opts = {
         spelling = {

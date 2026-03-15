@@ -1,6 +1,6 @@
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
 
-spec_builder.add({
+spec.add({
     "trouble.nvim",
     ---@class trouble.Config
     opts = {

@@ -1,4 +1,4 @@
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
 
 --- OPTIONS --------------------------------------------------------------------
 
@@ -9,7 +9,7 @@ vim.opt.termguicolors = true
 
 --- PLUGINS --------------------------------------------------------------------
 
-spec_builder.add({
+spec.add({
     "jb.nvim",
     after = function()
         require("jb").setup({
@@ -68,7 +68,7 @@ spec_builder.add({
     end,
 })
 
-spec_builder.add({
+spec.add({
     "nvim-treesitter",
     ---@type ide.Opts.Treesitter
     opts = {

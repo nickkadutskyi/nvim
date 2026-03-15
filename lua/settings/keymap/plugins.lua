@@ -1,4 +1,4 @@
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
 local utils = require("ide.utils")
 local pack = require("ide.pack")
 
@@ -32,7 +32,7 @@ utils.run.now_if_arg_or_deferred(function()
     end, { silent = true, desc = "Plugins: [o]pen [l]azy.nvim manager" })
 end)
 
-spec_builder.add({
+spec.add({
     "which-key.nvim",
     keys = {
         {
@@ -68,7 +68,7 @@ spec_builder.add({
 
 --- PLUGINS --------------------------------------------------------------------
 
-spec_builder.add({
+spec.add({
     "which-key.nvim",
     ---@type wk.Opts
     opts = {

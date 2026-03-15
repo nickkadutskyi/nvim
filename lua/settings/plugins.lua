@@ -1,10 +1,10 @@
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
 local utils = require("ide.utils")
 local g = utils.str.prepend_fn("https://github.com/")
 local c = utils.str.prepend_fn("https://codeberg.org/")
 
 --- Define all plugins with their src here. Feature files patch via name only.
-spec_builder.add({
+spec.add({
     --- A library of lua functions used by lots of plugins
     --- Required by: harpoon
     { src = g("nvim-lua/plenary.nvim"), data = { deferred = false } },
@@ -417,30 +417,12 @@ spec_builder.add({
             end,
         },
     },
-    --- Better quickfix window in Neovim, polish old quickfix window.
-    -- {
-    --     src = g("kevinhwang91/nvim-bqf"),
-    --     data = {
-    --         -- ft = "qf",
-    --         event = "IdeDeferred",
-    --         ---@type BqfConfig
-    --         opts = {
-    --             preview = {
-    --                 winblend = 0,
-    --             },
-    --         },
-    --         after = function(_, opts)
-    --             require("bqf").setup(opts)
-    --         end,
-    --     },
-    -- },
-    --- Improved UI and workflow for the Neovim quickfix
-    { -- TODO: Style it
-        src = g("stevearc/quicker.nvim"),
+    {
+        src = g("nickkadutskyi/snacks.nvim"),
         data = {
             event = "IdeDeferred",
             after = function(_, opts)
-                require("quicker").setup(opts)
+                require("snacks").setup(opts)
             end,
         },
     },

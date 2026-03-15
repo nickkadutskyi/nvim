@@ -1,4 +1,4 @@
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
 local pack = require("ide.pack")
 local utils = require("ide.utils")
 
@@ -19,7 +19,7 @@ end)
 
 --- PLUGINS --------------------------------------------------------------------
 
-spec_builder.add({
+spec.add({
     "lualine-harpoon.nvim",
     opts = {
         -- Configure symbols used in the display
@@ -45,7 +45,7 @@ spec_builder.add({
     },
 })
 
-spec_builder.add({
+spec.add({
     "lualine.nvim",
     before = function()
         -- This is to hide the statusline on the starter page,

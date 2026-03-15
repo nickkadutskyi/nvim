@@ -1,5 +1,5 @@
 local utils = require("ide.utils")
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
 
 --- AUTOCMDS -------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ end)
 
 --- PLUGINS --------------------------------------------------------------------
 
-spec_builder.add({
+spec.add({
     "todo-comments.nvim",
     opts = {
         signs = false, -- show icons in the signs column

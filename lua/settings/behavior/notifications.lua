@@ -1,6 +1,6 @@
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
 
-spec_builder.add({
+spec.add({
     "nvim-notify",
     opts = {
         minimum_width = 50,

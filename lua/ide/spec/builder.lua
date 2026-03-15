@@ -62,7 +62,27 @@ function M.get_specs()
         else
             entry.spec.data = I.merge_data_fragments(entry.data_fragments)
             if entry.spec.data.enabled ~= false then
-                table.insert(result, entry.spec)
+                -- HACK: Clear spec's opts_chain to avoid issue with mixed tables
+                --       See https://github.com/neovim/neovim/issues/35550
+                if I.has_mixed_table(entry.spec.data.opts_chain) then
+                    local spec = vim.deepcopy(entry.spec)
+                    if spec then
+                        -- Clearing opts_chain to avoid issues when passed to
+                        -- autocmd data field (in case of PackChanged and PackChangedPre).
+                        -- We will get opts_chain from registry
+                        spec.data.opts_chain = nil
+                        table.insert(result, spec)
+                    else
+                        vim.notify(
+                            "Failed to deepcopy spec for '" .. name .. "'",
+                            vim.log.levels.WARN,
+                            { title = "ide.spec.builder.get_specs()" }
+                        )
+                        table.insert(result, entry.spec)
+                    end
+                else
+                    table.insert(result, entry.spec)
+                end
             end
         end
     end
@@ -74,7 +94,12 @@ end
 ---@return table
 function M.resolve_opts(spec)
     local data = spec.data or {}
-    local chain = data.opts_chain or {}
+    -- HACK: we check in registry also because for some plugin specs we delete `opts_chain`
+    --       in case where opts can have mixed table with both index and keyed items
+    --       which casuse issue when passed to autocmd data field (in case of PackChanged and PackChangedPre).
+    --       See https://github.com/neovim/neovim/issues/35550
+    --       See https://github.com/neovim/neovim/issues/36638
+    local chain = data.opts_chain or I.registry[spec.name].spec.data.opts_chain or {}
     local extend_paths = data.opts_extend or {}
     local opts = {}
 
@@ -120,6 +145,28 @@ end
 
 function I.is_nonempty_string(x)
     return type(x) == "string" and x ~= ""
+end
+
+function I.has_mixed_table(tb)
+    if type(tb) ~= "table" then
+        return false
+    end
+    local has_sequential = false
+    local has_keyed = false
+    for k, v in pairs(tb) do
+        if type(k) == "number" and k >= 1 and math.floor(k) == k then
+            has_sequential = true
+        else
+            has_keyed = true
+        end
+        if has_sequential and has_keyed then
+            return true
+        end
+        if type(v) == "table" and I.has_mixed_table(v) then
+            return true
+        end
+    end
+    return false
 end
 
 ---@param spec vim.pack.Spec|ide.SpecData.Named

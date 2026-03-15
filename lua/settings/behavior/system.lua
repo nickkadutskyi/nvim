@@ -1,7 +1,7 @@
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
 local utils = require("ide.utils")
 
-spec_builder.add({
+spec.add({
     "DrKJeff16/project.nvim",
     ---@type Project.Config.Options
     opts = {

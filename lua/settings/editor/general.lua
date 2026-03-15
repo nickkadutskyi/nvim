@@ -1,5 +1,5 @@
 local utils = require("ide.utils")
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
 
 --- AUTOCMDS -------------------------------------------------------------------
 
@@ -34,7 +34,7 @@ end)
 
 --- Appearance --------------------------------------------------------------------
 
-spec_builder.add({
+spec.add({
     "indent-blankline.nvim",
     ---@type ibl.config
     opts = {
@@ -43,7 +43,7 @@ spec_builder.add({
         scope = { char = "▏", show_start = false, show_end = false },
     },
 })
-spec_builder.add({
+spec.add({
     "nvim-scrollbar",
     opts = {
         show = true,
@@ -88,7 +88,7 @@ spec_builder.add({
 
 --- Code Complection -----------------------------------------------------------
 
-spec_builder.add({
+spec.add({
     "blink.cmp",
     opts = {
         -- All presets have the following mappings:
@@ -249,7 +249,7 @@ local ftMap = {
     text = "indent",
 }
 
-spec_builder.add({
+spec.add({
     "nvim-ufo",
     opts = {
         open_fold_hl_timeout = 150,
@@ -298,7 +298,7 @@ end
 
 --- Sticky Lines ---------------------------------------------------------------
 
-spec_builder.add({
+spec.add({
     "nvim-treesitter-context",
     opts = {
         enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)

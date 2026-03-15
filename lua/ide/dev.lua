@@ -11,7 +11,7 @@ I.config = {
     fallback = true,
 }
 
---- Configure the dev loader. Call before spec_builder.add() calls are made.
+--- Configure the dev loader. Call before ide.spec.builder.add() calls are made.
 ---@param opts? ide.Dev.Config
 function M.setup(opts)
     if opts then

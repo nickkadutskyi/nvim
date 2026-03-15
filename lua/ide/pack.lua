@@ -16,9 +16,8 @@ end
 ---@param specs vim.pack.Spec[]
 function M.load(specs)
     -- Dev phase: rewrite spec.src to local path where applicable
-    local dev = require("ide.dev")
     for _, spec in ipairs(specs) do
-        local dev_path = dev.resolve(spec)
+        local dev_path = require("ide.dev").resolve(spec)
         if dev_path then
             spec.src = dev_path
         end
@@ -33,6 +32,8 @@ function M.load(specs)
             end, "ide.pack: before hook failed for '" .. (spec.name or "?") .. "' due to: ")
         end
     end
+
+    -- Autocmd before plugins are loaded
     vim.api.nvim_exec_autocmds("User", { pattern = "PackBefore", modeline = false })
 
     I.create_autocmds()

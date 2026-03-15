@@ -1,5 +1,5 @@
 local import = require("ide.import").import
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
 local pack = require("ide.pack")
 
 --- MODULE DEFINITION ----------------------------------------------------------
@@ -23,7 +23,7 @@ function M.setup(opts)
     end
 
     --- Load plugins after all specs have been added and merged
-    pack.load(spec_builder.get_specs())
+    pack.load(spec.get_specs())
 end
 
 return M

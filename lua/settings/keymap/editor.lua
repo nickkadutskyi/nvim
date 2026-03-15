@@ -1,5 +1,5 @@
 local utils = require("ide.utils")
-local spec_builder = require("ide.spec.builder")
+local spec = require("ide.spec.builder")
 
 --- OPTIONS --------------------------------------------------------------------
 
@@ -20,7 +20,7 @@ utils.run.now_if_arg_or_deferred(function()
 end)
 
 -- Select by scope
-spec_builder.add({
+spec.add({
     "nvim-treesitter-textobjects",
     keys = {
         {
@@ -62,7 +62,7 @@ spec_builder.add({
 })
 
 -- Move by scope
-spec_builder.add({
+spec.add({
     "nvim-treesitter-textobjects",
     keys = {
         {

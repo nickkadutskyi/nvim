@@ -48,10 +48,13 @@ function M.setup(opts)
         end,
     })
 
-    --- Configure loader for local development versions of plugins.
+    -- Configure loader for local development versions of plugins.
     require("ide.dev").setup()
 
-    --- Load plugins and setup with the settings
+    -- Configure Netrw to look and behave better
+    require("ide.netrw").setup()
+
+    -- Load plugins and setup with the settings
     require("settings").setup(opts)
 
     vim.api.nvim_exec_autocmds("User", { pattern = "IdeDone", modeline = false })
