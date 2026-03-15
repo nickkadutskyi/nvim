@@ -85,10 +85,16 @@ function I.handle_tools_lsp_declaration(bufnr, val, opts)
                     -- If cmd is a function it might require params so not resolving the binary
                     table.insert(to_enable, name)
                 elseif cfg.cmd then
-                    cfg.bin = type(cfg.bin) == "function" and cfg.bin() or cfg.bin
-                    if type(cfg.cmd) == "table" and cfg.bin then
+                    cfg.bin = (type(cfg.bin) == "function" and { cfg.bin() } or { cfg.bin })[1]
+                    if type(cfg.cmd) == "table" and type(cfg.bin) == "string" then
                         cfg.cmd[1] = cfg.bin --[[@as string]]
                         vim.lsp.config(name, { cmd = cfg.cmd, bin = cfg.bin })
+                    elseif cfg.bin and type(cfg.bin) ~= "string" then
+                        vim.notify(
+                            "LSP client '" .. name .. "' has a non-string 'bin' field.",
+                            vim.log.levels.WARN,
+                            { title = "ide.Lsp" }
+                        )
                     end
                     local can_run, binary = utils.run.can_run_command(cfg.cmd)
                     if can_run then

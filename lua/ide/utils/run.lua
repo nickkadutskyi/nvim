@@ -104,18 +104,18 @@ function M.on_load(name, fn, error_prefix)
 end
 
 ---Determines if a command can be run directly
----@param cmd string|function|table Command to run
+---@param cmd string|function|table<string> Command to run
 ---@return boolean, string
 function M.can_run_command(cmd)
-    cmd = type(cmd) == "function" and cmd() or cmd
-    cmd = type(cmd) == "table" and cmd[1] or cmd
-    assert(type(cmd) == "string" and cmd ~= "", "command must be a non-empty string, got: " .. vim.inspect(cmd))
+    local command = type(cmd) == "function" and cmd() or cmd
+    command = type(command) == "table" and command[1] or command
+    assert(type(command) == "string" and command ~= "", "command must be a non-empty string, got: " .. vim.inspect(cmd))
 
-    if vim.fn.executable(cmd) == 1 then
-        return true, cmd
+    if vim.fn.executable(command) == 1 then
+        return true, command
     end
 
-    return false, cmd
+    return false, command
 end
 
 function I.non_empty_str(v)

@@ -137,7 +137,7 @@ end
 ---@param cwd? string Optional current working directory to search in (defaults to vim.fn.getcwd())
 ---@return string|nil bin_path The path to the JS executable if found, otherwise nil
 function M.find_js_executable(executable, cwd)
-    local bin, found = Utils.tools.find_executable({
+    local found, bin = M.find_executable({
         "./node_modules/.bin/" .. executable,
         ".devenv/profile/bin/" .. executable,
     }, executable, cwd)

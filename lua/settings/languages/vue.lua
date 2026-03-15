@@ -1,4 +1,5 @@
 local spec = require("ide.spec.builder")
+local utils = require("ide.utils")
 
 spec.add({ "nvim-treesitter", opts = { ensure_installed = { "vue" } } })
 spec.add({
@@ -30,6 +31,11 @@ spec.add({
     "nvim-lspconfig",
     opts = { ---@type ide.Opts.Lsp
         clients = {
+            ["vue_ls"] = {
+                bin = function()
+                    return utils.tool.find_js_executable("vue-language-server")
+                end,
+            },
             ["vtsls"] = {
                 on_attach = function(client)
                     -- NOTE: see https://github.com/vuejs/language-tools/wiki/Neovim#custom-component-highlight
@@ -44,6 +50,22 @@ spec.add({
                     end
                 end,
                 filetypes = { "vue" },
+                settings = {
+                    vtsls = {
+                        tsserver = {
+                            globalPlugins = {
+                                -- See https://github.com/vuejs/language-tools/wiki/Neovim#configuration
+                                {
+                                    name = "@vue/typescript-plugin",
+                                    location = vim.fn.getcwd() .. "/node_modules/@vue/language-server",
+                                    languages = { "vue" },
+                                    configNamespace = "typescript",
+                                    enableForWorkspaceTypeScriptVersions = true,
+                                },
+                            },
+                        },
+                    },
+                },
             },
         },
     },
