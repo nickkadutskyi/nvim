@@ -140,7 +140,7 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "project.nvim": {
-      "rev": "b866f4fbd48db4824400ba44d281ef412c334f6b",
+      "rev": "c9e5a946db177691d019459e914a4d84f5f0999d",
       "src": "https://github.com/DrKJeff16/project.nvim"
     },
     "promise-async": {
