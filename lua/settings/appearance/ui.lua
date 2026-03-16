@@ -1,4 +1,5 @@
 local utils = require("ide.utils")
+local spec = require("ide.spec.builder")
 
 --- AUTOCMDS -------------------------------------------------------------------
 
@@ -97,3 +98,5 @@ vim.opt.fillchars = { eob = " ", diff = "━" }
 
 --- Font
 vim.g.nerd_font_is_present = true
+
+--- PLUGINS --------------------------------------------------------------------
