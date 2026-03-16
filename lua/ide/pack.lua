@@ -261,15 +261,16 @@ function I.create_autocmds()
             -- Run build function if plugin is installed/updated and has a build function
             if
                 data
-                and data.active
-                and (data.kind == "install" or data.kind == "update")
+                and ((data.active and data.kind == "update") or (not data.active and data.kind == "install"))
                 and data.spec
                 and data.spec.data
                 and type(data.spec.data.build) == "function"
             then
-                utils.run.now(function()
-                    data.spec.data.build(data)
-                end, "ide.pack: build hook failed for '" .. (data.spec.name or "?") .. "' due to: ")
+                utils.run.on_load(data.spec.name, function()
+                    utils.run.now(function()
+                        data.spec.data.build(data)
+                    end, "ide.pack: build hook failed for '" .. (data.spec.name or "?") .. "' due to: ")
+                end)
             end
         end,
     })

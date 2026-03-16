@@ -152,6 +152,32 @@ utils.run.now_if_arg_or_deferred(function()
     end, { desc = "Problems: previous [p]roblem" })
 end)
 
+-- Goto by Name Actions
+spec.add({
+    "dmtrKovalenko/fff.nvim",
+    keys = {
+        {
+            lhs = "<leader>gf",
+            rhs = function()
+                require("fff").find_files()
+            end,
+            desc = "Search(fff.nvim): [g]o to [f]ile",
+        },
+        {
+            lhs = "<leader>ff",
+            rhs = function()
+                require("fff").live_grep({
+                    title = "Find in Files",
+                    grep = {
+                        modes = { "plain", "fuzzy", "regex" },
+                    },
+                })
+            end,
+            desc = "Search(fff.nvim): [f]ind in [f]iles",
+        },
+    },
+})
+
 -- Goto by Reference Actions
 utils.run.on_lsp_attach(function(buf, client)
     -- LSP References or Usage

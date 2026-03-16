@@ -417,12 +417,32 @@ spec.add({
             end,
         },
     },
+    --- Project View, Big file handling, image rendering, other stuff
     {
         src = g("nickkadutskyi/snacks.nvim"),
         data = {
             event = "IdeDeferred",
             after = function(_, opts)
                 require("snacks").setup(opts)
+            end,
+        },
+    },
+    --- Fast File Finder for your AI and neovim, with memory built-in
+    {
+        src = g("dmtrKovalenko/fff.nvim"),
+        data = {
+            build = function()
+                vim.notify("Downloading fff.nvim binary")
+                -- this will download prebuild binary or try to use existing rustup toolchain to build from source
+                -- (if you are using lazy you can use gb for rebuilding a plugin if needed)
+                require("fff.download").download_or_build_binary()
+            end,
+            after = function(_, opts)
+                -- we set this here to ensure proper root
+                opts.base_path = vim.fn.getcwd()
+                require("fff").setup(opts)
+                -- NOTE: doing this to disable combo feature
+                require("fff.combo_renderer").detect_and_prepare = function() end
             end,
         },
     },
