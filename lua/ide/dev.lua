@@ -1,3 +1,5 @@
+local utils = require("ide.utils")
+
 --- MODULE DEFINITION ----------------------------------------------------------
 
 ---@class ide.Dev
@@ -10,6 +12,8 @@ I.config = {
     patterns = {},
     fallback = true,
 }
+
+I.installed = {}
 
 --- Configure the dev loader. Call before ide.spec.builder.add() calls are made.
 ---@param opts? ide.Dev.Config
@@ -52,6 +56,94 @@ function M.resolve(spec)
     end
 
     return dev_dir
+end
+
+---@param specs vim.pack.Spec[]
+---@param opts {load: fun(plugin_dat: {spec: vim.pack.Spec, path: string})}
+function M.add(specs, opts)
+    vim.validate("specs", specs, vim.islist, false, "list")
+    opts = vim.tbl_extend("force", { load = vim.v.vim_did_init == 1, confirm = true }, opts or {})
+    vim.validate("opts", opts, "table")
+
+    local plug_dir = I.get_plug_dir()
+
+    if #I.installed == 0 then
+        I.prepare_install_dir(plug_dir)
+    end
+
+    local plugs = {} --- @type ide.pack.Plug[]
+    for i = 1, #specs do
+        local p = I.new_plug(specs[i], plug_dir)
+        plugs[i] = p
+    end
+
+    -- Create symlinks for each plugin and track them
+    for _, plug in ipairs(plugs) do
+        local target = plug.info.dev_path
+        local link_path = vim.fs.joinpath(plug_dir, plug.spec.data.dev_name or plug.spec.name)
+
+        if target then
+            -- Remove existing entry if it exists (stale symlink, dir, etc.)
+            if vim.uv.fs_lstat(link_path) then
+                vim.fn.delete(link_path, "rf")
+            end
+
+            vim.uv.fs_symlink(target, link_path)
+            I.installed[plug.spec.name] = true
+
+            if opts.load then
+                opts.load({ spec = plug.spec, path = link_path })
+            end
+        end
+    end
+end
+
+function I.prepare_install_dir(plugin_dir)
+    local plug_dir = I.get_plug_dir()
+    if vim.uv.fs_lstat(plug_dir) then
+        vim.fn.delete(plug_dir, "rf")
+    end
+    vim.fn.mkdir(plug_dir, "p")
+end
+
+--- @return string
+function I.get_plug_dir()
+    return vim.fs.joinpath(vim.fn.stdpath("data"), "site", "pack", "dev", "opt")
+end
+
+--- @class (private) ide.pack.Plug
+--- @field spec vim.pack.SpecResolved
+--- @field path string
+--- @field info ide.pack.PlugInfo Gathered information about plugin.
+---
+--- @class (private) ide.pack.PlugInfo
+--- @field dev_path? string
+
+--- @param spec vim.pack.Spec
+--- @param plug_dir string?
+--- @return ide.pack.Plug
+function I.new_plug(spec, plug_dir)
+    local spec_resolved = I.normalize_spec(spec)
+    local path = vim.fs.joinpath(plug_dir or I.get_plug_dir(), spec_resolved.data.dev_name or spec_resolved.name)
+    local info = { dev_path = M.resolve(spec) }
+    return { spec = spec_resolved, path = path, info = info }
+end
+
+function I.is_nonempty_string(x)
+    return type(x) == "string" and x ~= ""
+end
+
+--- @param spec string|vim.pack.Spec
+--- @return vim.pack.SpecResolved
+function I.normalize_spec(spec)
+    vim.validate("spec", spec, "table")
+    vim.validate("spec.src", spec.src, I.is_nonempty_string, false, "non-empty string")
+    local name = spec.name or spec.src:gsub("%.git$", "")
+    name = (type(name) == "string" and name or ""):match("[^/]+$") or ""
+    vim.validate("spec.name", name, I.is_nonempty_string, true, "non-empty string")
+    spec.data = spec.data or {}
+    spec.data.dev_name = "dev-" .. name
+    return { src = spec.src, name = name, version = spec.version, data = spec.data }
 end
 
 return M

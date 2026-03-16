@@ -1,4 +1,5 @@
 local spec = require("ide.spec.builder")
+local pack = require("ide.pack")
 
 spec.add({
     "nvim-notify",
@@ -24,7 +25,7 @@ spec.add({
                     height = state.message.height,
                     col = vim.opt.columns:get() - 1,
                     row = next_row - 1,
-                    border = require("jb.borders").borders.notification,
+                    border = pack.is_loaded("jb.nvim") and require("jb.borders").borders.notification or "none",
                     style = "minimal",
                 }
             end,

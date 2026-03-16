@@ -1,5 +1,6 @@
 local utils = require("ide.utils")
 local spec_builder = require("ide.spec.builder")
+local dev = require("ide.dev")
 
 --- MODULE DEFINITION ----------------------------------------------------------
 local M = {}
@@ -15,17 +16,20 @@ end
 
 ---@param specs vim.pack.Spec[]
 function M.load(specs)
-    -- Dev phase: rewrite spec.src to local path where applicable
-    for _, spec in ipairs(specs) do
-        local dev_path = require("ide.dev").resolve(spec)
-        if dev_path then
-            spec.src = dev_path
-        end
-    end
-
-    -- Pre-load phase: run before hooks for all plugins (mirrors lazy.nvim init)
+    local normal_specs = {}
+    local dev_specs = {}
     for _, spec in ipairs(specs) do
         local data = spec.data or {}
+
+        -- Check for dev mode and separate dev specs to add with dev.add()
+        local dev_path = dev.resolve(spec)
+        if dev_path then
+            table.insert(dev_specs, spec)
+        else
+            table.insert(normal_specs, spec)
+        end
+
+        -- Pre-load phase: run before hooks for all plugins (mirrors lazy.nvim init)
         if type(data.before) == "function" then
             utils.run.now(function()
                 data.before({ spec = spec, path = "" })
@@ -39,7 +43,8 @@ function M.load(specs)
     I.create_autocmds()
 
     -- Install and load plugins, running after hooks in on_load
-    vim.pack.add(specs, { load = I.on_load, confirm = true })
+    dev.add(dev_specs, { load = I.on_load, confirm = true })
+    vim.pack.add(normal_specs, { load = I.on_load, confirm = true })
 end
 
 --- Get all active plugins whose spec.src is a local filesystem path (not a URL).
@@ -99,7 +104,6 @@ function I.on_load(plugin_data)
                 desc = "ide.pack: Load plugin '" .. name .. "' on event(s).",
                 callback = function()
                     if not I.loaded[name] then
-                        I.loaded[name] = true
                         I.load_plugin(plugin_data)
                     end
                 end,
@@ -115,7 +119,6 @@ function I.on_load(plugin_data)
                 desc = "ide.pack: Load plugin '" .. name .. "' on filetype(s).",
                 callback = function()
                     if not I.loaded[name] then
-                        I.loaded[name] = true
                         I.load_plugin(plugin_data)
                     end
                 end,
@@ -131,7 +134,6 @@ function I.on_load(plugin_data)
     end
 
     if not deferred_load then
-        I.loaded[name] = true
         I.load_plugin(plugin_data)
     end
 end
@@ -163,8 +165,11 @@ function I.load_plugin(plugin_data)
         end
     end
 
+    local plug_name = type(spec.data.dev_name) == "string" and spec.data.dev_name or spec.name
+    assert(type(plug_name) == "string", "Plugin name is required for loading: " .. vim.inspect(spec))
+
     -- Loads similarly to vim.pack.add with `load` not specified
-    vim.cmd.packadd({ vim.fn.escape(spec.name, " "), bang = vim.v.vim_did_enter == 0, magic = { file = false } })
+    vim.cmd.packadd({ vim.fn.escape(plug_name, " "), bang = vim.v.vim_did_enter == 0, magic = { file = false } })
     -- Source after/plugin/ when loading after startup (packadd never does this)
     if vim.v.vim_did_enter == 1 then
         local after_paths = vim.fn.glob(plugin_data.path .. "/after/plugin/**/*.{vim,lua}", false, true)
@@ -172,6 +177,8 @@ function I.load_plugin(plugin_data)
             vim.cmd.source({ path, magic = { file = false } })
         end
     end
+
+    I.loaded[spec.name] = true
 
     -- Run after hook if defined, passing resolved opts
     if data.after or (data.opts_chain and #data.opts_chain > 0) then

@@ -15,6 +15,7 @@
 ---@class (exact) ide.SpecData
 ---@field enabled? boolean (default true) when false spec is not included
 ---@field dev? boolean when true, load from local dev path instead of spec.src (see ide.Dev.Config)
+---@field dev_name? string optional name to use for dev path (defaults to plugin name);
 ---@field cond? boolean|fun(plugin_data: vim.pack.PluginData): boolean condition to determine whether plugin should be loaded, evaluated at load time; if false, plugin is not loaded and after hook is not run
 ---@field build? fun(event: settings.PackEvent) function to run after plugin is installed or updated
 ---@field opts? ide.SpecData.Opts either a table of options to merge into the plugin spec, or a function that returns such a table
