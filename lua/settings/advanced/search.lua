@@ -30,6 +30,8 @@ spec.add({
             prompt_position = "top", -- or 'top'
             preview_position = "bottom", -- or 'left', 'right', 'top', 'bottom'
             preview_size = 0.5,
+            -- TODO: check if this works
+            show_scrollbar = false,
         },
         preview = {
             -- enabled = false,
