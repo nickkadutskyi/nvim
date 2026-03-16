@@ -29,6 +29,10 @@
       "rev": "086a40dc7ed8242c03be9f47fbcee68699cc2395",
       "src": "https://github.com/stevearc/conform.nvim"
     },
+    "diffview.nvim": {
+      "rev": "4516612fe98ff56ae0415a259ff6361a89419b0a",
+      "src": "https://github.com/sindrets/diffview.nvim"
+    },
     "fff.nvim": {
       "rev": "64861f8142c5ce8c34f9ec73a3d084857182e156",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
@@ -40,6 +44,10 @@
     "fzf-lua": {
       "rev": "bf59dcee2a8d894724b060401d2abf3d71d4bd47",
       "src": "https://github.com/ibhagwan/fzf-lua"
+    },
+    "gitsigns.nvim": {
+      "rev": "7c4faa3540d0781a28588cafbd4dd187a28ac6e3",
+      "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "harpoon": {
       "rev": "87b1a3506211538f460786c23f98ec63ad9af4e5",
@@ -93,6 +101,10 @@
     "nvim-lspconfig": {
       "rev": "0203a9608d63eda57679b01e69f33a7b4c34b0d1",
       "src": "https://github.com/neovim/nvim-lspconfig"
+    },
+    "nvim-navic": {
+      "rev": "f5eba192f39b453675d115351808bd51276d9de5",
+      "src": "https://github.com/SmiteshP/nvim-navic"
     },
     "nvim-notify": {
       "rev": "ab98fecfe24d31fa03e0b3dcfc7c506c0f9c34c7",

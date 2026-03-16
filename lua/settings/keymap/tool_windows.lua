@@ -76,3 +76,40 @@ spec.add({
 })
 -- 8 Services (DB, Docker, Podman etc.)
 -- 9 Git (Git Log)
+local function toggle_diffview(cmd)
+    if pack.is_loaded("diffview.nvim") then
+        if next(require("diffview.lib").views) == nil then
+            vim.cmd(cmd)
+        else
+            vim.cmd("DiffviewClose")
+        end
+    else
+        vim.notify("diffview.nvim is not loaded", vim.log.levels.WARN)
+    end
+end
+spec.add({
+    "sindrets/diffview.nvim",
+    keys = {
+        {
+            desc = "VCS: [t]oggle [v]cs [l]og for current file",
+            lhs = { "<localleader>tvl" },
+            rhs = function()
+                toggle_diffview("DiffviewFileHistory %")
+            end,
+        },
+        {
+            desc = "VCS: [t]oggle [v]cs [l]og",
+            lhs = { "<leader>tvl" },
+            rhs = function()
+                toggle_diffview("DiffviewFileHistory")
+            end,
+        },
+        {
+            desc = "VCS: [t]oggle [v]cs [s]tatus",
+            lhs = { "<leader>tvs" },
+            rhs = function()
+                toggle_diffview("DiffviewOpen")
+            end,
+        },
+    },
+})

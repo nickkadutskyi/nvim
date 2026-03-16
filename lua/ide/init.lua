@@ -1,6 +1,6 @@
 local utils = require("ide.utils")
 -- TODO: move this utils from kdtsk to ide
-_G.Utils = require("kdtsk.utils")
+_G.Utils = require("legacy.utils.init")
 
 --- MODULE DEFINITION ----------------------------------------------------------
 

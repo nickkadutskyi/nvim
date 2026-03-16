@@ -26,6 +26,3 @@ require("ide").setup({
         "settings.advanced",
     },
 })
-
----@deprecated Moving config to vim.pack
-require("kdtsk")

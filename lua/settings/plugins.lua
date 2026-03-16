@@ -480,4 +480,63 @@ spec.add({
             end,
         },
     },
+    -- Simple winbar/statusline plugin that shows your current code context
+    {
+        src = g("SmiteshP/nvim-navic"),
+        event = "IdeDeferred",
+        data = {
+            after = function(_, opts)
+                local navic = require("nvim-navic")
+
+                -- Adjusts icon for JSON objects
+                local format_data = function(data, opts_internal)
+                    if vim.bo.filetype == "json" then
+                        for _, item in ipairs(data) do
+                            if item.type == "Module" then
+                                item.type = "Object"
+                                item.kind = 19
+                            end
+                        end
+                    end
+                    return data
+                end
+                navic.get_location = function(opts_internal, bufnr)
+                    local data = navic.get_data(bufnr)
+                    data = format_data(data, opts_internal)
+                    return navic.format_data(data, opts_internal)
+                end
+
+                local setup = false
+                utils.run.on_load("jb.nvim", function()
+                    -- Sets icons from jb.nvim
+                    opts.icons = vim.tbl_map(function(icon)
+                        return icon ~= "" and icon .. " " or ""
+                    end, require("jb.icons").kind)
+
+                    navic.setup(opts)
+                    setup = true
+                end)
+                if not setup then
+                    navic.setup(opts)
+                end
+            end,
+        },
+    },
+    -- Single tabpage interface for easily cycling through diffs for all modified files for any git rev.
+    {
+        src = g("sindrets/diffview.nvim"),
+        data = {
+            after = function(_, opts)
+                require("diffview").setup(opts)
+            end,
+        },
+    },
+    {
+        src = g("lewis6991/gitsigns.nvim"),
+        data = {
+            after = function(_, opts)
+                require("gitsigns").setup(opts)
+            end,
+        },
+    },
 })

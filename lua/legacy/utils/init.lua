@@ -23,14 +23,14 @@ setmetatable(M, {
             else
                 local has_blink, blink = pcall(require, "blik.cmp.config.appearance")
                 if has_blink and blink.default.kind_icons then
-                    t[k] = require("kdtsk.utils.icons")
+                    t[k] = require("legacy.utils.icons")
                     t[k].kind = blink.default.kind_icons
                 else
-                    t[k] = require("kdtsk.utils.icons")
+                    t[k] = require("legacy.utils.icons")
                 end
             end
         else
-            t[k] = require("kdtsk.utils." .. k)
+            t[k] = require("legacy.utils." .. k)
         end
 
         return t[k]
@@ -40,7 +40,7 @@ setmetatable(M, {
 ---@type table<function>
 local run_when_settings_loaded_functions = {}
 
----@param fn fun(settings: kdtsk.Settings): any?
+---@param fn fun(settings: legacy.Settings): any?
 ---@return boolean, any -- Returns true if settings are already loaded, false otherwise
 function M.run_when_settings_loaded(fn)
     assert(type(fn) == "function", "run_when_settings_loaded expects a function, but got: " .. type(fn))
@@ -61,7 +61,7 @@ vim.api.nvim_create_autocmd("User", {
             if type(fn) == "function" then
                 fn(vim.g.settings)
             else
-                vim.notify("Expecting function but, got: " .. type(fn), vim.log.levels.WARN, { title = "kdtsk.utils" })
+                vim.notify("Expecting function but, got: " .. type(fn), vim.log.levels.WARN, { title = "legacy.utils" })
             end
         end
     end,

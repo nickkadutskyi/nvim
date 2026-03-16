@@ -86,6 +86,41 @@ spec.add({
     },
 })
 
+--- Breadcrumbs ----------------------------------------------------------------
+
+spec.add({
+    "SmiteshP/nvim-navic",
+    opts = { ---@type Options
+        depth_limit = 4,
+        highlight = true,
+        color_correction = "dynamic",
+        lsp = {
+            auto_attach = true,
+            preference = {
+                "phpactor", -- TODO: find a way to switch to intelephense
+                "nixd", -- Works better than nil_ls
+            },
+        },
+        format_text = function(text)
+            -- This is a workaround for the fact that `nixd` returns
+            -- `{anonymous}` as the name of Array kind
+            if text == "{anonymous}" then
+                return "{a}"
+            end
+            local len = #text
+            local goal_len = 30
+            if len <= goal_len then
+                return text
+            else
+                local middle_len = 2 -- Length of ".."
+                local left_len = math.floor((goal_len - middle_len) * 0.7)
+                local right_len = goal_len - middle_len - left_len
+                return text:sub(1, left_len) .. ".." .. text:sub(len - right_len + 1, len)
+            end
+        end,
+    },
+})
+
 --- Code Complection -----------------------------------------------------------
 
 spec.add({
