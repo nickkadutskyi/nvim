@@ -40,7 +40,8 @@ spec.add({
             -- We load it synchronously because other plugins depend on it
             -- and might trigger setup before it's loaded, which would
             -- prevent them from applying the icon overrides
-            deferred = false,
+            -- deferred = false,
+            event = "IdeDone",
             after = function(_, opts)
                 --- Depends on jb.nvim for icon overrides
                 utils.run.on_load("jb.nvim", function()
@@ -202,23 +203,6 @@ spec.add({
             -- after = function(_, opts)
             --     require("hlslens").setup(opts)
             -- end,
-        },
-    },
-    --- Error stripes and VCS status in Scrollbar
-    --- Requires: nvim-hlslens
-    {
-        src = g("petertriho/nvim-scrollbar"),
-        data = {
-            event = "IdeDeferred",
-            after = function(_, opts)
-                require("scrollbar").setup(opts)
-                require("scrollbar.handlers").register("under_caret", function(bufnr)
-                    return vim.g.highlighted_lines or {}
-                end)
-                require("scrollbar.handlers").register("todo", function(bufnr)
-                    return (vim.g.todos_in_files or {})[vim.api.nvim_buf_get_name(bufnr)] or {}
-                end)
-            end,
         },
     },
     --- Ripgrep/gitgrep source for the blink.cmp
@@ -412,6 +396,7 @@ spec.add({
     {
         src = g("smjonas/inc-rename.nvim"),
         data = {
+            event = "IdeDeferred",
             after = function(_, opts)
                 require("inc_rename").setup(opts)
             end,
@@ -483,8 +468,8 @@ spec.add({
     -- Simple winbar/statusline plugin that shows your current code context
     {
         src = g("SmiteshP/nvim-navic"),
-        event = "IdeDeferred",
         data = {
+            event = "IdeDeferred",
             after = function(_, opts)
                 local navic = require("nvim-navic")
 
@@ -531,11 +516,30 @@ spec.add({
             end,
         },
     },
+    -- Git integration for buffers
     {
         src = g("lewis6991/gitsigns.nvim"),
         data = {
+            event = "IdeDeferred",
             after = function(_, opts)
                 require("gitsigns").setup(opts)
+            end,
+        },
+    },
+    --- Error stripes and VCS status in Scrollbar
+    --- Requires: nvim-hlslens, gitsigns.nvim
+    {
+        src = g("petertriho/nvim-scrollbar"),
+        data = {
+            event = "IdeDeferred",
+            after = function(_, opts)
+                require("scrollbar").setup(opts)
+                require("scrollbar.handlers").register("under_caret", function(bufnr)
+                    return vim.g.highlighted_lines or {}
+                end)
+                require("scrollbar.handlers").register("todo", function(bufnr)
+                    return (vim.g.todos_in_files or {})[vim.api.nvim_buf_get_name(bufnr)] or {}
+                end)
             end,
         },
     },
