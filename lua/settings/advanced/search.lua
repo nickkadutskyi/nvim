@@ -1,7 +1,18 @@
 local spec = require("ide.spec.builder")
 
+--- OPTIONS --------------------------------------------------------------------
+
+-- Search text in file
+-- Case-insensitive searching UNLESS \C or capital in search
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+-- Incremental search
+vim.opt.incsearch = true
+
+--- PLUGINS --------------------------------------------------------------------
+
 spec.add({
-    "dmtrKovalenko/fff.nvim",
+    "fff.nvim",
     opts = {
         base_path = vim.fn.getcwd(),
         prompt = "   ",
@@ -62,6 +73,117 @@ spec.add({
             smart_case = true, -- Case-insensitive unless query has uppercase
             time_budget_ms = 150, -- Max search time in ms per call (prevents UI freeze, 0 = no limit)
             modes = { "plain", "fuzzy", "regex" }, -- Available grep modes and their cycling order
+        },
+    },
+})
+
+spec.add({
+    "fzf-lua",
+    opts = {
+        winopts = {
+            height = 25, -- window height
+            width = 85,
+            row = 0.35,
+            zindex = 100,
+            preview = {
+                title_pos = "left",
+                scrollbar = false,
+                layout = "vertical",
+                vertical = "down:60%",
+                winopts = {},
+            },
+        },
+        actions = {
+            -- Pickers inheriting these actions:
+            --   files, git_files, git_status, grep, lsp, oldfiles, quickfix, loclist,
+            --   tags, btags, args, buffers, tabs, lines, blines
+            files = { true },
+        },
+        fzf_colors = true,
+        fzf_opts = {
+            ["--layout"] = "reverse",
+            ["--separator"] = "‾",
+        },
+        defaults = {
+            winopts = {
+                title_pos = "left",
+                height = 25, -- window height
+                width = 95,
+                row = 0.35,
+                preview = {
+                    winopts = {},
+                },
+            },
+            cwd_prompt = false,
+            prompt = "   ",
+            header = false,
+        },
+        files = {
+            winopts = {
+                title = " Files ",
+                height = 25, -- window height
+                width = 95,
+                row = 0.35,
+            },
+            prompt = "   ",
+            -- formatter = { "path.filename_first", 2 },
+            -- formatter = "path.filename_first",
+            formatter = "path.dirname_first",
+            no_ignore = true,
+            previewer = "builtin",
+        },
+        buffers = {
+            winopts = {
+                title = " Switcher ",
+                preview = {
+                    hidden = true,
+                },
+            },
+            prompt = "  ",
+        },
+        grep = {
+            winopts = {
+                title = " Find in Files ",
+                height = 25, -- window height
+                width = 85,
+                row = 0.35,
+            },
+            prompt = "   ",
+            previewer = "builtin",
+            formatter = "path.dirname_first",
+            -- formatter = "path.filename_first",
+            RIPGREP_CONFIG_PATH = vim.env.RIPGREP_CONFIG_PATH,
+            no_ignore = true,
+            hidden = true,
+        },
+        lsp = {
+            symbols = {
+                symbol_hl = function(s)
+                    -- `JBIcon<Kind>` generated in jb.nvim colorscheme
+                    return "JBIcon" .. s:lower()
+                end,
+            },
+        },
+        previewers = {
+            builtin = {
+                title_fnamemodify = function(s)
+                    -- Get absolute path of parent directory
+                    local absParentPath = vim.fn.fnamemodify(s, ":h")
+                    -- Convert absolute path to path relative to cwd
+                    local relParentPath = vim.fn.fnamemodify(absParentPath, ":~:.")
+
+                    local path = require("fzf-lua.path")
+                    local name = path.tail(s)
+
+                    -- Handle case when file is outside of cwd
+                    if relParentPath:find("^%./") then
+                        relParentPath = relParentPath:sub(3) -- Remove leading ./
+                    end
+
+                    -- Return filename with relative parent path
+                    return name .. " - " .. relParentPath
+                end,
+            },
         },
     },
 })

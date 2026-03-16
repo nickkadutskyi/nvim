@@ -17,7 +17,7 @@ utils.run.on_lsp_attach(function(buf, client)
     -- TODO: review what UI I need for this
     -- LSP Code Action or Context Actions
     local function context_action()
-        if pack.is_loaded("fzf") then
+        if pack.is_loaded("fzf-lua") then
             require("fzf-lua").lsp_code_actions({
                 async = true,
                 winopts = { title = " Context Actions ", title_pos = "left" },

@@ -127,6 +127,29 @@ utils.run.now_if_arg_or_deferred(function()
     })
 end)
 
+utils.run.on_lsp_attach(function(buf, client)
+    -- Quick Documentation
+    -- LSP Hover or Quick Documentation
+    vim.keymap.set("n", "K", function()
+        local border = "none" ---@type string|table
+        if pack.is_loaded("jb.nvim") then
+            border = require("jb.borders").borders.dialog.default_box or "rounded"
+        end
+        vim.lsp.buf.hover({ border = border })
+    end, { buffer = buf, desc = "LSP: [K]eeword lookup/quick documentation" })
+
+    -- Code View Actions
+    -- Parameter Info
+    -- LSP Signature Help or Parameter Info
+    vim.keymap.set({ "i", "n" }, "<C-s>", function()
+        local border = "none" ---@type string|table
+        if pack.is_loaded("jb.nvim") then
+            border = require("jb.borders").borders.dialog.default_box_header or "rounded"
+        end
+        vim.lsp.buf.signature_help({ border = border })
+    end, { desc = "LSP: [C-h]elp signature" })
+end)
+
 --- Navigate
 
 utils.run.now_if_arg_or_deferred(function()
@@ -152,9 +175,10 @@ utils.run.now_if_arg_or_deferred(function()
     end, { desc = "Problems: previous [p]roblem" })
 end)
 
--- Goto by Name Actions
+--- Goto by Name Actions
+-- Go to File...
 spec.add({
-    "dmtrKovalenko/fff.nvim",
+    "fff.nvim",
     keys = {
         {
             lhs = "<leader>gf",
@@ -177,6 +201,103 @@ spec.add({
         },
     },
 })
+
+-- Go to File...
+spec.add({
+    "fzf-lua",
+    keys = {
+        {
+            desc = "Search(fzf-lua): [g]o to [a]ny [f]ile",
+            lhs = "<leader>gaf",
+            rhs = function()
+                require("fzf-lua").files()
+            end,
+        },
+        {
+            desc = "Search(fzf-lua): [f]ind in [a]ll [f]iles",
+            lhs = "<leader>faf",
+            rhs = function()
+                require("fzf-lua").live_grep()
+            end,
+        },
+        {
+            desc = "[g]o to [b]uffer",
+            lhs = "<leader>gb",
+            rhs = function()
+                require("fzf-lua").buffers()
+            end,
+        },
+    },
+})
+
+utils.run.on_lsp_attach(function(buf, client)
+    -- Goto Class
+    local function find_class()
+        if pack.is_loaded("fzf-lua") then
+            require("fzf-lua").lsp_live_workspace_symbols({
+                regex_filter = function(item, _)
+                    if not item.kind:match("Class") then
+                        return false
+                    end
+
+                    return true
+                end,
+                winopts = { title = " Classes ", title_pos = "left" },
+                cwd_only = true,
+            })
+        else
+            vim.notify(
+                "FZF and similar tools are not present so can't find a class",
+                vim.log.levels.WARN,
+                { title = "Find a Class Keymap" }
+            )
+        end
+    end
+
+    -- vim.keymap.set("n", "<leader>o", find_class, { buffer = event.buf, desc = "LSP: Find Class by name" })
+    vim.keymap.set("n", "<leader>gc", find_class, { buffer = buf, desc = "LSP: [g]o to [c]lass" })
+
+    -- LSP Document Symbols or Find a Symbol in the current file
+    local function sym_in_doc()
+        if pack.is_loaded("fzf-lua") then
+            local file_name = vim.fn.expand("%:t")
+            require("fzf-lua").lsp_document_symbols({
+                cwd_only = true,
+                winopts = { title = " Symbols in " .. file_name .. " ", title_pos = "left" },
+            })
+        else
+            vim.lsp.buf.document_symbol()
+        end
+    end
+
+    vim.keymap.set("n", "<localleader><A-o>", sym_in_doc, { buffer = buf, desc = "LSP: Find Symbol in doc" })
+    vim.keymap.set("n", "<localleader>gs", sym_in_doc, { buffer = buf, desc = "LSP: [g]o to [s]ymbol" })
+    vim.keymap.set("n", "gO", sym_in_doc, { buffer = buf, desc = "LSP: [g]o to [s]ymbol" })
+
+    -- LSP Symbols or Find a Symbol
+    local function symbol_in_workspace()
+        if pack.is_loaded("fzf-lua") then
+            local show_excluded = false
+            require("fzf-lua").lsp_live_workspace_symbols({
+                regex_filter = function(item, _)
+                    return true
+                end,
+                cwd_only = true,
+                winopts = { title = " Symbols ", title_pos = "left" },
+            })
+        else
+            vim.lsp.buf.workspace_symbol()
+        end
+    end
+
+    vim.keymap.set(
+        "n",
+        "<leader><A-o>",
+        symbol_in_workspace,
+        { buffer = buf, desc = "LSP: Find a Symbol in current file" }
+    )
+    vim.keymap.set("n", "<leader>gs", symbol_in_workspace, { buffer = buf, desc = "LSP: [g]o to [s]ymbol" })
+end)
 
 -- Goto by Reference Actions
 utils.run.on_lsp_attach(function(buf, client)

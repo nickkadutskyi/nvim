@@ -446,4 +446,38 @@ spec.add({
             end,
         },
     },
+    -- Improved fzf.vim written in lua
+    {
+        src = g("ibhagwan/fzf-lua"),
+        data = {
+            event = "IdeDeferred",
+            after = function(_, opts)
+                local actions = require("fzf-lua.actions")
+
+                -- adds ability to delete buffers in Switcher
+                opts.buffers.actions = opts.buffers.actions or {}
+                opts.buffers.actions["alt-backspace"] = { fn = actions.buf_del, reload = true }
+
+                local setup = false
+                utils.run.on_load("jb.nvim", function()
+                    local split_top_shadowed = require("jb.borders").borders.dialog.default_box_split_top_shadowed
+                    local split_bottom_shadowed = require("jb.borders").borders.dialog.default_box_split_bottom_shadowed
+                    local header_shadowed = require("jb.borders").borders.dialog.default_box_header_shadowed
+                    local icons = require("jb.icons")
+
+                    opts.defaults.winopts.border = split_top_shadowed
+                    opts.defaults.winopts.preview.border = split_bottom_shadowed
+                    opts.buffers.winopts.border = header_shadowed
+
+                    opts.lsp.symbols.symbol_icons = icons.kind
+
+                    require("fzf-lua").setup(opts)
+                    setup = true
+                end)
+                if not setup then
+                    require("fzf-lua").setup(opts)
+                end
+            end,
+        },
+    },
 })

@@ -24,8 +24,6 @@ require("lazy").setup({
         { import = "kdtsk.settings.editor" },
         -- Everything related to version control systems (e.g. Git)
         { import = "kdtsk.settings.version_control" },
-        -- Uncategorized
-        { import = "kdtsk.settings.other" },
     },
     change_detection = { enable = true, notify = false },
     install = { colorscheme = { "jb" } },
