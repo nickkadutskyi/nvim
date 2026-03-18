@@ -65,11 +65,7 @@ function M.add(specs, opts)
     opts = vim.tbl_extend("force", { load = vim.v.vim_did_init == 1, confirm = true }, opts or {})
     vim.validate("opts", opts, "table")
 
-    local plug_dir = I.get_plug_dir()
-
-    if #I.installed == 0 then
-        I.prepare_install_dir(plug_dir)
-    end
+    local plug_dir = I.ensure_install_dir()
 
     local plugs = {} --- @type ide.pack.Plug[]
     for i = 1, #specs do
@@ -98,12 +94,21 @@ function M.add(specs, opts)
     end
 end
 
-function I.prepare_install_dir(plugin_dir)
+function I.ensure_install_dir()
     local plug_dir = I.get_plug_dir()
-    if vim.uv.fs_lstat(plug_dir) then
+
+    local stat = vim.uv.fs_lstat(plug_dir)
+    if stat and stat.type == "directory" then
+        return plug_dir
+    end
+
+    if stat then
         vim.fn.delete(plug_dir, "rf")
     end
+
     vim.fn.mkdir(plug_dir, "p")
+
+    return plug_dir
 end
 
 --- @return string

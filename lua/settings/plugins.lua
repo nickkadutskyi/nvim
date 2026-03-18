@@ -5,43 +5,14 @@ local c = utils.str.prepend_fn("https://codeberg.org/")
 
 --- Define all plugins with their src here. Feature files patch via name only.
 spec.add({
-    --- A library of lua functions used by lots of plugins
-    --- Required by: harpoon
-    { src = g("nvim-lua/plenary.nvim"), data = { deferred = false } },
-    --- A notification manager with a nice UI
-    ---TODO: move to snacks.nvim and style snacks.nvim notify or other notifications
-    {
-        src = g("rcarriga/nvim-notify"),
-        version = "ab98fecfe",
-        data = {
-            deferred = false,
-            after = function(_, opts)
-                require("notify").setup(opts)
-                vim.notify_orig = vim.notify
-                vim.notify = require("notify")
-                -- TODO: move this a different location
-                local severity = { "error", "warn", "info", "info" }
-                vim.lsp.handlers["window/showMessage"] = function(_, method, params)
-                    local client = vim.lsp.get_client_by_id(params.client_id) or {}
-                    vim.notify(method.message, severity[method.type], { title = "LSP: " .. (client.name or "Unknown") })
-                end
-            end,
-        },
-    },
-    --- My color scheme that recreates IntelliJeJ's look and feel in Neovim
-    {
-        src = g("nickkadutskyi/jb.nvim"),
-        data = { dev = true, deferred = false },
-    },
     --- Gutter or statusline icons, Requires a Nerd Font.
     {
         src = g("nvim-tree/nvim-web-devicons"),
         data = {
-            -- We load it synchronously because other plugins depend on it
-            -- and might trigger setup before it's loaded, which would
-            -- prevent them from applying the icon overrides
-            -- deferred = false,
-            event = "IdeDone",
+            -- We load it as early as possible to be synchronious with plugins
+            -- that might use it and might trigger setup before it's loaded,
+            -- which would prevent them from applying the icon overrides
+            event = "IdeDeferred",
             after = function(_, opts)
                 --- Depends on jb.nvim for icon overrides
                 utils.run.on_load("jb.nvim", function()
@@ -68,11 +39,41 @@ spec.add({
             end,
         },
     },
+    --- A library of lua functions used by lots of plugins
+    --- Required by: harpoon
+    { src = g("nvim-lua/plenary.nvim"), data = { event = "IdeDeferred" } },
+    --- A notification manager with a nice UI
+    ---TODO: move to snacks.nvim and style snacks.nvim notify or other notifications
+    {
+        src = g("rcarriga/nvim-notify"),
+        version = "ab98fecfe",
+        data = {
+            -- deferred = false,
+            event = "IdeDeferred",
+            after = function(_, opts)
+                require("notify").setup(opts)
+                vim.notify_orig = vim.notify
+                vim.notify = require("notify")
+                -- TODO: move this a different location
+                local severity = { "error", "warn", "info", "info" }
+                vim.lsp.handlers["window/showMessage"] = function(_, method, params)
+                    local client = vim.lsp.get_client_by_id(params.client_id) or {}
+                    vim.notify(method.message, severity[method.type], { title = "LSP: " .. (client.name or "Unknown") })
+                end
+            end,
+        },
+    },
+    --- My color scheme that recreates IntelliJeJ's look and feel in Neovim
+    {
+        src = g("nickkadutskyi/jb.nvim"),
+        data = { dev = true, deferred = false },
+    },
     --- Treesitter for syntax highlighting, folding, etc.
     --- Requires: tree-sitter, tar, curl, c compiler
     {
         src = g("nvim-treesitter/nvim-treesitter"),
         data = {
+            event = { "BufReadPre", "BufNewFile" },
             opts_extend = { "ensure_installed" },
             build = function()
                 vim.cmd("TSUpdate")
@@ -374,6 +375,8 @@ spec.add({
                 "clients.ts_ls.filetypes",
                 "clients.ts_ls.enabled.1",
             },
+            event = { "BufReadPre", "BufNewFile" },
+            -- event = "IdeDeferred",
             after = function(_, opts)
                 require("ide.lsp").setup(opts)
             end,

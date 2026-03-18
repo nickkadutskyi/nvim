@@ -32,19 +32,20 @@ function M.setup(opts)
     -- In case we don't have tools_lsp in .editorconfig we still want to configure LSP clients
     -- Running this delayed to ensure we create our autocmd for BufReadPost
     -- after the one created by editorconfig.lua plugin
-    utils.run.later(function()
-        I.autocmdid = utils.autocmd.create("BufReadPost", {
-            group = "ide-lsp",
-            callback = function(e)
-                vim.api.nvim_del_autocmd(I.autocmdid)
-                if I.configured then
-                    return
-                end
+    -- utils.run.now_if_arg_or_later(function()
+    -- Or run the whole setup process delayed. Currently pack spec will run after hook on BufReadPre
+    I.autocmdid = utils.autocmd.create("BufReadPost", {
+        group = "ide-lsp",
+        callback = function(e)
+            vim.api.nvim_del_autocmd(I.autocmdid)
+            if I.configured then
+                return
+            end
 
-                I.handle_tools_lsp_declaration(e.buf, "", {})
-            end,
-        })
-    end)
+            I.handle_tools_lsp_declaration(e.buf, "", {})
+        end,
+    })
+    -- end)
 end
 
 ---@param clients table<string, ide.Lsp.Client>
