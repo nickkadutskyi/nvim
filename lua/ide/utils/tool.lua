@@ -33,20 +33,62 @@ function M.is_enabled(test)
     return false
 end
 
+---@param tools table<ide.Tool>
+function M.resolve(tools)
+    return vim.iter(tools)
+        :filter(function(tool)
+            return M.is_enabled({ tool[2], tool[3], tool[4] })
+        end)
+        :fold({}, function(acc, v)
+            local only_opts = v[1]:sub(1, 1) == "_"
+            return utils.table.merge_lists_dicts(acc, v[5] or {}, only_opts and {} or { v[1] })
+        end)
+end
+
 ---@param tools_by_ft table<string,table<ide.Tool>>
 function M.resolve_by_ft(tools_by_ft)
     local resolved = {}
     for ft, tools in pairs(tools_by_ft) do
-        resolved[ft] = vim.iter(tools)
-            :filter(function(tool)
-                return M.is_enabled({ tool[2], tool[3], tool[4] })
-            end)
-            :fold({}, function(acc, v)
-                local only_opts = v[1]:sub(1, 1) == "_"
-                return utils.table.merge_lists_dicts(acc, v[5] or {}, only_opts and {} or { v[1] })
-            end)
+        resolved[ft] = M.resolve(tools)
     end
     return resolved
+end
+
+---@param val string?
+---@return string[] add
+---@return string[] remove
+function M.parse_tools(val)
+    local add = {}
+    local remove = {}
+
+    for _, token in ipairs(vim.split(val or "", ",", { plain = true, trimempty = true })) do
+        local tool = vim.trim(token)
+        if tool ~= "" then
+            local enabled = tool:sub(1, 1) ~= "!"
+            local name = vim.trim(tool:sub(enabled and 1 or 2))
+            if name ~= "" then
+                if enabled then
+                    table.insert(add, name)
+                else
+                    table.insert(remove, name)
+                end
+            end
+        end
+    end
+
+    return add, remove
+end
+
+---@param resolved table
+---@return string[]
+function M.extract_names(resolved)
+    local names = {}
+    for _, name in ipairs(resolved or {}) do
+        if type(name) == "string" and name ~= "" then
+            table.insert(names, name)
+        end
+    end
+    return names
 end
 
 --- Find an executable in the given paths, checking both absolute and relative paths.

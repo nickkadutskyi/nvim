@@ -14,11 +14,12 @@ I.configured_ft = {}
 ---@param opts ide.Opts.Lint
 function M.setup(opts)
     I.opts = opts or {}
+    I.opts.linters = I.opts.linters or {}
+    I.opts.linters_by_ft = I.opts.linters_by_ft or {}
+
     utils.run.on_load("nvim-lint", function()
         require("editorconfig").properties.tools_inspect = M.handle_tools_inspect_declaration
-        local lint = require("lint")
-        I.merge_linters(opts.linters and opts.linters or {})
-        lint.linters_by_ft = utils.tool.resolve_by_ft(opts.linters_by_ft)
+        I.merge_linters(I.opts.linters)
         -- In case we don't have tools_inspect in .editorconfig we still want to configure LSP clients
         utils.autocmd.create("BufReadPost", {
             group = "ide-lint",
@@ -44,41 +45,22 @@ function M.handle_tools_inspect_declaration(bufnr, val, opts)
         if I.configured_ft[ft] then
             return
         end
-        local lnt = require("lint")
 
-        local tools = vim.iter(vim.split(val, ",", { plain = true, trimempty = true }))
-            :filter(function(v)
-                return v ~= ""
+        local lnt = require("lint")
+        local resolved = utils.tool.resolve((I.opts.linters_by_ft or {})[ft] or {})
+        local add, remove = utils.tool.parse_tools(val)
+
+        lnt.linters_by_ft[ft] = utils.table.list_add_rem(utils.tool.extract_names(resolved), add, remove)
+        lnt.linters_by_ft[ft] = vim.iter(lnt.linters_by_ft[ft])
+            :filter(function(name)
+                return lnt.linters[name] ~= nil
             end)
             :totable()
 
-        lnt.linters_by_ft[ft] = lnt.linters_by_ft[ft] or {}
-
-        -- Iterate over both tools configured in ide and in .editorconfig
-        vim.list_extend(tools, lnt.linters_by_ft[ft])
-
-        local add = {}
-        local remove = {}
-
-        for _, tool in ipairs(tools) do
-            local enable = tool:sub(1, 1) ~= "!"
-            local name = tool:sub(enable and 1 or 2)
-            if not enable or lnt.linters[name] == nil then
-                vim.list_extend(remove, { name })
-            else
-                vim.list_extend(add, { name })
-            end
-        end
-
-        lnt.linters_by_ft[ft] = utils.table.list_add_rem(lnt.linters_by_ft[ft], add, remove)
-
-        for _, tool in ipairs(lnt.linters_by_ft[ft]) do
-            local name = tool
+        for _, name in ipairs(lnt.linters_by_ft[ft]) do
             local command = lnt.linters[name].cmd
             local can_run, binary = utils.run.can_run_command(command)
-            if can_run then
-                lnt.linters_by_ft[ft] = utils.table.list_add_rem(lnt.linters_by_ft[ft], { name }, {})
-            elseif vim.fn.executable("nix") then
+            if not can_run and vim.fn.executable("nix") then
                 -- Removing it for now until we get nix command to run it
                 lnt.linters_by_ft[ft] = utils.table.list_add_rem(lnt.linters_by_ft[ft], {}, { name })
                 -- TODO: add set up process status into statusline
@@ -103,8 +85,10 @@ function M.handle_tools_inspect_declaration(bufnr, val, opts)
             end
         end
 
-        -- We are ignoring errors here because some of the linters might not have their binaries configured
-        lnt.try_lint(nil, { ignore_errors = true })
+        if #lnt.linters_by_ft[ft] > 0 then
+            -- We are ignoring errors here because some of the linters might not have their binaries configured
+            lnt.try_lint(lnt.linters_by_ft[ft], { ignore_errors = true })
+        end
 
         I.configured_ft[ft] = true
         I.create_ft_autocmds(string.format("*.%s", ft))
@@ -121,7 +105,7 @@ function I.merge_linters(linters)
     local lint = require("lint")
     for linter_name, linter_opts in pairs(linters) do
         vim.validate("linter_opts", linter_opts, { "table", "function" }, "Linter must be a table or a function")
-        if type(linter_opts) == "fuction" then
+        if type(linter_opts) == "function" then
             lint.linters[linter_name] = linter_opts()
         else
             local linter = lint.linters[linter_name]
