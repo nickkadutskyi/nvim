@@ -169,7 +169,7 @@ function I.load_plugin(plugin_data)
     assert(type(plug_name) == "string", "Plugin name is required for loading: " .. vim.inspect(spec))
 
     -- Loads similarly to vim.pack.add with `load` not specified
-    vim.cmd.packadd({ vim.fn.escape(plug_name, " "), bang = vim.v.vim_did_enter == 0, magic = { file = false } })
+    vim.cmd.packadd({ vim.fn.escape(plug_name, " "), bang = vim.v.vim_did_init == 0, magic = { file = false } })
     -- Source after/plugin/ when loading after startup (packadd never does this)
     if vim.v.vim_did_enter == 1 then
         local after_paths = vim.fn.glob(plugin_data.path .. "/after/plugin/**/*.{vim,lua}", false, true)
