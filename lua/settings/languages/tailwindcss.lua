@@ -1,4 +1,5 @@
 local spec = require("ide.spec.builder")
+local utils = require("ide.utils")
 
 spec.add({
     "nvim-lspconfig",
@@ -15,6 +16,9 @@ spec.add({
                     },
                 },
                 nix_pkg = "tailwindcss-language-server",
+                bin = function()
+                    return utils.tool.find_js_executable("tailwindcss-language-server")
+                end,
             },
         },
     },
