@@ -48,8 +48,16 @@ function M.handle_tools_style_declartion(bufnr, val, _)
         end
 
         local cnfm = require("conform")
-        local resolved = utils.tool.resolve((I.opts.formatters_by_ft or {})[filetype] or {})
+
         local add, remove = utils.tool.parse_tools(val)
+        vim.iter(I.opts.formatters_by_ft[filetype] or {}):each(function(v)
+            if vim.tbl_contains(add, v[1]) then
+                v[4] = true
+            elseif vim.tbl_contains(remove, v[1]) then
+                v[4] = false
+            end
+        end)
+        local resolved = utils.tool.resolve((I.opts.formatters_by_ft or {})[filetype] or {})
         local names = utils.table.list_add_rem(utils.tool.extract_names(resolved), add, remove)
         local ft_config = I.build_ft_config(resolved, names)
 
