@@ -208,7 +208,7 @@ function I.feature_highlight_word_references()
                 end,
             })
         end
-    end)
+    end, "ide.lsp: failed to attach to client for highlight word references")
 end
 
 return M

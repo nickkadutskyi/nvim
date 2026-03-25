@@ -148,7 +148,7 @@ utils.run.on_lsp_attach(function(buf, client)
         end
         vim.lsp.buf.signature_help({ border = border })
     end, { desc = "LSP: [C-h]elp signature" })
-end)
+end, "keymap.VIEW: failed to set LSP hover and signature help keymaps")
 
 --- Navigate
 
@@ -297,7 +297,7 @@ utils.run.on_lsp_attach(function(buf, client)
         { buffer = buf, desc = "LSP: Find a Symbol in current file" }
     )
     vim.keymap.set("n", "<leader>gs", symbol_in_workspace, { buffer = buf, desc = "LSP: [g]o to [s]ymbol" })
-end)
+end, "keymap.GotoByNameActions: failed to set LSP document and workspace symbol keymaps")
 
 -- Goto by Reference Actions
 utils.run.on_lsp_attach(function(buf, client)
@@ -353,7 +353,8 @@ utils.run.on_lsp_attach(function(buf, client)
             vim.lsp.buf.type_definition()
         end
     end, { buffer = buf, desc = "LSP: [g]o to [r]efactor > Type [D]efinitions" })
-end)
+end, "keymap.GotoByReferenceActions: failed to set LSP actions")
+
 utils.run.now_if_arg_or_deferred(function()
     vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
     vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
@@ -492,7 +493,7 @@ utils.run.on_lsp_attach(function(buf, client)
     vim.keymap.set("n", "<F18>", rename, rename_opts("[F18] Rename..."))
     -- Overrides the default LSP rename keymap
     vim.keymap.set("n", "grn", rename, rename_opts("[g]o [r]efactor > Re[n]ame..."))
-end)
+end, "keymap.Refactor: failed to set LSP rename keymaps")
 
 -- TODO: come up with better keymap for this
 spec.add({
