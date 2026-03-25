@@ -140,11 +140,9 @@ end
 function I.feature_show_color()
     utils.run.on_lsp_attach(function(buf, client)
         if client and client:supports_method("textDocument/documentColor") then
-            vim.lsp.document_color.enable(true, buf, {
-                style = "virtual",
-            })
+            vim.lsp.document_color.enable(true, { bufnr = buf }, { style = "virtual" })
         end
-    end)
+    end, "ide.lsp: failed to attach to client for color highlighting")
 end
 
 -- The following two autocommands are used to highlight references of the

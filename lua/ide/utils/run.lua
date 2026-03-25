@@ -13,7 +13,7 @@ local I = {}
 function M.now_res(fn, error_prefix)
     local ok, result = pcall(fn)
     if not ok then
-        table.insert(I.cache.errors, (error_prefix or "") .. tostring(result))
+        table.insert(I.cache.errors, "now_res:" .. (error_prefix or "") .. tostring(result))
         I.schedule()
         return ok, nil
     end
@@ -26,7 +26,7 @@ end
 function M.now(fn, error_prefix)
     local ok, err = pcall(fn)
     if not ok then
-        table.insert(I.cache.errors, (error_prefix or "") .. tostring(err))
+        table.insert(I.cache.errors, "now: " .. (error_prefix or "") .. tostring(err))
     end
     I.schedule()
 end
@@ -34,7 +34,7 @@ end
 ---@param fn function Callable to execute.
 ---@param error_prefix? string Optional prefix to prepend to error messages.
 function M.later(fn, error_prefix)
-    table.insert(I.cache.queue, { fn = fn, error_prefix = error_prefix })
+    table.insert(I.cache.queue, { fn = fn, error_prefix = "later: " .. (error_prefix and error_prefix or "") })
     I.schedule()
 end
 
@@ -72,7 +72,7 @@ function M.on_deferred(fn, error_prefix)
         once = true,
         desc = "Run function on IdeDeferred event",
         callback = function()
-            M.now(fn, error_prefix)
+            M.now(fn, "deferred: " .. (error_prefix and error_prefix or ""))
         end,
     })
 end
@@ -87,7 +87,7 @@ function M.on_lsp_attach(fn, error_prefix)
             local client = vim.lsp.get_client_by_id(e.data.client_id)
             M.now(function()
                 fn(e.buf, client)
-            end, error_prefix)
+            end, "lsp_attach: " .. (error_prefix and error_prefix or ""))
         end,
     }, { clear = false })
 end
