@@ -1,7 +1,7 @@
 {
   "plugins": {
     "99": {
-      "rev": "ec9872f7df7f4eb8b319719c1c253eb3ea8877ed",
+      "rev": "0172d3caae2d8b967c9d47aa7557295f1481e5df",
       "src": "https://github.com/ThePrimeagen/99"
     },
     "Comment.nvim": {
@@ -13,7 +13,7 @@
       "src": "https://github.com/fang2hou/blink-copilot"
     },
     "blink-ripgrep.nvim": {
-      "rev": "f16d887e1f9d6844b47c71f9d16248173027a3d1",
+      "rev": "ca9c2028cd95ac2fd2426b121816051eba0b9764",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "blink.cmp": {
@@ -34,7 +34,7 @@
       "src": "https://github.com/sindrets/diffview.nvim"
     },
     "fff.nvim": {
-      "rev": "b005c0a790216bb19bbf7c051d0ecc4572181000",
+      "rev": "eb577ea4f39f7b9296ff8c6b4bf2b2899d017ded",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
     "friendly-snippets": {
@@ -42,11 +42,11 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf-lua": {
-      "rev": "54669c347fe94d5be41322bd5526095f3e528713",
+      "rev": "14e2ebc7ed4cef90ffb4fd192ca28c33741818eb",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gitsigns.nvim": {
-      "rev": "7c4faa3540d0781a28588cafbd4dd187a28ac6e3",
+      "rev": "0a80125bace82d82847d40bc2c38a22d62c6dc2d",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "harpoon": {
@@ -99,7 +99,7 @@
       "src": "https://github.com/mfussenegger/nvim-lint"
     },
     "nvim-lspconfig": {
-      "rev": "702f69fb167e9119f14adc4dfd4fcadf4d1b07a0",
+      "rev": "46204c8fdaa36a9aa3768780450e4bc7a210025f",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-navic": {
@@ -116,15 +116,15 @@
       "src": "https://github.com/petertriho/nvim-scrollbar"
     },
     "nvim-treesitter": {
-      "rev": "2b50ab5ccbcd9e5708deb351308edd738adbf84c",
+      "rev": "6620ae1c44dfa8623b22d0cbf873a9e8d073b849",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-treesitter-context": {
-      "rev": "9a8e39993e3b895601bf8227124a48ea8268149e",
+      "rev": "adf4b6b0420b7be6c717ef0ac7993183d6c201b1",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter-context"
     },
     "nvim-treesitter-textobjects": {
-      "rev": "7359dfcefa38db632541e1f9b5b5f291626a1d47",
+      "rev": "93d60a475f0b08a8eceb99255863977d3a25f310",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter-textobjects"
     },
     "nvim-ufo": {
@@ -140,7 +140,7 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "project.nvim": {
-      "rev": "45bf65e4d355d61a68dae0eb21494bbba4691d59",
+      "rev": "595bae3521f21a25969298a0779adf4d99754bbd",
       "src": "https://github.com/DrKJeff16/project.nvim"
     },
     "promise-async": {
