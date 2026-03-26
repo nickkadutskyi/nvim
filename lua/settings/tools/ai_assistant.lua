@@ -30,7 +30,7 @@ spec.add({
     "99",
     --- @type _99.Options
     opts = {
-        model = "github-copilot/claude-opus-4.6",
+        model = "github-copilot/gpt-5.3-codex",
         tmp_dir = "./tmp",
         completion = {
             custom_rules = {
