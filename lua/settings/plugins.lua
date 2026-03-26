@@ -423,6 +423,7 @@ spec.add({
                 opts.base_path = vim.fn.getcwd()
                 require("fff").setup(opts)
                 -- NOTE: doing this to disable combo feature
+                ---@diagnostic disable-next-line: duplicate-set-field
                 require("fff.combo_renderer").detect_and_prepare = function() end
             end,
         },
@@ -470,7 +471,7 @@ spec.add({
                 local navic = require("nvim-navic")
 
                 -- Adjusts icon for JSON objects
-                local format_data = function(data, opts_internal)
+                local format_data = function(data, _)
                     if vim.bo.filetype == "json" then
                         for _, item in ipairs(data) do
                             if item.type == "Module" then
@@ -481,6 +482,7 @@ spec.add({
                     end
                     return data
                 end
+                ---@diagnostic disable-next-line: duplicate-set-field
                 navic.get_location = function(opts_internal, bufnr)
                     local data = navic.get_data(bufnr)
                     data = format_data(data, opts_internal)
@@ -530,7 +532,7 @@ spec.add({
             event = "IdeDeferred",
             after = function(_, opts)
                 require("scrollbar").setup(opts)
-                require("scrollbar.handlers").register("under_caret", function(bufnr)
+                require("scrollbar.handlers").register("under_caret", function(_)
                     return vim.g.highlighted_lines or {}
                 end)
                 require("scrollbar.handlers").register("todo", function(bufnr)
