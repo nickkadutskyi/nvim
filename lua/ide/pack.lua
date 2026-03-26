@@ -197,8 +197,6 @@ function I.after(plugin_data)
         utils.run.now(function()
             data.after(plugin_data, opts)
         end, "ide.pack: after hook failed for '" .. (spec.name or "?") .. "' due to: ")
-    else
-        -- TODO: try to find main module from spec.scr and run its setup()
     end
 end
 
@@ -273,7 +271,6 @@ function I.create_autocmds()
                 and data.spec.data
                 and type(data.spec.data.build) == "function"
             then
-                -- TODO: decide if I need to load the plugin right away when build is triggered
                 utils.run.on_load(data.spec.name, function()
                     utils.run.now(function()
                         data.spec.data.build(data)

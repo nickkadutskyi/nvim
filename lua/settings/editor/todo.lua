@@ -13,7 +13,7 @@ utils.run.now_if_arg_or_later(function()
         group = "settings.check-todos",
         callback = function(_)
             if allowed_check_todos == nil then
-                allowed_check_todos = Utils.is_path_in_paths(vim.fn.getcwd(), {
+                allowed_check_todos = utils.fs.is_path_in_paths(vim.fn.getcwd(), {
                     "~/Documents",
                     "~/.config/nvim",
                 })

@@ -24,6 +24,7 @@ utils.run.now_if_arg_or_deferred(function()
         pattern = {
             "checkhealth",
             "help",
+            "netrw",
             "nvim-pack",
             "notify",
 
@@ -35,7 +36,6 @@ utils.run.now_if_arg_or_deferred(function()
             vim.bo[event.buf].buflisted = false
             utils.run.later(function()
                 local opts = { buffer = event.buf, silent = true, desc = "Buffer: [q/Esc] Close" }
-                -- TODO: check if it's the last window in the tabpage, and if so, close the tabpage instead
                 vim.keymap.set("n", "q", function()
                     vim.cmd("close")
                     pcall(vim.api.nvim_buf_delete, event.buf, { force = true })
@@ -366,7 +366,6 @@ end)
 
 utils.run.now_if_arg_or_deferred(function()
     if vim.lsp.inline_completion.is_enabled() then
-        -- TODO: provide an ability to accept partial inline completion (by word or line)
         vim.keymap.set("i", "<Tab>", function()
             if not vim.lsp.inline_completion.get() then
                 return "<Tab>"
@@ -495,7 +494,6 @@ utils.run.on_lsp_attach(function(buf, client)
     vim.keymap.set("n", "grn", rename, rename_opts("[g]o [r]efactor > Re[n]ame..."))
 end, "keymap.Refactor: failed to set LSP rename keymaps")
 
--- TODO: come up with better keymap for this
 spec.add({
     "99",
     keys = {

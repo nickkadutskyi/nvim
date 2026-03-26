@@ -97,7 +97,7 @@ spec.add({
         lsp = {
             auto_attach = true,
             preference = {
-                "phpactor", -- TODO: find a way to switch to intelephense
+                "phpactor",
                 "nixd", -- Works better than nil_ls
             },
         },

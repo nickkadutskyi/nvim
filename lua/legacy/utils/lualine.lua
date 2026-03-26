@@ -55,6 +55,8 @@ end
 
 --- Show icon if there are unsaved buffers
 function M.gitstat_subsec_has_unsaved_buffers()
+    _G._buffer_modified_count = _G._buffer_modified_count or 0
+    _G._buffer_modified_last_check_time = _G._buffer_modified_last_check_time or 0
     local current_time = vim.loop.now()
     if current_time - _G._buffer_modified_last_check_time > 500 then
         local count, _ = Utils.count_modified_buffers()

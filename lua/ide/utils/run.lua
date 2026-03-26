@@ -198,6 +198,20 @@ function M.get_nix_cmd(opts, callback)
     end)
 end
 
+-- Debounce function to limit the rate at which a function can fire
+function M.debounce(ms, fn)
+    local timer = vim.uv.new_timer()
+    return function(...)
+        local argv = { ... }
+        if timer ~= nil then
+            timer:start(ms, 0, function()
+                timer:stop()
+                vim.schedule_wrap(fn)(unpack(argv))
+            end)
+        end
+    end
+end
+
 --- INTERNAL DATA --------------------------------------------------------------
 ---Cache to track callables etc.
 I.cache = {

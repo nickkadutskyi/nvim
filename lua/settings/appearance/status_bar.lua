@@ -2,9 +2,6 @@ local spec = require("ide.spec.builder")
 local pack = require("ide.pack")
 local utils = require("ide.utils")
 
--- TODO: Consider https://github.com/Bekaboo/dropbar.nvim instead of Navic or
---       buiuld my own tool like dropbar.nvim but with better better keymap navigation
-
 --- AUTOCMDS -------------------------------------------------------------------
 
 utils.run.now_if_arg_or_deferred(function()
@@ -50,7 +47,6 @@ spec.add({
     before = function()
         -- This is to hide the statusline on the starter page,
         -- and prevent it from flashing on startup before lualine loads
-        vim.g.lualine_laststatus = vim.o.laststatus
         if vim.fn.argc(-1) > 0 then
             -- set an empty statusline till lualine loads
             vim.o.statusline = " "

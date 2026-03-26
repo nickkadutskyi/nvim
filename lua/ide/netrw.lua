@@ -70,8 +70,10 @@ function M.toggle_vim_explorer_float()
                 if vim.fn.isdirectory(I.current_file) == 1 or filename == "" then
                     vim.fn.win_execute(winid, "Explore")
                 else
-                    -- vim.fn.win_execute(winid, "ExploreFind")
-                    I.explore_find()
+                    utils.run.later(function()
+                        -- vim.fn.win_execute(winid, "ExploreFind")
+                        I.explore_find()
+                    end)
                 end
             end,
             nil,

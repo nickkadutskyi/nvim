@@ -256,20 +256,6 @@ function M.set_git_status_hl(bufnr)
     end
 end
 
----@param path string
----@param paths string[]|string
-function M.is_path_in_paths(path, paths)
-    path = vim.fn.fnamemodify(path, ":p")
-    if type(paths) == "string" then
-        paths = { paths }
-    end
-    for _, p in ipairs(paths) do
-        if path:find(vim.fn.fnamemodify(p, ":p"), 1, true) == 1 then
-            return true
-        end
-    end
-end
-
 ---@param item any
 ---@param table_name string
 ---@return any[] -- Copy of the global table
@@ -334,7 +320,7 @@ function M.create_tool_window(
         close_on_leave = true
     end
     -- close_on_leave = close_on_leave ~= nil and close_on_leave or true
-    local width = 45 -- TODO: do I need make it dynamic?
+    local width = 45
     local col, border
     if position == "left" then
         col = 0
@@ -498,20 +484,6 @@ function M.handle_commands(commands)
     end
 
     return via_nix, existing, ignored
-end
-
--- Debounce function to limit the rate at which a function can fire
-function M.debounce(ms, fn)
-    local timer = vim.uv.new_timer()
-    return function(...)
-        local argv = { ... }
-        if timer ~= nil then
-            timer:start(ms, 0, function()
-                timer:stop()
-                vim.schedule_wrap(fn)(unpack(argv))
-            end)
-        end
-    end
 end
 
 ---@param env_var string

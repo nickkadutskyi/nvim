@@ -63,7 +63,6 @@ function M.handle_tools_inspect_declaration(bufnr, val, opts)
             if not can_run and vim.fn.executable("nix") then
                 -- Removing it for now until we get nix command to run it
                 lnt.linters_by_ft[ft] = utils.table.list_add_rem(lnt.linters_by_ft[ft], {}, { name })
-                -- TODO: add set up process status into statusline
                 local nix_pkg = (lnt.linters[name] --[[@as ide.Linter]] or {}).nix_pkg or binary
                 utils.run.get_nix_cmd({ pkg = nix_pkg, program = binary }, function(nix_cmd, o)
                     if o.code == 0 then
@@ -118,12 +117,11 @@ function I.merge_linters(linters)
 end
 
 function I.create_ft_autocmds(pattern)
-    -- TODO: move debounce from kdtsk to ide utils
     -- Run linters that require a file to be saved and stdin
     utils.autocmd.create({ "BufWritePost", "BufReadPre", "BufNewFile" }, {
         group = "ide-lint-write:" .. pattern,
         pattern = pattern,
-        callback = Utils.debounce(100, function()
+        callback = utils.run.debounce(100, function()
             require("lint").try_lint()
         end),
     })
@@ -131,7 +129,7 @@ function I.create_ft_autocmds(pattern)
     utils.autocmd.create({ "InsertLeave", "TextChanged" }, {
         group = "ide-lint-stdin:" .. pattern,
         pattern = pattern,
-        callback = Utils.debounce(100, function()
+        callback = utils.run.debounce(100, function()
             require("lint").try_lint(nil, { filter = "stdin" })
         end),
     })

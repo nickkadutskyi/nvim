@@ -43,7 +43,6 @@ spec.add({
     --- Required by: harpoon
     { src = g("nvim-lua/plenary.nvim"), data = { event = "IdeDeferred" } },
     --- A notification manager with a nice UI
-    ---TODO: move to snacks.nvim and style snacks.nvim notify or other notifications
     {
         src = g("rcarriga/nvim-notify"),
         version = "ab98fecfe",
@@ -133,17 +132,11 @@ spec.add({
     {
         src = g("nvim-lualine/lualine.nvim"),
         data = {
-            -- TODO: run it defferred later when resolved conflict with harpoon-lualine
             event = "IdeDeferred",
             after = function(_, opts)
                 -- Running it later to ensure that all components are registered
                 -- because some may need to use lualine_require before lualine is setup
                 utils.run.later(function()
-                    vim.o.laststatus = vim.g.lualine_laststatus
-                    -- TODO: check why I need this variables
-                    _G._buffer_modified_count = 0
-                    _G._buffer_modified_last_check_time = 0
-
                     require("lualine").setup(opts)
                 end)
             end,

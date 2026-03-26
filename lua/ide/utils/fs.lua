@@ -38,4 +38,18 @@ function M.file_exists(paths, logic, cwd)
     return logic == "all", nil
 end
 
+---@param path string
+---@param paths string[]|string
+function M.is_path_in_paths(path, paths)
+    path = vim.fn.fnamemodify(path, ":p")
+    if type(paths) == "string" then
+        paths = { paths }
+    end
+    for _, p in ipairs(paths) do
+        if path:find(vim.fn.fnamemodify(p, ":p"), 1, true) == 1 then
+            return true
+        end
+    end
+end
+
 return M
