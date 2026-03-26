@@ -1,5 +1,6 @@
 local spec = require("ide.spec.builder")
 local utils = require("ide.utils")
+local lint = require("ide.lint")
 
 spec.add({ "nvim-treesitter", opts = { ensure_installed = { "php", "phpdoc" } } })
 
@@ -20,13 +21,13 @@ spec.add({
         },
         -- TODO: move php linters from kdtsk to ide utils
         linters = {
-            phpcs = Utils.php.linters.phpcs,
-            phpmd = Utils.php.linters.phpmd,
-            phpstan = Utils.php.linters.phpstan,
-            psalm = Utils.php.linters.psalm,
+            phpcs = lint.linters.phpcs,
+            phpmd = lint.linters.phpmd,
+            phpstan = lint.linters.phpstan,
+            psalm = lint.linters.psalm,
             phpinsights = {
                 cmd = function()
-                    return Utils.php.find_executable("phpinsights") or "phpinsights"
+                    return utils.tool.find_php_executable("phpinsights") or "phpinsights"
                 end,
                 nix_pkg = "php84Packages.phpinsights",
             },
@@ -46,20 +47,7 @@ spec.add({
                     "php_cs_fixer",
                     { ".php-cs-fixer.dist.php", ".php-cs-fixer.php" },
                     function()
-                        -- only enable if we find an executable in the project
-                        local executable = "php-cs-fixer"
-                        local cwd = vim.uv.cwd()
-
-                        -- Only look for local executables
-                        local _, found = Utils.tools.find_executable({
-                            "./" .. executable,
-                            "./" .. executable .. ".phar",
-                            "vendor/bin/" .. executable,
-                            "vendor/bin/" .. executable .. ".phar",
-                            ".devenv/profile/bin/" .. executable,
-                        }, executable .. "_", cwd)
-
-                        return found
+                        return utils.tool.find_php_executable("php-cs-fixer") ~= nil
                     end,
                 },
             },
@@ -73,7 +61,7 @@ spec.add({
                         return util.root_file({ "php-cs-fixer.dist.php", ".git" })(...)
                     end,
                     command = function(_, ctx)
-                        return Utils.php.find_executable("php-cs-fixer", ctx.dirname) or "php-cs-fixer"
+                        return utils.tool.find_php_executable("php-cs-fixer", ctx.dirname) or "php-cs-fixer"
                     end,
                     options = {
                         nix_pkg = "php83Packages.php-cs-fixer",
@@ -82,7 +70,7 @@ spec.add({
                 },
                 phpcbf = {
                     command = function(_, ctx)
-                        return Utils.php.find_executable("phpcbf", ctx.dirname) or "phpcbf"
+                        return utils.tool.find_php_executable("phpcbf", ctx.dirname) or "phpcbf"
                     end,
                     options = {
                         nix_pkg = "php84Packages.php-codesniffer",
