@@ -28,7 +28,9 @@ spec.add({
     "nvim-lspconfig",
     opts = { ---@type ide.Opts.Lsp
         clients = {
-            stylelint_lsp = {},
+            stylelint_lsp = {
+                nix_pkg = "stylelint-lsp",
+            },
             cssls = {},
         },
     },
