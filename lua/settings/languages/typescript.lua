@@ -68,6 +68,9 @@ spec.add({
                 enabled = { eslint_config_files },
                 nix_pkg = "vscode-langservers-extracted",
             },
+            ["tsgo"] = {
+                nix_pkg = "typescript-go",
+            },
             ["vtsls"] = {
                 enabled = { { "tsconfig.json" } },
                 nix_pkg = "vtsls",
