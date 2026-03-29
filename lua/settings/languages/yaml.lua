@@ -16,7 +16,16 @@ spec.add({
     ---@type ide.Opts.Conform
     opts = {
         formatters_by_ft = {
-            yaml = { { "yamlfmt", { ".yamlfmt" } } },
+            yaml = { { "yamlfmt", { ".yamlfmt" }, nil, true } },
+        },
+        conform_opts = {
+            formatters = {
+                yamlfmt = {
+                    options = {
+                        nix_pkg = "yamlfmt",
+                    },
+                },
+            },
         },
     },
 })
