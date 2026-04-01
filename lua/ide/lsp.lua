@@ -135,9 +135,12 @@ end
 
 function I.feature_show_color()
     utils.run.on_lsp_attach(function(buf, client)
-        if client and client:supports_method("textDocument/documentColor") then
-            vim.lsp.document_color.enable(true, { bufnr = buf }, { style = "virtual" })
-        end
+        -- Deferring this by 3 seconds to ensure client resolved all supported methods
+        vim.defer_fn(function()
+            if client and client:supports_method("textDocument/documentColor") then
+                vim.lsp.document_color.enable(true, { bufnr = buf }, { style = "virtual" })
+            end
+        end, 3000)
     end, "ide.lsp: failed to attach to client for color highlighting")
 end
 
