@@ -54,6 +54,9 @@ function M.setup(opts)
     -- Configure Netrw to look and behave better
     require("ide.netrw").setup()
 
+    -- Enable built-in undotree
+    vim.cmd("packadd nvim.undotree")
+
     -- Load plugins and setup with the settings
     require("settings").setup(opts)
 

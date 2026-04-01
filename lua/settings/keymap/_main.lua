@@ -26,6 +26,7 @@ utils.run.now_if_arg_or_deferred(function()
             "help",
             "netrw",
             "nvim-pack",
+            "nvim-undotree",
             "notify",
 
             "gitsigns-blame",
@@ -50,6 +51,15 @@ utils.run.now_if_arg_or_deferred(function()
 end)
 
 --- MAPPINGS -------------------------------------------------------------------
+
+--- FILE
+
+-- Show History...
+utils.run.now_if_arg_or_deferred(function()
+    vim.keymap.set("n", "<leader>ah", require("undotree").open, {
+        desc = "Local: [a]ctivate Show [h]istory..i",
+    })
+end)
 
 --- EDIT
 
