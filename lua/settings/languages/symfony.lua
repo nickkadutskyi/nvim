@@ -24,6 +24,7 @@ spec.add({
                 },
                 { "prettier" },
                 { "twig-cs-fixer", { ".twig-cs-fixer.dist.php", ".twig-cs-fixer.php", "symfony.lock" } },
+                { "djlint", { "djlint.toml", ".djlintrc" }, nil, nil, { timeout_ms = 2000 } },
             },
         },
         conform_opts = {
