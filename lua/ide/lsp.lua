@@ -23,7 +23,9 @@ function M.setup(opts)
     require("editorconfig").properties.tools_lsp = I.handle_tools_lsp_declaration
     I.configure_lsp_clients(opts.clients)
     I.feature_highlight_word_references()
-    I.feature_show_color()
+
+    -- Configure how document color shows up
+    vim.lsp.document_color.enable(true, nil, { style = "virtual" })
 
     -- In case we don't have tools_lsp in .editorconfig we still want to configure LSP clients
     -- Running this delayed to ensure we create our autocmd for BufReadPost
@@ -131,17 +133,6 @@ function I.handle_tools_lsp_declaration(bufnr, val, opts)
         end
         vim.lsp.enable(to_enable)
     end)
-end
-
-function I.feature_show_color()
-    utils.run.on_lsp_attach(function(buf, client)
-        -- Deferring this by 4 seconds to ensure client resolved all supported methods
-        vim.defer_fn(function()
-            if client and client:supports_method("textDocument/documentColor") then
-                vim.lsp.document_color.enable(true, { bufnr = buf }, { style = "virtual" })
-            end
-        end, 4000)
-    end, "ide.lsp: failed to attach to client for color highlighting")
 end
 
 -- The following two autocommands are used to highlight references of the
