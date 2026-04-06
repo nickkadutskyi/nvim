@@ -12,7 +12,7 @@ spec.add({
                     return utils.tool.find_js_executable("stimulus-language-server")
                 end,
             },
-            ["turbo-lsp"] = {
+            ["turbo_ls"] = {
                 filetypes = { "html", "ruby", "eruby", "blade", "php", "twig", "javascript" },
                 nix_pkg = false,
                 bin = function()
