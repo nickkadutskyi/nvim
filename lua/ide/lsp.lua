@@ -112,7 +112,7 @@ function I.handle_tools_lsp_declaration(bufnr, val, opts)
                     if can_run then
                         -- If runnable directly then enable the client
                         table.insert(to_enable, name)
-                    elseif vim.fn.executable("nix") then
+                    elseif cfg.nix_pkg ~= false and vim.fn.executable("nix") then
                         -- If not runnable directly use Nix to run it
                         local nix_pkg = cfg.nix_pkg or binary
                         utils.run.get_nix_cmd({ pkg = nix_pkg, program = binary }, function(nix_cmd, o)

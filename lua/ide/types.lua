@@ -76,7 +76,7 @@
 ---@field clients? table<string, ide.Lsp.Client>
 
 ---@class ide.Lsp.Client : vim.lsp.Config
----@field nix_pkg? string
+---@field nix_pkg? string|false
 ---@field enabled? ide.ToolTest|boolean
 ---@field bin? string|fun(): string|nil
 

@@ -6,13 +6,15 @@ spec.add({
     opts = { ---@type ide.Opts.Lsp
         clients = {
             ["stimulus_ls"] = {
-                filetypes = { "html", "ruby", "eruby", "blade", "php", "twig" },
+                filetypes = { "html", "ruby", "eruby", "blade", "php", "twig", "javascript" },
+                nix_pkg = false,
                 bin = function()
                     return utils.tool.find_js_executable("stimulus-language-server")
                 end,
             },
             ["turbo-lsp"] = {
-                filetypes = { "html", "ruby", "eruby", "blade", "php", "twig" },
+                filetypes = { "html", "ruby", "eruby", "blade", "php", "twig", "javascript" },
+                nix_pkg = false,
                 bin = function()
                     return utils.tool.find_js_executable("turbo-language-server")
                 end,
