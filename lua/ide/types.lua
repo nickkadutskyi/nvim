@@ -74,6 +74,7 @@
 
 ---@class ide.Opts.Lsp
 ---@field clients? table<string, ide.Lsp.Client>
+---@field logs? {max_size?: number, max_backup_files?: number}
 
 ---@class ide.Lsp.Client : vim.lsp.Config
 ---@field nix_pkg? string|false

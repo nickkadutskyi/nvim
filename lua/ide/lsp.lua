@@ -6,7 +6,12 @@ local M = {}
 local I = {}
 
 ---@type ide.Opts.Lsp
-I.opts = {}
+I.opts = {
+    logs = {
+        max_size = 1 * 1024 * 1024, -- 1 MB
+        max_backup_files = 5,
+    },
+}
 I.configured = false
 I.autocmdid = nil
 I.setup = false
@@ -18,8 +23,7 @@ function M.setup(opts)
         return
     end
     I.setup = true
-    I.opts = opts or {}
-    I.opts.clients = I.opts.clients or {}
+    I.opts = vim.tbl_deep_extend("force", I.opts, opts or {})
     require("editorconfig").properties.tools_lsp = I.handle_tools_lsp_declaration
     I.configure_lsp_clients(opts.clients)
     I.feature_highlight_word_references()
@@ -199,6 +203,33 @@ function I.feature_highlight_word_references()
             })
         end
     end, "ide.lsp: failed to attach to client for highlight word references")
+end
+
+function M.rotate_lsp_logs()
+    local log_path = vim.fn.stdpath("state") .. "/lsp.log"
+    if not vim.fn.filereadable(log_path) then
+        log_path = vim.lsp.log.get_filename()
+    end
+    local backup_dir = vim.fn.stdpath("state") .. "/logs"
+    vim.fn.mkdir(backup_dir, "p")
+
+    if vim.fn.getfsize(log_path) > I.opts.logs.max_size then
+        -- Rotate the log file
+        local timestamp = os.date("%Y%m%d_%H%M%S")
+        os.rename(log_path, backup_dir .. "/lsp_" .. timestamp .. ".log")
+        vim.fn.writefile({}, log_path)
+
+        -- Clean up old backups
+        local backups = vim.fn.glob(backup_dir .. "/lsp_*.log", true, true)
+        table.sort(backups, function(a, b)
+            return vim.fn.getftime(a) > vim.fn.getftime(b)
+        end)
+        for i, file in ipairs(backups) do
+            if i > I.opts.logs.max_backup_files then
+                os.remove(file)
+            end
+        end
+    end
 end
 
 return M

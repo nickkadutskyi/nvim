@@ -31,7 +31,7 @@ spec.add({
             formatters = {
                 ["twig-cs-fixer"] = {
                     command = function(_, ctx)
-                        return Utils.php.find_executable("twig-cs-fixer", ctx.dirname) or "twig-cs-fixer"
+                        return utils.tool.find_php_executable("twig-cs-fixer", ctx.dirname) or "twig-cs-fixer"
                     end,
                     cwd = function(...)
                         local util = require("conform.util")

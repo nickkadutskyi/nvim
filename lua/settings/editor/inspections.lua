@@ -71,7 +71,7 @@ spec.add({
     opts = {
         render = function(props)
             return {
-                { Utils.incline.component_diagnostics(props) },
+                { require("ide.incline").component_diagnostics(props) },
             }
         end,
     },

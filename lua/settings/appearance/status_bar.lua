@@ -120,10 +120,10 @@ spec.add({
                         return ""
                     end,
                 },
-                { Utils.lualine.component_macro_recording },
+                { require("ide.lualine").component_macro_recording },
                 { "harpoon" },
                 {
-                    Utils.lualine.gitstat_subsec_has_unsaved_buffers,
+                    require("ide.lualine").gitstat_subsec_has_unsaved_buffers,
                     color = "StatusBarHasUnsavedBuffers",
                     padding = { left = 0, right = 1 },
                 },

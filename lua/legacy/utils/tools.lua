@@ -140,41 +140,6 @@ end
 ---| '"laravel"'
 ---| '"symfony"'
 
----@param scope kdtsk.tools.Scope Scope to use the tool within (e.g. php)
----@param component string Name of the tool, language server, plugin, etc.
----@param purpose kdtsk.tools.Purpose Purpose for which the tool is enabled
----@param patterns ?string[] Patterns to match the tool's config file
----@param fn ?fun(): boolean Optional function to run if the tool is enabled, should return a boolean indicating if the
---- tool is enabled or not. If not provided, the function will return true if the tool is enabled via settings or
---- patterns, false otherwise.
-function M.is_component_enabled(scope, component, purpose, patterns, fn)
-    local purposeStr = type(purpose) == "number" and M.purpose[purpose] or purpose
-
-    -- 1. Check if the tool is explicitly enabled/disabled via .nvim.lua settings
-    local ok, enabled = Utils.run_when_settings_loaded(function(settings)
-        local tool = settings[scope] and settings[scope][component]
-        if type(tool) == "table" then
-            local use_for = type(tool.use_for) == "table" and tool.use_for or {}
-            return use_for[purposeStr]
-        end
-    end)
-    if ok and enabled ~= nil then
-        return enabled
-    end
-
-    -- 2. No explicit setting; check patterns for config file existence
-    if patterns and Utils.tools.file_exists(patterns) then
-        return true
-    end
-
-    -- 3. No explicit setting and no pattern match; fall back to fn
-    if fn and type(fn) == "function" then
-        return fn()
-    end
-
-    return false
-end
-
 function M.deep_merge_lists(...)
     local tables = { ... }
     local out = vim.deepcopy(tables[1])
@@ -198,46 +163,6 @@ function M.deep_merge_lists(...)
     end
 
     return out
-end
-
----@param tbl1 table First table to extend
----@param tbl2 table Second table to extend
----@param comp {
----  [1]: kdtsk.tools.Scope, # Scope of the component (e.g. "php")
----  [2]: string, # Name of the component (e.g. "phpactor")
----  [3]: kdtsk.tools.Purpose, # Purpose of the component (e.g. "LSP")
----  [4]: string[], # Patterns to match the tool's config file
----  [5]: fun(): boolean, # Optional function to run if the tool is enabled, should return a boolean indicating if the
---- } Component to check if enabled
-function M.extend_if_enabled(tbl1, tbl2, comp)
-    if M.is_component_enabled(unpack(comp)) then
-        return M.deep_merge_lists(tbl1, tbl2)
-    else
-        return tbl1
-    end
-end
-
----Determines if a command can be run directly or needs to be run via Nix.
----Uses Nix to run the command only if outside of a Nix shell because
----Nix shells have to provide the environment for the command to run.
----@param command string|function|table Command to run
----@return boolean, boolean, string, nil|boolean (directly, via_nix, command, can_run_via_nix)
-function M.run_command_via(command)
-    command = type(command) == "function" and command() or command
-    command = type(command) == "table" and command[1] or command
-    assert(
-        type(command) == "string" and command ~= "",
-        "Command must be a non-empty string, but got: " .. vim.inspect(command)
-    )
-    if vim.fn.executable(command) == 1 then
-        return true, false, command, nil
-    elseif vim.fn.executable("nix") == 1 and Utils.nix.nix_shell_type() == nil then
-        return false, true, command, true
-    elseif vim.fn.executable("nix") == 1 and Utils.nix.nix_shell_type() ~= nil then
-        return false, false, command, true
-    else
-        return false, false, command, false
-    end
 end
 
 return M

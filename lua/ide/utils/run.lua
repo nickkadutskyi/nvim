@@ -150,7 +150,7 @@ function M.get_nix_cmd(opts, callback)
 
     -- nix eval flake output for a package and get pname and meta keys
     -- to check if it can do nix run (requires meta.mainProgram)
-    Utils.queue_command({
+    M.queue_command({
         "nix",
         "eval",
         "--json",
@@ -210,6 +210,40 @@ function M.debounce(ms, fn)
             end)
         end
     end
+end
+
+-- Queue for sequential system commands execution
+local eval_queue = {}
+local is_processing = false
+
+---Process the next item in the queue
+local function process_queue()
+    if is_processing or #eval_queue == 0 then
+        return
+    end
+
+    is_processing = true
+    local item = table.remove(eval_queue, 1)
+
+    vim.system(item.cmd, item.opts, function(o)
+        is_processing = false
+        item.callback(o)
+        -- Process next item in queue
+        vim.schedule(process_queue)
+    end)
+end
+
+---Add system command to queue
+---@param cmd table
+---@param opts table
+---@param callback function
+function M.queue_command(cmd, opts, callback)
+    table.insert(eval_queue, {
+        cmd = cmd,
+        opts = opts,
+        callback = callback,
+    })
+    process_queue()
 end
 
 --- INTERNAL DATA --------------------------------------------------------------
