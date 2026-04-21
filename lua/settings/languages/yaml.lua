@@ -16,7 +16,7 @@ spec.add({
     ---@type ide.Opts.Conform
     opts = {
         formatters_by_ft = {
-            yaml = { { "yamlfmt", { ".yamlfmt" }, nil, true } },
+            yaml = { { "yamlfmt", { ".yamlfmt" }, nil, true, { timeout_ms = 1500 }  } },
         },
         conform_opts = {
             formatters = {
