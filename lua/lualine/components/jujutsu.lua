@@ -4,15 +4,21 @@ local cache = {
     result = nil,
     timestamp = 0,
     debounce_timer = nil,
+    running = false,
+    request_id = 0,
     is_jj_repo = nil, -- nil = unknown, true = jj repo, false = not jj repo
     focus_lost_time = nil, -- when focus was lost
 }
 
-local CACHE_DURATION = 400 -- 1 second in milliseconds
-local DEBOUNCE_DELAY = 200 -- 400ms debounce
+local CACHE_DURATION = 2000 -- 2 second in milliseconds
+local DEBOUNCE_DELAY = 200 -- 200ms debounce
 local UNFOCUS_THRESHOLD = 60000 -- 1 minute in milliseconds
 
 local default_options = {}
+
+local function strip_ansi(text)
+    return text:gsub("\27%[[0-9;]*m", "")
+end
 
 local function should_use_extended_cache()
     if not cache.focus_lost_time then
@@ -41,38 +47,51 @@ local function get_jujutsu_status()
         return cache.result or ""
     end
 
+    -- Use cached result while async process is running
+    if cache.running then
+        return cache.result or ""
+    end
+
     -- Set up debounced execution
     cache.debounce_timer = vim.defer_fn(function()
         cache.debounce_timer = nil
 
-        -- Get jujutsu status via starship-jj and clear ANSI codes
-        local handle = io.popen('out=$(starship-jj --ignore-working-copy starship prompt 2>/dev/null) && printf "%s" "$out" | sed \'s/\\x1b\\[[0-9;]*m//g\' | xargs ; echo "EXIT_CODE:$?" || echo "EXIT_CODE:$?"')
-        if not handle then
-            cache.result = ""
-            cache.timestamp = current_time
-            return
-        end
+        cache.running = true
+        cache.request_id = cache.request_id + 1
+        local request_id = cache.request_id
+        local ok = pcall(
+            vim.system,
+            { "starship-jj", "--ignore-working-copy", "starship", "prompt" },
+            { text = true },
+            function(result)
+                if request_id ~= cache.request_id then
+                    return
+                end
 
-        local output = handle:read("*all")
-        handle:close()
+                cache.running = false
 
-        -- Extract exit code from the output
-        local command_output, exit_code_str = output:match("^(.*)EXIT_CODE:(%d+)%s*$")
-        local exit_code = tonumber(exit_code_str) or 1
+                if result.code == 0 and result.stdout and vim.trim(result.stdout) ~= "" then
+                    local cleaned = strip_ansi(result.stdout)
+                    cache.result = vim.trim(cleaned)
+                    cache.is_jj_repo = true
+                else
+                    cache.result = ""
+                    cache.is_jj_repo = false
+                end
 
-        if exit_code == 0 and command_output and vim.trim(command_output) ~= "" then
-            -- Remove ANSI escape codes and trailing whitespace/newlines
-            -- We are not cleaning ANSI codes here because we already did it in the shell command
-            -- local cleaned = command_output:gsub("\27%[[0-9;]*m", "")
-            local cleaned = command_output
-            cache.result = vim.trim(cleaned)
-            cache.is_jj_repo = true
-        else
+                cache.timestamp = vim.loop.now()
+                vim.schedule(function()
+                    vim.cmd.redrawstatus()
+                end)
+            end
+        )
+
+        if not ok and request_id == cache.request_id then
+            cache.running = false
             cache.result = ""
             cache.is_jj_repo = false
+            cache.timestamp = vim.loop.now()
         end
-
-        cache.timestamp = vim.loop.now()
     end, DEBOUNCE_DELAY)
 
     -- Return cached result or empty string while waiting
@@ -116,6 +135,8 @@ vim.api.nvim_create_autocmd({ "DirChanged" }, {
     callback = function()
         cache.result = nil
         cache.timestamp = 0
+        cache.running = false
+        cache.request_id = cache.request_id + 1
         cache.is_jj_repo = nil
         cache.focus_lost_time = nil
         if cache.debounce_timer then
