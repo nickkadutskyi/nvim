@@ -6,11 +6,18 @@ local utils = require("ide.utils")
 
 utils.run.now_if_arg_or_deferred(function()
     -- Setup autocmds to update buffer_modified_count when relevant events occur
-    utils.autocmd.create({ "BufWritePost", "BufEnter", "BufModifiedSet", "FileChangedShellPost" }, {
+    utils.autocmd.create({ "BufWritePost", "BufEnter", "FileChangedShellPost" }, {
         callback = function()
             _G._buffer_modified_last_check_time = 0
         end,
         desc = "Reset buffer modified check timer for status line updates.",
+    })
+    utils.autocmd.create({ "OptionSet" }, {
+        callback = function()
+            _G._buffer_modified_last_check_time = 0
+        end,
+        desc = "Reset buffer modified check timer for status line updates.",
+        pattern = "modified",
     })
 end)
 

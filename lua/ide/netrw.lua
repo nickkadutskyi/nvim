@@ -22,6 +22,8 @@ function M.setup()
     spec.add({
         src = "https://github.com/prichrd/netrw.nvim",
         data = {
+            -- NOTE: disabled it because of BufModifiedSet in the package
+            enabled = false,
             event = "IdeDeferred",
             opts = {
                 -- File icons to use when `use_devicons` is false or if
