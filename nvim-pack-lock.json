@@ -13,7 +13,7 @@
       "src": "https://github.com/fang2hou/blink-copilot"
     },
     "blink-ripgrep.nvim": {
-      "rev": "7a3bedb0c978e7fbde3c68127df544e23554e22b",
+      "rev": "eb0815c094a0fdbbd8e4aa4d7ca54f3fba381676",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "blink.cmp": {
@@ -42,7 +42,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf-lua": {
-      "rev": "64590411e6cf3d603d1e1bdad3a3d051f2f5a91a",
+      "rev": "cf4c30892644f01ebfb1e248eeca9e259856f9dc",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gitsigns.nvim": {
@@ -140,7 +140,7 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "project.nvim": {
-      "rev": "1a1947486aabeaa05174e997b41fbb215ab44a62",
+      "rev": "be46cee9e300d664f80096d288d51019e308dc10",
       "src": "https://github.com/DrKJeff16/project.nvim"
     },
     "promise-async": {
