@@ -53,7 +53,7 @@ spec.add({
                 require("notify").setup(opts)
                 vim.notify_orig = vim.notify
                 vim.notify = require("notify")
-                local s = { "ERROR", "WANR", "INFO", "INFO", "DEBUG" }
+                local s = { "ERROR", "WARN", "INFO", "INFO", "DEBUG" }
                 vim.lsp.handlers["window/showMessage"] = function(_, method, params)
                     local client = vim.lsp.get_client_by_id(params.client_id) or {}
                     local level = vim.log.levels[s[method.type]]
