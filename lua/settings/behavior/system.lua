@@ -5,7 +5,24 @@ spec.add({
     "DrKJeff16/project.nvim",
     ---@type Project.Config.Options
     opts = {
-        patterns = { ">Documents" },
+        patterns = {
+            ">Documents",
+            ".git",
+            ".github",
+            "_darcs",
+            ".hg",
+            ".bzr",
+            ".svn",
+            "Pipfile",
+            "pyproject.toml",
+            ".pre-commit-config.yaml",
+            ".pre-commit-config.yml",
+            ".csproj",
+            ".sln",
+            ".nvim.lua",
+            ".neoconf.json",
+            "neoconf.json",
+        },
         manual_mode = true,
         disable_on = {
             ft = {

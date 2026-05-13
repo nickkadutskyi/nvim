@@ -321,10 +321,8 @@ spec.add({
         data = {
             -- Need to run it on UIEnter or later IdeDeferred to ensure that the first buffer is loaded
             event = "IdeDeferred",
-            ---@param opts Project.Config.Options
+            ---@param opts ProjectOpts
             after = function(_, opts)
-                opts.patterns = vim.list_extend(opts.patterns or {}, require("project.config.defaults").patterns)
-
                 require("project").setup(opts)
             end,
         },
