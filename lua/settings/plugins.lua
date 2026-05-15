@@ -319,6 +319,7 @@ spec.add({
     {
         src = g("DrKJeff16/project.nvim"),
         data = {
+            enabled = false,
             -- Need to run it on UIEnter or later IdeDeferred to ensure that the first buffer is loaded
             event = "IdeDeferred",
             ---@param opts ProjectOpts

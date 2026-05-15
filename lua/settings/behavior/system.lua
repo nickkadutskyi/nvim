@@ -48,14 +48,14 @@ spec.add({
 
 -- Corret root directory after project.nvim is loaded to use its patterns and lsp
 utils.run.on_load("project.nvim", function()
-    local pr_core = require("project.core")
-
-    local root, method = pr_core.get_project_root()
-    if root and root ~= vim.fn.getcwd() or false then
-        -- vim.cmd.cd(root)
-        pr_core.set_pwd(root, method)
-        vim.notify("Set project root to: " .. root, vim.log.levels.INFO, { title = "settings.behavior.system" })
-    end
+    -- local pr_core = require("project.core")
+    --
+    -- local root, method = pr_core.get_project_root()
+    -- if root and root ~= vim.fn.getcwd() or false then
+    --     -- vim.cmd.cd(root)
+    --     pr_core.set_pwd(root, method)
+    --     vim.notify("Set project root to: " .. root, vim.log.levels.INFO, { title = "settings.behavior.system" })
+    -- end
 end, "settings.behavior.system: Failed to switch project root due to: ")
 
 -- Need this to handle same filenames in title
