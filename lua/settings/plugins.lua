@@ -69,7 +69,7 @@ spec.add({
             dev = true,
             deferred = false,
             after = function(_, opts)
-                -- require("notificaions").setup(opts)
+                require("notifications").setup(opts)
             end,
         },
     },
