@@ -62,6 +62,17 @@ spec.add({
             end,
         },
     },
+    --- My plugin for notifications
+    {
+        src = g("nickkadutskyi/notifications.nvim"),
+        data = {
+            dev = true,
+            deferred = false,
+            after = function(_, opts)
+                -- require("notificaions").setup(opts)
+            end,
+        },
+    },
     --- My color scheme that recreates IntelliJeJ's look and feel in Neovim
     {
         src = g("nickkadutskyi/jb.nvim"),

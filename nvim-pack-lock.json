@@ -90,6 +90,10 @@
       "rev": "3f643df59951d9adc4cf348cefe435fcdb5a3671",
       "src": "https://github.com/prichrd/netrw.nvim"
     },
+    "notifications.nvim": {
+      "rev": "cc9450774cf61508b232c98004d0ca1efe82f99a",
+      "src": "https://github.com/nickkadutskyi/notifications.nvim"
+    },
     "nvim-hlslens": {
       "rev": "be2d7b2be01860b5445a007ff2bc72b29896db6b",
       "src": "https://github.com/kevinhwang91/nvim-hlslens"
