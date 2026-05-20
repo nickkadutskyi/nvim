@@ -133,6 +133,18 @@ function I.on_load(plugin_data)
         end
     end
 
+    -- All plugins are loaded deferred by default unless specifically disabled,
+    -- so if no deferred triggers then load on next tick to allow all plugins
+    -- to register their triggers first.
+    if deferred and deferred_load ~= true then
+        deferred_load = true
+        utils.run.later(function()
+            if not I.loaded[name] then
+                I.load_plugin(plugin_data)
+            end
+        end)
+    end
+
     if not deferred_load then
         I.load_plugin(plugin_data)
     end
