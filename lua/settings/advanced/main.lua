@@ -27,7 +27,7 @@ utils.run.now_if_arg_or_deferred(function()
         group = "settings.highlight-yank",
         desc = "Highlight yanked text",
         callback = function()
-            (vim.hl or vim.highlight).on_yank()
+            (vim.hl or vim.highlight).hl_op()
         end,
     })
     utils.run.on_deferred(function()
