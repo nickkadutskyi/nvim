@@ -67,7 +67,7 @@ spec.add({
     keys = {
         {
             desc = "Structure: [a]ctivate [s]tructure",
-            lhs = { "<localleader>os" },
+            lhs = { "<localleader>as" },
             rhs = function()
                 require("trouble").open("symbols")
             end,
