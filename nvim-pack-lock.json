@@ -13,7 +13,7 @@
       "src": "https://github.com/fang2hou/blink-copilot"
     },
     "blink-ripgrep.nvim": {
-      "rev": "2fa5ce6c03424138fb0c9d0d1abd40c30eb23cd7",
+      "rev": "b3cf66b9443a2b832346a7e739ca3c391ab906ee",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "blink.cmp": {
@@ -34,7 +34,7 @@
       "src": "https://github.com/sindrets/diffview.nvim"
     },
     "fff.nvim": {
-      "rev": "030a583b37802416ce9108295b209d2e6b9d0079",
+      "rev": "5e53b6e8cf83913d51a63b54f606b07d6e4de4bc",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
     "friendly-snippets": {
@@ -42,7 +42,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf-lua": {
-      "rev": "fea9eedc6894c44d44cbb772a5cd11c93b82d7a1",
+      "rev": "d340ade20dfe4ef87e6f9a63b9905be91965b5dc",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gitsigns.nvim": {
@@ -67,7 +67,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "jb.nvim": {
-      "rev": "5aa977eb29c758a4ff0e82ac75c45d7f8cacfe50",
+      "rev": "11a8c9e154e79099ad151e6bb37540ccaefb23af",
       "src": "https://github.com/nickkadutskyi/jb.nvim"
     },
     "lazydev.nvim": {
@@ -83,7 +83,7 @@
       "src": "https://github.com/arkav/lualine-lsp-progress"
     },
     "lualine.nvim": {
-      "rev": "131a558e13f9f28b15cd235557150ccb23f89286",
+      "rev": "221ce6b2d999187044529f49da6554a92f740a96",
       "src": "https://github.com/nvim-lualine/lualine.nvim"
     },
     "netrw.nvim": {
@@ -91,7 +91,7 @@
       "src": "https://github.com/prichrd/netrw.nvim"
     },
     "notifications.nvim": {
-      "rev": "1338f43f39a64b8004e9746569b223728e3a82d0",
+      "rev": "be5cfdcf3696976dbee931ca164913b9089df41f",
       "src": "https://github.com/nickkadutskyi/notifications.nvim"
     },
     "nvim-hlslens": {
@@ -103,7 +103,7 @@
       "src": "https://github.com/mfussenegger/nvim-lint"
     },
     "nvim-lspconfig": {
-      "rev": "a4ed4e761c400849e8c9f8bda33e5083f890268c",
+      "rev": "9573948c38bfabeec353ae7dd7d3ffec4c506a6b",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-navic": {
@@ -144,7 +144,7 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "project.nvim": {
-      "rev": "9841a53c05af7bc02b9cd9743115f8ed09e5e382",
+      "rev": "124f2a5015fad619a57a650fab3c2eef73a4a089",
       "src": "https://github.com/DrKJeff16/project.nvim"
     },
     "promise-async": {
