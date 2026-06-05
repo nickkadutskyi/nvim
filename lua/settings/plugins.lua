@@ -51,14 +51,14 @@ spec.add({
             event = "IdeDeferred",
             after = function(_, opts)
                 require("notify").setup(opts)
-                vim.notify_orig = vim.notify
-                vim.notify = require("notify")
-                local s = { "ERROR", "WARN", "INFO", "INFO", "DEBUG" }
-                vim.lsp.handlers["window/showMessage"] = function(_, method, params)
-                    local client = vim.lsp.get_client_by_id(params.client_id) or {}
-                    local level = vim.log.levels[s[method.type]]
-                    vim.notify(method.message, level, { title = "LSP: " .. (client.name or "Unknown") })
-                end
+                -- vim.notify_orig = vim.notify
+                -- vim.notify = require("notify")
+                -- local s = { "ERROR", "WARN", "INFO", "INFO", "DEBUG" }
+                -- vim.lsp.handlers["window/showMessage"] = function(_, method, params)
+                --     local client = vim.lsp.get_client_by_id(params.client_id) or {}
+                --     local level = vim.log.levels[s[method.type]]
+                --     vim.notify(method.message, level, { title = "LSP: " .. (client.name or "Unknown") })
+                -- end
             end,
         },
     },
@@ -70,6 +70,15 @@ spec.add({
             deferred = false,
             after = function(_, opts)
                 require("notifications").setup(opts)
+                vim.notify_orig = vim.notify
+                vim.notify = require("notifications").notify
+
+                local s = { "ERROR", "WARN", "INFO", "INFO", "DEBUG" }
+                vim.lsp.handlers["window/showMessage"] = function(_, method, params)
+                    local client = vim.lsp.get_client_by_id(params.client_id) or {}
+                    local level = vim.log.levels[s[method.type]]
+                    vim.notify(method.message, level, { title = "LSP", subtitle = (client.name or "unknown") })
+                end
             end,
         },
     },
