@@ -412,6 +412,7 @@ spec.add({
         src = g("smjonas/inc-rename.nvim"),
         data = {
             event = "IdeDeferred",
+            opts = { save_in_cmdline_history = true },
             after = function(_, opts)
                 require("inc_rename").setup(opts)
             end,
