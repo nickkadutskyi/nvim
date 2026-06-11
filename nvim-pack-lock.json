@@ -1,7 +1,7 @@
 {
   "plugins": {
     "99": {
-      "rev": "4d229141546290746c82ac90f5afc2786865b5f3",
+      "rev": "f897910d0dc1b919be88ab1cd35445bb53d70390",
       "src": "https://github.com/ThePrimeagen/99"
     },
     "Comment.nvim": {
@@ -13,7 +13,7 @@
       "src": "https://github.com/fang2hou/blink-copilot"
     },
     "blink-ripgrep.nvim": {
-      "rev": "6094b91a33002081eeb644c60d0bf21d5da2b7f9",
+      "rev": "eb5eee973f4d296ce88c6253502428d4a88c40b8",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "blink.cmp": {
@@ -34,7 +34,7 @@
       "src": "https://github.com/sindrets/diffview.nvim"
     },
     "fff.nvim": {
-      "rev": "8092cfa3faf3471d29b3e11049e921d7e759d789",
+      "rev": "ec57eb02a679737dbf4f88520a0a79cc62eb1664",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
     "friendly-snippets": {
@@ -67,7 +67,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "jb.nvim": {
-      "rev": "11a8c9e154e79099ad151e6bb37540ccaefb23af",
+      "rev": "e5922bc707ac7e9a61dbfa085128f65c3c826682",
       "src": "https://github.com/nickkadutskyi/jb.nvim"
     },
     "lazydev.nvim": {
@@ -91,7 +91,7 @@
       "src": "https://github.com/prichrd/netrw.nvim"
     },
     "notifications.nvim": {
-      "rev": "e2e694972dd0223467cb0919124d42019821db02",
+      "rev": "0244a0e3f2ff1ff575dc61563fcb480e47b05cb9",
       "src": "https://github.com/nickkadutskyi/notifications.nvim"
     },
     "nvim-hlslens": {
@@ -103,7 +103,7 @@
       "src": "https://github.com/mfussenegger/nvim-lint"
     },
     "nvim-lspconfig": {
-      "rev": "229b79051b380377664edc4cbd534930154921a1",
+      "rev": "ed19590a3a9792901553c388d1aadafce012f80d",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-navic": {
@@ -144,7 +144,7 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "project.nvim": {
-      "rev": "43ad7ddf0dc5c475211c581f616bd5d779489b6a",
+      "rev": "b9788aafbf198cecf2327e75f6904cf7846d05a4",
       "src": "https://github.com/DrKJeff16/project.nvim"
     },
     "promise-async": {
