@@ -74,10 +74,6 @@
       "rev": "ff2cbcba459b637ec3fd165a2be59b7bbaeedf0d",
       "src": "https://github.com/folke/lazydev.nvim"
     },
-    "live-rename.nvim": {
-      "rev": "205bddec4bf1276c81a03777f8335d4ad034ae03",
-      "src": "https://github.com/saecki/live-rename.nvim"
-    },
     "lualine-harpoon.nvim": {
       "rev": "4c29626e2404d31b1672e91dc263180a3d218e3b",
       "src": "https://codeberg.org/kristoferssolo/lualine-harpoon.nvim"
@@ -89,10 +85,6 @@
     "lualine.nvim": {
       "rev": "221ce6b2d999187044529f49da6554a92f740a96",
       "src": "https://github.com/nvim-lualine/lualine.nvim"
-    },
-    "netrw.nvim": {
-      "rev": "3f643df59951d9adc4cf348cefe435fcdb5a3671",
-      "src": "https://github.com/prichrd/netrw.nvim"
     },
     "notifications.nvim": {
       "rev": "6820a6f3528d167d92d8fca4e9ce0cc70a0ba268",
@@ -158,10 +150,6 @@
     "snacks.nvim": {
       "rev": "51c66de000d5b4b8a92cf545d8b07c688b129989",
       "src": "https://github.com/nickkadutskyi/snacks.nvim"
-    },
-    "tiny-cmdline.nvim": {
-      "rev": "b1db8607a78f0c23b3bae08e079b1b7f147619d7",
-      "src": "https://github.com/rachartier/tiny-cmdline.nvim"
     },
     "todo-comments.nvim": {
       "rev": "31e3c38ce9b29781e4422fc0322eb0a21f4e8668",
