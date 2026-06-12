@@ -1,7 +1,7 @@
 {
   "plugins": {
     "99": {
-      "rev": "f897910d0dc1b919be88ab1cd35445bb53d70390",
+      "rev": "c17422457027c913c76c75a921fca1e623d2678e",
       "src": "https://github.com/ThePrimeagen/99"
     },
     "Comment.nvim": {
@@ -13,7 +13,7 @@
       "src": "https://github.com/fang2hou/blink-copilot"
     },
     "blink-ripgrep.nvim": {
-      "rev": "eb5eee973f4d296ce88c6253502428d4a88c40b8",
+      "rev": "2727ace99e8b5aa0dc1a02d7daa56db038514a5f",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "blink.cmp": {
@@ -34,7 +34,7 @@
       "src": "https://github.com/sindrets/diffview.nvim"
     },
     "fff.nvim": {
-      "rev": "ec57eb02a679737dbf4f88520a0a79cc62eb1664",
+      "rev": "cf171e067d99a7ee1298bd3903f14a04addd8b39",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
     "friendly-snippets": {
@@ -95,7 +95,7 @@
       "src": "https://github.com/prichrd/netrw.nvim"
     },
     "notifications.nvim": {
-      "rev": "0244a0e3f2ff1ff575dc61563fcb480e47b05cb9",
+      "rev": "6820a6f3528d167d92d8fca4e9ce0cc70a0ba268",
       "src": "https://github.com/nickkadutskyi/notifications.nvim"
     },
     "nvim-hlslens": {
@@ -148,7 +148,7 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "project.nvim": {
-      "rev": "b9788aafbf198cecf2327e75f6904cf7846d05a4",
+      "rev": "e363f6ec6c47d5a37eeb65bc0477e58e16cd4206",
       "src": "https://github.com/DrKJeff16/project.nvim"
     },
     "promise-async": {
