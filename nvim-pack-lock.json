@@ -13,7 +13,7 @@
       "src": "https://github.com/fang2hou/blink-copilot"
     },
     "blink-ripgrep.nvim": {
-      "rev": "4491907dd46f6ae7a87ccc9f7a34b3d7c8616fc4",
+      "rev": "9d03bc7823f56638bd0dea40c3ed4e947e436c61",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "blink.cmp": {
@@ -34,7 +34,7 @@
       "src": "https://github.com/sindrets/diffview.nvim"
     },
     "fff.nvim": {
-      "rev": "cf171e067d99a7ee1298bd3903f14a04addd8b39",
+      "rev": "65832db6d870a0a9a6df3448ef54a888b226a436",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
     "friendly-snippets": {
@@ -87,7 +87,7 @@
       "src": "https://github.com/nvim-lualine/lualine.nvim"
     },
     "notifications.nvim": {
-      "rev": "6820a6f3528d167d92d8fca4e9ce0cc70a0ba268",
+      "rev": "cc3dbe2af5cbccc6cc7e8e4ee4b5b6aa0f4cb5fc",
       "src": "https://github.com/nickkadutskyi/notifications.nvim"
     },
     "nvim-hlslens": {
@@ -140,7 +140,7 @@
       "src": "https://github.com/nvim-lua/plenary.nvim"
     },
     "project.nvim": {
-      "rev": "e363f6ec6c47d5a37eeb65bc0477e58e16cd4206",
+      "rev": "7a277005da9ed3958044a3d1510025fa1aba188f",
       "src": "https://github.com/DrKJeff16/project.nvim"
     },
     "promise-async": {
