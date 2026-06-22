@@ -534,6 +534,12 @@ spec.add({
             end,
         },
     },
+    {
+        src = g("barrettruth/diffs.nvim"),
+        data = {
+            after = function(_, opts) end,
+        },
+    },
     -- Git integration for buffers
     {
         src = g("lewis6991/gitsigns.nvim"),
