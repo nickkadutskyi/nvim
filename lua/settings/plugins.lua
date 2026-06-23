@@ -83,10 +83,7 @@ spec.add({
         },
     },
     --- My color scheme that recreates IntelliJeJ's look and feel in Neovim
-    {
-        src = g("nickkadutskyi/jb.nvim"),
-        data = { dev = true, deferred = false },
-    },
+    { src = g("nickkadutskyi/jb.nvim"), data = { dev = true, deferred = false } },
     --- Treesitter for syntax highlighting, folding, etc.
     --- Requires: tree-sitter, tar, curl, c compiler
     {
@@ -256,7 +253,6 @@ spec.add({
     {
         src = g("folke/trouble.nvim"),
         data = {
-            -- enabled = false,
             event = "IdeDeferred",
             after = function(_, opts)
                 local trouble = require("trouble")
@@ -532,12 +528,6 @@ spec.add({
             after = function(_, opts)
                 require("diffview").setup(opts)
             end,
-        },
-    },
-    {
-        src = g("barrettruth/diffs.nvim"),
-        data = {
-            after = function(_, opts) end,
         },
     },
     -- Git integration for buffers
