@@ -193,7 +193,16 @@ spec.add({
         {
             lhs = "<leader>gf",
             rhs = function()
-                require("fff").find_files()
+                require("fff").find_files({
+                    layout = {
+                        height = function(_terminal_width, terminal_height)
+                            return 20 / terminal_height
+                        end,
+                    },
+                    preview = {
+                        enabled = false,
+                    },
+                })
             end,
             desc = "Search(fff.nvim): [g]o to [f]ile",
         },
@@ -204,6 +213,9 @@ spec.add({
                     title = "Find in Files",
                     grep = {
                         modes = { "plain", "fuzzy", "regex" },
+                    },
+                    preview = {
+                        enabled = true,
                     },
                 })
             end,

@@ -24,7 +24,7 @@ spec.add({
                 return 28 / terminal_height
             end,
             width = function(terminal_width, _terminal_height)
-                return 98 / terminal_width
+                return 92 / terminal_width
             end,
             flex = false,
             prompt_position = "top", -- or 'top'
@@ -32,6 +32,7 @@ spec.add({
             preview_size = 0.5,
             -- TODO: check if this works
             show_scrollbar = false,
+            min_list_height = 5,
         },
         preview = {
             -- enabled = false,
@@ -75,6 +76,7 @@ spec.add({
             smart_case = true, -- Case-insensitive unless query has uppercase
             time_budget_ms = 150, -- Max search time in ms per call (prevents UI freeze, 0 = no limit)
             modes = { "plain", "fuzzy", "regex" }, -- Available grep modes and their cycling order
+            trim_whitespace = true,
         },
     },
 })

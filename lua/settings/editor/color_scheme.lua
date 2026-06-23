@@ -29,7 +29,7 @@ spec.add({
                         border = require("jb.borders").borders.dialog.default_box_split_top_no_footer_shadowed,
                     },
                     condition = function(bufnr, _)
-                        local ok, fff = pcall(require, "fff.picker_ui")
+                        local ok, fff = pcall(require, "fff.picker_ui.picker_ui_state")
                         if not ok or not fff.state then
                             return false
                         end
@@ -41,7 +41,7 @@ spec.add({
                         border = require("jb.borders").borders.dialog.default_box_split_middle_shadowed_no_footer,
                     },
                     condition = function(bufnr, _)
-                        local ok, fff = pcall(require, "fff.picker_ui")
+                        local ok, fff = pcall(require, "fff.picker_ui.picker_ui_state")
                         if not ok or not fff.state then
                             return false
                         end
@@ -53,7 +53,7 @@ spec.add({
                         border = require("jb.borders").borders.dialog.default_box_split_bottom_shadowed_header,
                     },
                     condition = function(bufnr, _)
-                        local ok, fff = pcall(require, "fff.picker_ui")
+                        local ok, fff = pcall(require, "fff.picker_ui.picker_ui_state")
                         if not ok or not fff.state then
                             return false
                         end

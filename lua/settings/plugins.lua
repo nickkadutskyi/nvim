@@ -420,7 +420,7 @@ spec.add({
                 require("fff").setup(opts)
                 -- NOTE: doing this to disable combo feature
                 ---@diagnostic disable-next-line: duplicate-set-field
-                -- require("fff.combo_renderer").detect_and_prepare = function() end
+                require("fff.picker_ui.combo_renderer").detect = function() end
             end,
         },
     },
