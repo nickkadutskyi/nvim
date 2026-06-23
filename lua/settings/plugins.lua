@@ -42,26 +42,6 @@ spec.add({
     --- A library of lua functions used by lots of plugins
     --- Required by: harpoon
     { src = g("nvim-lua/plenary.nvim"), data = { event = "IdeDeferred" } },
-    --- A notification manager with a nice UI
-    {
-        src = g("rcarriga/nvim-notify"),
-        version = "ab98fecfe",
-        data = {
-            -- deferred = false,
-            event = "IdeDeferred",
-            after = function(_, opts)
-                require("notify").setup(opts)
-                -- vim.notify_orig = vim.notify
-                -- vim.notify = require("notify")
-                -- local s = { "ERROR", "WARN", "INFO", "INFO", "DEBUG" }
-                -- vim.lsp.handlers["window/showMessage"] = function(_, method, params)
-                --     local client = vim.lsp.get_client_by_id(params.client_id) or {}
-                --     local level = vim.log.levels[s[method.type]]
-                --     vim.notify(method.message, level, { title = "LSP: " .. (client.name or "Unknown") })
-                -- end
-            end,
-        },
-    },
     --- My plugin for notifications
     {
         src = g("nickkadutskyi/notifications.nvim"),

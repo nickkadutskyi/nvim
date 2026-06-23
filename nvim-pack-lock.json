@@ -13,7 +13,7 @@
       "src": "https://github.com/fang2hou/blink-copilot"
     },
     "blink-ripgrep.nvim": {
-      "rev": "d169b3e34e81d296e691127d0452ff20bc42fd1e",
+      "rev": "8c9742902d939faa416da1944ba96810c5f5035d",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "blink.cmp": {
@@ -28,10 +28,6 @@
     "conform.nvim": {
       "rev": "619363c30309d29ffa631e67c8183f2a72caa373",
       "src": "https://github.com/stevearc/conform.nvim"
-    },
-    "diffs.nvim": {
-      "rev": "7ab445c39224160203ae692d3c883e2f51f2d442",
-      "src": "https://github.com/barrettruth/diffs.nvim"
     },
     "diffview.nvim": {
       "rev": "4516612fe98ff56ae0415a259ff6361a89419b0a",
@@ -71,7 +67,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "jb.nvim": {
-      "rev": "e5922bc707ac7e9a61dbfa085128f65c3c826682",
+      "rev": "cd3688530993049c72bdb007200b558bf4547b01",
       "src": "https://github.com/nickkadutskyi/jb.nvim"
     },
     "lazydev.nvim": {
@@ -91,7 +87,7 @@
       "src": "https://github.com/nvim-lualine/lualine.nvim"
     },
     "notifications.nvim": {
-      "rev": "cc3dbe2af5cbccc6cc7e8e4ee4b5b6aa0f4cb5fc",
+      "rev": "e46ff0ac53310e20667dcfd20cb8b56398010be0",
       "src": "https://github.com/nickkadutskyi/notifications.nvim"
     },
     "nvim-hlslens": {
@@ -109,11 +105,6 @@
     "nvim-navic": {
       "rev": "f5eba192f39b453675d115351808bd51276d9de5",
       "src": "https://github.com/SmiteshP/nvim-navic"
-    },
-    "nvim-notify": {
-      "rev": "ab98fecfe24d31fa03e0b3dcfc7c506c0f9c34c7",
-      "src": "https://github.com/rcarriga/nvim-notify",
-      "version": "'ab98fecfe'"
     },
     "nvim-scrollbar": {
       "rev": "f8e87b96cd6362ef8579be456afee3b38fd7e2a8",
@@ -142,10 +133,6 @@
     "plenary.nvim": {
       "rev": "74b06c6c75e4eeb3108ec01852001636d85a932b",
       "src": "https://github.com/nvim-lua/plenary.nvim"
-    },
-    "project.nvim": {
-      "rev": "7a277005da9ed3958044a3d1510025fa1aba188f",
-      "src": "https://github.com/DrKJeff16/project.nvim"
     },
     "promise-async": {
       "rev": "119e8961014c9bfaf1487bf3c2a393d254f337e2",
