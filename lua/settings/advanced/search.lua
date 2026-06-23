@@ -60,6 +60,10 @@ spec.add({
             grep_fuzzy_active = "CustomFFFRegexInactive", -- Highlight for keybind + label when fuzzy is on
             -- Cross-mode suggestion highlights
             suggestion_header = "WarningMsg", -- Highlight for the "No results found. Suggested..." banner
+
+            winhl = {
+                preview = "Normal:Normal,IncSearch:FzfLuaSearch,FloatTitle:DialogFloatBorderTop",
+            },
         },
         keymaps = {
             -- goes to the previous query in history
@@ -77,6 +81,7 @@ spec.add({
             time_budget_ms = 150, -- Max search time in ms per call (prevents UI freeze, 0 = no limit)
             modes = { "plain", "fuzzy", "regex" }, -- Available grep modes and their cycling order
             trim_whitespace = true,
+            location_format = "%d",
         },
     },
 })

@@ -59,15 +59,6 @@ spec.add({
                         end
                         return bufnr == fff.state.preview_buf
                     end,
-                    after = function(winid, _, _)
-                        vim.schedule(function()
-                            vim.api.nvim_set_option_value(
-                                "winhl",
-                                "Normal:Normal,IncSearch:FzfLuaSearch,FloatTitle:DialogFloatBorderTop",
-                                { win = winid }
-                            )
-                        end)
-                    end,
                 },
             },
         })
