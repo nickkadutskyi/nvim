@@ -6,7 +6,7 @@ spec.add({
     opts = { ---@type ide.Opts.Lsp
         clients = {
             ["tailwindcss"] = {
-                enalbed = {
+                enabled = {
                     {
                         "tailwind.config.js",
                         "tailwind.config.cjs",

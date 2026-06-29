@@ -25,7 +25,7 @@ spec.add({
     opts = { ---@type ide.Opts.Lsp
         clients = {
             zls = {
-                -- enalbed = { { "zls.json" } },
+                -- enabled = { { "zls.json" } },
                 nix_pkg = "zls",
             },
         },
