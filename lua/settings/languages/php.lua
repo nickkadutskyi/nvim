@@ -151,6 +151,18 @@ spec.add({
                     return utils.tool.find_php_executable("phpactor")
                 end,
             },
+            ["phpantom_lsp"] = {
+                enabled = {
+                    nil,
+                    function() -- Always enabe if there is executable in the project
+                        return utils.tool.find_php_executable("phpantom_lsp") ~= nil
+                    end,
+                },
+                bin = function()
+                    return utils.tool.find_php_executable("phpantom_lsp")
+                end,
+                nix_pkg = "phpantom-lsp",
+            },
             ["psalm"] = {
                 -- `root_dir` already checks for psalm.xml or psalm.xml.dist
                 -- To enable it create either of these files and configure it
