@@ -328,7 +328,8 @@ vim.opt.linebreak = false
 if vim.fn.has("linebreak") == 1 then
     vim.opt.breakindent = true
     vim.opt.showbreak = "↳ "
-    vim.opt.breakindentopt = { shift = 0, min = 20, sbr = true }
+    -- vim.opt.breakindentopt = { shift = 0, min = 20, sbr = true }
+    vim.o.breakindentopt = "shift:0,min:20,sbr"
 end
 
 --- Sticky Lines ---------------------------------------------------------------
