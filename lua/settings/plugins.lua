@@ -305,6 +305,8 @@ spec.add({
         data = {
             event = "IdeDeferred",
             after = function(_, opts)
+                local ft = require("Comment.ft")
+                ft.set("blade", "{{-- %s --}}")
                 require("Comment").setup(opts)
             end,
         },
