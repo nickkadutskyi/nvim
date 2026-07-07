@@ -152,12 +152,13 @@ spec.add({
                 end,
             },
             ["phpantom_lsp"] = {
-                enabled = {
-                    nil,
-                    function() -- Always enabe if there is executable in the project
-                        return utils.tool.find_php_executable("phpantom_lsp") ~= nil
-                    end,
-                },
+                enabled = false,
+                -- enabled = {
+                --     nil,
+                --     function() -- Always enabe if there is executable in the project
+                --         return utils.tool.find_php_executable("phpantom_lsp") ~= nil
+                --     end,
+                -- },
                 bin = function()
                     return utils.tool.find_php_executable("phpantom_lsp")
                 end,
