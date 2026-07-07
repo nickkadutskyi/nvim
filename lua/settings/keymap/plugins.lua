@@ -7,6 +7,14 @@ local pack = require("ide.pack")
 --- MAPPINGS -------------------------------------------------------------------
 
 utils.run.now_if_arg_or_deferred(function()
+    -- vim.keymap.set("n", "<leader>mu", function()
+    --     local plugins = vim.pack._get_names()
+    --     -- vim.pack.update()
+    --     for _, plugin in ipairs(plugins) do
+    --         vim.pack.update({ plugin }, { offline = true })
+    --     end
+    -- end, { silent = true, desc = "Plugins: plugin [m]anager [u]pdate" })
+
     vim.keymap.set("n", "<leader>mu", function()
         vim.pack.update()
     end, { silent = true, desc = "Plugins: plugin [m]anager [u]pdate" })
