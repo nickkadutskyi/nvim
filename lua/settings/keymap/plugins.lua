@@ -7,14 +7,6 @@ local pack = require("ide.pack")
 --- MAPPINGS -------------------------------------------------------------------
 
 utils.run.now_if_arg_or_deferred(function()
-    -- vim.keymap.set("n", "<leader>mu", function()
-    --     local plugins = vim.pack._get_names()
-    --     -- vim.pack.update()
-    --     for _, plugin in ipairs(plugins) do
-    --         vim.pack.update({ plugin }, { offline = true })
-    --     end
-    -- end, { silent = true, desc = "Plugins: plugin [m]anager [u]pdate" })
-
     vim.keymap.set("n", "<leader>mu", function()
         vim.pack.update()
     end, { silent = true, desc = "Plugins: plugin [m]anager [u]pdate" })
@@ -33,11 +25,6 @@ utils.run.now_if_arg_or_deferred(function()
     vim.keymap.set("n", "<leader>mfr", function()
         vim.pack.update(nil, { force = true, target = "lockfile" })
     end, { silent = true, desc = "Plugins: plugin [m]anager [f]orce [r]estore from lockfile" })
-
-    --- Lazy.nvim for managing plugins
-    vim.keymap.set("n", "<leader>ol", function()
-        require("lazy").show()
-    end, { silent = true, desc = "Plugins: [o]pen [l]azy.nvim manager" })
 end)
 
 spec.add({
