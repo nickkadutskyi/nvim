@@ -30,7 +30,7 @@ spec.add({
     "99",
     --- @type _99.Options
     opts = {
-        model = "xai/grok-4.3",
+        model = "xai/grok-4.5",
         tmp_dir = "./tmp",
         completion = {
             custom_rules = {
