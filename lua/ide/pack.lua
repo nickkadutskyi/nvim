@@ -72,6 +72,32 @@ function M.get_local_plugin_names()
         :totable()
 end
 
+--- Get names of all plugins managed by vim.pack.
+---@return string[]
+function M.get_plugin_names()
+    return vim.iter(vim.pack.get())
+        :map(function(p)
+            return p.spec.name
+        end)
+        :totable()
+end
+
+--- Run `vim.pack.update` in batches to avoid failures when updating many plugins at once.
+---@param names? string[] Plugin names to update. Default: all managed plugins.
+---@param opts? vim.pack.keyset.update Options forwarded to `vim.pack.update`.
+---@param batch_size? integer Plugins per batch. Default: 5.
+function M.update_batched(names, opts, batch_size)
+    names = names or M.get_plugin_names()
+    batch_size = batch_size or 5
+    if #names == 0 then
+        return
+    end
+    for i = 1, #names, batch_size do
+        local batch = vim.list_slice(names, i, math.min(i + batch_size - 1, #names))
+        vim.pack.update(batch, opts)
+    end
+end
+
 --- INTERNAL FUNCTIONS ---------------------------------------------------------
 
 ---@param plugin_data {spec: vim.pack.Spec, path: string}
