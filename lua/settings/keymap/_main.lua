@@ -119,6 +119,14 @@ spec.add({
             lhs = "<C-5>",
             rhs = function()
                 local harpoon = require("harpoon")
+                harpoon:list():select(5)
+            end,
+            desc = "Bookmarks: select [5]th item in the list.",
+        },
+        {
+            lhs = "<C-6>",
+            rhs = function()
+                local harpoon = require("harpoon")
                 harpoon:list():select(harpoon:list():length())
             end,
             desc = "Bookmarks: select [last] item in the list.",
