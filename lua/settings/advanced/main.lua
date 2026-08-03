@@ -41,7 +41,54 @@ end)
 
 spec.add({
     "harpoon",
-    opts = { settings = { save_on_toggle = true } },
+    opts = {
+        settings = { save_on_toggle = true },
+        -- Default select uses bufadd+bufload which can leave a freshly opened
+        -- buffer marked 'modified' (lualine [+]) even though nothing changed.
+        -- :edit goes through the normal open path and avoids that.
+        default = {
+            select = function(list_item, _, options)
+                if list_item == nil then
+                    return
+                end
+
+                local Extensions = require("harpoon.extensions")
+                options = options or {}
+
+                local path = list_item.value
+                local bufnr = vim.fn.bufnr(("^%s$"):format(vim.fn.escape(path, "^$.*[]~\\")))
+                local set_position = bufnr == -1 or not vim.api.nvim_buf_is_loaded(bufnr)
+
+                if options.vsplit then
+                    vim.cmd.vsplit()
+                elseif options.split then
+                    vim.cmd.split()
+                elseif options.tabedit then
+                    vim.cmd.tabedit(vim.fn.fnameescape(path))
+                    bufnr = vim.api.nvim_get_current_buf()
+                    set_position = true
+                elseif bufnr ~= -1 and vim.api.nvim_buf_is_loaded(bufnr) then
+                    vim.api.nvim_set_current_buf(bufnr)
+                else
+                    vim.cmd.edit(vim.fn.fnameescape(path))
+                    bufnr = vim.api.nvim_get_current_buf()
+                    set_position = true
+                end
+
+                if set_position and list_item.context then
+                    local lines = vim.api.nvim_buf_line_count(bufnr)
+                    local row = math.min(list_item.context.row or 1, lines)
+                    local row_text = vim.api.nvim_buf_get_lines(bufnr, row - 1, row, false)
+                    local col = math.min(list_item.context.col or 0, row_text[1] and #row_text[1] or 0)
+                    pcall(vim.api.nvim_win_set_cursor, 0, { row, col })
+                end
+
+                Extensions.extensions:emit(Extensions.event_names.NAVIGATE, {
+                    buffer = bufnr,
+                })
+            end,
+        },
+    },
     after = function(_, opts)
         local harpoon = require("harpoon")
         local harpoon_extensions = require("harpoon.extensions")
