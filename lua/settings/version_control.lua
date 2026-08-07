@@ -27,16 +27,6 @@ spec.add({
             "git_rebase",
             "diff",
         },
-        custom_parsers = {
-            jjdescription = {
-                install_info = {
-                    url = "https://github.com/kareigu/tree-sitter-jjdescription", -- local path or git repo
-                    revision = "1613b8c85b6ead48464d73668f39910dcbb41911",
-                    branch = "dev", -- default branch in case of git repo if different from master
-                },
-                tier = 1,
-            },
-        },
     },
 })
 spec.add({
