@@ -82,8 +82,8 @@ vim.opt.listchars = {
     tab = "——-",
     -- tab = "——–",
     -- tab = "──",
-    space = "‧",
-    trail = "‧",
+    space = "·",
+    trail = "·",
     extends = "⟩",
     nbsp = "␣",
 }

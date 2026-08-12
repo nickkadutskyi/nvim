@@ -73,7 +73,7 @@ spec.add({
     ---@type ide.Opts.Treesitter
     opts = {
         -- Previous ensure installed
-        ensure_installed = { "comment", "vim", "vimdoc", "editorconfig", "tmux", "sql", "regex", "http" },
+        ensure_installed = { "comment", "vim", "vimdoc", "editorconfig", "sql", "regex", "http" },
         syntax_map = { ["tiltfile"] = "starlark" },
         auto_install = true, -- Automatically install missing parsers
         sync_install = false, -- Install parsers synchronously
