@@ -78,10 +78,7 @@ vim.o.relativenumber = true
 -- Sets how Neovim will display certain whitespace characters in the editor.
 vim.o.list = true
 vim.opt.listchars = {
-    -- tab = "» ",
     tab = "——-",
-    -- tab = "——–",
-    -- tab = "──",
     space = "·",
     trail = "·",
     extends = "⟩",
