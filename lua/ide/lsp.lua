@@ -34,6 +34,7 @@ function M.setup(opts)
     -- Enable LSP CodeLens
     vim.lsp.codelens.enable(true)
 
+    require("ide.lsp.inlay_hint").setup()
     vim.lsp.inlay_hint.enable(true)
 
     -- In case we don't have tools_lsp in .editorconfig we still want to configure LSP clients
