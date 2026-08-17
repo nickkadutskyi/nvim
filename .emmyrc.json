@@ -23,14 +23,18 @@
       "?/lua/?/init.lua"
     ]
   },
+  "strict": {
+    "requirePath": false
+  },
   "workspace": {
     "workspaceRoots": [
-      "./lua",
-      "./"
+      "./lua"
     ],
     "library": [
+      "$VIMRUNTIME/lua",
       "$HOME/.local/share/nvim/site/pack",
-      "$VIMRUNTIME"
+      "$HOME/.local/share/nvim/site/pack/dev/opt/jb.nvim/lua",
+      "$HOME/.local/share/nvim/site/pack/core/opt/jb.nvim/lua"
     ]
   }
 }
