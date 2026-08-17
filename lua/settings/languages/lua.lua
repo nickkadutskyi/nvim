@@ -46,6 +46,7 @@ spec.add({
     "nvim-lspconfig",
     opts = { ---@type ide.Opts.Lsp
         clients = {
+            ["emmylua_ls"] = {},
             ["lua_ls"] = {
                 settings = {
                     Lua = {
