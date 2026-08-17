@@ -31,6 +31,11 @@ function M.setup(opts)
     -- Configure how document color shows up
     vim.lsp.document_color.enable(true, nil, { style = "virtual" })
 
+    -- Enable LSP CodeLens
+    vim.lsp.codelens.enable(true)
+
+    vim.lsp.inlay_hint.enable(true)
+
     -- In case we don't have tools_lsp in .editorconfig we still want to configure LSP clients
     -- Running this delayed to ensure we create our autocmd for BufReadPost
     -- after the one created by editorconfig.lua plugin
