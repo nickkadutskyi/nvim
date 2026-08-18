@@ -30,10 +30,10 @@ spec.add({
                     },
                     condition = function(bufnr, _)
                         local ok, fff = pcall(require, "fff.picker_ui.picker_ui_state")
-                        if not ok or not fff.state then
-                            return false
+                        if ok and fff ~= nil then
+                            return bufnr == fff.state.input_buf
                         end
-                        return bufnr == fff.state.input_buf
+                        return false
                     end,
                 },
                 {
@@ -42,10 +42,10 @@ spec.add({
                     },
                     condition = function(bufnr, _)
                         local ok, fff = pcall(require, "fff.picker_ui.picker_ui_state")
-                        if not ok or not fff.state then
-                            return false
+                        if ok and fff ~= nil then
+                            return bufnr == fff.state.list_buf
                         end
-                        return bufnr == fff.state.list_buf
+                        return false
                     end,
                 },
                 {
@@ -54,10 +54,10 @@ spec.add({
                     },
                     condition = function(bufnr, _)
                         local ok, fff = pcall(require, "fff.picker_ui.picker_ui_state")
-                        if not ok or not fff.state then
-                            return false
+                        if ok and fff ~= nil then
+                            return bufnr == fff.state.preview_buf
                         end
-                        return bufnr == fff.state.preview_buf
+                        return false
                     end,
                 },
             },

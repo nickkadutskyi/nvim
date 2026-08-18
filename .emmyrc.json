@@ -34,7 +34,8 @@
       "$VIMRUNTIME/lua",
       "$HOME/.local/share/nvim/site/pack",
       "$HOME/.local/share/nvim/site/pack/dev/opt/jb.nvim/lua",
-      "$HOME/.local/share/nvim/site/pack/core/opt/jb.nvim/lua"
+      "$HOME/.local/share/nvim/site/pack/core/opt/jb.nvim/lua",
+      "$HOME/.local/share/nvim/site/pack/core/opt/fff.nvim/lua"
     ]
   }
 }
