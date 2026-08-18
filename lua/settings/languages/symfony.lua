@@ -52,6 +52,17 @@ spec.add({
     "nvim-lspconfig",
     opts = { ---@type ide.Opts.Lsp
         clients = {
+            ["symfony_lsp"] = {
+                enabled = {
+                    nil,
+                    function()
+                        return utils.tool.find_php_executable("symfony-lsp") ~= nil
+                    end,
+                },
+                bin = function()
+                    return utils.tool.find_php_executable("symfony-lsp")
+                end,
+            },
             ["twiggy_language_server"] = {
                 enabled = { { ".twig-cs-fixer.dist.php", ".twig-cs-fixer.php", "symfony.lock" } },
                 bin = function()
