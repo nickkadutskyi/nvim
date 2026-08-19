@@ -94,6 +94,14 @@ function M.add(specs, opts)
     end
 end
 
+--- Get plugin names that were installed from local development checkouts.
+---@return string[]
+function M.get_active_plugin_names()
+    local names = vim.tbl_keys(I.installed)
+    table.sort(names)
+    return names
+end
+
 function I.ensure_install_dir()
     local plug_dir = I.get_plug_dir()
 

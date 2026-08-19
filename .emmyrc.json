@@ -13,29 +13,23 @@
     "disable": []
   },
   "runtime": {
-    "version": "LuaJIT",
-    "requirePattern": [
-      "?.lua",
-      "?/init.lua",
-      "lua/?.lua",
-      "lua/?/init.lua",
-      "?/lua/?.lua",
-      "?/lua/?/init.lua"
-    ]
+    "version": "LuaJIT"
   },
   "strict": {
-    "requirePath": false
+    "requirePath": true
   },
   "workspace": {
     "workspaceRoots": [
       "./lua"
     ],
     "library": [
-      "$VIMRUNTIME/lua",
-      "$HOME/.local/share/nvim/site/pack",
-      "$HOME/.local/share/nvim/site/pack/dev/opt/jb.nvim/lua",
-      "$HOME/.local/share/nvim/site/pack/core/opt/jb.nvim/lua",
-      "$HOME/.local/share/nvim/site/pack/core/opt/fff.nvim/lua"
+      "$VIMRUNTIME/lua"
+    ],
+    "moduleMap": [
+      {
+        "pattern": "^(?:core|dev)\\.opt\\..+?\\.lua\\.(.+)$",
+        "replace": "$1"
+      }
     ]
   }
 }
