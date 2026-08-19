@@ -39,9 +39,9 @@ function M.setup()
                                     :join("")
                             local virtual_text = hint_virtual_texts[hint.position.character] or {}
 
-                            if hint.paddingLeft then
-                                virtual_text[#virtual_text + 1] = { " " }
-                            end
+                            -- if hint.paddingLeft then
+                            --     virtual_text[#virtual_text + 1] = { " " }
+                            -- end
                             virtual_text[#virtual_text + 1] = { prefix, "LspInlayHintReverse" }
                             virtual_text[#virtual_text + 1] = { text, "LspInlayHint" }
                             virtual_text[#virtual_text + 1] = { suffix, "LspInlayHintReverse" }
