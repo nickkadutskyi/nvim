@@ -64,6 +64,16 @@ spec.add({
     },
     --- My color scheme that recreates IntelliJeJ's look and feel in Neovim
     { src = g("nickkadutskyi/jb.nvim"), data = { dev = true, deferred = false } },
+    --- Auto dark mode theme switcher because neovim will change terminal's background
+    {
+        src = g("f-person/auto-dark-mode.nvim"),
+        data = {
+            deferred = false,
+            after = function(_, opts)
+                require("auto-dark-mode").setup(opts)
+            end,
+        },
+    },
     --- Treesitter for syntax highlighting, folding, etc.
     --- Requires: tree-sitter, tar, curl, c compiler
     {

@@ -91,7 +91,7 @@ spec.add({
                     newfile_status = true,
                     symbols = { newfile = "[new]", unnamed = "[no name]" },
                     color = function(_)
-                        return vim.b.custom_git_status_hl or "Custom_TabSel"
+                        return vim.b.custom_git_status_hl or "StatusLine"
                     end,
                     separator = " ›",
                 },
