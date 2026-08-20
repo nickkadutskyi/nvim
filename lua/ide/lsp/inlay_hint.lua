@@ -1,7 +1,11 @@
 local M = {}
 
-local prefix = ""
-local suffix = ""
+-- local prefix = ""
+-- local suffix = ""
+-- local prefix = " "
+-- local suffix = " "
+local prefix = "▐"
+local suffix = "▌"
 
 function M.setup()
     require("vim.lsp.inlay_hint")
