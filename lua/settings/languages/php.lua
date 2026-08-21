@@ -163,6 +163,11 @@ spec.add({
                     return utils.tool.find_php_executable("phpantom_lsp")
                 end,
                 nix_pkg = "phpantom-lsp",
+                on_attach = function(client)
+                    if vim.bo.filetype == "php" then
+                        client.server_capabilities.inlayHintProvider = false
+                    end
+                end,
             },
             ["psalm"] = {
                 -- `root_dir` already checks for psalm.xml or psalm.xml.dist
