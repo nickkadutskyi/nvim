@@ -166,6 +166,7 @@ spec.add({
                 on_attach = function(client)
                     if vim.bo.filetype == "php" then
                         client.server_capabilities.inlayHintProvider = false
+                        client.server_capabilities.semanticTokensProvider = nil
                     end
                 end,
             },
