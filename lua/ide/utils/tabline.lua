@@ -81,6 +81,7 @@ function M.tabline()
     -- Build the tabline string
     local close_icon = "" --- x X     󰅙
     local tabline = ""
+    local tabline_width = 0
     for i, tab in ipairs(tabs) do
         local is_sel = i == current
 
@@ -88,6 +89,7 @@ function M.tabline()
         if is_sel then
             tabline = tabline .. "%#TabLineBorderSel#▏"
             tabline = tabline .. "%#TabLineSel#"
+            tabline_width = tabline_width + 1
         else
             tabline = tabline .. "%#TabLine#"
         end
@@ -102,25 +104,31 @@ function M.tabline()
         end
         if is_sel then
             tabline = tabline .. "" .. label .. " "
+            tabline_width = tabline_width + vim.fn.strdisplaywidth(label) + 1
         else
             tabline = tabline .. " " .. label .. " "
+            tabline_width = tabline_width + vim.fn.strdisplaywidth(label) + 2
         end
 
         -- Close button with its own highlight
         local close_hl = is_sel and "%#TabLineCloseIconSel#" or "%#TabLineCloseIcon#"
         tabline = tabline .. close_hl .. "%" .. i .. "X" .. close_icon .. "%X"
+        tabline_width = tabline_width + vim.fn.strdisplaywidth(close_icon)
 
         -- Right border (selected only) then gap
         if is_sel then
             tabline = tabline .. "%#TabLineBorderSel#▕"
             tabline = tabline .. "%#TabLine#"
+            tabline_width = tabline_width + 1
         else
             tabline = tabline .. "%#TabLine# "
+            tabline_width = tabline_width + 1
         end
     end
 
     -- Fill remainder and reset click targets
-    tabline = tabline .. "%#TabLineFill#%T"
+    local fill = string.rep("▁", math.max(0, vim.o.columns - tabline_width))
+    tabline = tabline .. "%#TabLineFill#%T" .. fill
 
     return tabline
 end
