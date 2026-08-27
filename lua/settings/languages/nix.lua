@@ -1,4 +1,5 @@
 local spec = require("ide.spec.builder")
+local utils = require("ide.utils")
 
 spec.add({ "nvim-treesitter", opts = { ensure_installed = { "nix" } } })
 spec.add({
@@ -51,6 +52,12 @@ spec.add({
                 },
             },
             ["nil_ls"] = {
+                enabled = {
+                    nil,
+                    function()
+                        return utils.tool.find_executable({}, "nil") ~= nil
+                    end,
+                },
                 nix_pkg = "nil",
                 capabilities = {
                     workspace = {
