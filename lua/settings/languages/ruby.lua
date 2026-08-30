@@ -15,7 +15,8 @@ spec.add({
 })
 spec.add({
     "nvim-lspconfig",
-    opts = { ---@type ide.Opts.Lsp
+    ---@type ide.Opts.Lsp
+    opts = {
         clients = {
             ["rubocop"] = {
                 enabled = { { "rubocop", ".rubocop.yml" } },

@@ -12,9 +12,7 @@ spec.add({
                     options = {
                         nix_pkg = "nodePackages_latest.prettier",
                     },
-                    ---@param self conform.FormatterConfig
-                    ---@param ctx conform.Context
-                    prepend_args = function(self, ctx)
+                    prepend_args = function(_, ctx)
                         local args = {}
                         if ctx.filename:match("%.xml$") then
                             -- Plugin for XML have to be installed
@@ -29,7 +27,8 @@ spec.add({
 })
 spec.add({
     "nvim-lspconfig",
-    opts = { ---@type ide.Opts.Lsp
+    ---@type ide.Opts.Lsp
+    opts = {
         clients = {
             ["lemminx"] = {
                 settings = { xml = { server = { workDir = "~/.cache/lemminx" } } },

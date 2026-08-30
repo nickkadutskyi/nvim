@@ -16,7 +16,7 @@ spec.add({
     ---@type ide.Opts.Conform
     opts = {
         formatters_by_ft = {
-            yaml = { { "yamlfmt", { ".yamlfmt" }, nil, true, { timeout_ms = 1500 }  } },
+            yaml = { { "yamlfmt", { ".yamlfmt" }, nil, true, { timeout_ms = 1500 } } },
         },
         conform_opts = {
             formatters = {
@@ -31,7 +31,8 @@ spec.add({
 })
 spec.add({
     "nvim-lspconfig",
-    opts = { ---@type ide.Opts.Lsp
+    ---@type ide.Opts.Lsp
+    opts = {
         clients = {
             yamlls = {
                 enabled = { nil, nil, false },

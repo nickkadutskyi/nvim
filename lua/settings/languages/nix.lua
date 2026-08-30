@@ -1,10 +1,10 @@
 local spec = require("ide.spec.builder")
-local utils = require("ide.utils")
 
 spec.add({ "nvim-treesitter", opts = { ensure_installed = { "nix" } } })
 spec.add({
     "conform.nvim",
-    opts = { ---@type ide.Opts.Conform
+    ---@type ide.Opts.Conform
+    opts = {
         formatters_by_ft = {
             nix = { { "nixfmt", nil, nil, true } },
         },
@@ -39,7 +39,8 @@ spec.add({
 })
 spec.add({
     "nvim-lspconfig",
-    opts = { ---@type ide.Opts.Lsp
+    ---@type ide.Opts.Lsp
+    opts = {
         clients = {
             ["nixd"] = {
                 nix_pkg = "nixd",
@@ -52,12 +53,6 @@ spec.add({
                 },
             },
             ["nil_ls"] = {
-                enabled = {
-                    nil,
-                    function()
-                        return utils.tool.find_executable({}, "nil") ~= nil
-                    end,
-                },
                 nix_pkg = "nil",
                 capabilities = {
                     workspace = {

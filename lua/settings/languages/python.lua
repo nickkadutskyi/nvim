@@ -32,7 +32,8 @@ spec.add({
 })
 spec.add({
     "nvim-lspconfig",
-    opts = { ---@type ide.Opts.Lsp
+    ---@type ide.Opts.Lsp
+    opts = {
         clients = {
             pylsp = {
                 nix_pkg = "python313Packages.python-lsp-server", -- pylsp

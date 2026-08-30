@@ -6,7 +6,8 @@ spec.add({ "nvim-treesitter", opts = { ensure_installed = { "php", "phpdoc" } } 
 
 spec.add({
     "nvim-lint",
-    opts = { ---@type ide.Opts.Lint
+    ---@type ide.Opts.Lint
+    opts = {
         linters_by_ft = {
             php = {
                 { "php", nil, nil, true },
@@ -37,7 +38,8 @@ spec.add({
 
 spec.add({
     "conform.nvim",
-    opts = { ---@type ide.Opts.Conform
+    ---@type ide.Opts.Conform
+    opts = {
         formatters_by_ft = {
             php = {
                 { "_", nil, nil, true, { async = true, timeout_ms = 1500 } },
@@ -84,7 +86,8 @@ spec.add({
 
 spec.add({
     "nvim-lspconfig",
-    opts = { ---@type ide.Opts.Lsp
+    ---@type ide.Opts.Lsp
+    opts = {
         clients = {
             ["intelephense"] = {
                 enabled = {

@@ -4,7 +4,8 @@ spec.add({ "nvim-treesitter", opts = { ensure_installed = { "lua", "luadoc", "lu
 
 spec.add({
     "mfussenegger/nvim-lint",
-    opts = { ---@type ide.Opts.Lint
+    ---@type ide.Opts.Lint
+    opts = {
         linters_by_ft = {
             lua = {
                 { "selene", { "selene.toml" } },
@@ -20,7 +21,8 @@ spec.add({
 
 spec.add({
     "conform.nvim",
-    opts = { ---@type ide.Opts.Conform
+    ---@type ide.Opts.Conform
+    opts = {
         formatters_by_ft = {
             lua = { { "stylua", nil, nil, true, { timeout_ms = 2000 } } },
         },
@@ -44,7 +46,8 @@ spec.add({
 
 spec.add({
     "nvim-lspconfig",
-    opts = { ---@type ide.Opts.Lsp
+    ---@type ide.Opts.Lsp
+    opts = {
         clients = {
             ["emmylua_ls"] = {},
             ["lua_ls"] = {
@@ -79,32 +82,37 @@ spec.add({
 
 spec.add({
     "nvim-lspconfig",
-    opts = function(_, opts)
-        local client = opts.clients and opts.clients.emmylua_ls
-        if not client then
-            return opts
-        end
+    opts =
+        ---@param opts ide.Opts.Lsp
+        ---@return ide.Opts.Lsp
+        function(_, opts)
+            local client = opts.clients and opts.clients.emmylua_ls
+            if not client then
+                return opts
+            end
 
-        local pack_path = vim.fs.joinpath(vim.fn.stdpath("data"), "site", "pack")
-        local ignore_dir = { "dev/opt" }
-        local library = {
-            {
-                path = pack_path,
-                ignoreDir = ignore_dir,
-            },
-        }
-        for _, name in ipairs(require("ide.dev").get_active_plugin_names()) do
-            table.insert(ignore_dir, "core/opt/" .. name)
-            table.insert(library, vim.fs.joinpath(pack_path, "dev", "opt", "dev-" .. name, "lua"))
-        end
-
-        client.settings = vim.tbl_deep_extend("force", client.settings or {}, {
-            emmylua = {
-                workspace = {
-                    library = library,
+            local dp = vim.fn.stdpath("data")
+            local data_path = (type(dp) == "string" and dp or dp[1]) or vim.env.HOME .. "/.local/share/nvim"
+            local pack_path = vim.fs.joinpath(data_path, "site", "pack")
+            local ignore_dir = { "dev/opt" }
+            local library = {
+                {
+                    path = pack_path,
+                    ignoreDir = ignore_dir,
                 },
-            },
-        })
-        return opts
-    end,
+            }
+            for _, name in ipairs(require("ide.dev").get_active_plugin_names()) do
+                table.insert(ignore_dir, "core/opt/" .. name)
+                table.insert(library, vim.fs.joinpath(pack_path, "dev", "opt", "dev-" .. name, "lua"))
+            end
+
+            client.settings = vim.tbl_deep_extend("force", client.settings or {}, {
+                emmylua = {
+                    workspace = {
+                        library = library,
+                    },
+                },
+            })
+            return opts
+        end,
 })

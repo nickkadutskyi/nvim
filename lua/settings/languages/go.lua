@@ -2,14 +2,16 @@ local spec = require("ide.spec.builder")
 
 spec.add({
     "nvim-treesitter",
-    opts = { ---@type ide.Opts.Treesitter
+    ---@type ide.Opts.Treesitter
+    opts = {
         ensure_installed = { "go", "gotmpl" },
         syntax_map = { ["gotexttmpl"] = "gotmpl", ["gohtmltmpl"] = "gotmpl" },
     },
 })
 spec.add({
     "nvim-lspconfig",
-    opts = { ---@type ide.Opts.Lsp
+    ---@type ide.Opts.Lsp
+    opts = {
         clients = {
             ["gopls"] = { enabled = false },
         },

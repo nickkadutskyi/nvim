@@ -3,7 +3,8 @@ local utils = require("ide.utils")
 
 spec.add({
     "nvim-lspconfig",
-    opts = { ---@type ide.Opts.Lsp
+    ---@type ide.Opts.Lsp
+    opts = {
         clients = {
             ["tailwindcss"] = {
                 enabled = {

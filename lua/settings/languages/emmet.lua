@@ -2,7 +2,8 @@ local spec = require("ide.spec.builder")
 
 spec.add({
     "nvim-lspconfig",
-    opts = { ---@type ide.Opts.Lsp
+    ---@type ide.Opts.Lsp
+    opts = {
         clients = {
             ["emmet_language_server"] = {
                 nix_pkg = "emmet-language-server",

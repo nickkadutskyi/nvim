@@ -11,7 +11,8 @@ spec.add({
 })
 spec.add({
     "nvim-lspconfig",
-    opts = { ---@type ide.Opts.Lsp
+    ---@type ide.Opts.Lsp
+    opts = {
         clients = {
             rust_analyzer = {
                 nix_pkg = "rust-analyzer",

@@ -5,7 +5,8 @@ spec.add({ "nvim-treesitter", opts = { ensure_installed = { "twig" } } })
 
 spec.add({
     "nvim-lint",
-    opts = { ---@type ide.Opts.Lint
+    ---@type ide.Opts.Lint
+    opts = {
         linters_by_ft = {
             twig = { { "twig-cs-fixer", { ".twig-cs-fixer.dist.php", ".twig-cs-fixer.php", "symfony.lock" } } },
         },
@@ -14,7 +15,8 @@ spec.add({
 
 spec.add({
     "conform.nvim",
-    opts = { ---@type ide.Opts.Conform
+    ---@type ide.Opts.Conform
+    opts = {
         formatters_by_ft = {
             twig = {
                 { "_", nil, nil, true, { async = true, timeout_ms = 1500, stop_after_first = false } },
@@ -50,7 +52,8 @@ spec.add({
 
 spec.add({
     "nvim-lspconfig",
-    opts = { ---@type ide.Opts.Lsp
+    ---@type ide.Opts.Lsp
+    opts = {
         clients = {
             ["symfony_lsp"] = {
                 enabled = {
