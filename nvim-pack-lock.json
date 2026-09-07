@@ -17,7 +17,7 @@
       "src": "https://github.com/fang2hou/blink-copilot"
     },
     "blink-ripgrep.nvim": {
-      "rev": "e3ac509af5a78e0372f1cd5dee00359f80b6a231",
+      "rev": "ec88e894c7cc12d9028fc803ae91528c76395b8f",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "blink.cmp": {
@@ -71,7 +71,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "jb.nvim": {
-      "rev": "984139426dbc1af955fab83b964712d36db7213d",
+      "rev": "ad55d976d44c498ae8dfb0dfec5712516a9cadf9",
       "src": "https://github.com/nickkadutskyi/jb.nvim"
     },
     "lazydev.nvim": {
@@ -103,7 +103,7 @@
       "src": "https://github.com/mfussenegger/nvim-lint"
     },
     "nvim-lspconfig": {
-      "rev": "84252f9832fb5b9024fe9f7258e7c2aff915e6fb",
+      "rev": "615d7b2712efb2f530a83a9d0466acafba6b1d6f",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-navic": {
@@ -115,7 +115,7 @@
       "src": "https://github.com/petertriho/nvim-scrollbar"
     },
     "nvim-treesitter": {
-      "rev": "427e9222363d07c32d6db6169e4049c28d58d141",
+      "rev": "0d0969030ad955b510d7c8012b40252a25c12a6d",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-treesitter-context": {
