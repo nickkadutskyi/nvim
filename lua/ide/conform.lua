@@ -39,8 +39,10 @@ function M.setup(opts)
 end
 
 --- Handling editorconfig integration for tools_style property
----@type fun(bufnr: integer, val: string, opts?: table)
-function M.handle_tools_style_declartion(bufnr, val, _)
+---@param bufnr integer
+---@param val string
+---@param _opts? table
+function M.handle_tools_style_declartion(bufnr, val, _opts)
     utils.run.on_load("conform.nvim", function()
         local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
         if I.configured_ft[filetype] then
