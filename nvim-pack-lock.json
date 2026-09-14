@@ -17,7 +17,7 @@
       "src": "https://github.com/fang2hou/blink-copilot"
     },
     "blink-ripgrep.nvim": {
-      "rev": "eec58ad5fa71ee935b382fc6b5863be6bb9caa03",
+      "rev": "18e3c196a75877b847a4a685035b25a3c2cb6912",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "blink.cmp": {
@@ -38,7 +38,7 @@
       "src": "https://github.com/sindrets/diffview.nvim"
     },
     "fff.nvim": {
-      "rev": "e208805e08550c363060d78a8a470ff86062f3d9",
+      "rev": "4083ea04d30537aaa653a2189616ab6b4ff19810",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
     "friendly-snippets": {
