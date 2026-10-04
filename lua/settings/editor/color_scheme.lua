@@ -14,7 +14,7 @@ spec.add({
     after = function()
         require("jb").setup({
             transparent = false,
-            integrations = { ghostty = true },
+            integrations = { ghostty = true, fff = true },
             enforce_float_style = {
                 {
                     style = { border = require("jb.borders").borders.dialog.default_box_header_shadowed },
@@ -23,42 +23,6 @@ spec.add({
                             return false
                         end
                         return config.title == " Plugins " or config.title:find("99") ~= nil
-                    end,
-                },
-                {
-                    style = {
-                        border = require("jb.borders").borders.dialog.default_box_split_top_no_footer_shadowed,
-                    },
-                    condition = function(bufnr, _)
-                        local ok, fff = pcall(require, "fff.picker_ui.picker_ui_state")
-                        if ok and fff ~= nil then
-                            return bufnr == fff.state.input_buf
-                        end
-                        return false
-                    end,
-                },
-                {
-                    style = {
-                        border = require("jb.borders").borders.dialog.default_box_split_middle_shadowed_no_footer,
-                    },
-                    condition = function(bufnr, _)
-                        local ok, fff = pcall(require, "fff.picker_ui.picker_ui_state")
-                        if ok and fff ~= nil then
-                            return bufnr == fff.state.list_buf
-                        end
-                        return false
-                    end,
-                },
-                {
-                    style = {
-                        border = require("jb.borders").borders.dialog.default_box_split_bottom_shadowed_header,
-                    },
-                    condition = function(bufnr, _)
-                        local ok, fff = pcall(require, "fff.picker_ui.picker_ui_state")
-                        if ok and fff ~= nil then
-                            return bufnr == fff.state.preview_buf
-                        end
-                        return false
                     end,
                 },
             },

@@ -38,33 +38,6 @@ spec.add({
             -- enabled = false,
             line_numbers = true,
         },
-        hl = {
-            border = "FloatBorder",
-            normal = "FzfLuaFzfNormal",
-            cursor = "FzfLuaFzfCursorLine",
-            matched = "FzfLuaFzfMatch",
-            title = "FzfLuaTitle",
-            prompt = "FzfLuaFzfPrompt",
-            active_file = "FzfLuaFzfCursorLine",
-            frecency = "Number",
-            debug = "Comment",
-
-            combo_header = "Number",
-            scrollbar = "FzfLuaFzfScrollbar", -- Highlight for scrollbar thumb (track uses border)
-
-            -- Grep highlights
-            grep_match = "CustomFFFGrepMatch", -- Highlight for matched text in grep results
-            grep_line_number = "CustomFFFGrepLineNr", -- Highlight for :line:col location
-            grep_regex_active = "CustomFFFRegexActive", -- Highlight for keybind + label when regex is on
-            grep_regex_inactive = "CustomFFFRegexInactive", -- Highlight for keybind + label when regex is off
-            grep_fuzzy_active = "CustomFFFRegexInactive", -- Highlight for keybind + label when fuzzy is on
-            -- Cross-mode suggestion highlights
-            suggestion_header = "WarningMsg", -- Highlight for the "No results found. Suggested..." banner
-
-            winhl = {
-                preview = "Normal:Normal,IncSearch:FzfLuaSearch,FloatTitle:DialogFloatBorderTop",
-            },
-        },
         keymaps = {
             -- goes to the previous query in history
             cycle_previous_query = "<C-h>",
