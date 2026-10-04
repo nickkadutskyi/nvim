@@ -17,7 +17,7 @@
       "src": "https://github.com/fang2hou/blink-copilot"
     },
     "blink-ripgrep.nvim": {
-      "rev": "a7804525b1d52bd9709d7b78ae23d8152f967ae6",
+      "rev": "ed56dfc1bfd72aed054ca100b5c137285fdee1ee",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "blink.cmp": {
@@ -38,7 +38,7 @@
       "src": "https://github.com/sindrets/diffview.nvim"
     },
     "fff.nvim": {
-      "rev": "89c19270ea2dfc20829a7429f72022571558093e",
+      "rev": "c188e7a8f90e4ee4aabe18f93d5869dfb4289f12",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
     "friendly-snippets": {
@@ -46,7 +46,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf-lua": {
-      "rev": "eab53acb3fd36479f084f854b4418d02b5c70382",
+      "rev": "bba13a0d260ca5e049683344ba70791c9ad8ece6",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gitsigns.nvim": {
@@ -71,7 +71,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "jb.nvim": {
-      "rev": "b1efc8a2692265e06385c97e10e8538dca52ccef",
+      "rev": "d3f93e573f66d17213c841cd08a23ca63a6ed329",
       "src": "https://github.com/nickkadutskyi/jb.nvim"
     },
     "lazydev.nvim": {
@@ -115,7 +115,7 @@
       "src": "https://github.com/petertriho/nvim-scrollbar"
     },
     "nvim-treesitter": {
-      "rev": "910fdf6f49e9dee7e7257c7d11a76b040fdfb9de",
+      "rev": "e289100ff98969e118c702199d88b764ce9e7fdf",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-treesitter-context": {
