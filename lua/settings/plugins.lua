@@ -260,7 +260,7 @@ spec.add({
         src = g("nvim-treesitter/nvim-treesitter-context"),
         data = {
             -- NOTE: Disabled it because it caused some errors on latest neovim commit 18e2729
-            enabled = false,
+            enabled = true,
             event = "IdeDeferred",
             after = function(_, opts)
                 require("treesitter-context").setup(opts)
