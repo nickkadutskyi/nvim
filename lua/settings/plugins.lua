@@ -114,23 +114,6 @@ spec.add({
             end,
         },
     },
-    --- AI Assistant for code generation, refactoring, etc.
-    {
-        src = g("ThePrimeagen/99"),
-        data = {
-            event = "IdeDeferred",
-            ---@param opts _99.Options
-            after = function(_, opts)
-                local _99 = require("99")
-                opts.logger = {
-                    level = _99.DEBUG,
-                    path = "/tmp/" .. vim.fs.basename(vim.uv.cwd()) .. ".99.debug",
-                    print_on_error = true,
-                }
-                _99.setup(opts)
-            end,
-        },
-    },
     --- LSP Progress lualine componenet
     --- Required by: lualine.nvim
     { src = g("arkav/lualine-lsp-progress"), data = { event = "IdeDeferred" } },

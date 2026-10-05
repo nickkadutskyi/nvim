@@ -15,17 +15,6 @@ spec.add({
         require("jb").setup({
             transparent = false,
             integrations = { ghostty = true, fff = true },
-            enforce_float_style = {
-                {
-                    style = { border = require("jb.borders").borders.dialog.default_box_header_shadowed },
-                    condition = function(_, config)
-                        if type(config.title) ~= "string" then
-                            return false
-                        end
-                        return config.title == " Plugins " or config.title:find("99") ~= nil
-                    end,
-                },
-            },
         })
 
         -- Enable color scheme

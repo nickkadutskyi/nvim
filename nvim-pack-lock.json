@@ -1,9 +1,5 @@
 {
   "plugins": {
-    "99": {
-      "rev": "c17422457027c913c76c75a921fca1e623d2678e",
-      "src": "https://github.com/ThePrimeagen/99"
-    },
     "Comment.nvim": {
       "rev": "e30b7f2008e52442154b66f7c519bfd2f1e32acb",
       "src": "https://github.com/numToStr/Comment.nvim"

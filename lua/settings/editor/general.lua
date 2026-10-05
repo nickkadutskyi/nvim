@@ -162,15 +162,8 @@ spec.add({
             default = { "lsp", "copilot", "path", "snippets", "buffer", "ripgrep" },
             per_filetype = {
                 lua = { "lazydev", "lsp", "copilot", "path", "snippets", "buffer", "ripgrep" },
-                ["99prompt"] = { "99", "lsp", "path", "buffer" },
             },
             providers = {
-                ["99"] = {
-                    name = "99",
-                    module = "blink.compat.source",
-                    score_offset = -3,
-                    opts = {},
-                },
                 copilot = {
                     name = "copilot",
                     module = "blink-copilot",

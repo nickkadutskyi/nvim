@@ -524,34 +524,6 @@ utils.run.on_lsp_attach(function(buf, client)
     vim.keymap.set("n", "grn", rename, rename_opts("[g]o [r]efactor > Re[n]ame..."))
 end, "keymap.Refactor: failed to set LSP rename keymaps")
 
-spec.add({
-    "99",
-    keys = {
-        {
-            lhs = "<leader>9v",
-            rhs = function()
-                require("99").visual({})
-            end,
-            desc = "AI: [9]9 visual selection",
-            mode = "v",
-        },
-        {
-            lhs = "<leader>9x",
-            rhs = function()
-                require("99").stop_all_requests()
-            end,
-            desc = "AI: [9]9 [x] cancel all requests",
-        },
-        {
-            lhs = "<leader>9s",
-            rhs = function()
-                require("99").search({})
-            end,
-            desc = "AI: [9]9 [s]earch",
-        },
-    },
-})
-
 --- FIND
 
 utils.run.now_if_arg_or_deferred(function()
