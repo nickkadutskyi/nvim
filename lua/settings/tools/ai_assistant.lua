@@ -12,15 +12,7 @@ local utils = require("ide.utils")
 spec.add({
     "nvim-lspconfig",
     opts = { ---@type ide.Opts.Lsp
-        clients = {
-            ["copilot"] = {
-                settings = {
-                    telemetry = {
-                        telemetryLevel = "off",
-                    },
-                },
-            },
-        },
+        clients = {},
     },
 })
 
