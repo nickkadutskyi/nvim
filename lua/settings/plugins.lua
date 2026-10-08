@@ -114,7 +114,11 @@ spec.add({
             end,
         },
     },
-    --- Statusline
+    --- LSP Progress lualine componenet
+    --- Required by: lualine.nvim
+    { src = g("arkav/lualine-lsp-progress"), data = { event = "IdeDeferred" } },
+    --- Statusline configurator
+    --- Requires: lualine-lsp-progress
     {
         src = g("nvim-lualine/lualine.nvim"),
         data = {
