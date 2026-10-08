@@ -107,13 +107,6 @@ spec.add({
             },
             lualine_x = {
                 {
-                    "lsp_progress",
-                    fmt = function(str)
-                        -- Should fix "E539: Illegal character <,>"  error
-                        return require("lualine.utils.utils").stl_escape(str)
-                    end,
-                },
-                {
                     -- Shows currently running linters
                     function()
                         if pack.is_loaded("nvim-lint") then
