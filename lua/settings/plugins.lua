@@ -532,4 +532,26 @@ spec.add({
             end,
         },
     },
+    -- {
+    --     src = g("github/copilot.vim"),
+    --     data = {
+    --         before = function() end,
+    --     },
+    -- },
+    {
+        src = g("copilotlsp-nvim/copilot-lsp"),
+        data = {
+            after = function(_, opts)
+                -- require("copilot_lsp").setup(opts)
+            end,
+        },
+    },
+    {
+        src = g("zbirenbaum/copilot.lua"),
+        data = {
+            after = function(_, opts)
+                require("copilot").setup(opts)
+            end,
+        },
+    },
 })
