@@ -107,7 +107,7 @@ function I.native_spelling(props)
                         local col = vim.api.nvim_win_get_cursor(0)[2]
                         table.insert(
                             found,
-                            { lnum = lnum - 1, col = col, kind = word[2] == "caps" and "Grammar" or "Typo" }
+                            { lnum = lnum - 1, col = col, kind = word[2] == "caps" and "GrammarError" or "Typo" }
                         )
                         if col + #word[1] >= #line then
                             break
@@ -164,13 +164,13 @@ function I.language_inspection(diagnostic)
         return "Typo"
     end
     -- Unknown or missing rule IDs stay in the grammar bucket.
-    return "Grammar"
+    return "GrammarError"
 end
 
 ---@param props table
 function M.component_diagnostics(props)
     local label = {}
-    local counts = { 0, 0, 0, 0, Grammar = 0, Typo = 0 }
+    local counts = { 0, 0, 0, 0, GrammarError = 0, Typo = 0 }
     local language_diagnostics = {}
     for _, diagnostic in ipairs(vim.diagnostic.get(props.buf)) do
         local language_kind = I.language_inspection(diagnostic)
@@ -210,7 +210,7 @@ function M.component_diagnostics(props)
             table.insert(label, { n .. " " })
         end
     end
-    for _, kind in ipairs({ "Grammar", "Typo" }) do
+    for _, kind in ipairs({ "GrammarError", "Typo" }) do
         local n = counts[kind]
         if n > 0 then
             table.insert(label, { " ", group = "Custom_Icons_" .. kind })
