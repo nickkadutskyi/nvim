@@ -13,7 +13,7 @@
       "src": "https://github.com/fang2hou/blink-copilot"
     },
     "blink-ripgrep.nvim": {
-      "rev": "49285d2201714c678c54201834e11e7135e126d3",
+      "rev": "a06090792e5d68b9ece6a2ebdbe87bb9a1857231",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "blink.cmp": {
@@ -79,7 +79,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "jb.nvim": {
-      "rev": "52a729bb22d241f6ddd9a17d1d04cac5cc24d205",
+      "rev": "bf3949f2c4fd3e20fb92ba6aa788287529599816",
       "src": "https://github.com/nickkadutskyi/jb.nvim"
     },
     "lazydev.nvim": {
