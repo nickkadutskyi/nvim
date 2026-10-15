@@ -9,59 +9,136 @@ local I = {
     spell_cache = {},
 }
 
--- Accepting words does not change the buffer's edit counter.
-vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI", "OptionSet", "BufWipeout" }, {
+function I.spell_dictionaries()
+    local dictionaries = {}
+    -- Includes the temporary dictionary used by zG/zW and :spellgood!/:spellwrong!.
+    for path in ("\n" .. vim.fn.execute("silent! spellinfo")):gmatch("\nfile: ([^\n]+)") do
+        local stat = vim.uv.fs_stat(path)
+        dictionaries[path] = stat and { stat.size, stat.ino, stat.mtime, stat.ctime } or false
+    end
+    return dictionaries
+end
+
+function I.invalidate_spelling(buf)
+    for cached_buf, cached in pairs(I.spell_cache) do
+        if not buf or cached_buf == buf then
+            -- Replacing the entry also cancels any batch queued with the old spell context.
+            I.spell_cache[cached_buf] = { words = cached.words }
+        end
+    end
+end
+
+vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI", "OptionSet", "FileType", "Syntax", "BufWipeout" }, {
     group = vim.api.nvim_create_augroup("ide.incline.spell", { clear = true }),
-    callback = function()
-        I.spell_cache = {}
+    callback = function(event)
+        if event.event == "BufWipeout" then
+            I.spell_cache[event.buf] = nil
+        elseif event.event == "FileType" or event.event == "Syntax" then
+            -- Incline creates its own filetype=incline buffers while refreshing its labels.
+            I.invalidate_spelling(event.buf)
+        elseif event.event == "OptionSet" then
+            if event.match:match("^spell") then
+                I.invalidate_spelling()
+            end
+        else
+            -- Accepting words does not change changedtick, but an idle event alone is not a change.
+            local cached = I.spell_cache[event.buf]
+            if cached and vim.wo.spell and not vim.deep_equal(cached.dictionaries, I.spell_dictionaries()) then
+                I.invalidate_spelling()
+            end
+        end
     end,
 })
 
 ---@param props table
 ---@return table[]
 function I.native_spelling(props)
+    -- if true then
+    --     return {}
+    -- end
     if not vim.wo[props.win].spell then
         return {}
     end
     local tick = vim.api.nvim_buf_get_changedtick(props.buf)
     local cached = I.spell_cache[props.buf]
-    if cached and cached.tick == tick then
+    if cached and cached.tick == tick and (cached.pending or not cached.dirty) then
         return cached.words
     end
 
-    local words = vim.api.nvim_win_call(props.win, function()
-        local view = vim.fn.winsaveview()
-        local ok, result = pcall(function()
-            local found = {}
-            for lnum, line in ipairs(vim.api.nvim_buf_get_lines(props.buf, 0, -1, false)) do
-                vim.api.nvim_win_set_cursor(0, { lnum, 0 })
-                while true do
-                    -- Checking the buffer respects the editor's spell regions; checking a string does not.
-                    local word = vim.fn.spellbadword()
-                    if word[1] == "" then
-                        break
-                    end
-                    local col = vim.api.nvim_win_get_cursor(0)[2]
-                    table.insert(
-                        found,
-                        { lnum = lnum - 1, col = col, kind = word[2] == "caps" and "Grammar" or "Typo" }
-                    )
-                    if col + #word[1] >= #line then
-                        break
-                    end
-                    vim.api.nvim_win_set_cursor(0, { lnum, col + #word[1] })
-                end
-            end
-            return found
-        end)
-        vim.fn.winrestview(view)
-        if not ok then
-            error(result)
+    cached = {
+        tick = tick,
+        words = cached and cached.words or {},
+        pending = true,
+        dictionaries = vim.api.nvim_win_call(props.win, I.spell_dictionaries),
+    }
+    I.spell_cache[props.buf] = cached
+    local found = {}
+    local next_line = 0
+    local function scan()
+        if I.spell_cache[props.buf] ~= cached then
+            return
         end
-        return result
-    end)
-    I.spell_cache[props.buf] = { tick = tick, words = words }
-    return words
+        if
+            not vim.api.nvim_win_is_valid(props.win)
+            or vim.api.nvim_win_get_buf(props.win) ~= props.buf
+            or not vim.wo[props.win].spell
+            or vim.api.nvim_buf_get_changedtick(props.buf) ~= tick
+        then
+            cached.pending = false
+            cached.dirty = true
+            return
+        end
+
+        -- Yield between batches so full-buffer spelling checks never run inside a render.
+        local stop_line = math.min(next_line + 100, vim.api.nvim_buf_line_count(props.buf))
+        local lines = vim.api.nvim_buf_get_lines(props.buf, next_line, stop_line, false)
+        vim.api.nvim_win_call(props.win, function()
+            local view = vim.fn.winsaveview()
+            local ok, result = pcall(function()
+                for offset, line in ipairs(lines) do
+                    local lnum = next_line + offset
+                    vim.api.nvim_win_set_cursor(0, { lnum, 0 })
+                    while true do
+                        -- Checking the buffer respects the editor's spell regions; checking a string does not.
+                        local word = vim.fn.spellbadword()
+                        if word[1] == "" then
+                            break
+                        end
+                        local col = vim.api.nvim_win_get_cursor(0)[2]
+                        table.insert(
+                            found,
+                            { lnum = lnum - 1, col = col, kind = word[2] == "caps" and "Grammar" or "Typo" }
+                        )
+                        if col + #word[1] >= #line then
+                            break
+                        end
+                        vim.api.nvim_win_set_cursor(0, { lnum, col + #word[1] })
+                    end
+                end
+            end)
+            vim.fn.winrestview(view)
+            if not ok then
+                cached.pending = false
+                cached.dirty = true
+                error(result)
+            end
+        end)
+        next_line = stop_line
+        if next_line < vim.api.nvim_buf_line_count(props.buf) then
+            vim.defer_fn(scan, 10)
+        else
+            cached.words = found
+            cached.pending = false
+            if package.loaded["incline"] then
+                -- Let the current render's debounce finish before requesting another one.
+                vim.defer_fn(function()
+                    require("incline").refresh()
+                end, require("incline.config").debounce_threshold.falling + 1)
+            end
+        end
+    end
+    vim.defer_fn(scan, 10)
+    return cached.words
 end
 
 ---@param diagnostic vim.Diagnostic
