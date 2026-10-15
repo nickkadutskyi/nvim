@@ -217,6 +217,14 @@ function M.component_diagnostics(props)
             table.insert(label, { n .. " " })
         end
     end
+    -- IntelliJ shows the success icon only for a fully clean inspection result.
+    if #label == 0 then
+        local icon = "OK"
+        if pack.is_loaded("jb.nvim") and vim.g.nerd_font_is_present then
+            icon = ""
+        end
+        table.insert(label, { icon, group = "Custom_Icons_OK" })
+    end
     return label
 end
 
