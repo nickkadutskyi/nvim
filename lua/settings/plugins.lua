@@ -155,15 +155,6 @@ spec.add({
             event = "IdeDeferred",
             after = function(_, opts)
                 require("incline").setup(opts)
-                utils.autocmd.create(
-                    { "DiagnosticChanged", "TextChanged", "TextChangedI", "TextChangedP", "OptionSet" },
-                    {
-                        group = "plugins.incline-diagnostics",
-                        callback = function()
-                            require("incline").refresh()
-                        end,
-                    }
-                )
             end,
         },
     },
