@@ -79,7 +79,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "jb.nvim": {
-      "rev": "bf3949f2c4fd3e20fb92ba6aa788287529599816",
+      "rev": "e8c9ee7aa2d4ddd52ec7b5496bb6dccb5aa4bead",
       "src": "https://github.com/nickkadutskyi/jb.nvim"
     },
     "lazydev.nvim": {
