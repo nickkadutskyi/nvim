@@ -31,6 +31,10 @@ spec.add({
     opts = {
         suggestion = {
             auto_trigger = true,
+            keymap = {
+                accept_word = "<M-S-l>",
+                accept_line = false,
+            },
         },
     },
 })
