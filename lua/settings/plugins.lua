@@ -517,6 +517,7 @@ spec.add({
     },
     --- Error stripes and VCS status in Scrollbar
     --- Requires: nvim-hlslens, gitsigns.nvim
+    --- TODO: move to v2
     {
         src = g("petertriho/nvim-scrollbar"),
         data = {
