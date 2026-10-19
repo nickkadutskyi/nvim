@@ -27,7 +27,7 @@ end
 
 --- Resolve a local dev directory for a spec.
 --- Returns the local path string when dev mode applies, or nil to keep spec.src.
----@param spec vim.pack.Spec
+---@param spec ide.Spec
 ---@return string|nil
 function M.resolve(spec)
     local data = spec.data or {}
@@ -58,8 +58,8 @@ function M.resolve(spec)
     return dev_dir
 end
 
----@param specs vim.pack.Spec[]
----@param opts {load: fun(plugin_dat: {spec: vim.pack.Spec, path: string})}
+---@param specs ide.Spec[]
+---@param opts {load: fun(plugin_dat: {spec: ide.Spec, path: string})}
 function M.add(specs, opts)
     vim.validate("specs", specs, vim.islist, false, "list")
     opts = vim.tbl_extend("force", { load = vim.v.vim_did_init == 1, confirm = true }, opts or {})
@@ -132,7 +132,7 @@ end
 --- @class (private) ide.pack.PlugInfo
 --- @field dev_path? string
 
---- @param spec vim.pack.Spec
+--- @param spec ide.Spec
 --- @param plug_dir string?
 --- @return ide.pack.Plug
 function I.new_plug(spec, plug_dir)
@@ -146,7 +146,7 @@ function I.is_nonempty_string(x)
     return type(x) == "string" and x ~= ""
 end
 
---- @param spec string|vim.pack.Spec
+--- @param spec string|ide.Spec
 --- @return vim.pack.SpecResolved
 function I.normalize_spec(spec)
     vim.validate("spec", spec, "table")

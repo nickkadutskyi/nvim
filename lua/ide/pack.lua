@@ -14,7 +14,7 @@ function M.is_loaded(name)
     return I.loaded[name] == true
 end
 
----@param specs vim.pack.Spec[]
+---@param specs ide.Spec[]
 function M.load(specs)
     local normal_specs = {}
     local dev_specs = {}
@@ -100,7 +100,7 @@ end
 
 --- INTERNAL FUNCTIONS ---------------------------------------------------------
 
----@param plugin_data {spec: vim.pack.Spec, path: string}
+---@param plugin_data {spec: ide.Spec, path: string}
 function I.on_load(plugin_data)
     local spec = plugin_data.spec
     local data = spec.data or {}
@@ -176,7 +176,7 @@ function I.on_load(plugin_data)
     end
 end
 
----@param plugin_data {spec: vim.pack.Spec, path: string}
+---@param plugin_data {spec: ide.Spec, path: string}
 function I.load_plugin(plugin_data)
     local spec = plugin_data.spec
     local data = spec.data or {}

@@ -9,7 +9,7 @@ I.order = {}
 ---@type table<string, ide.Spec.Builder.Entry>
 I.registry = {}
 
----@param spec vim.pack.Spec|vim.pack.Spec[]|ide.SpecData.Named|ide.SpecData.Named[]
+---@param spec ide.Spec|ide.Spec[]|ide.SpecData.Named|ide.SpecData.Named[]
 function M.add(spec)
     vim.validate("spec", spec, "table")
 
@@ -22,7 +22,7 @@ function M.add(spec)
     -- add them all (this allows for convenient grouping of related specs in the input)
     if type(spec[1]) == "table" then
         for _, s in ipairs(spec) do
-            M.add(s --[[@as vim.pack.Spec|ide.SpecData.Named]])
+            M.add(s --[[@as ide.Spec|ide.SpecData.Named]])
         end
         return
     end
@@ -52,7 +52,7 @@ function M.add(spec)
 end
 
 --- Merge all collected specs. Call once, pass result to vim.pack.add().
----@return vim.pack.Spec[]
+---@return ide.Spec[]
 function M.get_specs()
     local result = {}
     for _, name in ipairs(I.order) do
@@ -90,7 +90,7 @@ function M.get_specs()
 end
 
 --- Resolve opts chain at load time (called from on_load after packadd right before before hook).
----@param spec vim.pack.Spec
+---@param spec ide.Spec
 ---@return table
 function M.resolve_opts(spec)
     local data = spec.data or {}
@@ -169,7 +169,7 @@ function I.has_mixed_table(tb)
     return false
 end
 
----@param spec vim.pack.Spec|ide.SpecData.Named
+---@param spec ide.Spec|ide.SpecData.Named
 ---@return string
 function I.name(spec)
     vim.validate("spec", spec, "table")

@@ -5,7 +5,7 @@
 ---@field patterns string[]  plain substrings matched against spec.src to auto-enable dev mode
 ---@field fallback boolean   when true, fall back to remote src if the local directory does not exist
 
----@alias ide.SpecData.Opts table | fun(spec: vim.pack.Spec, opts: table): table?
+---@alias ide.SpecData.Opts table | fun(spec: ide.Spec, opts: table): table?
 
 ---@class ide.SpecData.Key : vim.keymap.set.Opts
 ---@field lhs string|string[] lhs key sequence
@@ -33,22 +33,20 @@
 ---@class ide.SpecData.OptsChained : ide.SpecData
 ---@field opts_chain table<ide.SpecData.Opts> list of opts tables or functions to merge, in order of application (later entries override earlier ones)
 
----@class (exact) vim.pack.Spec
----@diagnostic disable-next-line: duplicate-doc-field
+---@class (exact) ide.Spec : vim.pack.Spec
 ---@field data? ide.SpecData|ide.SpecData.OptsChained
----@field [string]? nil
 
 ---@class settings.PackEvent
 ---@field active boolean
----@field spec vim.pack.Spec
+---@field spec ide.Spec
 ---@field kind 'install' | 'update' | 'remove'
 
 ---@alias vim.pack.OnLoad fun(plug_data: vim.pack.PluginData)
 
----@alias vim.pack.PluginData {spec: vim.pack.Spec, path: string}
+---@alias vim.pack.PluginData {spec: ide.Spec, path: string}
 
 ---@class ide.Spec.Builder.Entry
----@field spec? vim.pack.Spec
+---@field spec? ide.Spec
 ---@field data_fragments ide.SpecData[]
 
 ---@class ide.ParserInfo : ParserInfo
@@ -80,10 +78,11 @@
 ---@field enabled? ide.ToolTest|boolean
 ---@field bin? string|fun(): string|nil
 
----@alias ide.LocalSettings table<string, table<string, {
----  use_for: table<kdtsk.tools.Purpose, boolean>, -- use the tool for the given purpose
----  lsp_settings?: table, -- provide settings for LSP
---- }>>
+---@class ide.LocalSettings.Tool
+---@field use_for table<kdtsk.tools.Purpose, boolean> Use the tool for the given purpose.
+---@field lsp_settings? table Settings to provide to the LSP.
+
+---@alias ide.LocalSettings table<string, table<string, ide.LocalSettings.Tool>>
 
 ---@class settings.Opts
 ---@field imports string[] List of modules to import
