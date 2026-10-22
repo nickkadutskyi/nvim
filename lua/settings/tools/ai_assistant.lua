@@ -32,8 +32,9 @@ spec.add({
         suggestion = {
             auto_trigger = true,
             keymap = {
-                accept_word = "<M-S-l>",
-                accept_line = false,
+                accept = "<Tab>",
+                accept_word = "<A-Tab>",
+                accept_line = "<S-Tab>",
             },
         },
     },
