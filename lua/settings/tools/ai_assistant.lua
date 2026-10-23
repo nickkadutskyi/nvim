@@ -9,26 +9,19 @@ local utils = require("ide.utils")
 -- vim.lsp.inline_completion.enable()
 -- end)
 
-spec.add({
-    "nvim-lspconfig",
-    opts = { ---@type ide.Opts.Lsp
-        clients = {
-            ["copilot"] = {
-                settings = {
-                    telemetry = {
-                        telemetryLevel = "off",
-                    },
-                },
-            },
-        },
-    },
-})
-
 --- PLUGINS --------------------------------------------------------------------
 
+-- Let copilot.lua own attachment; native LSP can attach first and skip its keymaps.
 spec.add({
     "copilot.lua",
     opts = {
+        server_opts_overrides = {
+            settings = {
+                telemetry = {
+                    telemetryLevel = "off",
+                },
+            },
+        },
         suggestion = {
             auto_trigger = true,
             keymap = {
