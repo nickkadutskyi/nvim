@@ -58,22 +58,61 @@ utils.run.on_load("project.nvim", function()
     -- end
 end, "settings.behavior.system: Failed to switch project root due to: ")
 
--- Need this to handle same filenames in title
--- TODO: make it more efficient, check if git is fast and also handle non-git project
+-- Keep paths, not just basenames, so titles can use the shortest unique suffix.
 utils.run.on_deferred(function()
-    vim.system({ "git", "rev-parse", "--is-inside-work-tree" }, { text = true }, function(o)
-        if o.code == 0 and o.stdout:match("true") then
-            -- Checks if there are any files in git repo
-            vim.system(
-                { "sh", "-c", 'git -C "$(git rev-parse --show-toplevel)" ls-files | xargs basename' },
-                { text = true },
-                function(git_files)
-                    if git_files.code == 0 then
-                        -- Stores all files in git repo into global variable
-                        vim.g.all_files_str = table.concat(vim.split(git_files.stdout, "\n"), ", ")
-                    end
-                end
-            )
+    local generation = 0
+    local function update_project_files()
+        generation = generation + 1
+        local request = generation
+        local cwd = vim.fn.getcwd()
+        local function store_files(result)
+            if request ~= generation or vim.fn.getcwd() ~= cwd then
+                return
+            end
+            vim.g.project_files = result.code == 0
+                    and { root = cwd, paths = vim.split(result.stdout, "\0", { plain = true, trimempty = true }) }
+                or nil
+            vim.cmd.redraw()
         end
-    end)
+        vim.system(
+            { "git", "ls-files", "--cached", "--others", "--exclude-standard", "-z" },
+            { cwd = cwd },
+            vim.schedule_wrap(function(result)
+                if request ~= generation or vim.fn.getcwd() ~= cwd then
+                    return
+                end
+                if result.code == 0 then
+                    store_files(result)
+                else
+                    vim.system(
+                        {
+                            "rg",
+                            "--files",
+                            "--null",
+                            "--hidden",
+                            "--no-require-git",
+                            "--glob",
+                            "!.git",
+                            "--glob",
+                            "!.jj",
+                        },
+                        { cwd = cwd },
+                        vim.schedule_wrap(function(files)
+                            -- ripgrep exits with 1 when the project has no files.
+                            if files.code == 1 then
+                                files.code = 0
+                            end
+                            store_files(files)
+                        end)
+                    )
+                end
+            end)
+        )
+    end
+    utils.autocmd.create({ "DirChanged", "BufWritePost", "FocusGained" }, {
+        group = "settings.project-file-titles",
+        desc = "Refresh project paths used to disambiguate file titles",
+        callback = update_project_files,
+    })
+    update_project_files()
 end)
