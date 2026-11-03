@@ -1,5 +1,6 @@
 ---@class kdtsk.utils.ui
 local M = {}
+local terminal_title = {}
 
 -- Uses the shortest unique path suffix for files in the current project.
 function M.titlestring()
@@ -10,7 +11,6 @@ function M.titlestring()
     local relativeFilePath = vim.fn.expand("%")
     local filePath = vim.fn.expand("%:p")
     local fileName = vim.fn.expand("%:t")
-    local home = vim.env.HOME .. "/"
     local project_files = vim.g.project_files
     local delim = fileName ~= "" and " – " or ""
 
@@ -18,17 +18,41 @@ function M.titlestring()
     if relativeFilePath == "" then
         title_filename = "[No Name]"
     elseif string.match(relativeFilePath, "^term://") then
-        local path_parts = vim.fn.split(relativeFilePath, ":")
-        title_filename = "term " .. path_parts[#path_parts]
+        local command = relativeFilePath:match("//%d+:(.*)$") or vim.o.shell
+        title_filename = "term " .. vim.fs.basename(command:match("^%S+") or command)
+        local pid = vim.b.terminal_job_pid
+        if pid then
+            local now = vim.uv.hrtime() / 1e6
+            -- Process queries can spawn ps; avoid doing that on every title redraw.
+            if terminal_title.pid ~= pid or now - terminal_title.updated >= 1000 then
+                local programs, seen = {}, {}
+                local function collect_programs(process_pid)
+                    local process = vim.api.nvim_get_proc(process_pid)
+                    if not process then
+                        return
+                    end
+                    local name = vim.fs.basename(process.name)
+                    if not seen[name] then
+                        seen[name] = true
+                        programs[#programs + 1] = name
+                    end
+                    for _, child in ipairs(vim.api.nvim_get_proc_children(process_pid)) do
+                        collect_programs(child)
+                    end
+                end
+                collect_programs(pid)
+                terminal_title = {
+                    pid = pid,
+                    updated = now,
+                    title = #programs > 0 and "term " .. table.concat(programs, " → ") or title_filename,
+                }
+            end
+            title_filename = terminal_title.title
+        end
     elseif string.match(relativeFilePath, "^.*://") then
         title_filename = relativeFilePath
     elseif not project_files or project_files.root ~= cwd or not vim.fs.relpath(cwd, filePath) then
-        if string.match(filePath, "^" .. home) and vim.fn.resolve(filePath) ~= filePath then
-            -- if file is in home directory and symlink
-            title_filename = "./" .. vim.fn.fnamemodify(filePath, ":t")
-        else
-            title_filename = vim.fn.fnamemodify(vim.fn.resolve(filePath), ":~:.:h") .. "/" .. vim.fn.expand("%:t")
-        end
+        title_filename = vim.fn.fnamemodify(filePath, ":~:.")
     else
         title_filename = fileName
         local parent = vim.fs.dirname(filePath)

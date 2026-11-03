@@ -6,6 +6,8 @@ vim.env.SSH_CONNECTION = nil
 local root = vim.fn.tempname()
 local sibling = root .. "-other"
 local plain = root .. "-plain"
+local home = vim.env.HOME
+local terminal_jobs = {}
 local ui = require("legacy.utils.ui")
 local function write(path)
     vim.fn.mkdir(vim.fs.dirname(path), "p")
@@ -80,6 +82,14 @@ local ok, err = xpcall(function()
     )
 
     title(nil, "[No Name]")
+    -- An external symlink must retain its own path, even if its target is in the project.
+    vim.fn.mkdir(sibling, "p")
+    assert(vim.uv.fs_symlink(root .. "/unique.lua", sibling .. "/linked.lua"))
+    vim.env.HOME = vim.fs.dirname(root)
+    title(sibling .. "/linked.lua", "~/" .. vim.fs.basename(sibling) .. "/linked.lua")
+    vim.env.HOME = home
+    title(sibling .. "/linked.lua", sibling .. "/linked.lua")
+    vim.api.nvim_buf_delete(0, { force = true })
     title("lua/legacy/utils/ui.lua", "utils/ui.lua")
     title("lua/settings/appearance/ui.lua", "appearance/ui.lua")
     title("one/shared/deep/file.lua", "one/shared/deep/file.lua")
@@ -171,6 +181,29 @@ local ok, err = xpcall(function()
         "removed duplicate still affects titles"
     )
 
+    -- Show executable names, including programs launched by a shell, not arguments.
+    vim.cmd.enew()
+    local shell = vim.fn.exepath("sh")
+    local job = vim.fn.jobstart({ shell, "-c", 'read -r command; eval "$command"' }, { term = true })
+    assert(job > 0)
+    terminal_jobs[#terminal_jobs + 1] = job
+    local prefix = vim.fs.basename(plain) .. " - term " .. vim.fs.basename(shell)
+    assert(ui.titlestring() == prefix, ui.titlestring())
+    vim.fn.chansend(job, vim.fn.shellescape(shell) .. " -c 'sleep 60 & wait' & wait\n")
+    assert(
+        vim.wait(5000, function()
+            return ui.titlestring() == prefix .. " → sleep"
+        end),
+        "terminal title did not show the shell's running program: " .. ui.titlestring()
+    )
+    vim.fn.jobstop(job)
+    assert(
+        vim.wait(5000, function()
+            return ui.titlestring() == prefix
+        end),
+        "exited terminal should fall back to the executable name: " .. ui.titlestring()
+    )
+
     vim.fn.mkdir(plain .. "/empty")
     vim.api.nvim_set_current_dir(plain .. "/empty")
     assert(
@@ -182,6 +215,10 @@ local ok, err = xpcall(function()
     )
 end, debug.traceback)
 
+for _, job in ipairs(terminal_jobs) do
+    pcall(vim.fn.jobstop, job)
+end
+vim.env.HOME = home
 vim.api.nvim_set_current_dir(config)
 vim.fn.delete(root, "rf")
 vim.fn.delete(sibling, "rf")
