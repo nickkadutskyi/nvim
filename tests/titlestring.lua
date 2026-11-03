@@ -46,6 +46,7 @@ local ok, err = xpcall(function()
         "other/deep/file.lua",
         "main.lua",
         "src/main.lua",
+        "vendor/src/main.lua",
         "domain.lua",
         "domainXlua",
         "a/[draft%.lua",
@@ -95,8 +96,9 @@ local ok, err = xpcall(function()
     title("one/shared/deep/file.lua", "one/shared/deep/file.lua")
     title("two/shared/deep/file.lua", "two/shared/deep/file.lua")
     title("other/deep/file.lua", "other/deep/file.lua")
-    title("main.lua", vim.fs.basename(root) .. "/main.lua")
+    title("main.lua", "main.lua")
     title("src/main.lua", "src/main.lua")
+    title("vendor/src/main.lua", "vendor/src/main.lua")
     title("domain.lua", "domain.lua")
     title("a/[draft%.lua", "a/[draft%.lua")
     title("b/rate%", "b/rate%")
@@ -107,13 +109,13 @@ local ok, err = xpcall(function()
         title("b/" .. name, "b/" .. name)
     end
 
-    vim.cmd.edit("new/unique.lua")
-    vim.fn.mkdir(root .. "/new", "p")
+    vim.cmd.edit("new/utils/ui.lua")
+    vim.fn.mkdir(root .. "/new/utils", "p")
     vim.cmd.write()
-    vim.cmd.edit("unique.lua")
+    vim.cmd.edit("lua/legacy/utils/ui.lua")
     assert(
         vim.wait(5000, function()
-            return ui.titlestring() == vim.fs.basename(root) .. " - " .. vim.fs.basename(root) .. "/unique.lua"
+            return ui.titlestring() == vim.fs.basename(root) .. " - legacy/utils/ui.lua"
         end),
         "saved duplicate did not refresh titles"
     )
@@ -151,6 +153,9 @@ local ok, err = xpcall(function()
     title("lua/legacy/utils/ui.lua", "utils/ui.lua")
     title("lua/settings/appearance/ui.lua", "appearance/ui.lua")
     title("one/shared/deep/file.lua", "one/shared/deep/file.lua")
+    title("main.lua", "main.lua")
+    title("src/main.lua", "src/main.lua")
+    title("vendor/src/main.lua", "vendor/src/main.lua")
     title("a/[draft%.lua", "a/[draft%.lua")
     title("b/rate%", "b/rate%")
     title("a/file with spaces.lua", "a/file with spaces.lua")
@@ -163,20 +168,20 @@ local ok, err = xpcall(function()
     end
 
     -- External additions and removals should be reflected when focus returns.
-    title("domain.lua", "domain.lua")
-    write(plain .. "/external/domain.lua")
+    title("lua/legacy/utils/ui.lua", "utils/ui.lua")
+    write(plain .. "/external/utils/ui.lua")
     vim.api.nvim_exec_autocmds("FocusGained", {})
     assert(
         vim.wait(5000, function()
-            return ui.titlestring() == vim.fs.basename(plain) .. " - " .. vim.fs.basename(plain) .. "/domain.lua"
+            return ui.titlestring() == vim.fs.basename(plain) .. " - legacy/utils/ui.lua"
         end),
         "external duplicate did not refresh titles"
     )
-    vim.fn.delete(plain .. "/external/domain.lua")
+    vim.fn.delete(plain .. "/external/utils/ui.lua")
     vim.api.nvim_exec_autocmds("FocusGained", {})
     assert(
         vim.wait(5000, function()
-            return ui.titlestring() == vim.fs.basename(plain) .. " - domain.lua"
+            return ui.titlestring() == vim.fs.basename(plain) .. " - utils/ui.lua"
         end),
         "removed duplicate still affects titles"
     )

@@ -56,7 +56,7 @@ function M.titlestring()
     else
         title_filename = fileName
         local parent = vim.fs.dirname(filePath)
-        while title_filename ~= "" do
+        while title_filename ~= "" and parent ~= cwd do
             local duplicate = false
             for _, path in ipairs(project_files.paths) do
                 local other = vim.fs.joinpath(cwd, path)
