@@ -187,7 +187,7 @@ local ok, err = xpcall(function()
     local job = vim.fn.jobstart({ shell, "-c", 'read -r command; eval "$command"' }, { term = true })
     assert(job > 0)
     terminal_jobs[#terminal_jobs + 1] = job
-    local prefix = vim.fs.basename(plain) .. " - term " .. vim.fs.basename(shell)
+    local prefix = vim.fs.basename(plain) .. " - " .. vim.fs.basename(shell)
     assert(ui.titlestring() == prefix, ui.titlestring())
     vim.fn.chansend(job, vim.fn.shellescape(shell) .. " -c 'sleep 60 & wait' & wait\n")
     assert(

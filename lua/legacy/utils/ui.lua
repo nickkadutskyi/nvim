@@ -19,7 +19,7 @@ function M.titlestring()
         title_filename = "[No Name]"
     elseif string.match(relativeFilePath, "^term://") then
         local command = relativeFilePath:match("//%d+:(.*)$") or vim.o.shell
-        title_filename = "term " .. vim.fs.basename(command:match("^%S+") or command)
+        title_filename = vim.fs.basename(command:match("^%S+") or command)
         local pid = vim.b.terminal_job_pid
         if pid then
             local now = vim.uv.hrtime() / 1e6
@@ -44,7 +44,7 @@ function M.titlestring()
                 terminal_title = {
                     pid = pid,
                     updated = now,
-                    title = #programs > 0 and "term " .. table.concat(programs, " → ") or title_filename,
+                    title = #programs > 0 and table.concat(programs, " → ") or title_filename,
                 }
             end
             title_filename = terminal_title.title
