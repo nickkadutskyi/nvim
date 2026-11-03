@@ -12,7 +12,7 @@ utils.run.now_if_arg_or_deferred(function()
                 -- FIXME: cache titlestring somewhere to avoid re-evaluating it
                 -- TODO: should I make async system call?
                 -- Rename tmux window using the evaluated titlestring
-                vim.fn.system(string.format('tmux rename-window "%s"', Utils.ui.titlestring()))
+                vim.fn.system({ "tmux", "rename-window", Utils.ui.titlestring() })
             end,
         })
     end

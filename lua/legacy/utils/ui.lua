@@ -15,7 +15,9 @@ function M.titlestring()
     local delim = fileName ~= "" and " – " or ""
 
     local title_filename
-    if string.match(relativeFilePath, "^term://") then
+    if relativeFilePath == "" then
+        title_filename = "[No Name]"
+    elseif string.match(relativeFilePath, "^term://") then
         local path_parts = vim.fn.split(relativeFilePath, ":")
         title_filename = "term " .. path_parts[#path_parts]
     elseif string.match(relativeFilePath, "^.*://") then
@@ -58,7 +60,7 @@ function M.titlestring()
     end
 
     -- return project .. (delim ~= "" and delim .. title_filename or "")
-    return host_prefix .. project .. " - " .. title_filename .. " (nvim)"
+    return host_prefix .. project .. " - " .. title_filename
 end
 
 return M
