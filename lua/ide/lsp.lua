@@ -153,29 +153,28 @@ function I.feature_highlight_word_references()
         if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight, buf) then
             local default_handler = vim.lsp.handlers["textDocument/documentHighlight"]
 
-            -- Looks for line numbers of the highlighted references and stores them in a global variable
+            -- Store zero-based reference marks per buffer for the v2 scrollbar provider.
             -- For scrollbar marks to show up
             client.handlers["textDocument/documentHighlight"] = function(err, result, ctx, config)
                 if result and #result > 0 then
                     local lines_set = {}
                     for _, highlight in ipairs(result) do
                         local range = highlight.range
-                        local start_line = range.start.line + 1 -- Convert to 1-based
-                        local end_line = range["end"].line + 1
+                        local start_line = range.start.line
+                        local end_line = range["end"].line
                         for line = start_line, end_line do
                             -- lines_set[line] = true
-                            table.insert(lines_set, { line = line, type = "IdentifierUnderCaret", level = 0 })
+                            table.insert(lines_set, { line = line, type = "IdentifierUnderCaret" })
                         end
                     end
                     -- local lines = vim.tbl_keys(lines_set)
                     -- table.sort(lines)
-                    vim.g.highlighted_lines = lines_set
+                    vim.b[ctx.bufnr].highlighted_lines = lines_set
                 else
-                    vim.g.highlighted_lines = {}
+                    vim.b[ctx.bufnr].highlighted_lines = {}
                 end
                 if pack.is_loaded("nvim-scrollbar") then
-                    require("scrollbar.handlers").show()
-                    require("scrollbar").throttled_render()
+                    require("scrollbar.providers").refresh(ctx.bufnr)
                 end
                 default_handler(err, result, ctx, config)
             end
@@ -192,14 +191,20 @@ function I.feature_highlight_word_references()
                 group = hi_augroup,
                 callback = function()
                     vim.lsp.buf.clear_references()
-                    vim.g.highlighted_lines = {}
+                    vim.b[buf].highlighted_lines = {}
+                    if pack.is_loaded("nvim-scrollbar") then
+                        require("scrollbar.providers").refresh(buf)
+                    end
                 end,
             })
 
             vim.api.nvim_create_autocmd("LspDetach", {
                 group = vim.api.nvim_create_augroup("ide-lsp-detach", { clear = true }),
                 callback = function(event)
-                    vim.g.highlighted_lines = {}
+                    vim.b[event.buf].highlighted_lines = {}
+                    if pack.is_loaded("nvim-scrollbar") then
+                        require("scrollbar.providers").refresh(event.buf)
+                    end
                     vim.lsp.buf.clear_references()
                     vim.api.nvim_clear_autocmds({
                         group = "ide-lsp-highlight",

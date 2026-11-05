@@ -11,11 +11,14 @@ function M.add_todos_to_global()
         for _, result in ipairs(results) do
             todos_lines[result.filename] = todos_lines[result.filename] or {}
             table.insert(todos_lines[result.filename], {
-                line = result.lnum,
+                line = result.lnum - 1, -- v2 scrollbar marks are zero-based.
                 type = "Todo",
             })
         end
         vim.g.todos_in_files = todos_lines
+        if require("ide.pack").is_loaded("nvim-scrollbar") then
+            require("scrollbar").refresh()
+        end
     end, { disable_not_found_warnings = true })
 end
 

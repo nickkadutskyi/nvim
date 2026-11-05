@@ -178,17 +178,6 @@ spec.add({
             end,
         },
     },
-    --- Highlight search results and provide a nice UI for it
-    --- Required by: nvim-scrollbar
-    {
-        src = g("kevinhwang91/nvim-hlslens"),
-        data = {
-            event = "IdeDeferred",
-            -- after = function(_, opts)
-            --     require("hlslens").setup(opts)
-            -- end,
-        },
-    },
     --- Ripgrep/gitgrep source for the blink.cmp
     { src = g("mikavilpas/blink-ripgrep.nvim"), data = { event = "IdeDeferred" } },
     --- Set of preconfigured snippets for different languages.
@@ -516,20 +505,29 @@ spec.add({
         },
     },
     --- Error stripes and VCS status in Scrollbar
-    --- Requires: nvim-hlslens, gitsigns.nvim
-    --- TODO: move to v2
+    --- Requires: gitsigns.nvim (search uses Neovim's native search)
     {
         src = g("petertriho/nvim-scrollbar"),
+        version = "refactor/v2",
         data = {
             event = "IdeDeferred",
             after = function(_, opts)
                 require("scrollbar").setup(opts)
-                require("scrollbar.handlers").register("under_caret", function(_)
-                    return vim.g.highlighted_lines or {}
-                end)
-                require("scrollbar.handlers").register("todo", function(bufnr)
-                    return (vim.g.todos_in_files or {})[vim.api.nvim_buf_get_name(bufnr)] or {}
-                end)
+                local providers = require("scrollbar.providers")
+                providers.register({
+                    name = "under_caret",
+                    refresh_owner = { buffer = "manager" },
+                    refresh = function(bufnr)
+                        return vim.b[bufnr].highlighted_lines or {}
+                    end,
+                })
+                providers.register({
+                    name = "todo",
+                    refresh_owner = { buffer = "manager" },
+                    refresh = function(bufnr)
+                        return (vim.g.todos_in_files or {})[vim.api.nvim_buf_get_name(bufnr)] or {}
+                    end,
+                })
             end,
         },
     },

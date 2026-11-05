@@ -90,10 +90,6 @@
       "rev": "e46ff0ac53310e20667dcfd20cb8b56398010be0",
       "src": "https://github.com/nickkadutskyi/notifications.nvim"
     },
-    "nvim-hlslens": {
-      "rev": "be2d7b2be01860b5445a007ff2bc72b29896db6b",
-      "src": "https://github.com/kevinhwang91/nvim-hlslens"
-    },
     "nvim-lint": {
       "rev": "52107ce2076a27a285af781248e2c59bad817cd0",
       "src": "https://github.com/mfussenegger/nvim-lint"
@@ -107,8 +103,9 @@
       "src": "https://github.com/SmiteshP/nvim-navic"
     },
     "nvim-scrollbar": {
-      "rev": "00fe857e7cd97ee5e556de643ee920b003a96b03",
-      "src": "https://github.com/petertriho/nvim-scrollbar"
+      "rev": "b39443d8fcae3e326ff965dea3fe7df266c8ccac",
+      "src": "https://github.com/petertriho/nvim-scrollbar",
+      "version": "'refactor/v2'"
     },
     "nvim-treesitter": {
       "rev": "610734c5d3e59761d5f79318d120633374537fa5",
@@ -127,7 +124,7 @@
       "src": "https://github.com/kevinhwang91/nvim-ufo"
     },
     "nvim-web-devicons": {
-      "rev": "ec309a0eaff6ea967e58c275996155ab5c16938d",
+      "rev": "0dc0cfb0c6858041174a53c7aa4adaf65e994b3c",
       "src": "https://github.com/nvim-tree/nvim-web-devicons"
     },
     "plenary.nvim": {

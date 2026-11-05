@@ -46,17 +46,25 @@ spec.add({
 spec.add({
     "nvim-scrollbar",
     opts = {
-        show = true,
-        set_highlights = false,
-        hide_if_all_visible = false,
-        handlers = {
-            diagnostic = true,
-            gitsigns = true, -- Requires gitsigns
-            handle = true,
-            search = true, -- Requires hlslens
+        -- v2 fills in the new Thumb groups while preserving jb.nvim's existing groups.
+        set_highlights = true,
+        providers = {
             cursor = false,
+            diagnostic = true,
+            search = true,
+            marks = false,
+            gitsigns = true,
         },
-        excluded_filetypes = { "snacks_picker_list" },
+        scrollbar = {
+            hide_if_all_visible = false,
+            hide_on_cursor = false,
+            unit = "screenline", -- Keep marks aligned with closed folds.
+            thumb = { highlight = "ScrollbarHandle" }, -- jb.nvim's v1 thumb color.
+            layout = {
+                columns = { { "thumb", "marks" } },
+            },
+        },
+        exclude = { filetypes = { snacks_picker_list = true } },
         marks = {
             GitAdd = {
                 text = "│",
@@ -67,19 +75,11 @@ spec.add({
             IdentifierUnderCaret = {
                 text = { "-", "=" },
                 priority = 1,
-                gui = nil,
-                color = nil,
-                cterm = nil,
-                color_nr = nil, -- cterm
                 highlight = "IdentifierUnderCaret",
             },
             Todo = {
                 text = { "-", "=" },
                 priority = 1,
-                gui = nil,
-                color = nil,
-                cterm = nil,
-                color_nr = nil, -- cterm
                 highlight = "Todo",
             },
         },
