@@ -9,7 +9,7 @@
       "src": "https://github.com/f-person/auto-dark-mode.nvim"
     },
     "blink-ripgrep.nvim": {
-      "rev": "47c9795bf1be9f4b6466d19a2bf0dca42bd65bf7",
+      "rev": "2af170c9821406d71b8ee67c1dbfef407b3db791",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "blink.cmp": {
@@ -34,7 +34,7 @@
       "src": "https://github.com/sindrets/diffview.nvim"
     },
     "fff.nvim": {
-      "rev": "b3b8cede0beb95272ebc2c72c648269f9c5228b3",
+      "rev": "b35b96ad065aea26aafb73eac69fd4866f173b76",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
     "friendly-snippets": {
@@ -67,7 +67,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "jb.nvim": {
-      "rev": "232ec924860c80fd599910730587d240c29746ee",
+      "rev": "61053d7d78b3d965b98533d0af19031dbec5d689",
       "src": "https://github.com/nickkadutskyi/jb.nvim"
     },
     "lazydev.nvim": {

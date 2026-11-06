@@ -46,8 +46,7 @@ spec.add({
 spec.add({
     "nvim-scrollbar",
     opts = {
-        -- v2 fills in the new Thumb groups while preserving jb.nvim's existing groups.
-        set_highlights = true,
+        set_highlights = false, -- Highlights are owned by jb.nvim.
         providers = {
             cursor = false,
             diagnostic = true,
@@ -59,7 +58,6 @@ spec.add({
             hide_if_all_visible = false,
             hide_on_cursor = false,
             unit = "screenline", -- Keep marks aligned with closed folds.
-            thumb = { highlight = "ScrollbarHandle" }, -- jb.nvim's v1 thumb color.
             layout = {
                 columns = { { "thumb", "marks" } },
             },
