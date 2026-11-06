@@ -59,24 +59,42 @@ spec.add({
             hide_on_cursor = false,
             unit = "screenline", -- Keep marks aligned with closed folds.
             layout = {
-                columns = { { "thumb", "marks" } },
+                columns = {
+                    {
+                        "marks",
+                        { types = { "Error", "Warn", "Info", "Hint" } },
+                        { types = { "GitAdd", "GitChange", "GitDelete" } },
+                    },
+                    {
+                        "thumb",
+                        "marks",
+                        { types = { "Error", "Warn", "Info", "Hint" } },
+                    },
+                },
             },
         },
         exclude = { filetypes = { snacks_picker_list = true } },
         marks = {
+            Search = { text = { "--", "==" } },
+            Error = { text = { "--", "==" } },
+            Warn = { text = { "--", "==" } },
+            Info = { text = { "--", "==" } },
+            Hint = { text = { "--", "==" } },
+            Misc = { text = { "--", "==" } },
             GitAdd = {
                 text = "│",
             },
             GitChange = {
                 text = "│",
             },
+            GitDelete = { text = "▁" },
             IdentifierUnderCaret = {
-                text = { "-", "=" },
+                text = { "--", "==" },
                 priority = 1,
                 highlight = "IdentifierUnderCaret",
             },
             Todo = {
-                text = { "-", "=" },
+                text = { "--", "==" },
                 priority = 1,
                 highlight = "Todo",
             },
