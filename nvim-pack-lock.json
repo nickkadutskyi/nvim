@@ -67,7 +67,7 @@
       "src": "https://github.com/lukas-reineke/indent-blankline.nvim"
     },
     "jb.nvim": {
-      "rev": "61053d7d78b3d965b98533d0af19031dbec5d689",
+      "rev": "27c1fb3204463bdb02497152926a820e8ad2bb0b",
       "src": "https://github.com/nickkadutskyi/jb.nvim"
     },
     "lazydev.nvim": {
