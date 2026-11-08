@@ -9,7 +9,7 @@
       "src": "https://github.com/f-person/auto-dark-mode.nvim"
     },
     "blink-ripgrep.nvim": {
-      "rev": "13c7faf2a145688066f21896fc0a835a56387c42",
+      "rev": "f3c41583b8e41cc1bcd659dde705efd19617b72d",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "blink.cmp": {
@@ -26,7 +26,7 @@
       "src": "https://github.com/stevearc/conform.nvim"
     },
     "copilot.lua": {
-      "rev": "192b297ef37d9f6a8b889c07fb9a3dd16f1cb86f",
+      "rev": "1d674b416df08e5c54e442503b7703a0df462acf",
       "src": "https://github.com/zbirenbaum/copilot.lua"
     },
     "diffview.nvim": {
@@ -34,7 +34,7 @@
       "src": "https://github.com/sindrets/diffview.nvim"
     },
     "fff.nvim": {
-      "rev": "b35b96ad065aea26aafb73eac69fd4866f173b76",
+      "rev": "5d21e4bbdf33a09f58975636208e30747bc8d918",
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
     "friendly-snippets": {
@@ -42,7 +42,7 @@
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf-lua": {
-      "rev": "11357ee24a9f092b1db503237eb57e2a11e48434",
+      "rev": "22f0bbd3140a8a3b34fec75e5a640513ca6d4ce3",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gitsigns.nvim": {
@@ -95,7 +95,7 @@
       "src": "https://github.com/mfussenegger/nvim-lint"
     },
     "nvim-lspconfig": {
-      "rev": "d5c7e7bcc15bccc01bf1601a03473e10de2f0f7e",
+      "rev": "993d048db0d83d8e8ba3f9cb376456321acdcce3",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-navic": {
@@ -103,12 +103,12 @@
       "src": "https://github.com/SmiteshP/nvim-navic"
     },
     "nvim-scrollbar": {
-      "rev": "b39443d8fcae3e326ff965dea3fe7df266c8ccac",
+      "rev": "4805fc7c81c9f5a9498c0d2dd78c1f4407bb26e4",
       "src": "https://github.com/petertriho/nvim-scrollbar",
       "version": "'refactor/v2'"
     },
     "nvim-treesitter": {
-      "rev": "915f2bd3d4e2a33704bfc476b5137e9befa82f3d",
+      "rev": "19bdfc04f40ed2ccb3340591d125f759b0406875",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "nvim-treesitter-context": {
