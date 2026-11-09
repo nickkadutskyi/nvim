@@ -9,7 +9,7 @@
       "src": "https://github.com/f-person/auto-dark-mode.nvim"
     },
     "blink-ripgrep.nvim": {
-      "rev": "f3c41583b8e41cc1bcd659dde705efd19617b72d",
+      "rev": "c2e6dffbab87688dbca05e464edb6eee749a847f",
       "src": "https://github.com/mikavilpas/blink-ripgrep.nvim"
     },
     "blink.cmp": {
@@ -38,7 +38,7 @@
       "src": "https://github.com/dmtrKovalenko/fff.nvim"
     },
     "friendly-snippets": {
-      "rev": "b2ea5c41a150ba72fb656eedb4ed0a86d138d945",
+      "rev": "7a1c9f7897a4eb078b157a04c7af81e5869215b1",
       "src": "https://github.com/rafamadriz/friendly-snippets"
     },
     "fzf-lua": {
@@ -103,7 +103,7 @@
       "src": "https://github.com/SmiteshP/nvim-navic"
     },
     "nvim-scrollbar": {
-      "rev": "4805fc7c81c9f5a9498c0d2dd78c1f4407bb26e4",
+      "rev": "6caaef9bb1b07f7f5f0a314da0478c676b55cf9e",
       "src": "https://github.com/petertriho/nvim-scrollbar",
       "version": "'refactor/v2'"
     },
