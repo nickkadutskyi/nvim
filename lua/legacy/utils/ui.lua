@@ -1,9 +1,19 @@
 ---@class kdtsk.utils.ui
 local M = {}
 local terminal_title = {}
+local last_title
 
 -- Uses the shortest unique path suffix for files in the current project.
 function M.titlestring()
+    -- Pickers and other non-file floats keep the title of the window underneath.
+    if
+        last_title
+        and vim.api.nvim_win_get_config(0).relative ~= ""
+        and (vim.bo.buftype ~= "" or vim.api.nvim_buf_get_name(0) == "")
+    then
+        return last_title
+    end
+
     local devpath = vim.fn.fnamemodify("~/Documents", ":p")
     local cwd = vim.fn.getcwd()
     local projectName = vim.fn.fnamemodify(cwd, ":t")
@@ -84,7 +94,8 @@ function M.titlestring()
     end
 
     -- return project .. (delim ~= "" and delim .. title_filename or "")
-    return host_prefix .. project .. " - " .. title_filename
+    last_title = host_prefix .. project .. " - " .. title_filename
+    return last_title
 end
 
 return M

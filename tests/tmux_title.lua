@@ -47,6 +47,16 @@ local ok, err = xpcall(function()
         local actual = tmux("display-message", "-p", "#{window_name}")
         assert(actual == expected, vim.inspect({ expected = expected, actual = actual }))
     end
+    -- Entering a picker-like float must not rename the tmux window.
+    local before = tmux("display-message", "-p", "#{window_name}")
+    local win = vim.api.nvim_open_win(
+        vim.api.nvim_create_buf(false, true),
+        true,
+        { relative = "editor", row = 1, col = 1, width = 20, height = 5 }
+    )
+    assert(tmux("display-message", "-p", "#{window_name}") == before)
+    vim.api.nvim_win_close(win, true)
+
     vim.cmd.enew()
     local expected = vim.fs.basename(root) .. " - [No Name]"
     local actual = tmux("display-message", "-p", "#{window_name}")

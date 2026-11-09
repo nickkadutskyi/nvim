@@ -109,6 +109,28 @@ local ok, err = xpcall(function()
         title("b/" .. name, "b/" .. name)
     end
 
+    -- Non-file floats such as pickers keep the previous title; file floats still update it.
+    title("lua/legacy/utils/ui.lua", "utils/ui.lua")
+    local previous = ui.titlestring()
+    local function float(buf)
+        return vim.api.nvim_open_win(buf, true, { relative = "editor", row = 1, col = 1, width = 20, height = 5 })
+    end
+    for _, buf in ipairs({ vim.api.nvim_create_buf(false, true), vim.api.nvim_create_buf(false, false) }) do
+        local win = float(buf)
+        assert(ui.titlestring() == previous, ui.titlestring())
+        vim.api.nvim_win_close(win, true)
+    end
+    local win = float(vim.api.nvim_create_buf(false, true))
+    local float_job = vim.fn.jobstart({ vim.fn.exepath("sh") }, { term = true })
+    terminal_jobs[#terminal_jobs + 1] = float_job
+    assert(ui.titlestring() == previous, ui.titlestring())
+    vim.fn.jobstop(float_job)
+    vim.api.nvim_win_close(win, true)
+    win = float(vim.fn.bufadd(root .. "/unique.lua"))
+    assert(ui.titlestring() == vim.fs.basename(root) .. " - unique.lua", ui.titlestring())
+    vim.api.nvim_win_close(win, true)
+    assert(ui.titlestring() == previous, ui.titlestring())
+
     vim.cmd.edit("new/utils/ui.lua")
     vim.fn.mkdir(root .. "/new/utils", "p")
     vim.cmd.write()
