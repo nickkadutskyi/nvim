@@ -103,7 +103,7 @@
       "src": "https://github.com/SmiteshP/nvim-navic"
     },
     "nvim-scrollbar": {
-      "rev": "6caaef9bb1b07f7f5f0a314da0478c676b55cf9e",
+      "rev": "577c488dc6f30cd0e2faa5eebe6e19f7d343181e",
       "src": "https://github.com/petertriho/nvim-scrollbar",
       "version": "'refactor/v2'"
     },
