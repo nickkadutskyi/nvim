@@ -148,7 +148,7 @@ spec.add({
                         return not require("lualine.components.jujutsu").is_jujutsu_repo()
                     end,
                 },
-                { "jujutsu" },
+                { "jujutsu", icon = "󰘬", padding = { left = 1, right = 1 } },
                 { "searchcount", padding = { left = 0, right = 1 } },
                 { "location", padding = { left = 0, right = 1 } },
             },
