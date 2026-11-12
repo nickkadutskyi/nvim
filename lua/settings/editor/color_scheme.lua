@@ -14,7 +14,7 @@ spec.add({
     after = function()
         require("jb").setup({
             transparent = false,
-            integrations = { ghostty = true, fff = true },
+            integrations = { ghostty = false, fff = true },
         })
 
         -- Enable color scheme
