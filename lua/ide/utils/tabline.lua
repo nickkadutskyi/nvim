@@ -21,7 +21,7 @@ function I.get_tab_info(tabnr)
     local is_file = false
 
     if bufname == "" then
-        name = "[No Name]"
+        name = "[no name]"
     elseif bufname:match("term://") then
         local path_parts = vim.fn.split(bufname, ":")
         name = "term " .. path_parts[#path_parts]
@@ -39,7 +39,7 @@ end
 
 ---Resolve duplicate display names across all tabs by prepending the immediate
 ---parent directory for any regular-file tab whose base filename appears more
----than once.  Special buffers ([No Name], term, diffview, etc.) are left as-is
+---than once.  Special buffers ([no name], term, diffview, etc.) are left as-is
 ---even if they share a label, since there is no meaningful path to pull from.
 ---@param tabs { name: string, bufname: string, is_file: boolean, modified: boolean }[]
 function I.resolve_duplicates(tabs)

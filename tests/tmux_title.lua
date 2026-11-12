@@ -58,7 +58,7 @@ local ok, err = xpcall(function()
     vim.api.nvim_win_close(win, true)
 
     vim.cmd.enew()
-    local expected = vim.fs.basename(root) .. " - [No Name]"
+    local expected = vim.fs.basename(root) .. " - [no name]"
     local actual = tmux("display-message", "-p", "#{window_name}")
     assert(actual == expected, vim.inspect({ expected = expected, actual = actual }))
 end, debug.traceback)

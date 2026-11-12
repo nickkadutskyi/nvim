@@ -26,7 +26,7 @@ function M.titlestring()
 
     local title_filename
     if relativeFilePath == "" then
-        title_filename = "[No Name]"
+        title_filename = "[no name]"
     elseif string.match(relativeFilePath, "^term://") then
         local command = relativeFilePath:match("//%d+:(.*)$") or vim.o.shell
         title_filename = vim.fs.basename(command:match("^%S+") or command)

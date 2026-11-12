@@ -28,7 +28,7 @@ local function title(path, expected)
 end
 
 local ok, err = xpcall(function()
-    title(nil, "[No Name]")
+    title(nil, "[no name]")
     local pattern_names = {
         "unfinished[",
         "unfinished(",
@@ -82,7 +82,7 @@ local ok, err = xpcall(function()
         "initial project index missing"
     )
 
-    title(nil, "[No Name]")
+    title(nil, "[no name]")
     -- An external symlink must retain its own path, even if its target is in the project.
     vim.fn.mkdir(sibling, "p")
     assert(vim.uv.fs_symlink(root .. "/unique.lua", sibling .. "/linked.lua"))
